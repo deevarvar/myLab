@@ -2,31 +2,34 @@ var net = require('net');
 var fs = require('fs');
 var testSock = '/tmp/test.sock';
 
+
+//unlink existing test sock or error will be EADDRINUSE
 fs.unlink(testSock, function () {
-var server = net.createServer(function(socket){
-    socket.write('connected\r\n');
+        var server = net.createServer(function(socket){
 
-    socket.on('data', function(data) {
-        console.log('DATA ' + data);
-        //data trim new line
-        data =  data.toString().replace(/[\r\n]/g, '');
+            socket.on('data', function(data) {
+                console.log('DATA ' + data);
+                //data trim new line
+                data =  data.toString().replace(/[\r\n]/g, '');
 
-        socket.write('You said "' + data + '"\n');
-        if(data == 'close'){
-            console.log('close server');
-            //async only when all connections are closed, server will be closed then.
-            server.close();
-        }
+                socket.write('You said "' + data + '"\n');
+                if(data == 'close'){
+                    console.log('close server');
+                    //async only when all connections are closed, server will be closed then.
+                    server.close();
+                }
+            });
+
+            socket.on('close', function(data) {
+                console.log('CLOSED: ');
+            });
+
+        });
+
+
+    server.listen(testSock, function() { //'listening' listener
+        console.log('server bound');
     });
-
-    socket.on('close', function(data) {
-        console.log('CLOSED: ');
-    });
-
 });
 
 
-server.listen(testSock, function() { //'listening' listener
-    console.log('server bound');
-});
-});
