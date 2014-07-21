@@ -1,0 +1,5 @@
+This project is just used to emulate this scenario:
+1. node.js communicate with python process
+2. the unix domain socket is used here
+3. the msg is bidirectional
+4. use mongodbto trigger
