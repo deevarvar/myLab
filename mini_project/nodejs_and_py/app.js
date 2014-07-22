@@ -2,7 +2,7 @@ var net = require('net');
 var fs = require('fs');
 var testSock = '/tmp/test.sock';
 
-
+//add url handler to test ip's behavior
 //unlink existing test sock or error will be EADDRINUSE
 fs.unlink(testSock, function () {
         var server = net.createServer(function(socket){

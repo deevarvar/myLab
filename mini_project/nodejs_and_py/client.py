@@ -28,7 +28,7 @@ except socket.error, msg:
 
 while 1:
     cmd = raw_input('enter command:')
-    print 'cmd is '+ cmd
+    print 'cmd is ' + cmd
     sock.sendall(cmd)
 
     server_data = sock.recv(8192)

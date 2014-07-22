@@ -1,0 +1,12 @@
+{
+	"name": "nodejs_and_py",
+    "description": "backend use py to do sth",
+    "author": "ZhiHua Ye <zhihuayer@gmail.com>",
+  	"license": "MIT",
+	"dependencies": {
+    "express": "~4.2.0"
+	}
+
+
+
+}
