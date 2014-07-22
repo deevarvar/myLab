@@ -20,12 +20,12 @@ This project is just used to emulate this scenario:
 1.1.Telnet Pane: click 'connect'
 1.2.Telnet Pane backend: start websockify
 
-msg format :  dst/action/actionArgs
-all python thread use one socket to communicate with node.js
+msg format(JSON) :  dst/action/actionArgs
+each thread will use one seperate socket to communicate with node.js
 singleton check
 
 2.1 LCD control pane: click pane, send msg: 'none/connect/ip'
 2.2 python daemon: receive msg and create thread and telnet
-2.3 LCD control pane: click keypad and backend send msg to python daemon 'ip/key/keyName'
+2.3 LCD control pane: click keypad and backend send msg to python daemon 'ip/key/keyName' 通过额外的socket
 2.4 python daemon: parse ip and do key press
 2.5 LCD control pane: close pane, stop telnet session(add session check and timeout)
