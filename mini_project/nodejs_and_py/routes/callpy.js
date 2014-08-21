@@ -10,7 +10,8 @@ router.get(/\/(.*)/, function(req, res) {
 
 
     var msg = {
-        "path":req.path.substring(1)
+        "path":req.path.substring(1),
+        "exit": "True"
     };
 
     console.log('path is ', JSON.stringify(msg));

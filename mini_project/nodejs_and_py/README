@@ -1,13 +1,25 @@
 This project is just used to emulate this scenario:
- _   _       _
-| \ | | ___ | |_ ___  ___
-|  \| |/ _ \| __/ _ \/ __|
-| |\  | (_) | ||  __/\__ \
-|_| \_|\___/ \__\___||___/
-1. node.js communicate with python process
-2. the unix domain socket is used here
-3. the msg is bidirectional
-4. use mongodbto trigger
+
+ ____             __ _       _   _       _
+|  _ \ _ __ __ _ / _| |_    | \ | | ___ | |_ ___  ___
+| | | | '__/ _` | |_| __|   |  \| |/ _ \| __/ _ \/ __|
+| |_| | | | (_| |  _| |_    | |\  | (_) | ||  __/\__ \
+|____/|_|  \__,_|_|  \__|   |_| \_|\___/ \__\___||___/
+1. node.js communicate with python main process
+2. unix domain sockets(uds) are used here
+3.1 Frontend's GET trigger python main process to create thread
+3.2 create profile in mongodb and use profile to do singleton check
+3.3 each python child thread use seperate uds to communicate with node
+4. node.js may send action msg to python child thread, thread will send ack when action is finished.
+5. add web apps
+5.1 web based login(telnet/ssh)
+6. swig, jquery, bootstrap, mongoosedb
+6.1 multiuser login, use swig as the frontend template
+
+
+
+
+
 
 
 
@@ -22,7 +34,7 @@ This project is just used to emulate this scenario:
 
 msg format(JSON) :  dst/action/actionArgs
 each thread will use one seperate socket to communicate with node.js
-singleton check
+
 
 2.1 LCD control pane: click pane, send msg: 'none/connect/ip'
 2.2 python daemon: receive msg and create thread and telnet

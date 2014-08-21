@@ -12,7 +12,10 @@
  *
  *         Author:  Zhihua Ye (varvar), zhihuaye@gmail.com
  *   Organization:  NGO
- *
+ *			 Note: 
+ *					1. ssize_t
+ *					2. mode_t
+ *					3. fread() does not distinguish between end-of-file and error
  * =====================================================================================
  */
 

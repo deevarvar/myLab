@@ -12,4 +12,4 @@ def string_generator(size=6, chars=string.ascii_letters+string.digits):
 #emulate touch cmd
 def touchFile(fname, time=None):
     with open(fname, 'a'):
-        os.utime(fname,times)
+        os.utime(fname,time)
