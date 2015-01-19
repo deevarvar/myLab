@@ -1,4 +1,5 @@
 #http://stackoverflow.com/questions/9000960/python-regular-expressions-re-search-vs-re-findall?rq=1
+#https://docs.python.org/2/howto/regex.html
 #use non-capture version in findall
 
 import re
