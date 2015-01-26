@@ -1,0 +1,1 @@
+http_code,%{http_code},http_connect,%{http_connect},content_type,%{content_type},time_namelookup,%{time_namelookup},time_redirect,%{time_redirect},time_pretransfer,%{time_pretransfer},time_connect,%{time_connect},time_starttransfer,%{time_starttransfer},time_total,%{time_total},speed_download,%{speed_download}\n
