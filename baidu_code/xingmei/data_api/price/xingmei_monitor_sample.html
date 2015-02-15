@@ -1,37 +1,59 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN http://www.w3.org/TR/html4/loose.dtd">
-
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf8">
-  <style type="text/css">
-  table {border-collapse: collapse;}
-  td {padding: 0px;text-align: center;}
-  </style>
-
+<style type="text/css">
+table {border-collapse: collapse;}
+td {padding: 0px;text-align: center;}
+</style>
 </head>
 <body>
+<p> 详细场次请见附件wrong.csv</p>
 
-
-<table border="1" borderspacing="0">
-  <caption>星美价格监控</caption>
-  <tr>
-    <th>一/二线城市</th>
-    <th>影院id</th>
-    <th>影院名</th>
-    <th>非黄价格问题场次数</th>
-    <th>黄金时段价格问题场次数</th>
-  </tr>
-  <tr>
-    <td>一线</td>
-    <td>103</td>
-    <td>北京金源</td>
-    <td>26</td>
-    <td>0</td>
-
-  </tr>
-
+<table border="1">
+<caption>场次总结统计</caption>
+<th>问题影院总数</th>
+<th>问题场次总数</th>
+<th>非黄场次总数</th>
+<th>黄金场次总数</th>
+<tr>
+<td>100</td>
+<td>100</td>
+<td>40</td>
+<td>60</td>
+</tr>
 </table>
+<hr>
+
+<table border="1">
+<caption>星美价格监控详细统计</caption>
+<tr>
+<th>一/二线城市</th>
+<th>影院id</th>
+<th>影院名</th>
+<th>非黄价格问题场次数</th>
+<th>黄金时段价格问题场次数</th>
+</tr>
+<tr>
+<td>一线</td>
+<td>103</td>
+<td>星美国际影城-北京金源店</td>
+<td>20</td>
+<td>0</td>
+</tr>
+<tr>
+<td>二线</td>
+<td>106</td>
+<td>星美国际影城-昆明金鹰店</td>
+<td>0</td>
+<td>7</td>
+</tr>
+</table>
+
+
+
 <p> 星美价格规则:</p>
+<p>0. 法定节假日按照周六日的规则;周六日如果是工作日，按照工作日规则</p>
 <p>1.	权重 4 一线城市影城 0：00 – 2：00  6折 ，周一至五 2：00 – 17:15 3D影片结算价30元，2D影片结算价25元； 17：15以后 6折。 六日 2:00 – 12：00 3D影片结算价 30元， 2D影片结算价25元；以后6折。</p>
 <p>2.	权重 5 二线城市影城 0：00 – 2：00  6折 ，周一至五 2：00 – 17:15 3D影片结算价25元，2D影片结算价20元； 17：15以后 6折。 六日 2:00 – 12：00 3D影片结算价25元， 2D影片结算价20元；以后6折。</p>
 <p>3.	权重 6 四个影城（北京金源、上海正大、成都环球中心、拉萨神力）周一至五 2：00 – 17:15 所有片结算价30元， 17：15以后 7折， 六日 2:00 – 12：00 所有片结算价 30元， 以后7折</p>

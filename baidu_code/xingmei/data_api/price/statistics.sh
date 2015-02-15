@@ -26,6 +26,31 @@ echo "</head>" >> $htmlfile
 echo "<body>" >> $htmlfile
 
 echo "<p> 详细场次请见附件wrong.csv</p>" >> $htmlfile
+
+cinematotal=$(wc -l cinema.list|cut -d ' ' -f 1)
+primetotal=$(cat wrongprice.csv| awk -F, -v primetime=14 '$primetime==1'|wc -l|cut -f 1)
+plantotal=$(wc -l wrongprice.csv|cut -d ' ' -f 1)
+plantotal=$(echo ${plantotal}-1|bc)
+nonprimetotal=$(echo ${plantotal}-${primetotal}|bc)
+
+echo $cinematotal, $plantotal,$primetotal, $nonprimetotal,
+
+echo "<table border=\"1\">" >> $htmlfile
+echo "<caption>场次总结统计</caption>" >> $htmlfile
+echo "<th>问题影院总数</th>" >> $htmlfile
+echo "<th>问题场次总数</th>" >> $htmlfile
+echo "<th>非黄场次总数</th>" >> $htmlfile
+echo "<th>黄金场次总数</th>" >> $htmlfile
+echo "<tr>" >> $htmlfile
+echo "<td>$cinematotal</td>" >> $htmlfile
+echo "<td>$plantotal</td>" >> $htmlfile
+echo "<td>$nonprimetotal</td>" >> $htmlfile
+echo "<td>$primetotal</td>"  >> $htmlfile
+echo "</tr>" >> $htmlfile
+echo "</table>" >> $htmlfile
+
+echo "<hr>" >> $htmlfile
+
 echo "<table border=\"1\">" >> $htmlfile
 echo "<caption>星美价格监控</caption>" >> $htmlfile
 echo "<tr>" >> $htmlfile
@@ -62,7 +87,11 @@ echo  "</tr>" >> $htmlfile
 done < cinema.list
 
 echo "</table>" >> $htmlfile
+
+
+
 echo "<p> 星美价格规则:</p>" >> $htmlfile
+echo "<p>0. 法定节假日按照周六日的规则;周六日如果是工作日，按照工作日规则</p>" >> $htmlfile
 echo "<p>1.	权重 4 一线城市影城 0：00 – 2：00  6折 ，周一至五 2：00 – 17:15 3D影片结算价30元，2D影片结算价25元； 17：15以后 6折。 六日 2:00 – 12：00 3D影片结算价 30元， 2D影片结算价25元；以后6折。</p>" >> $htmlfile
 echo "<p>2.	权重 5 二线城市影城 0：00 – 2：00  6折 ，周一至五 2：00 – 17:15 3D影片结算价25元，2D影片结算价20元； 17：15以后 6折。 六日 2:00 – 12：00 3D影片结算价25元， 2D影片结算价20元；以后6折。</p>" >> $htmlfile
 echo "<p>3.	权重 6 四个影城（北京金源、上海正大、成都环球中心、拉萨神力）周一至五 2：00 – 17:15 所有片结算价30元， 17：15以后 7折， 六日 2:00 – 12：00 所有片结算价 30元， 以后7折</p>" >> $htmlfile

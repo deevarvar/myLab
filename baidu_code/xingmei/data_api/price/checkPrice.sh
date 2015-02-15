@@ -23,6 +23,11 @@ dir=$(dirname $0)
 FIRSTCITIES=(100 101 102 105 128 138 139 140 143 144 149 163 166 167 174 103 142)
 SECONDCITIES=(104 106 107 108 109 110 111 112 113 114 115 116 117 118 119 120 121 122 123 124 125 126 127 129 130 131 132 133 134 135 136 137 141 145 146 147 148 150 151 152 154 156 157 158 159 160 161 162 164 165 168 169 170 171 172 173 175 176 177 178 155 153)
 SPECIALCITIES=(103 142 155 153)
+
+#offcial holidays
+extraholidays=(2015-01-01 2015-01-02 2015-02-18 2015-02-19 2015-02-20 2015-02-23 2015-02-24 2015-05-01 2015-04-06 2015-06-22 2015-10-01 2015-10-02 2015-10-05 2015-10-06 2015-10-07)
+extraworkdays=(2015-01-04 2015-02-15 2015-02-28 2015-10-10)
+
 SERVER="http://182.92.217.248:8090/xingmei_web/server"
 uid=baidumovie
 passwd="O1wBNQgxOBvjgrBJ"
@@ -144,8 +149,22 @@ processPrice(){
     #echo $1,$2,$3,$4,$5,$6,$7,$8
     # calculate the price
     postfix="work"
+
+
+    #TODO:add logic about extra holidays and workdays
+
+    containsElement "$startday" "${extraholidays[@]}"
+    extrarest=$?
+    containsElement "$startday" "${extraworkdays[@]}"
+    extrawork=$?
     containsElement "$weekday" "${restdays[@]}"
-    if [ $? -eq 1 ];then
+    normal=$?
+
+    if [ "$extrarest" -eq 1 ];then
+        postfix="rest"
+    elif [ "$extrawork" -eq 1 ];then
+        postfix="work"
+    elif [ "$normal" -eq 1 ];then
         postfix="rest"
     fi
 
