@@ -129,6 +129,8 @@ containsElement () {
   return 0
 }
 
+
+
 #arguments: cinemaId, prefix, timeString,marketPrice,price,planId,movieId, movieType
 processPrice(){
     cinemaId=$1
@@ -140,6 +142,7 @@ processPrice(){
     hallId=$7
     movieId=$8
     movieType=$9
+    lowestprice=$10
 
     starttime=$(echo $timeString|cut -d '"' -f 2)
     startday=$(echo $starttime|cut -d ' ' -f 1)
@@ -207,6 +210,7 @@ processPrice(){
         done
 BLOCKCOMMENT
 
+
     discount=$(eval echo \$${price_rule}|cut -d , -f 2)
 
     #special handling,
@@ -227,6 +231,21 @@ BLOCKCOMMENT
         echo discount case: target is $targetPrice,real is  $price, primetime is $primetime
     fi
 
+
+    #special handling
+    #for movieId 8726, 《北京纽约》, 3.6,3.7,3.8 will be set to lowest price
+    if [ ${movieId} -eq 8726 ];then
+        eventday_8726=(2015-03-06 2015-03-07 2015-03-08)
+        containsElement "$startday" "${eventday_8726[@]}"
+        isEvent=$?
+        if [ $isEvent -eq 1 ];then
+            echo "special price rule for 8726, targetPrice is changed from $targetPrice to $lowestPrice"
+            targetPrice=${lowestPrice}
+
+        fi
+
+    fi
+
     result=$(echo $targetPrice $price|awk '{printf "%f", $1-$2}')
     result=$(echo $result-0|bc)
 
@@ -236,6 +255,9 @@ BLOCKCOMMENT
     fi
 
 }
+
+
+
 
 #two arguments: cinemaId, file_prefix
 processPlans(){
@@ -269,6 +291,7 @@ do
     #find marketPrice, price, starttime, weekday,qid
     timeString=$(grep "planInfo\",$index,\"starttime\"" $formatfile |cut -f 2)
     marketPrice=$(grep "planInfo\",$index,\"marketPrice\"" $formatfile|cut -f 2)
+    lowestPrice=$(grep "planInfo\",$index,\"lowestPrice\"" $formatfile|cut -f 2)
     price=$(grep "planInfo\",$index,\"price\"" $formatfile|cut -f 2)
     planId=$(grep "planInfo\",$index,\"qid\"" $formatfile|cut -f 2)
     hallId=$(grep "planInfo\",$index,\"hallNo\"" ${formatfile} |cut -f 2|cut -d \" -f 2)
@@ -282,7 +305,9 @@ do
     #"\u5de8\u5e55\u5385"
     vipHall=$(grep "planInfo\",$index,\"hallName\"" ${formatfile}|grep -o "\\\u8d35\\\u5bbe\\\u5385\|vip\|VIP\|\\\u5de8\\\u5e55\\\u5385")
     cinemaName=$(arrayGet cinemas $cinemaId)
-    arrayGet cinemas $cinemaId
+    #arrayGet cinemas $cinemaId
+
+
     if [ -n "$isIMAX" ];then
         result=$(echo $marketPrice - $price|bc)
             echo "city type:$prefix, cinema: $cinemaId, cinemaName: $cinemaName, hallId: $hallId, movieId: $movieId, plan $planId, time is $starttime, weekday is $weekday, marketPrice is $marketPrice,movie type is $movieType"
@@ -298,7 +323,7 @@ do
     else
 
         #NOTE: double quote is IMPORTANT when argument including space!!!
-        processPrice $cinemaId $prefix "$timeString" $marketPrice $price $planId $hallId $movieId $movieType
+        processPrice $cinemaId $prefix "$timeString" $marketPrice $price $planId $hallId $movieId $movieType $lowestPrice
     fi
 
 
@@ -310,19 +335,23 @@ done
 
 
 
-#use this line to do unit test, handle one movie
-# processPrice $1 $2 "$3" $4 $5 $6 $7 $8
-#handle one cinema
-#processPlans 103 "first"
-#processPlans 104 "second"
-#shell blockcomment
-: << BLOCKCOMMENT
-BLOCKCOMMENT
+
 
 
 
 
 genCinemaPair
+
+
+#use this line to do unit test, handle one movie
+# processPrice $1 $2 "$3" $4 $5 $6 $7 $8
+#handle one cinema
+#processPlans 139 "first"
+#processPlans 104 "second"
+#shell blockcomment
+
+: << BLOCKCOMMENT
+BLOCKCOMMENT
 
 
 #declare the global variable
@@ -353,9 +382,9 @@ do
     processPlans $cinemaId "second"
 done
 
+
+
 : << BLOCKCOMMENT
-
-
 #special cities
 for((i=0; i<${#SPECIALCITIES[*]}; i++))
 #for((i=0; i<1; i++))
