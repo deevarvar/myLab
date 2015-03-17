@@ -21,7 +21,7 @@ dir=$(dirname $0)
 
 
 FIRSTCITIES=(100 101 102 105 128 138 139 140 143 144 149 163 166 167 174 103 142)
-SECONDCITIES=(104 106 107 108 109 110 111 112 113 114 115 116 117 118 119 120 121 122 123 124 125 126 127 129 130 131 132 133 134 135 136 137 141 145 146 147 148 150 151 152 154 156 157 158 159 160 161 162 164 165 168 169 170 171 172 173 175 176 177 178 155 153)
+SECONDCITIES=(104 106 107 108 109 110 111 112 113 114 115 116 117 118 119 120 121 122 123 124 125 129 130 131 132 133 134 135 136 137 141 145 147 148 150 151 152 154 156 157 158 159 160 161 164 165 168 169 170 171 173 175 176 177 178 155 153)
 SPECIALCITIES=(103 142 155 153)
 
 #offcial holidays
@@ -89,6 +89,7 @@ price_rule_special_rest_2D="25,0.7"
 mkdir -p raw
 mkdir -p format
 
+echo "影院id,影院名,今天排期数,明天排期数,后天排期数" > planstat.csv
 echo "城市,影院id, 影院名,影厅id,movieId,场次号,开始时间,周几,marketPrice,price,理论价,movieType,VIP厅,primetime" > "./wrongprice.csv"
 
 
@@ -257,6 +258,24 @@ BLOCKCOMMENT
 }
 
 
+function recordPlanInfo(){
+    cinemaid=$1
+    cinemaname=$2
+    formatfile=$3
+     #need to check 3 days plan num
+    echo $cinemaid,$cinemaname,$formatfile
+    today=$(date +%Y-%m-%d)
+    oneday=$(date -d '1 day' +%Y-%m-%d)
+    twoday=$(date -d '2 days' +%Y-%m-%d)
+    #echo $today, $oneday, $twoday
+    today_num=$(grep "starttime.*$today" $formatfile|wc -l)
+    oneday_num=$(grep "starttime.*$oneday" $formatfile|wc -l)
+    twoday_num=$(grep "starttime.*$twoday" $formatfile|wc -l)
+
+    echo $cinemaid,$cinemaname,${today_num}, ${oneday_num}, ${twoday_num} >> planstat.csv
+
+}
+
 
 
 #two arguments: cinemaId, file_prefix
@@ -282,7 +301,17 @@ processPlans(){
 
 #get plan num
 planNum=$(grep -o "planInfo\",[0-9]\+," $formatfile |uniq|sort -t , -nk2|tail -n 1|cut -d , -f 2)
+planNum=$((planNum+1))
 echo planNum is $planNum
+
+
+    cinemaName=$(arrayGet cinemas $cinemaId)
+
+
+
+#add function to caculate the plannum
+    recordPlanInfo $cinemaId $cinemaName $formatfile
+
 
 for((index=0;index < planNum;index++))
 do
@@ -299,12 +328,13 @@ do
     isIMAX=$(echo $movieType|grep -o 'IMAX\|DMAX')
     movieId=$(grep "planInfo\",$index,\"movieId\"" $formatfile|cut -f 2)
 
+
     #VIP,巨幕，贵宾厅，三个都是原价
     #VIP,vip
     #"\u8d35\u5bbe\u5385"
     #"\u5de8\u5e55\u5385"
     vipHall=$(grep "planInfo\",$index,\"hallName\"" ${formatfile}|grep -o "\\\u8d35\\\u5bbe\\\u5385\|vip\|VIP\|\\\u5de8\\\u5e55\\\u5385")
-    cinemaName=$(arrayGet cinemas $cinemaId)
+
     #arrayGet cinemas $cinemaId
 
 
@@ -326,9 +356,6 @@ do
         processPrice $cinemaId $prefix "$timeString" $marketPrice $price $planId $hallId $movieId $movieType $lowestPrice
     fi
 
-
-
-
 done
 
 }
@@ -341,6 +368,13 @@ done
 
 
 genCinemaPair
+#declare the global variable
+while read line
+do
+    cid=$(echo $line|cut -d, -f 1)
+    cname=$(echo $line|cut -d, -f 2)
+    declare "cinemas_$cid=$cname"
+done < cinema.pair
 
 
 #use this line to do unit test, handle one movie
@@ -350,17 +384,11 @@ genCinemaPair
 #processPlans 104 "second"
 #shell blockcomment
 
+
+
 : << BLOCKCOMMENT
 BLOCKCOMMENT
 
-
-#declare the global variable
-while read line
-do
-    cid=$(echo $line|cut -d, -f 1)
-    cname=$(echo $line|cut -d, -f 2)
-    declare "cinemas_$cid=$cname"
-done < cinema.pair
 
 #first tie cities
 for((i=0; i<${#FIRSTCITIES[*]}; i++))
@@ -394,5 +422,6 @@ do
 done
 BLOCKCOMMENT
 
-
 rm -f temp
+
+
