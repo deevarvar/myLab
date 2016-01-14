@@ -1,0 +1,7 @@
+2015-05-28 21:34:16,059 - normal - INFO - queue_monitor.py - getPage - 110 - index is 0 online_schedulequeue
+2015-05-28 21:34:16,059 - normal - INFO - queue_monitor.py - fixIndex - 74 - pattern schedulequeue is in online_schedulequeue, index is 0
+2015-05-28 21:34:16,060 - normal - INFO - queue_monitor.py - getPage - 110 - index is 1 queue.movie.budget.record
+2015-05-28 21:34:16,060 - normal - INFO - queue_monitor.py - fixIndex - 74 - pattern record is in queue.movie.budget.record, index is 1
+2015-05-28 21:34:16,061 - normal - INFO - queue_monitor.py - getPage - 110 - index is 2 queue.movie.budget.adjust
+2015-05-28 21:34:16,061 - normal - INFO - queue_monitor.py - fixIndex - 74 - pattern adjust is in queue.movie.budget.adjust, index is 2
+2015-05-28 21:34:16,062 - normal - INFO - queue_monitor.py - getValue - 93 - result is {'record': {'num': '0', 'name': 'queue.movie.budget.record', 'level': 100}, 'adjust': {'num': '0', 'name': 'queue.movie.budget.adjust', 'level': 100}, 'schedulequeue': {'num': '0', 'name': 'online_schedulequeue', 'level': 50}}

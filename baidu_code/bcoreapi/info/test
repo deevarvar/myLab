@@ -1,0 +1,13 @@
+test_dict = {"city":"city","zero":"","0":0}
+try:
+    assert test_dict.has_key('nothing') and test_dict['nothing']
+except AssertionError,e:
+    print "1"
+try:
+    assert test_dict['zero']
+except AssertionError,e:
+    print "2"
+try:
+    assert test_dict['0']
+except AssertionError,e:
+    print "3"

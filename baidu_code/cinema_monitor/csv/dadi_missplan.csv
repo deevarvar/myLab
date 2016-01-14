@@ -1,0 +1,45 @@
+是否是合法影院,接入方, third_id, 影院名,影院id,bid, 加密bid, 影院url, 排期url, 排期来源,电影信息
+1,dadi, '0049,新乡新玛特, '2345,'2381330819531063671,'b5972e7ab57d777ab020a878,http://www.nuomi.com/cinema/b5972e7ab57d777ab020a878,"http://www.nuomi.com/pcindex/main/timetable?cinemaid=b5972e7ab57d777ab020a878&mid=9422&needMovieInfo=1&tploption=1&_=1428996217
+http://www.nuomi.com/pcindex/main/timetable?cinemaid=b5972e7ab57d777ab020a878&mid=9410&needMovieInfo=1&tploption=1&_=1428996217
+http://www.nuomi.com/pcindex/main/timetable?cinemaid=b5972e7ab57d777ab020a878&mid=8883&needMovieInfo=1&tploption=1&_=1428996217
+http://www.nuomi.com/pcindex/main/timetable?cinemaid=b5972e7ab57d777ab020a878&mid=9427&needMovieInfo=1&tploption=1&_=1428996218
+","dadi
+","9422/速度与激情7/37
+9410/咱们结婚吧/3
+8883/我是女王/2
+9427/冲锋车/0
+"
+1,dadi, '0175,驻马店新百汇, '2614,'14235600661784258566,'8c99c97bebf1a8664f3a59c1,http://www.nuomi.com/cinema/8c99c97bebf1a8664f3a59c1,"http://www.nuomi.com/pcindex/main/timetable?cinemaid=8c99c97bebf1a8664f3a59c1&mid=9422&needMovieInfo=1&tploption=1&_=1428996657
+http://www.nuomi.com/pcindex/main/timetable?cinemaid=8c99c97bebf1a8664f3a59c1&mid=8901&needMovieInfo=1&tploption=1&_=1428996657
+http://www.nuomi.com/pcindex/main/timetable?cinemaid=8c99c97bebf1a8664f3a59c1&mid=9410&needMovieInfo=1&tploption=1&_=1428996658
+http://www.nuomi.com/pcindex/main/timetable?cinemaid=8c99c97bebf1a8664f3a59c1&mid=8883&needMovieInfo=1&tploption=1&_=1428996658
+http://www.nuomi.com/pcindex/main/timetable?cinemaid=8c99c97bebf1a8664f3a59c1&mid=9427&needMovieInfo=1&tploption=1&_=1428996658
+","dadi
+","9422/速度与激情7/55
+8901/战狼/6
+9410/咱们结婚吧/3
+8883/我是女王/1
+9427/冲锋车/0
+"
+1,dadi, '0194,西安长安步行街, '3817,'11611007022447908839,'23c94f9ff665c9fb1ef74d42,http://www.nuomi.com/cinema/23c94f9ff665c9fb1ef74d42,"http://www.nuomi.com/pcindex/main/timetable?cinemaid=23c94f9ff665c9fb1ef74d42&mid=9422&needMovieInfo=1&tploption=1&_=1428996728
+http://www.nuomi.com/pcindex/main/timetable?cinemaid=23c94f9ff665c9fb1ef74d42&mid=8901&needMovieInfo=1&tploption=1&_=1428996728
+http://www.nuomi.com/pcindex/main/timetable?cinemaid=23c94f9ff665c9fb1ef74d42&mid=9410&needMovieInfo=1&tploption=1&_=1428996729
+http://www.nuomi.com/pcindex/main/timetable?cinemaid=23c94f9ff665c9fb1ef74d42&mid=8883&needMovieInfo=1&tploption=1&_=1428996729
+http://www.nuomi.com/pcindex/main/timetable?cinemaid=23c94f9ff665c9fb1ef74d42&mid=9432&needMovieInfo=1&tploption=1&_=1428996729
+","dadi
+","9422/速度与激情7/50
+8901/战狼/9
+9410/咱们结婚吧/1
+8883/我是女王/3
+9432/魔法总动员/0
+"
+1,dadi, '0258,宝鸡天同国际, '8185,'2962716103179254915,'491d1492104bb275a5da390b,http://www.nuomi.com/cinema/491d1492104bb275a5da390b,"http://www.nuomi.com/pcindex/main/timetable?cinemaid=491d1492104bb275a5da390b&mid=9422&needMovieInfo=1&tploption=1&_=1428996994
+http://www.nuomi.com/pcindex/main/timetable?cinemaid=491d1492104bb275a5da390b&mid=8901&needMovieInfo=1&tploption=1&_=1428996995
+http://www.nuomi.com/pcindex/main/timetable?cinemaid=491d1492104bb275a5da390b&mid=9410&needMovieInfo=1&tploption=1&_=1428996995
+http://www.nuomi.com/pcindex/main/timetable?cinemaid=491d1492104bb275a5da390b&mid=8883&needMovieInfo=1&tploption=1&_=1428996995
+","dadi
+","9422/速度与激情7/39
+8901/战狼/6
+9410/咱们结婚吧/0
+8883/我是女王/2
+"

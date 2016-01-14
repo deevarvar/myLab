@@ -1,0 +1,131 @@
+<div class="w-ajax-cinema-detail clearfix">
+<div class="content">
+<a id="j-fi-star"
+           href="/film/9373?tag=ugc#j-sn-list" target="_blank"            class="fi-star clearfix">
+<div class="star ugc-star-wrap-19 ">
+<div class="star ugc-star-grade" style="width:84.55px;">
+</div>
+</div><div class="star-cc"><em>8</em><span class="">.9</span></div>
+</a>
+<h2><a href="/film/9373" target="_blank">失孤</a></h2>
+<div class="de">
+<p><span>导演：</span>彭三源</p>
+<p><span>主演：</span>刘德华/井柏然</p>
+<p><span>类型：</span>剧情/社会</p>
+<ul class="">
+<li><span>国家：</span>中国大陆</li>
+<li><span>首映：</span>2015-03-20</li>
+<li><span>片长：</span>108分钟</li>
+</ul>
+<p class="intro">
+<span>剧情：</span>
+<span class="c">一个两岁的孩子雷达在1998年的某一天走失，父亲雷泽宽（刘德华饰）从此开始了长达十五年的寻子之路，途中历尽艰辛，偶然遇到了四岁时被拐的修车小伙曾帅（井柏然饰），两人一同踏<a id="j-summary-open" href="###">展开</a></span><span id="j-summary-more" class="c" style="display:none">上寻亲之路，途中两人建立了父子般的情谊。<a id="j-summary-fold" href="###">收起</a></span></p>
+</div>
+</div>
+</div>
+<script type="text/javascript">
+    $("#j-summary-open").on("click", function() {
+        $("#j-summary-open").hide();
+        $("#j-summary-more").show();
+
+        return false;
+    });
+    $("#j-summary-fold").on("click", function() {
+        $("#j-summary-open").show();
+        $("#j-summary-more").hide();
+
+        return false;
+    });
+    $('#j-choose-checked').on("mousedown",function(){
+        $("#j-sn-list a:eq(0)").trigger('click');
+        //$('#j-sn-list li a').removeClass('spec-nav-current').eq(0).addClass('spec-nav-current');
+        //$('#j-info-all li').eq(0).show().siblings().hide();
+    });
+</script>
+<div id="j-choose-list" class="w-choose-list">
+<dl id="j-movie-date" class="clearfix" mon="area=bookLayer&element_type=filter" bn_box="bookLayer" alog-alias="bainuo-cinema-choose-list-movie-date" alog-group="bainuo-cinema-choose-list-movie-date">
+<dt>观影日期：</dt>
+<dd class="hover">
+<a href="#j-movie-list0" index="0" class="movie-date" mon="element=今天04.14">今天04.14(周二)</a>
+</dd>
+</dl>
+<div style="clear: both;"></div>
+<div id="j-movie-list0" class="list" mon="area=bookLayer" bn_box="bookLayer&position" style="display:block">
+<table class="thead clearfix">
+<tr>
+<th>放映时间</th>
+<th>语言版本</th>
+<th>影厅</th>
+<th>糯米现价</th>
+<th>选座购票</th>
+</tr>
+</table>
+<div class="table">
+<table>
+<tr class="">
+<td>
+15:25
+<br>
+<span class="empty-time">预计17:13散场</span>
+</td>
+<td>国语/2D</td>
+<td>1号厅</td>
+<td>
+<span class="hover nuomi-price">
+&yen;37
+</span>
+<del>&yen;50</del>
+</td>
+<td>
+<a href="/dianying/plan?seq_no=107049730&amp;cinema_id=334148&amp;third_from=txpc"
+                                            class="btn-choose-seat" target="_blank"
+                                            mon="element=15:25&position=1">
+选座购票</a>
+</td>
+</tr>
+</table>
+</div>
+</div>
+</div>
+<script>
+            F.context("userPhone", "");
+
+            $(function() {
+                $("#j-movie-date .movie-date").on("click", function(e) {
+                    $("#j-movie-date dd").removeClass("hover");
+                    $(this).parent().addClass("hover");
+
+                    var id = $(this).attr("index");
+                    $("#j-choose-list .list").hide();
+                    $("#j-movie-list"+id).show();
+                    return false;
+                });
+
+                $('.j-slider-other').on('click',function(){
+                    $(this).parent().prev().find('.slider-other-item').toggle();
+                    if($(this).hasClass('slider-show') ){
+                        $(this).removeClass('slider-show').addClass('slider-hide').html('收起');
+                    }else{
+                        $(this).removeClass('slider-hide').addClass('slider-show').html('展开所有场次');
+                    }
+                });
+
+                require.async(["common:widget/ui/passport/passport.js", "common:widget/ui/passport_bind_phone/passport_bind_phone.js"],
+                    function(loginApi, passBindPhone) {
+                    $("#j-choose-list .btn-choose-seat").on("click", function(e) {
+                        var $target = $(e.currentTarget);
+                        loginApi.check(function() {
+                            var userPhone = F.context("userPhone");
+                            if(!userPhone) {
+                                passBindPhone.bind();
+                            } else {
+                                var url = $target.attr("href")+"&user_mobile="+F.context("userPhone");
+                                window.open(url, "_parent");
+                            }
+                        });
+
+                        return false;
+                    });
+                });
+            });
+        </script>

@@ -1,0 +1,205 @@
+start to listent to 8004
+cmts delay is 0, rate is 100
+cmts waterlevel is 84 delay_dict is ['0'], rate_dict is ['100']
+cmts delay time for seat_info is 0
+cmts waterlevel is 38 correct/wrong/ongoing rate is [{'rate': '100', 'type': 2}, {'rate': '100', 'type': 0}, {'rate': '100', 'type': 1}]
+cmtsrsp type is 2
+cmts delay is ['0', '1', '2'], rate is ['20', '50', '30']
+cmts waterlevel is 37 delay_dict is ['0', '1', '2'], rate_dict is [20, 70, 100]
+cmts delay time for lock_seat is 1
+cmts waterlevel is 38 correct/wrong/ongoing rate is [{'rate': '50', 'type': 2}, {'rate': '70', 'type': 0}, {'rate': '100', 'type': 1}]
+cmtsrsp type is 2
+cmts delay is 0, rate is 100
+cmts waterlevel is 39 delay_dict is ['0'], rate_dict is ['100']
+cmts delay time for confirm_order is 0
+cmts waterlevel is 20 correct/wrong/ongoing rate is [{'rate': '100', 'type': 2}, {'rate': '100', 'type': 0}, {'rate': '100', 'type': 1}]
+cmtsrsp type is 2
+cmts delay is 0, rate is 100
+cmts waterlevel is 62 delay_dict is ['0'], rate_dict is ['100']
+cmts delay time for query_order is 0
+cmts waterlevel is 92 correct/wrong/ongoing rate is [{'rate': '100', 'type': 2}, {'rate': '100', 'type': 0}, {'rate': '100', 'type': 1}]
+cmtsrsp type is 2
+start to listent to 8004
+enter getoken
+cmts delay is 0, rate is 100
+cmts waterlevel is 55 delay_dict is ['0'], rate_dict is ['100']
+cmts delay time for seat_info is 0
+cmts waterlevel is 3 correct/wrong/ongoing rate is [{'rate': '100', 'type': 2}, {'rate': '100', 'type': 0}, {'rate': '100', 'type': 1}]
+cmtsrsp type is 2
+cmts seatinfo is <?xml version="1.0"?>                <GetPlanSiteStateResult>                    <ResultCode>0</ResultCode>                    <PlanSiteStates>                        <PlanSiteState>                            <SeatNo>05010526</SeatNo>                            <SeatState>1</SeatState>                            <SeatPieceNo>01</SeatPieceNo>                            <GraphRow>5</GraphRow>                            <GraphCol>26</GraphCol>                            <SeatRow>5</SeatRow>                            <SeatCol>9</SeatCol>                            <SeatPieceName>&#x5168;&gt;&#x533A;</SeatPieceName>                            <HallNo>05</HallNo>                        </PlanSiteState>                    </PlanSiteStates>                </GetPlanSiteStateResult>
+cmts delay is ['0', '1', '2'], rate is ['20', '50', '30']
+cmts waterlevel is 73 delay_dict is ['0', '1', '2'], rate_dict is [20, 70, 100]
+cmts delay time for lock_seat is 2
+cmts waterlevel is 31 correct/wrong/ongoing rate is [{'rate': '50', 'type': 2}, {'rate': '70', 'type': 0}, {'rate': '100', 'type': 1}]
+cmtsrsp type is 2
+cmts lockseat is <?xml version="1.0" encoding="utf-8"?>                    <RealCheckSeatStateResult xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">                    <ResultCode>0</ResultCode>                    <OrderNo>1431676390883691</OrderNo>                    <SeatInfos>                        <SeatInfo>                            <SeatNo>04010117</SeatNo>                            <TicketPrice>30</TicketPrice>                            <SeatRow>1</SeatRow>                            <SeatCol>1</SeatCol>                            <SeatPieceNo>01</SeatPieceNo>                        </SeatInfo>                    </SeatInfos>                    </RealCheckSeatStateResult>
+cmts delay is 0, rate is 100
+cmts waterlevel is 98 delay_dict is ['0'], rate_dict is ['100']
+cmts delay time for confirm_order is 0
+cmts waterlevel is 73 correct/wrong/ongoing rate is [{'rate': '100', 'type': 2}, {'rate': '100', 'type': 0}, {'rate': '100', 'type': 1}]
+cmtsrsp type is 2
+cmts conformorder is <?xml version="1.0"?>                <SellTicketResult xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">                  <ResultCode>0</ResultCode>                  <OrderNo>1431676392905661</OrderNo>                  <ValidCode>104109</ValidCode>                </SellTicketResult>
+cmts delay is 0, rate is 100
+cmts waterlevel is 6 delay_dict is ['0'], rate_dict is ['100']
+cmts delay time for query_order is 0
+cmts waterlevel is 17 correct/wrong/ongoing rate is [{'rate': '100', 'type': 2}, {'rate': '100', 'type': 0}, {'rate': '100', 'type': 1}]
+cmtsrsp type is 2
+cmts query_order is <?xml version="1.0"?>                <GetOrderStatusResult xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">                  <ResultCode>0</ResultCode>                <OrderNo>1431676392945924</OrderNo>                <ValidCode>104109</ValidCode>                <OrderStatus>8</OrderStatus>                </GetOrderStatusResult>
+start to listent to 8004
+enter getoken
+cmts delay is 0, rate is 100
+cmts waterlevel is 59 delay_dict is ['0'], rate_dict is ['100']
+cmts delay time for seat_info is 0
+cmts waterlevel is 90 correct/wrong/ongoing rate is [{'rate': '100', 'type': 2}, {'rate': '100', 'type': 0}, {'rate': '100', 'type': 1}]
+cmtsrsp type is 2
+cmts seatinfo is <?xml version="1.0"?>                <GetPlanSiteStateResult>                    <ResultCode>0</ResultCode>                    <PlanSiteStates>                        <PlanSiteState>                            <SeatNo>05010526</SeatNo>                            <SeatState>1</SeatState>                            <SeatPieceNo>01</SeatPieceNo>                            <GraphRow>5</GraphRow>                            <GraphCol>26</GraphCol>                            <SeatRow>5</SeatRow>                            <SeatCol>9</SeatCol>                            <SeatPieceName>&#x5168;&gt;&#x533A;</SeatPieceName>                            <HallNo>05</HallNo>                        </PlanSiteState>                    </PlanSiteStates>                </GetPlanSiteStateResult>
+cmts delay is ['0', '1', '2'], rate is ['20', '50', '30']
+cmts waterlevel is 24 delay_dict is ['0', '1', '2'], rate_dict is [20, 70, 100]
+cmts delay time for lock_seat is 1
+cmts waterlevel is 39 correct/wrong/ongoing rate is [{'rate': '50', 'type': 2}, {'rate': '70', 'type': 0}, {'rate': '100', 'type': 1}]
+cmtsrsp type is 2
+cmts lockseat is <?xml version="1.0" encoding="utf-8"?>                    <RealCheckSeatStateResult xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">                    <ResultCode>0</ResultCode>                    <OrderNo>1431676711595476</OrderNo>                    <SeatInfos>                        <SeatInfo>                            <SeatNo>04010117</SeatNo>                            <TicketPrice>30</TicketPrice>                            <SeatRow>1</SeatRow>                            <SeatCol>1</SeatCol>                            <SeatPieceNo>01</SeatPieceNo>                        </SeatInfo>                    </SeatInfos>                    </RealCheckSeatStateResult>
+cmts delay is 0, rate is 100
+cmts waterlevel is 81 delay_dict is ['0'], rate_dict is ['100']
+cmts delay time for confirm_order is 0
+cmts waterlevel is 54 correct/wrong/ongoing rate is [{'rate': '100', 'type': 2}, {'rate': '100', 'type': 0}, {'rate': '100', 'type': 1}]
+cmtsrsp type is 2
+cmts conformorder is <?xml version="1.0"?>                <SellTicketResult xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">                  <ResultCode>0</ResultCode>                  <OrderNo>1431676712621244</OrderNo>                  <ValidCode>104109</ValidCode>                </SellTicketResult>
+cmts delay is 0, rate is 100
+cmts waterlevel is 57 delay_dict is ['0'], rate_dict is ['100']
+cmts delay time for query_order is 0
+cmts waterlevel is 36 correct/wrong/ongoing rate is [{'rate': '100', 'type': 2}, {'rate': '100', 'type': 0}, {'rate': '100', 'type': 1}]
+cmtsrsp type is 2
+cmts query_order is <?xml version="1.0"?>                <GetOrderStatusResult xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">                  <ResultCode>0</ResultCode>                <OrderNo>1431676712644270</OrderNo>                <ValidCode>104109</ValidCode>                <OrderStatus>8</OrderStatus>                </GetOrderStatusResult>
+start to listent to 8006
+start to listent to 8006
+fire delay is 0, rate is 100
+fire waterlevel is 51 delay_dict is ['0'], rate_dict is ['100']
+fire delay time for seat_info is 0
+fire waterlevel is 93 correct/wrong/ongoing rate is [{'rate': '100', 'type': 2}, {'rate': '100', 'type': 0}, {'rate': '100', 'type': 1}]
+fire rsp type is 2
+fire seatinfo is <?xml version="1.0" encoding="GBK"?>"                            "<showSeats cinemaId="00000003" hallId="3" version="1.0">"                            "<section id="01" ><seat rowId="A" columnId="17" \/><seat rowId="A" columnId="18" \/>"                            "<\/section>"                            "<\/showSeats>
+fire delay is 0, rate is 100
+fire waterlevel is 96 delay_dict is ['0'], rate_dict is ['100']
+fire delay time for seat_info is 0
+fire waterlevel is 1 correct/wrong/ongoing rate is [{'rate': '100', 'type': 2}, {'rate': '100', 'type': 0}, {'rate': '100', 'type': 1}]
+fire rsp type is 2
+fire seatinfo is <?xml version="1.0" encoding="GBK"?>"                            "<showSeats cinemaId="00000003" hallId="3" version="1.0">"                            "<section id="01" ><seat rowId="A" columnId="17" \/><seat rowId="A" columnId="18" \/>"                            "<\/section>"                            "<\/showSeats>
+start to listent to 8006
+fire delay is 0, rate is 100
+fire waterlevel is 95 delay_dict is ['0'], rate_dict is ['100']
+fire delay time for seat_info is 0
+fire waterlevel is 12 correct/wrong/ongoing rate is [{'rate': '100', 'type': 2}, {'rate': '100', 'type': 0}, {'rate': '100', 'type': 1}]
+fire rsp type is 2
+fire seatinfo is <?xml version="1.0" encoding="GBK"?>                            <showSeats cinemaId="00000003" hallId="3" version="1.0">                            <section id="01" ><seat rowId="A" columnId="17" \/><seat rowId="A" columnId="18" \/>                            <\/section>                           <\/showSeats>
+fire delay is 0, rate is 100
+fire waterlevel is 8 delay_dict is ['0'], rate_dict is ['100']
+fire delay time for seat_info is 0
+fire waterlevel is 40 correct/wrong/ongoing rate is [{'rate': '100', 'type': 2}, {'rate': '100', 'type': 0}, {'rate': '100', 'type': 1}]
+fire rsp type is 2
+fire seatinfo is <?xml version="1.0" encoding="GBK"?>                            <showSeats cinemaId="00000003" hallId="3" version="1.0">                            <section id="01" ><seat rowId="A" columnId="17" \/><seat rowId="A" columnId="18" \/>                            <\/section>                           <\/showSeats>
+fire delay is ['0', '1', '2'], rate is ['20', '50', '30']
+fire waterlevel is 93 delay_dict is ['0', '1', '2'], rate_dict is [20, 70, 100]
+fire delay time for lock_seat is 2
+fire waterlevel is 6 correct/wrong/ongoing rate is [{'rate': '50', 'type': 2}, {'rate': '70', 'type': 0}, {'rate': '100', 'type': 1}]
+fire rsp type is 2
+fire lockseat is <?xml version="1.0" encoding="GBK"?><seatLock version="1.0" ><result>0<\/result><messages><message>Success<\/message><\/messages><seats><seat rowId="A" columnId="16" statusInd="" \/><\/seats><\/seatLock>
+fire delay is 0, rate is 100
+fire waterlevel is 91 delay_dict is ['0'], rate_dict is ['100']
+fire delay time for seat_info is 0
+fire waterlevel is 25 correct/wrong/ongoing rate is [{'rate': '100', 'type': 2}, {'rate': '100', 'type': 0}, {'rate': '100', 'type': 1}]
+fire rsp type is 2
+fire seatinfo is <?xml version="1.0" encoding="GBK"?>                            <showSeats cinemaId="00000003" hallId="3" version="1.0">                            <section id="01" ><seat rowId="A" columnId="17" \/><seat rowId="A" columnId="18" \/>                            <\/section>                           <\/showSeats>
+fire delay is ['0', '1', '2'], rate is ['20', '50', '30']
+fire waterlevel is 33 delay_dict is ['0', '1', '2'], rate_dict is [20, 70, 100]
+fire delay time for lock_seat is 1
+fire waterlevel is 14 correct/wrong/ongoing rate is [{'rate': '50', 'type': 2}, {'rate': '70', 'type': 0}, {'rate': '100', 'type': 1}]
+fire rsp type is 2
+fire lockseat is <?xml version="1.0" encoding="GBK"?><seatLock version="1.0" ><result>0<\/result><messages><message>Success<\/message><\/messages><seats><seat rowId="A" columnId="16" statusInd="" \/><\/seats><\/seatLock>
+fire delay is 0, rate is 100
+fire waterlevel is 64 delay_dict is ['0'], rate_dict is ['100']
+fire delay time for confirm_order is 0
+fire waterlevel is 100 correct/wrong/ongoing rate is [{'rate': '100', 'type': 2}, {'rate': '100', 'type': 0}, {'rate': '100', 'type': 1}]
+fire rsp type is 2
+fire conformorder is <?xml version="1.0" encoding="GBK"?><bookingConfirm version="1.0"><result>0<\/result><bookingId>888815051800729<\/bookingId><messages><message>\u8ba2\u5355\u5904\u7406\u6210\u529f(OPS:Order Processed Successfully)<\/message><\/messages><confirmationId>02360769<\/confirmationId><seats><seat ticketNo="88881505000868" rowId="A" columnId="14" sectionId="" statusInd="" printedFlg="" lastModifyTime=""\/><\/seats><\/bookingConfirm>
+fire delay is 0, rate is 100
+fire waterlevel is 45 delay_dict is ['0'], rate_dict is ['100']
+fire delay time for query_order is 0
+fire waterlevel is 37 correct/wrong/ongoing rate is [{'rate': '100', 'type': 2}, {'rate': '100', 'type': 0}, {'rate': '100', 'type': 1}]
+fire rsp type is 2
+fire query_order is <?xml version="1.0" encoding="GBK"?><orderDetail version="1.0"><cinemaId>00000003<\/cinemaId><hallId>3<\/hallId><filmId>00120551201301<\/filmId><show seqNo="" date="2015-05-30" time="1620" \/><seats><seat ticketNO="88881505000864" sectionId="01" rowId="A" columnId="16" statusInd="B" printedFlg="N" lastModifyTime=""  infoCode=""\/><\/seats><result>0<\/result><messages><message>\u4ea4\u6613\u6210\u529f\uff0c\u8ba2\u5355\u5df2\u7ecf\u786e\u8ba4<\/message><\/messages><statusInd>1<\/statusInd><bookingId>888815051800725<\/bookingId><confirmationId>09160392<\/confirmationId><\/orderDetail>
+fire delay is 0, rate is 100
+fire waterlevel is 8 delay_dict is ['0'], rate_dict is ['100']
+fire delay time for seat_info is 0
+fire waterlevel is 99 correct/wrong/ongoing rate is [{'rate': '100', 'type': 2}, {'rate': '100', 'type': 0}, {'rate': '100', 'type': 1}]
+fire rsp type is 2
+fire seatinfo is <?xml version="1.0" encoding="GBK"?>                            <showSeats cinemaId="00000003" hallId="3" version="1.0">                            <section id="01" ><seat rowId="A" columnId="17" \/><seat rowId="A" columnId="18" \/>                            <\/section>                           <\/showSeats>
+fire delay is ['0', '1', '2'], rate is ['20', '50', '30']
+fire waterlevel is 70 delay_dict is ['0', '1', '2'], rate_dict is [20, 70, 100]
+fire delay time for lock_seat is 1
+fire waterlevel is 18 correct/wrong/ongoing rate is [{'rate': '50', 'type': 2}, {'rate': '70', 'type': 0}, {'rate': '100', 'type': 1}]
+fire rsp type is 2
+fire lockseat is <?xml version="1.0" encoding="GBK"?><seatLock version="1.0" ><result>0<\/result><messages><message>Success<\/message><\/messages><seats><seat rowId="A" columnId="16" statusInd="" \/><\/seats><\/seatLock>
+fire delay is 0, rate is 100
+fire waterlevel is 57 delay_dict is ['0'], rate_dict is ['100']
+fire delay time for confirm_order is 0
+fire waterlevel is 79 correct/wrong/ongoing rate is [{'rate': '100', 'type': 2}, {'rate': '100', 'type': 0}, {'rate': '100', 'type': 1}]
+fire rsp type is 2
+fire conformorder is <?xml version="1.0" encoding="GBK"?><bookingConfirm version="1.0"><result>0<\/result><bookingId>888815051800729<\/bookingId><messages><message>\u8ba2\u5355\u5904\u7406\u6210\u529f(OPS:Order Processed Successfully)<\/message><\/messages><confirmationId>02360769<\/confirmationId><seats><seat ticketNo="88881505000868" rowId="A" columnId="14" sectionId="" statusInd="" printedFlg="" lastModifyTime=""\/><\/seats><\/bookingConfirm>
+fire delay is 0, rate is 100
+fire waterlevel is 71 delay_dict is ['0'], rate_dict is ['100']
+fire delay time for query_order is 0
+fire waterlevel is 29 correct/wrong/ongoing rate is [{'rate': '0', 'type': 2}, {'rate': '100', 'type': 0}, {'rate': '100', 'type': 1}]
+fire rsp type is 0
+fire query_order is <?xml version="1.0" encoding="GBK"?><orderDetail version="1.0"><result>-1<\/result><\/orderDetail>
+start to listent to 8005
+enter getoken
+cmts delay is 0, rate is 100
+cmts waterlevel is 47 delay_dict is ['0'], rate_dict is ['100']
+cmts delay time for seat_info is 0
+cmts waterlevel is 88 correct/wrong/ongoing rate is [{'rate': '100', 'type': 2}, {'rate': '100', 'type': 0}, {'rate': '100', 'type': 1}]
+cmts rsp type is 2
+cmts seatinfo is <?xml version="1.0"?>                <GetPlanSiteStateResult>                    <ResultCode>0</ResultCode>                    <PlanSiteStates>                        <PlanSiteState>                            <SeatNo>05010526</SeatNo>                            <SeatState>1</SeatState>                            <SeatPieceNo>01</SeatPieceNo>                            <GraphRow>5</GraphRow>                            <GraphCol>26</GraphCol>                            <SeatRow>5</SeatRow>                            <SeatCol>9</SeatCol>                            <SeatPieceName>&#x5168;&gt;&#x533A;</SeatPieceName>                            <HallNo>05</HallNo>                        </PlanSiteState>                    </PlanSiteStates>                </GetPlanSiteStateResult>
+cmts delay is ['0', '1', '2'], rate is ['20', '50', '30']
+cmts waterlevel is 57 delay_dict is ['0', '1', '2'], rate_dict is [20, 70, 100]
+cmts delay time for lock_seat is 1
+cmts waterlevel is 30 correct/wrong/ongoing rate is [{'rate': '50', 'type': 2}, {'rate': '70', 'type': 0}, {'rate': '100', 'type': 1}]
+cmts rsp type is 2
+cmts lockseat is <?xml version="1.0" encoding="utf-8"?>                    <RealCheckSeatStateResult xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">                    <ResultCode>0</ResultCode>                    <OrderNo>soap_cmts1431940215906908</OrderNo>                    <SeatInfos>                        <SeatInfo>                            <SeatNo>04010117</SeatNo>                            <TicketPrice>30</TicketPrice>                            <SeatRow>1</SeatRow>                            <SeatCol>1</SeatCol>                            <SeatPieceNo>01</SeatPieceNo>                        </SeatInfo>                    </SeatInfos>                    </RealCheckSeatStateResult>
+cmts delay is 0, rate is 100
+cmts waterlevel is 7 delay_dict is ['0'], rate_dict is ['100']
+cmts delay time for confirm_order is 0
+cmts waterlevel is 78 correct/wrong/ongoing rate is [{'rate': '100', 'type': 2}, {'rate': '100', 'type': 0}, {'rate': '100', 'type': 1}]
+cmts rsp type is 2
+cmts conformorder is <?xml version="1.0"?>                <SellTicketResult xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">                  <ResultCode>0</ResultCode>                  <OrderNo>soap_cmts1431940216933803</OrderNo>                  <ValidCode>104109</ValidCode>                </SellTicketResult>
+cmts delay is 0, rate is 100
+cmts waterlevel is 34 delay_dict is ['0'], rate_dict is ['100']
+cmts delay time for query_order is 0
+cmts waterlevel is 86 correct/wrong/ongoing rate is [{'rate': '100', 'type': 2}, {'rate': '100', 'type': 0}, {'rate': '100', 'type': 1}]
+cmts rsp type is 2
+cmts query_order is <?xml version="1.0"?>                <GetOrderStatusResult xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">                  <ResultCode>0</ResultCode>                <OrderNo>soap_cmts1431940216958348</OrderNo>                <ValidCode>104109</ValidCode>                <OrderStatus>8</OrderStatus>                </GetOrderStatusResult>
+start to listent to 8006
+fire delay is 0, rate is 100
+fire waterlevel is 47 delay_dict is ['0'], rate_dict is ['100']
+fire delay time for seat_info is 0
+fire waterlevel is 0 correct/wrong/ongoing rate is [{'rate': '100', 'type': 2}, {'rate': '100', 'type': 0}, {'rate': '100', 'type': 1}]
+fire rsp type is 2
+fire seatinfo is <?xml version="1.0" encoding="GBK"?>                            <showSeats cinemaId="00000003" hallId="3" version="1.0">                            <section id="01" ><seat rowId="A" columnId="17" /><seat rowId="A" columnId="18" />                            </section>                           </showSeats>
+fire delay is ['0', '1', '2'], rate is ['20', '50', '30']
+fire waterlevel is 20 delay_dict is ['0', '1', '2'], rate_dict is [20, 70, 100]
+fire delay time for lock_seat is 0
+fire waterlevel is 72 correct/wrong/ongoing rate is [{'rate': '50', 'type': 2}, {'rate': '70', 'type': 0}, {'rate': '100', 'type': 1}]
+fire rsp type is 1
+fire lockseat is <?xml version="1.0" encoding="GBK"?><seatLock version="1.0" ><result>-1</result></seatLock>
+fire delay is 0, rate is 100
+fire waterlevel is 48 delay_dict is ['0'], rate_dict is ['100']
+fire delay time for confirm_order is 0
+fire waterlevel is 64 correct/wrong/ongoing rate is [{'rate': '100', 'type': 2}, {'rate': '100', 'type': 0}, {'rate': '100', 'type': 1}]
+fire rsp type is 2
+fire conformorder is <?xml version="1.0" encoding="GBK"?><bookingConfirm version="1.0"><result>0</result><bookingId>soap_fire1431941227596018</bookingId><messages><message>\u8ba2\u5355\u5904\u7406\u6210\u529f(OPS:Order Processed Successfully)</message></messages><confirmationId>02360769</confirmationId><seats><seat ticketNo="88881505000868" rowId="A" columnId="14" sectionId="" statusInd="" printedFlg="" lastModifyTime=""/></seats></bookingConfirm>
+fire delay is 0, rate is 100
+fire waterlevel is 57 delay_dict is ['0'], rate_dict is ['100']
+fire delay time for query_order is 0
+fire waterlevel is 39 correct/wrong/ongoing rate is [{'rate': '100', 'type': 2}, {'rate': '100', 'type': 0}, {'rate': '100', 'type': 1}]
+fire rsp type is 2
+fire query_order is <?xml version="1.0" encoding="GBK"?><orderDetail version="1.0"><cinemaId>00000003</cinemaId><hallId>3</hallId><filmId>00120551201301</filmId><show seqNo="" date="2015-05-30" time="1620" /><seats><seat ticketNO="88881505000864" sectionId="01" rowId="A" columnId="16" statusInd="B" printedFlg="N" lastModifyTime=""  infoCode=""/></seats><result>0</result><messages><message>\u4ea4\u6613\u6210\u529f\uff0c\u8ba2\u5355\u5df2\u7ecf\u786e\u8ba4</message></messages><statusInd>1</statusInd><bookingId>soap_fire1431941227636390</bookingId><confirmationId>09160392</confirmationId></orderDetail>

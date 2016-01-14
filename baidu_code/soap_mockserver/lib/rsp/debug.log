@@ -1,0 +1,37 @@
+cmts delay is ['0', '1', '2'], rate is ['20', '50', '30']
+cmts waterlevel is 96 delay_dict is ['0', '1', '2'], rate_dict is [20, 70, 100]
+cmtsdelay time for lock_seat is 2
+cmts delay is ['0', '1', '2'], rate is ['20', '50', '30']
+cmts waterlevel is 76 delay_dict is ['0', '1', '2'], rate_dict is [20, 70, 100]
+cmtsdelay time for lock_seat is 2
+cmts delay is ['0', '1', '2'], rate is ['20', '50', '30']
+cmts waterlevel is 90 delay_dict is ['0', '1', '2'], rate_dict is [20, 70, 100]
+cmtsdelay time for lock_seat is 2
+cmts delay is ['0', '1', '2'], rate is ['20', '50', '30']
+cmts waterlevel is 34 delay_dict is ['0', '1', '2'], rate_dict is [20, 70, 100]
+cmtsdelay time for lock_seat is 1
+cmts delay is ['0', '1', '2'], rate is ['20', '50', '30']
+cmts waterlevel is 67 delay_dict is ['0', '1', '2'], rate_dict is [20, 70, 100]
+cmtsdelay time for lock_seat is 1
+cmts delay is ['0', '1', '2'], rate is ['20', '50', '30']
+cmts waterlevel is 75 delay_dict is ['0', '1', '2'], rate_dict is [20, 70, 100]
+cmtsdelay time for lock_seat is 2
+cmts waterlevel is 100 correct/wrong/ongoing rate is [{'rate': '50', 'type': 2}, {'rate': '70', 'type': 0}, {'rate': '100', 'type': 1}]
+cmtsrsp type is 1
+cmts delay is ['0', '1', '2'], rate is ['20', '50', '30']
+cmts waterlevel is 54 delay_dict is ['0', '1', '2'], rate_dict is [20, 70, 100]
+cmtsdelay time for lock_seat is 1
+cmts delay is ['0', '1', '2'], rate is ['20', '50', '30']
+cmts waterlevel is 70 delay_dict is ['0', '1', '2'], rate_dict is [20, 70, 100]
+cmtsdelay time for lock_seat is 1
+cmts waterlevel is 32 correct/wrong/ongoing rate is [{'rate': '50', 'type': 2}, {'rate': '70', 'type': 0}, {'rate': '100', 'type': 1}]
+cmtsrsp type is 2
+cmts delay is ['0', '1', '2'], rate is ['20', '50', '30']
+cmts waterlevel is 85 delay_dict is ['0', '1', '2'], rate_dict is [20, 70, 100]
+cmtsdelay time for lock_seat is 2
+cmts delay is ['0', '1', '2'], rate is ['20', '50', '30']
+cmts waterlevel is 64 delay_dict is ['0', '1', '2'], rate_dict is [20, 70, 100]
+cmtsdelay time for lock_seat is 1
+cmts waterlevel is 66 correct/wrong/ongoing rate is [{'rate': '50', 'type': 2}, {'rate': '70', 'type': 0}, {'rate': '100', 'type': 1}]
+cmtsrsp type is 0
+<?xml version="1.0" encoding="utf-8"?>                    <RealCheckSeatStateResult xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">                    <ResultCode>101102</ResultCode>                    </RealCheckSeatStateResult>

@@ -1,0 +1,4 @@
+2015-04-02 22:02:52,040 - root - INFO - log.py - <module> - 21 - hello, info!
+2015-04-02 22:02:52,041 - root - WARNING - log.py - <module> - 22 - hello, warn!
+2015-04-02 22:02:52,041 - root - ERROR - log.py - <module> - 23 - hello, error!
+2015-04-02 22:02:52,041 - root - CRITICAL - log.py - <module> - 24 - hello, critical!

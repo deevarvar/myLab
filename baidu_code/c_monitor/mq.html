@@ -1,0 +1,295 @@
+
+
+
+
+
+
+<html>
+<head>
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+
+    <title>movieMQ : Queues</title>
+
+    <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
+    <style type="text/css" media="screen">
+        @import url('/admin/styles/sorttable.css');
+        @import url('/admin/styles/type-settings.css');
+        @import url('/admin/styles/site.css');
+        @import url('/admin/styles/prettify.css');
+    </style>
+    
+        <script type='text/javascript' src='/admin/js/common.js'></script>
+        <script type='text/javascript' src='/admin/js/css.js'></script>
+        <script type='text/javascript' src='/admin/js/standardista-table-sorting.js'></script>
+        <script type='text/javascript' src='/admin/js/prettify.js'></script>
+        <script>addEvent(window, 'load', prettyPrint)</script>
+    
+
+
+</head>
+<body>
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+
+<div class="white_box">
+    <div class="header">
+        <div class="header_l">
+            <div class="header_r">
+            </div>
+        </div>
+    </div>
+    <div class="content">
+        <div class="content_l">
+            <div class="content_r">
+
+                <div>
+
+                    <!-- Banner -->
+                    <div id="asf_logo">
+                        <div id="activemq_logo">
+                            <a style="float:left; width:280px;display:block;text-indent:-5000px;text-decoration:none;line-height:60px; margin-top:10px; margin-left:100px;"
+                                href="http://activemq.apache.org/" title="The most popular and powerful open source Message Broker">ActiveMQ</a> &trade;
+                            <a style="float:right; width:210px;display:block;text-indent:-5000px;text-decoration:none;line-height:60px; margin-top:15px; margin-right:10px;"
+                                href="http://www.apache.org/" title="The Apache Software Foundation">ASF</a>
+                        </div>
+                    </div>
+
+
+                    <div class="top_red_bar">
+                        <div id="site-breadcrumbs">
+                            <a href="/admin/index.jsp;jsessionid=1l0v8b6qrp95wobo3vcp25ify" title="Home">Home</a>
+                            &#124;
+                            <a href="/admin/queues.jsp;jsessionid=1l0v8b6qrp95wobo3vcp25ify" title="Queues">Queues</a>
+                            &#124;
+                            <a href="/admin/topics.jsp;jsessionid=1l0v8b6qrp95wobo3vcp25ify" title="Topics">Topics</a>
+                            &#124;
+                            <a href="/admin/subscribers.jsp;jsessionid=1l0v8b6qrp95wobo3vcp25ify" title="Subscribers">Subscribers</a>
+                            &#124;
+                            <a href="/admin/connections.jsp;jsessionid=1l0v8b6qrp95wobo3vcp25ify" title="Connections">Connections</a>
+                            &#124;
+                            <a href="/admin/network.jsp;jsessionid=1l0v8b6qrp95wobo3vcp25ify" title="Network">Network</a>
+                            &#124;
+                             <a href="/admin/scheduled.jsp;jsessionid=1l0v8b6qrp95wobo3vcp25ify" title="Scheduled">Scheduled</a>
+                            &#124;
+                            <a href="/admin/send.jsp;jsessionid=1l0v8b6qrp95wobo3vcp25ify"
+                               title="Send">Send</a>
+                        </div>
+                        <div id="site-quicklinks"><P>
+                            <a href="http://activemq.apache.org/support.html"
+                               title="Get help and support using Apache ActiveMQ">Support</a></p>
+                        </div>
+                    </div>
+
+                    <table border="0">
+                        <tbody>
+                            <tr>
+                                <td valign="top" width="100%" style="overflow:hidden;">
+                                    <div class="body-content">
+
+
+<div>
+<form action="createDestination.action" method="post">
+    <input type="hidden" name="JMSDestinationType" value="queue"/>
+    <input type="hidden" name="secret" value="9a6f25e5-2fb8-4108-b175-91b14294073d"/>
+
+    <label name="destination">Queue Name</label>
+    <input type="text" name="JMSDestination" value=""/>
+
+    <input type="submit" value="Create"/>
+</form>
+</div>
+
+
+<h2>Queues</h2>
+
+<table id="queues" class="sortable autostripe">
+<thead>
+<tr>
+<th>Name</th>
+<th>Number Of Pending Messages</th>
+<th>Number Of Consumers</th>
+<th>Messages Enqueued</th>
+<th>Messages Dequeued</th>
+<th>Views</th>
+<th>Operations</th>
+</tr>
+</thead>
+<tbody>
+
+
+<tr>
+<td><a href="browse.jsp;jsessionid=1l0v8b6qrp95wobo3vcp25ify?JMSDestination=online_schedulequeue">
+
+
+online_schedulequeue</a></td>
+<td>0</td>
+<td>1</td>
+<td>2103</td>
+<td>2103</td>
+<td>
+    <a href="browse.jsp;jsessionid=1l0v8b6qrp95wobo3vcp25ify?JMSDestination=online_schedulequeue">Browse</a>
+	<a href="queueConsumers.jsp;jsessionid=1l0v8b6qrp95wobo3vcp25ify?JMSDestination=online_schedulequeue">Active Consumers</a><br/>
+	<a href="queueProducers.jsp;jsessionid=1l0v8b6qrp95wobo3vcp25ify?JMSDestination=online_schedulequeue">Active Producers</a><br/>
+    <a href="queueBrowse/
+
+online_schedulequeue
+?view=rss&feedType=atom_1.0" title="Atom 1.0"><img src="images/feed_atom.png"/></a>
+    <a href="queueBrowse/
+
+online_schedulequeue
+?view=rss&feedType=rss_2.0" title="RSS 2.0"><img src="images/feed_rss.png"/></a>
+</td>
+<td>
+    <a href="send.jsp;jsessionid=1l0v8b6qrp95wobo3vcp25ify?JMSDestination=online_schedulequeue&JMSDestinationType=queue">Send To</a>
+    <a href="purgeDestination.action;jsessionid=1l0v8b6qrp95wobo3vcp25ify?JMSDestination=online_schedulequeue&JMSDestinationType=queue&secret=9a6f25e5-2fb8-4108-b175-91b14294073d">Purge</a>
+    <a href="deleteDestination.action;jsessionid=1l0v8b6qrp95wobo3vcp25ify?JMSDestination=online_schedulequeue&JMSDestinationType=queue&secret=9a6f25e5-2fb8-4108-b175-91b14294073d">Delete</a>
+</td>
+</tr>
+
+
+<tr>
+<td><a href="browse.jsp;jsessionid=1l0v8b6qrp95wobo3vcp25ify?JMSDestination=queue.movie.budget.record">
+
+
+queue.movie.budget.record</a></td>
+<td>0</td>
+<td>64</td>
+<td>2466528</td>
+<td>2466528</td>
+<td>
+    <a href="browse.jsp;jsessionid=1l0v8b6qrp95wobo3vcp25ify?JMSDestination=queue.movie.budget.record">Browse</a>
+	<a href="queueConsumers.jsp;jsessionid=1l0v8b6qrp95wobo3vcp25ify?JMSDestination=queue.movie.budget.record">Active Consumers</a><br/>
+	<a href="queueProducers.jsp;jsessionid=1l0v8b6qrp95wobo3vcp25ify?JMSDestination=queue.movie.budget.record">Active Producers</a><br/>
+    <a href="queueBrowse/
+
+queue.movie.budget.record
+?view=rss&feedType=atom_1.0" title="Atom 1.0"><img src="images/feed_atom.png"/></a>
+    <a href="queueBrowse/
+
+queue.movie.budget.record
+?view=rss&feedType=rss_2.0" title="RSS 2.0"><img src="images/feed_rss.png"/></a>
+</td>
+<td>
+    <a href="send.jsp;jsessionid=1l0v8b6qrp95wobo3vcp25ify?JMSDestination=queue.movie.budget.record&JMSDestinationType=queue">Send To</a>
+    <a href="purgeDestination.action;jsessionid=1l0v8b6qrp95wobo3vcp25ify?JMSDestination=queue.movie.budget.record&JMSDestinationType=queue&secret=9a6f25e5-2fb8-4108-b175-91b14294073d">Purge</a>
+    <a href="deleteDestination.action;jsessionid=1l0v8b6qrp95wobo3vcp25ify?JMSDestination=queue.movie.budget.record&JMSDestinationType=queue&secret=9a6f25e5-2fb8-4108-b175-91b14294073d">Delete</a>
+</td>
+</tr>
+
+
+<tr>
+<td><a href="browse.jsp;jsessionid=1l0v8b6qrp95wobo3vcp25ify?JMSDestination=queue.movie.budget.adjust">
+
+
+queue.movie.budget.adjust</a></td>
+<td>0</td>
+<td>64</td>
+<td>352</td>
+<td>352</td>
+<td>
+    <a href="browse.jsp;jsessionid=1l0v8b6qrp95wobo3vcp25ify?JMSDestination=queue.movie.budget.adjust">Browse</a>
+	<a href="queueConsumers.jsp;jsessionid=1l0v8b6qrp95wobo3vcp25ify?JMSDestination=queue.movie.budget.adjust">Active Consumers</a><br/>
+	<a href="queueProducers.jsp;jsessionid=1l0v8b6qrp95wobo3vcp25ify?JMSDestination=queue.movie.budget.adjust">Active Producers</a><br/>
+    <a href="queueBrowse/
+
+queue.movie.budget.adjust
+?view=rss&feedType=atom_1.0" title="Atom 1.0"><img src="images/feed_atom.png"/></a>
+    <a href="queueBrowse/
+
+queue.movie.budget.adjust
+?view=rss&feedType=rss_2.0" title="RSS 2.0"><img src="images/feed_rss.png"/></a>
+</td>
+<td>
+    <a href="send.jsp;jsessionid=1l0v8b6qrp95wobo3vcp25ify?JMSDestination=queue.movie.budget.adjust&JMSDestinationType=queue">Send To</a>
+    <a href="purgeDestination.action;jsessionid=1l0v8b6qrp95wobo3vcp25ify?JMSDestination=queue.movie.budget.adjust&JMSDestinationType=queue&secret=9a6f25e5-2fb8-4108-b175-91b14294073d">Purge</a>
+    <a href="deleteDestination.action;jsessionid=1l0v8b6qrp95wobo3vcp25ify?JMSDestination=queue.movie.budget.adjust&JMSDestinationType=queue&secret=9a6f25e5-2fb8-4108-b175-91b14294073d">Delete</a>
+</td>
+</tr>
+
+</tbody>
+</table>
+
+
+                                    </div>
+                                </td>
+                                <td valign="top">
+
+                                    <div class="navigation">
+                                        <div class="navigation_top">
+                                            <div class="navigation_bottom">
+                                                <H3>Queue Views</H3>
+
+                                                <ul class="alternate" type="square">
+
+
+
+                                                    <li><a href="queueGraph.jsp" title="View the queue depths as a graph">Graph</a></li>
+                                                    <li><a href="xml/queues.jsp" title="View the queues as XML">XML</a></li>
+                                                </ul>
+                                                <H3>Topic Views</H3>
+
+                                                <ul class="alternate" type="square">
+
+
+
+                                                    <li><a href="xml/topics.jsp" title="View the topics as XML">XML</a></li>
+                                                </ul>
+                                                <H3>Subscribers Views</H3>
+
+                                                <ul class="alternate" type="square">
+
+
+
+                                                    <li><a href="xml/subscribers.jsp" title="View the subscribers as XML">XML</a></li>
+                                                </ul>
+                                                <H3>Useful Links</H3>
+
+                                                <ul class="alternate" type="square">
+                                                    <li><a href="http://activemq.apache.org/"
+                                                           title="The most popular and powerful open source Message Broker">Documentation</a></li>
+                                                    <li><a href="http://activemq.apache.org/faq.html">FAQ</a></li>
+                                                    <li><a href="http://activemq.apache.org/download.html">Downloads</a>
+                                                    </li>
+                                                    <li><a href="http://activemq.apache.org/discussion-forums.html">Forums</a>
+                                                    </li>
+                                                </ul>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+
+
+                    <div class="bottom_red_bar"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="black_box">
+        <div class="footer">
+            <div class="footer_l">
+                <div class="footer_r">
+                    <div>
+                        Copyright 2005-2014 The Apache Software Foundation.
+
+                        <!--  (<a href="?printable=true">printable version</a>)-->
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+</body>
+</html>
+	

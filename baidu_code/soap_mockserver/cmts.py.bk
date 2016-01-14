@@ -1,0 +1,139 @@
+#!/usr/bin/env python
+# encoding: utf8
+
+
+"""
+This is a simple HelloWorld example to show the basics of writing
+a webservice using spyne, starting a server, and creating a service
+client.
+
+Here's how to call it using suds:
+
+#>>> from suds.client import Client
+#>>> c = Client('http://localhost:8000/?wsdl')
+#>>> c.service.say_hello('punk', 5)
+(stringArray){
+   string[] =
+      "Hello, punk",
+      "Hello, punk",
+      "Hello, punk",
+      "Hello, punk",
+      "Hello, punk",
+ }
+#>>>
+"""
+import os
+CURRENT_PATH = os.path.abspath(os.path.dirname(__file__))
+import sys
+sys.path.append(CURRENT_PATH)
+import time
+from spyne import Application, rpc, ServiceBase, Iterable, Integer, Unicode
+
+from spyne.protocol.soap import Soap11
+from spyne.server.wsgi import WsgiApplication
+
+PROJECT_PATH = os.path.join(os.path.abspath(os.path.dirname(__file__)))
+sys.path.append(PROJECT_PATH + 'lib')
+import settings
+
+import logging
+
+from wsgiref.simple_server import make_server
+
+orderNo = ''
+
+class CmtsService(ServiceBase):
+    @rpc(Unicode, Unicode, _returns=Unicode)
+    def GetToken(ctx, pAppCode, pVerifyInfo):
+        token = '<TokenResult><ResultCode>0</ResultCode><TokenID>1829</TokenID><Token>cmts_token</Token><TimeOut>300</TimeOut></TokenResult>'
+        logging.info('enter getoken') 
+        return token
+
+    @rpc(Unicode, Unicode, Unicode, Unicode, _returns=Unicode)
+    def GetPlanCannotSellSeat(ctx, pAppCode, pFeatureAppNo, pSerial,pVerifyInfo):
+        seat = '<?xml version=\"1.0\"?>\
+                <GetPlanSiteStateResult>\
+                    <ResultCode>0</ResultCode>\
+                    <PlanSiteStates>\
+                        <PlanSiteState>\
+                            <SeatNo>05010526</SeatNo>\
+                            <SeatState>1</SeatState>\
+                            <SeatPieceNo>01</SeatPieceNo>\
+                            <GraphRow>5</GraphRow>\
+                            <GraphCol>26</GraphCol>\
+                            <SeatRow>5</SeatRow>\
+                            <SeatCol>9</SeatCol>\
+                            <SeatPieceName>&#x5168;&gt;&#x533A;</SeatPieceName>\
+                            <HallNo>05</HallNo>\
+                        </PlanSiteState>\
+                    </PlanSiteStates>\
+                </GetPlanSiteStateResult>'
+        logging.info('enter getplancannotsellseat')
+        return seat
+
+    @rpc(Unicode, _returns=Unicode)
+    def LiveRealCheckSeatState(ctx, pXmlString):
+        global orderNo
+        orderNo = str(int(time.time()*1000000))
+        lockseat = '<?xml version=\"1.0\" encoding=\"utf-8\"?>\
+                    <RealCheckSeatStateResult xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xmlns:xsd=\"http://www.w3.org/2001/XMLSchema\">\
+                    <ResultCode>0</ResultCode>\
+                    <OrderNo>'+ str(orderNo) +'</OrderNo>\
+                    <SeatInfos>\
+                        <SeatInfo>\
+                            <SeatNo>04010117</SeatNo>\
+                            <TicketPrice>30</TicketPrice>\
+                            <SeatRow>1</SeatRow>\
+                            <SeatCol>1</SeatCol>\
+                            <SeatPieceNo>01</SeatPieceNo>\
+                        </SeatInfo>\
+                    </SeatInfos>\
+                    </RealCheckSeatStateResult>'
+        logging.info('enter LiveRealCheckSeatState')
+        return lockseat
+
+    @rpc(Unicode, _returns=Unicode)
+    def SellTicket(ctx, pXmlString):
+        sell ='<?xml version=\"1.0\"?>\
+                <SellTicketResult xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xmlns:xsd=\"http://www.w3.org/2001/XMLSchema\">\
+                  <ResultCode>0</ResultCode>\
+                  <OrderNo>' + str(orderNo)+'</OrderNo>\
+                  <ValidCode>104109</ValidCode>\
+                </SellTicketResult>'
+        logging.info('enter sellticket')
+        return sell
+
+    @rpc(Unicode, Unicode, Unicode, Unicode, _returns=Unicode)
+    def GetOrderStatus(ctx, pAppCode,pSerialNum, pTokenID, pVerifyInfo):
+        order = '<?xml version=\"1.0\"?>\
+                <GetOrderStatusResult xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xmlns:xsd=\"http://www.w3.org/2001/XMLSchema\">\
+                  <ResultCode>0</ResultCode>\
+                <OrderNo>'+ orderNo+'</OrderNo>\
+                <ValidCode>104109</ValidCode>\
+                <OrderStatus>8</OrderStatus>\
+                </GetOrderStatusResult>'
+        logging.info('enter getorderstatus , orderNo is '+orderNo)
+        return order
+
+application = Application([CmtsService], 'http://webservice.main.cmts.cn',
+                          in_protocol=Soap11(),
+                          out_protocol=Soap11())
+
+wsgi_application = WsgiApplication(application)
+
+
+if __name__ == '__main__':
+    
+    #fixme, donot know why: change server method, need to change port and restart...
+    port = 8004
+    '''
+    logging.basicConfig(level=logging.DEBUG)
+    logging.getLogger('spyne.protocol.xml').setLevel(logging.DEBUG)
+
+    logging.info("listening to http://127.0.0.1:"+str(port))
+
+    logging.info("wsdl is at: http://localhost:" + str(port) +"/?wsdl")
+    '''
+    logging.config.dictConfig(settings.LOGGING)
+    server = make_server('', port, wsgi_application)
+    server.serve_forever()
