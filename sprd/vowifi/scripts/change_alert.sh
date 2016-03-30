@@ -8,11 +8,15 @@ cecol=3
 msgcol=4
 format="%h|%ad|%ce|%B"
 tmphash="x"
-declare -a libdir=("avatar" "adapter" "lemon" "melon" "watermelon" "grape" "service" "security" "app")
+bitbucketurl="https://bitbucket.org/vowifi_team"
+codedir=/home/apuser/juphoon_code/bitbucket
+mailflag=0
+declare -a libdir=("avatar" "adapter" "lemon" "melon" "watermelon" "grape" "service" "security" "app" "ImsCm")
 
 zfile="result"
 zfile=$(readlink -f $zfile)
-htmlfile="code_changes.html"
+mkdir -p html
+htmlfile="html/code_changes.html.$(date +%Y-%m-%d-%H:%M:%S)"
 htmlfile=$(readlink -f $htmlfile)
 : > $zfile
 : > $htmlfile
@@ -22,8 +26,8 @@ function gennotes()
 {
 	today=$(date +%Y-%m-%d-%H:%M)
 	yesday=$(date -d "1 day ago" +%Y-%m-%d-%H:%M)
-	echo "<p> from $yesday to $today, code changes are listed below:</p>" >> $htmlfile
-	echo "<p>You can click the commit's bitbucket link to view the changes</p>" >> $htmlfile
+	echo "<h1>Code changes from $yesday to $today</h1>" >> $htmlfile
+	echo "<p>You can click the commit id's bitbucket link to view the changes</p>" >> $htmlfile
 	echo "<p>bitbucket login account is in the juphoon_code_usage.docx </p>" >> $htmlfile
 }
 
@@ -34,10 +38,9 @@ echo "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.01 Transitional//EN http://www.
 echo "<html>" >> $htmlfile
 echo "<head>" >> $htmlfile
 echo "<meta http-equiv=\"Content-Type\" content=\"text/html; charset=utf-8\">" >> $htmlfile
-#echo "<style type=\"text/css\">" >> $htmlfile
-#echo "table {border-collapse: collapse;}" >> $htmlfile
-#echo "td {padding: 0px;text-align: center;}" >> $htmlfile
-#echo "</style>" >> $htmlfile
+echo "<style type=\"text/css\">" >> $htmlfile
+echo "caption {font-weight: bold;font-size: 160%;}" >> $htmlfile
+echo "</style>" >> $htmlfile
 gennotes
 
 
@@ -86,17 +89,11 @@ fi
 echo trying to get diff in $repodir, now is $(date +%Y-%m-%d-%H:%M:%S)
 echo $repodir >> $zfile 
 
-echo "<br>" >> $htmlfile
-echo "<table border=\"1\">" >> $htmlfile
-echo "<caption>$repodir commits today</caption>" >> $htmlfile
-echo "<th>hash id</th>" >> $htmlfile
-echo "<th>author date</th>" >> $htmlfile
-echo "<th>committer email</th>" >> $htmlfile
-echo "<th>commit msg</th>" >> $htmlfile
-
 cd $repodir
 #for test 
-resetver
+#resetver
+
+
 gethash
 prevhash=$tmphash
 git pull
@@ -107,6 +104,15 @@ curhash=$tmphash
 #add check if curhash == prevhash
 if [ "$curhash" != "$prevhash" ]
 then
+	mailflag=1
+	echo "<br>" >> $htmlfile
+	echo "<table border=\"1\">" >> $htmlfile
+	echo "<caption>$repodir commits today</caption>" >> $htmlfile
+	echo "<th>hash id</th>" >> $htmlfile
+	echo "<th>author date</th>" >> $htmlfile
+	echo "<th>committer email</th>" >> $htmlfile
+	echo "<th>commit msg</th>" >> $htmlfile
+
 	changes="$repodir.changes"
 	git log $prevhash..$curhash --pretty=format:'%h' > $changes
 	#just append one more \n
@@ -120,7 +126,7 @@ then
 		ad=$(echo $tmp | cut -d '|' -f 2)
 		ce=$(echo $tmp | cut -d '|' -f 3)
 		cmsg=$(echo $tmp | cut -d '|' -f 4-)
-
+		cid="<a href=\"${bitbucketurl}/$repodir/commits/$cid\">$cid</a>"
       	        echo "<tr>" >> $htmlfile
                 echo "<td>$cid</td>" >> $htmlfile
                 echo "<td>$ad</td>" >> $htmlfile
@@ -131,7 +137,6 @@ then
 	
 	echo "</table>" >> $htmlfile
 
-
 else
 	echo no update
 fi
@@ -139,10 +144,15 @@ fi
 cd ..
 }
 
+function sendemail()
+{
+	cat $htmlfile | mutt -s "daily code changes" -e "my_hdr From:vowifi_mailer@spreadtrum.com" -e "set content_type=text/html"  -- zhihua.ye@spreadtrum.com 
+}
+
 : <<  COMMENT
 COMMENT
 
-
+cd $codedir
 genhtmlopen
 
 for lib in "${libdir[@]}"
@@ -153,3 +163,9 @@ done
 
 genhtmlclose
 
+if [ "$mailflag" == 1 ]
+then
+	sendemail
+else
+	echo "All repo is up to date."
+fi
