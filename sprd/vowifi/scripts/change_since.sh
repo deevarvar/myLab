@@ -12,21 +12,26 @@ bitbucketurl="https://bitbucket.org/vowifi_team"
 codedir=/home/apuser/juphoon_code/bitbucket
 mailflag=0
 declare -a libdir=("avatar" "adapter" "lemon" "melon" "watermelon" "grape" "service" "security" "app" "ImsCm")
+defaultinter="30 mins ago"
+interval=${1:-$defaultinter}
+
+
 
 cd $codedir
 mkdir -p log
 datedir=log/$(date +%Y-%m-%d-%H-%M-%S)
 datedir=$(readlink -f $datedir)
-mkdir -p $datedir
+mkdir -p $datedir 
 htmlfile="$datedir/code_changes.html"
+allcommits="$datedir/allcommits"
 : > $htmlfile
 
 
 function gennotes()
 {
-	today=$(date +%Y-%m-%d-%H:%M)
-	yesday=$(date -d "30 mins ago" +%Y-%m-%d-%H:%M)
-	echo "<h1>Code changes from $yesday to $today</h1>" >> $htmlfile
+	now=$(date +%Y-%m-%d-%H:%M)
+	before=$(date -d "$interval" +%Y-%m-%d-%H:%M)
+	echo "<h1>Code changes in last $interval, from $before to $now</h1>" >> $htmlfile
 	echo "<p>You can click the commit id's bitbucket link to view the changes</p>" >> $htmlfile
 	echo "<p>bitbucket login account is in the juphoon_code_usage.docx </p>" >> $htmlfile
 }
@@ -58,12 +63,6 @@ echo "</html>" >> $htmlfile
 }
 
 
-function resetver()
-{
-#just reset to HEAD~3
-	git reset --hard HEAD~3
-}
-
 function gethash()
 {
 tmp=$(git log -1 --pretty=format:'%h|%ad|%ce|%B'| tr '\n' ' ')
@@ -93,15 +92,13 @@ cd $repodir
 #resetver
 
 
-gethash
-prevhash=$tmphash
 git pull
-gethash
-curhash=$tmphash
+
+repocommits="$allcommits.$repodir"
+git log --since="$interval" --pretty=format:'%h' > $repocommits
 
 
-#add check if curhash == prevhash
-if [ "$curhash" != "$prevhash" ]
+if [ -s $repocommits ]
 then
 	mailflag=1
 	echo "<br>" >> $htmlfile
@@ -111,14 +108,16 @@ then
 	echo "<th>author date</th>" >> $htmlfile
 	echo "<th>committer email</th>" >> $htmlfile
 	echo "<th>commit msg</th>" >> $htmlfile
-
-	changes="$datedir/$repodir.changes"
-	git log $prevhash..$curhash --pretty=format:'%h' > $changes
+	#curhash=$(head -n 1 $repocommits)
+	#prevhash=$(tail -n 1 $repocommits)
+	#echo in $repodir , prevhash is $prevhash, curhash is $curhash 
+	#changes="$datedir/$repodir.changes"
+	#git log $prevhash~1..$curhash --pretty=format:'%h' > $changes
 	#just append one more \n
-	echo >> $changes
+	echo >> $repocommits
 	while read commitid
 	do
-		#echo hash is $commitid
+		echo hash is $commitid
 		tmp=$(git log -1 $commitid --pretty=format:'%h|%ad|%ce|%B'| tr '\n' ' ')
 		cid=$(echo $tmp | cut -d '|' -f 1)
 		ad=$(echo $tmp | cut -d '|' -f 2)
@@ -131,7 +130,7 @@ then
                 echo "<td>$ce</td>" >> $htmlfile
                 echo "<td>$cmsg</td>"  >> $htmlfile
                 echo "</tr>" >> $htmlfile
-	done  < $changes
+	done  < $repocommits
 	
 	echo "</table>" >> $htmlfile
 
@@ -144,7 +143,7 @@ cd ..
 
 function sendemail()
 {
-	cat $htmlfile | mutt -s "daily code changes" -e "my_hdr From:vowifi_mailer@spreadtrum.com" -e "set content_type=text/html"  -- zhihua.ye@spreadtrum.com Sally.He@spreadtrum.com Zhaodi.Chen@spreadtrum.com Evers.Chen@spreadtrum.com Xianhe.yang@spreadtrum.com YingYing.fan@spreadtrum.com Cindy.Xie@spreadtrum.com MingZhe.jin@spreadtrum.com
+	cat $htmlfile | mutt -s "daily code changes" -e "my_hdr From:vowifi_mailer@spreadtrum.com" -e "set content_type=text/html"  -- zhihua.ye@spreadtrum.com #Sally.He@spreadtrum.com Zhaodi.Chen@spreadtrum.com 
 }
 
 : <<  COMMENT
