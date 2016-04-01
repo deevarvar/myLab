@@ -11,7 +11,7 @@ tmphash="x"
 bitbucketurl="https://bitbucket.org/vowifi_team"
 codedir=/home/apuser/juphoon_code/bitbucket
 mailflag=0
-declare -a libdir=("avatar" "adapter" "lemon" "melon" "watermelon" "grape" "service" "security" "app" "ImsCm")
+declare -a libdir=("avatar" "adapter" "lemon" "melon" "watermelon" "grape" "service" "security" "app" "ImsCm" "strongswan")
 
 cd $codedir
 mkdir -p log
@@ -30,6 +30,7 @@ function gennotes()
 	echo "<h1>Code changes $interval, from $yesday to $today</h1>" >> $htmlfile
 	echo "<p>You can click the commit id's bitbucket link to view the changes</p>" >> $htmlfile
 	echo "<p>bitbucket login account is in the juphoon_code_usage.docx </p>" >> $htmlfile
+	echo "<p>If you have any suggestions, please email to zhihua.ye@spreadtrum.com</p>" >> $htmlfile
 }
 
 
@@ -145,7 +146,7 @@ cd ..
 
 function sendemail()
 {
-	cat $htmlfile | mutt -s "daily code changes" -e "my_hdr From:vowifi@spreadtrum.com" -c vowifi@spreadtrum.com -e "set content_type=text/html"  -- zhihua.ye@spreadtrum.com Sally.He@spreadtrum.com Zhaodi.Chen@spreadtrum.com Evers.Chen@spreadtrum.com Xianhe.yang@spreadtrum.com YingYing.fan@spreadtrum.com Cindy.Xie@spreadtrum.com MingZhe.jin@spreadtrum.com ireton.xing@juphoon.com
+	cat $htmlfile | mutt -s "daily code changes" -e "my_hdr From:vowifi@spreadtrum.com" -c vowifi@spreadtrum.com -e "set content_type=text/html"  -- zhihua.ye@spreadtrum.com Sally.He@spreadtrum.com Zhaodi.Chen@spreadtrum.com Evers.Chen@spreadtrum.com Xianhe.yang@spreadtrum.com YingYing.fan@spreadtrum.com Cindy.Xie@spreadtrum.com MingZhe.jin@spreadtrum.com ireton.xing@juphoon.com.cn
 }
 
 : <<  COMMENT
