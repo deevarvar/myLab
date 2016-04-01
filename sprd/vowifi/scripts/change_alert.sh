@@ -27,7 +27,7 @@ function gennotes()
 {
 	today=$(date +%Y-%m-%d-%H:%M)
 	yesday=$(date -d "$interval" +%Y-%m-%d-%H:%M)
-	echo "<h1>Code changes from $yesday to $today</h1>" >> $htmlfile
+	echo "<h1>Code changes $interval, from $yesday to $today</h1>" >> $htmlfile
 	echo "<p>You can click the commit id's bitbucket link to view the changes</p>" >> $htmlfile
 	echo "<p>bitbucket login account is in the juphoon_code_usage.docx </p>" >> $htmlfile
 }
@@ -145,7 +145,7 @@ cd ..
 
 function sendemail()
 {
-	cat $htmlfile | mutt -s "daily code changes" -e "my_hdr From:vowifi_mailer@spreadtrum.com" -e "set content_type=text/html"  -- zhihua.ye@spreadtrum.com #Sally.He@spreadtrum.com Zhaodi.Chen@spreadtrum.com Evers.Chen@spreadtrum.com Xianhe.yang@spreadtrum.com YingYing.fan@spreadtrum.com Cindy.Xie@spreadtrum.com MingZhe.jin@spreadtrum.com
+	cat $htmlfile | mutt -s "daily code changes" -e "my_hdr From:vowifi@spreadtrum.com" -c vowifi@spreadtrum.com -e "set content_type=text/html"  -- zhihua.ye@spreadtrum.com Sally.He@spreadtrum.com Zhaodi.Chen@spreadtrum.com Evers.Chen@spreadtrum.com Xianhe.yang@spreadtrum.com YingYing.fan@spreadtrum.com Cindy.Xie@spreadtrum.com MingZhe.jin@spreadtrum.com ireton.xing@juphoon.com
 }
 
 : <<  COMMENT

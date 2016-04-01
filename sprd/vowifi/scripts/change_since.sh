@@ -143,7 +143,7 @@ cd ..
 
 function sendemail()
 {
-	cat $htmlfile | mutt -s "daily code changes" -e "my_hdr From:vowifi_mailer@spreadtrum.com" -e "set content_type=text/html"  -- zhihua.ye@spreadtrum.com #Sally.He@spreadtrum.com Zhaodi.Chen@spreadtrum.com 
+cat $htmlfile | mutt -s "daily code changes" -e "my_hdr From:vowifi@spreadtrum.com" -c vowifi@spreadtrum.com -e "set content_type=text/html"  -- zhihua.ye@spreadtrum.com Sally.He@spreadtrum.com Zhaodi.Chen@spreadtrum.com Evers.Chen@spreadtrum.com Xianhe.yang@spreadtrum.com YingYing.fan@spreadtrum.com Cindy.Xie@spreadtrum.com MingZhe.jin@spreadtrum.com ireton.xing@juphoon.com
 }
 
 : <<  COMMENT
