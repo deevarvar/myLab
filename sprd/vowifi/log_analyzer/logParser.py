@@ -35,7 +35,7 @@ class logParser():
             #prepare the log file handle
             self.log = glob.glob(self.files['log'])[0]
             timestamp = self.log[7:].split('.')[0]
-            self.trimlog = timestamp + '_trim.log'
+            self.trimlog = timestamp + '_' + filterlevel + '.log'
             with open(self.trimlog, 'w') as tlog:
                 tlog.truncate()#index = 0
 
@@ -71,10 +71,14 @@ class logParser():
         print "total " + str(index) + " lines."
 
     def gettags(self):
+        #just parse the high level's log
+        pass
+
+    def getPidsByTags(self):
         pass
 
 if __name__ == '__main__':
-    lp = logParser(filterlevel='low')
+    lp = logParser(filterlevel='high')
     #lp.testfile()
     lp.getflow()
     print 'done'
