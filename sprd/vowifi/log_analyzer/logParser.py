@@ -14,7 +14,7 @@ two ways to track logs:
 
 
 class logParser():
-    def __init__(self):
+    def __init__(self, filterlevel='low'):
         try:
             configfile = 'config.ini'
             config = ConfigObj(configfile, file_error=True)
@@ -22,14 +22,23 @@ class logParser():
             self.files['log'] = config['files']['log']
             self.files['process'] = config['files']['process']
 
+            filterinfo = config['filterlevels'][filterlevel]
             #if only str, convert to list
-            if type(config['process']['juphoon']) is str:
-                config['process']['juphoon'] = config['process']['juphoon'].split()
-            if type(config['process']['android']) is str:
-                config['process']['android'] = config['process']['android'].split()
+            if type(filterinfo['juphoon']) is str:
+                filterinfo['juphoon'] = filterinfo['juphoon'].split()
+            if type(filterinfo['android']) is str:
+                filterinfo['android'] = filterinfo['android'].split()
 
-            self.process = config['process']['juphoon'] + config['process']['android']
+            self.process = filterinfo['juphoon'] + filterinfo['android']
             self.pids = []
+
+            #prepare the log file handle
+            self.log = glob.glob(self.files['log'])[0]
+            timestamp = self.log[7:].split('.')[0]
+            self.trimlog = timestamp + '_trim.log'
+            with open(self.trimlog, 'w') as tlog:
+                tlog.truncate()#index = 0
+
         except (ConfigObjError, IOError) as e:
              print 'Could not read "%s": %s' % (configfile, e)
 
@@ -43,30 +52,29 @@ class logParser():
                     for i,pname in enumerate(self.process):
                         if pname in line:
                             pinfo = line.split()
-                            print pinfo[8] + ', pid is ' + pinfo[1]
+                            with open(self.trimlog, 'a+') as tlog:
+                                tlog.write(pinfo[8] + ' is ' + pinfo[1] + '\n')
                             self.pids.append(pinfo[1])
 
     def getflow(self):
         self.getpid()
-        log = glob.glob(self.files['log'])[0]
-        #index = 0
-        if log:
+        if self.log:
             #get main log's date, 0-main-04-17-23-20-45.log
-            timestamp = log[7:].split('.')[0]
-            trimlog = timestamp + '_trim.log'
-            with open(trimlog, 'w') as tlog:
-                tlog.truncate()
-            with open(log) as logfile:
+            index = 0
+            with open(self.log) as logfile:
                 for line in logfile:
                     for i,pid in enumerate(self.pids):
                         if pid in line:
-                            #index += 1
-                            with open(trimlog, 'a+') as tlog:
+                            index += 1
+                            with open(self.trimlog, 'a+') as tlog:
                                 tlog.write(line)
-        #print index
+        print "total " + str(index) + " lines."
+
+    def gettags(self):
+        pass
 
 if __name__ == '__main__':
-    lp = logParser()
+    lp = logParser(filterlevel='low')
     #lp.testfile()
     lp.getflow()
     print 'done'
