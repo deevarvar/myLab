@@ -53,7 +53,7 @@ class logParser():
             self.tagfile = "processtags"
 
             self.defaultoccurnum = 1
-            self.lemonoccurnum = 5
+            self.lemonoccurnum = 50
 
             with open(self.tagfile, 'w') as ptags:
                 ptags.truncate()
@@ -156,27 +156,38 @@ class logParser():
             #the whole string...
             taginfo = tagsection[tag].split(',')
             self.tags[tag]['name'] = taginfo[0]
-            self.tags[tag]['prio'] = taginfo[1]
+            self.tags[tag]['level'] = int(taginfo[1]) #NOTE convert str to int
+            self.tags[tag]['found'] = 0
 
         if self.log:
             with open(self.log) as logfile:
                 for lineno,line in enumerate(logfile):
                     lineinfo = line.split()
+
+                    #for debug to scan only range
+                    #if lineno < 4421 or lineno > 4421:
+                    #    continue
+                    #print lineinfo
+
                     #error check
                     if len(lineinfo) < 6:
                         print "line " + str(lineno) + " is incorrect"
                         continue
 
-                    ltag = lineinfo[5]
+                    ltag = lineinfo[5].replace(":", "")
                     lpid = lineinfo[2]
                     #print ltag + ' '+ str(lpid)
                     #need to add priority to check if found
                     for tag in tagsection:
-                        if self.tags[tag]['prio'] != 1:
+                        if self.tags[tag]['found'] != self.tags[tag]['level']:
+                            #print tag + ' vs ' + ltag
                             if tag == ltag:
                                 print 'lineno is ' + str(lineno)+' found pid for ' + self.tags[tag]['name']
-                                self.tags[tag]['prio'] = 1
-                                self.tags[tag]['pid'] = lpid
+                                self.tags[tag]['found'] += 1
+                                if self.tags[tag]['found'] == self.tags[tag]['level']:
+                                    self.tags[tag]['pid'] = lpid
+                                    print 'pid ' + str(lpid) + ' is for ' +  self.tags[tag]['name']
+                                break  # break from this line's for tag in tagsection
 
         for tag, process in self.tags.iteritems():
             print process
@@ -190,6 +201,6 @@ if __name__ == '__main__':
     lp.gettags()
     lp.writetags()
 
-    #lp.getPidsByTags()
+    lp.getPidsByTags()
 
     print 'done'
