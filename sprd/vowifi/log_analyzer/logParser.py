@@ -19,6 +19,7 @@ class logParser():
         try:
             configfile = 'config.ini'
             config = ConfigObj(configfile, file_error=True)
+            self.config = config
             self.files = {}
             self.files['log'] = config['files']['log']
             self.files['process'] = config['files']['process']
@@ -33,10 +34,9 @@ class logParser():
             self.process = filterinfo['juphoon'] + filterinfo['android']
             #pid array
             self.pids = []
-            #pid/process mapping dict
-            self.pidprocess = {}
-            #pid/tags mapping dict, pid with tags set
-            self.pidtags = {}
+
+            #struct to contain 'process'(str), 'tags'(list)
+            self.piddb = {}
 
             #prepare the log file handle
             self.log = glob.glob(self.files['log'])[0]
@@ -67,8 +67,9 @@ class logParser():
                             with open(self.trimlog, 'a+') as tlog:
                                 tlog.write(lprocess + ' is ' + lpid + '\n')
                             self.pids.append(lpid)
-                            self.pidprocess[lpid] = lprocess
-                            self.pidtags[lpid] = set()
+                            self.piddb[lpid] = {}
+                            self.piddb[lpid]['process'] = lprocess
+                            self.piddb[lpid]['tags'] = []
 
     def getflow(self):
         self.getpid()
@@ -98,13 +99,12 @@ class logParser():
                             with open(self.trimlog, 'a+') as tlog:
                                 tlog.write(line)
                             #get tags
-                            if ltag != "System.out":
-                                self.pidtags[pid].add(ltag)
-        for key, set in self.pidtags.iteritems():
-            print 'in process ' + key + ", tags are "
-            for value in set:
-                print value,
-            print
+
+                            #the two tags are non-sense
+                            if ltag == "System.out" or ltag == "System":
+                                continue
+                            if ltag not in self.piddb[pid]['tags']:
+                                self.piddb[pid]['tags'].append(ltag)
 
         print "total " + str(matchindex) + " lines."
 
@@ -113,19 +113,33 @@ class logParser():
         #use dict to store the pid
         self.getflow()
         with open(self.tags, "a+") as tfile:
-            for process, set in self.pidtags.iteritems():
-                alltags = ""
-                for value in set:
-                    alltags = alltags + value + " "
-                tfile.write(self.pidprocess[process] + "=" + alltags + '\n')
-        pass
+            for i, pid in enumerate(self.pids):
+                alltags = ''
+                for i,processtag in enumerate(self.piddb[pid]['tags']):
+                    alltags = alltags + processtag + " "
+                tfile.write(self.piddb[pid]['process'] + "=" + alltags + '\n')
+
+    def writetags(self):
+        #FIXME: need to manually remove those tags not needed
+        #the logic is here, just need the first tag to identify
+        tagssections = {}
+        for i, pid in enumerate(self.pids):
+            taglist = self.piddb[pid]['tags']
+            if taglist:
+                lproc = self.piddb[pid]['process']
+                tagssections[lproc] = taglist[0]
+
+        self.config['tags'] = tagssections
+        self.config.write()
 
     def getPidsByTags(self):
+        self.config
         pass
 
 if __name__ == '__main__':
     lp = logParser(filterlevel='high')
     #lp.testfile()
     #lp.getflow()
-    lp.gettags()
+    lp.gettags() #just need to run once
+    lp.writetags()#just need to run once
     print 'done'
