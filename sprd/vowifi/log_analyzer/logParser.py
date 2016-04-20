@@ -127,7 +127,8 @@ class logParser():
             taglist = self.piddb[pid]['tags']
             if taglist:
                 lproc = self.piddb[pid]['process']
-                tagssections[lproc] = taglist[0]
+                firsttag = taglist[0]
+                tagssections[firsttag] = lproc
 
         self.config['tags'] = tagssections
         self.config.write()
