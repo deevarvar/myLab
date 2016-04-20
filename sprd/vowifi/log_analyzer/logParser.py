@@ -14,6 +14,7 @@ two ways to track logs:
 
 
 class logParser():
+
     def __init__(self, filterlevel='low'):
         try:
             configfile = 'config.ini'
@@ -30,7 +31,12 @@ class logParser():
                 filterinfo['android'] = filterinfo['android'].split()
 
             self.process = filterinfo['juphoon'] + filterinfo['android']
+            #pid array
             self.pids = []
+            #pid/process mapping dict
+            self.pidprocess = {}
+            #pid/tags mapping dict
+            self.pidtags = {}
 
             #prepare the log file handle
             self.log = glob.glob(self.files['log'])[0]
@@ -44,7 +50,7 @@ class logParser():
 
     def getpid(self):
         pfile = glob.glob(self.files['process'])[0]
-        #note: use native ps not,busybox ps, sample is listed below
+        #note: use native ps, not busybox ps, sample is listed below
         #system    1681  283   724960 65316 SyS_epoll_ b6d38f54 S com.juphoon.sprd.service
         if pfile:
             with open(pfile) as processfile:
@@ -52,26 +58,44 @@ class logParser():
                     for i,pname in enumerate(self.process):
                         if pname in line:
                             pinfo = line.split()
+                            lprocess = pinfo[8]
+                            lpid = pinfo[1]
                             with open(self.trimlog, 'a+') as tlog:
-                                tlog.write(pinfo[8] + ' is ' + pinfo[1] + '\n')
-                            self.pids.append(pinfo[1])
+                                tlog.write(lprocess + ' is ' + lpid + '\n')
+                            self.pids.append(lpid)
+                            self.pidprocess[lpid] = lprocess
 
     def getflow(self):
         self.getpid()
         if self.log:
             #get main log's date, 0-main-04-17-23-20-45.log
-            index = 0
+            matchindex = 0
             with open(self.log) as logfile:
                 for line in logfile:
                     for i,pid in enumerate(self.pids):
-                        if pid in line:
-                            index += 1
+                        lineinfo = line.split()
+                        if len(lineinfo) < 6:
+                            print line
+                            print "line is incorrect"
+                            continue
+                        lpid = lineinfo[2]
+                        ltag = lineinfo[5]
+                        if (lpid is None) or (ltag is None):
+                            print "lpid or ltag is none"
+                            continue
+
+                        if pid == lpid:
+                            matchindex += 1
+                            #get the line
                             with open(self.trimlog, 'a+') as tlog:
                                 tlog.write(line)
-        print "total " + str(index) + " lines."
+                            #get tags
+
+        print "total " + str(matchindex) + " lines."
 
     def gettags(self):
         #just parse the high level's log
+        #use dict to store the pid
         pass
 
     def getPidsByTags(self):
