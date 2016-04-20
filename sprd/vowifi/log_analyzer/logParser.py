@@ -38,6 +38,11 @@ class logParser():
             #struct to contain 'process'(str), 'tags'(list)
             self.piddb = {}
 
+            self.tags = {}
+
+            #keywords may be in wrong place, each
+            self.priority = {}
+
             #prepare the log file handle
             self.log = glob.glob(self.files['log'])[0]
             timestamp = self.log[7:].split('.')[0]
@@ -45,8 +50,12 @@ class logParser():
             with open(self.trimlog, 'w') as tlog:
                 tlog.truncate()#index = 0
 
-            self.tags = "processtags"
-            with open(self.tags, 'w') as ptags:
+            self.tagfile = "processtags"
+
+            self.defaultoccurnum = 1
+            self.lemonoccurnum = 5
+
+            with open(self.tagfile, 'w') as ptags:
                 ptags.truncate()
 
         except (ConfigObjError, IOError) as e:
@@ -112,7 +121,7 @@ class logParser():
         #just parse the high level's log
         #use dict to store the pid
         self.getflow()
-        with open(self.tags, "a+") as tfile:
+        with open(self.tagfile, "a+") as tfile:
             for i, pid in enumerate(self.pids):
                 alltags = ''
                 for i,processtag in enumerate(self.piddb[pid]['tags']):
@@ -128,19 +137,59 @@ class logParser():
             if taglist:
                 lproc = self.piddb[pid]['process']
                 firsttag = taglist[0]
-                tagssections[firsttag] = lproc
+                lprio = self.defaultoccurnum
+                #special handling, LEMON need more check
+                if firsttag == 'LEMON':
+                    lprio = self.lemonoccurnum
+                tagssections[firsttag] = lproc + ','+ str(lprio)
 
         self.config['tags'] = tagssections
         self.config.write()
 
+
     def getPidsByTags(self):
-        self.config
-        pass
+        #lemon log is not so good
+
+        tagsection = self.config['tags']
+        for tag in tagsection:
+            self.tags[tag] = {}
+            #the whole string...
+            taginfo = tagsection[tag].split(',')
+            self.tags[tag]['name'] = taginfo[0]
+            self.tags[tag]['prio'] = taginfo[1]
+
+        if self.log:
+            with open(self.log) as logfile:
+                for lineno,line in enumerate(logfile):
+                    lineinfo = line.split()
+                    #error check
+                    if len(lineinfo) < 6:
+                        print "line " + str(lineno) + " is incorrect"
+                        continue
+
+                    ltag = lineinfo[5]
+                    lpid = lineinfo[2]
+                    #print ltag + ' '+ str(lpid)
+                    #need to add priority to check if found
+                    for tag in tagsection:
+                        if self.tags[tag]['prio'] != 1:
+                            if tag == ltag:
+                                print 'lineno is ' + str(lineno)+' found pid for ' + self.tags[tag]['name']
+                                self.tags[tag]['prio'] = 1
+                                self.tags[tag]['pid'] = lpid
+
+        for tag, process in self.tags.iteritems():
+            print process
+            if 'pid' in process:
+                print tag + ' ' + process['name'] + ' pid is '+ str(process['pid'])
 
 if __name__ == '__main__':
     lp = logParser(filterlevel='high')
-    #lp.testfile()
-    #lp.getflow()
-    lp.gettags() #just need to run once
-    lp.writetags()#just need to run once
+
+    #just need to run once to update config.ini's tags section
+    lp.gettags()
+    lp.writetags()
+
+    #lp.getPidsByTags()
+
     print 'done'
