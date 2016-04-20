@@ -35,7 +35,7 @@ class logParser():
             self.pids = []
             #pid/process mapping dict
             self.pidprocess = {}
-            #pid/tags mapping dict
+            #pid/tags mapping dict, pid with tags set
             self.pidtags = {}
 
             #prepare the log file handle
@@ -64,6 +64,7 @@ class logParser():
                                 tlog.write(lprocess + ' is ' + lpid + '\n')
                             self.pids.append(lpid)
                             self.pidprocess[lpid] = lprocess
+                            self.pidtags[lpid] = set()
 
     def getflow(self):
         self.getpid()
@@ -74,12 +75,13 @@ class logParser():
                 for line in logfile:
                     for i,pid in enumerate(self.pids):
                         lineinfo = line.split()
+                        #error check
                         if len(lineinfo) < 6:
                             print line
                             print "line is incorrect"
                             continue
                         lpid = lineinfo[2]
-                        ltag = lineinfo[5]
+                        ltag = lineinfo[5].replace(":", "")
                         if (lpid is None) or (ltag is None):
                             print "lpid or ltag is none"
                             continue
@@ -90,6 +92,13 @@ class logParser():
                             with open(self.trimlog, 'a+') as tlog:
                                 tlog.write(line)
                             #get tags
+                            if ltag != "System.out":
+                                self.pidtags[pid].add(ltag)
+        for key, set in self.pidtags.iteritems():
+            print 'in process ' + key + ", tags are "
+            for value in set:
+                print value,
+            print
 
         print "total " + str(matchindex) + " lines."
 
