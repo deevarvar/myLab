@@ -45,6 +45,10 @@ class logParser():
             with open(self.trimlog, 'w') as tlog:
                 tlog.truncate()#index = 0
 
+            self.tags = "processtags"
+            with open(self.tags, 'w') as ptags:
+                ptags.truncate()
+
         except (ConfigObjError, IOError) as e:
              print 'Could not read "%s": %s' % (configfile, e)
 
@@ -72,16 +76,18 @@ class logParser():
             #get main log's date, 0-main-04-17-23-20-45.log
             matchindex = 0
             with open(self.log) as logfile:
-                for line in logfile:
+                for lineno,line in enumerate(logfile):
                     for i,pid in enumerate(self.pids):
                         lineinfo = line.split()
                         #error check
                         if len(lineinfo) < 6:
                             print line
-                            print "line is incorrect"
+                            print "line " + str(lineno) + " is incorrect"
                             continue
+
                         lpid = lineinfo[2]
                         ltag = lineinfo[5].replace(":", "")
+
                         if (lpid is None) or (ltag is None):
                             print "lpid or ltag is none"
                             continue
@@ -105,6 +111,13 @@ class logParser():
     def gettags(self):
         #just parse the high level's log
         #use dict to store the pid
+        self.getflow()
+        with open(self.tags, "a+") as tfile:
+            for process, set in self.pidtags.iteritems():
+                alltags = ""
+                for value in set:
+                    alltags = alltags + value + " "
+                tfile.write(self.pidprocess[process] + "=" + alltags + '\n')
         pass
 
     def getPidsByTags(self):
@@ -113,5 +126,6 @@ class logParser():
 if __name__ == '__main__':
     lp = logParser(filterlevel='high')
     #lp.testfile()
-    lp.getflow()
+    #lp.getflow()
+    lp.gettags()
     print 'done'
