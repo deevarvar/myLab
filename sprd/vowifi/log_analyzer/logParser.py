@@ -99,7 +99,7 @@ class logParser():
                         if len(lineinfo) < 6:
                             print line
                             print "line " + str(lineno) + " is incorrect"
-                            continue
+                            break
 
                         lpid = lineinfo[2]
                         ltag = lineinfo[5].replace(":", "")
@@ -230,12 +230,18 @@ class logParser():
                         foundflag = self.tags[process]['found']
                         for i, taginfo in enumerate(tagdes):
                             if taginfo['name'] == ltag: #find tag
-                                if  foundflag != 1 and (taginfo['foundnum'] != taginfo['level']): # check if occurnum ok
+                                # if already found and check if occurnum ok
+                                if  foundflag != 1 and (taginfo['foundnum'] != taginfo['level']):
                                     print 'lineno is ' + str(lineno)+' foundnum pid for ' + process
                                     taginfo['foundnum'] += 1
                                     if taginfo['foundnum'] == taginfo['level']: # ok add pid
                                         self.tags[process]['pid'] = lpid
                                         self.tags[process]['found'] = 1
+
+                                        self.pids.append(lpid)
+                                        self.piddb[lpid] = dict()
+                                        self.piddb[lpid]['process'] = process
+                                        self.piddb[lpid]['tags'] = dict()
                                         print 'pid ' + str(lpid) + ' is for ' +  process
                                     break # break from  for i, taginfo in enumerate(tagdes):
                         else:
@@ -267,13 +273,5 @@ class logParser():
 if __name__ == '__main__':
     lp = logParser(filterlevel='high')
 
-    #just need to run once to update config.ini's tags section
-    #lp.getTagsNum()
-
-    #lp.writetags()
-
-    lp.getPidsByTags()
-
-
-
+    lp.getflow(has_ps=False)
     print 'done'
