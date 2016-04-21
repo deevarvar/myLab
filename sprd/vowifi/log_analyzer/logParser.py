@@ -47,25 +47,27 @@ class logParser():
             self.log = glob.glob(self.files['log'])[0]
             timestamp = self.log[7:].split('.')[0]
             self.trimlog = timestamp + '_' + filterlevel + '.log'
-            with open(self.trimlog, 'w') as tlog:
-                tlog.truncate()#index = 0
+
+            self.processout = 'processout.log'
 
             self.tagfile = "processtags"
 
             self.defaultoccurnum = 1
             self.lemonoccurnum = 50
 
-            with open(self.tagfile, 'w') as ptags:
-                ptags.truncate()
-
         except (ConfigObjError, IOError) as e:
              print 'Could not read "%s": %s' % (configfile, e)
 
+    '''
+        the function is used to get pid from ps output
+    '''
     def getpid(self):
         pfile = glob.glob(self.files['process'])[0]
         #note: use native ps, not busybox ps, sample is listed below
         #system    1681  283   724960 65316 SyS_epoll_ b6d38f54 S com.juphoon.sprd.service
         if pfile:
+            with open(self.trimlog, 'w') as tlog:
+                tlog.truncate()#index = 0
             with open(pfile) as processfile:
                 for line in processfile:
                     for i,pname in enumerate(self.process):
@@ -81,7 +83,9 @@ class logParser():
                             self.piddb[lpid]['tags'] = []
 
     def getflow(self):
-        self.getpid()
+        #self.getpid()
+
+        self.getPidsByTags()
         if self.log:
             #get main log's date, 0-main-04-17-23-20-45.log
             matchindex = 0
@@ -121,6 +125,10 @@ class logParser():
         #just parse the high level's log
         #use dict to store the pid
         self.getflow()
+
+        with open(self.tagfile, 'w') as ptags:
+            ptags.truncate()
+
         with open(self.tagfile, "a+") as tfile:
             for i, pid in enumerate(self.pids):
                 alltags = ''
@@ -188,19 +196,31 @@ class logParser():
                                     self.tags[tag]['pid'] = lpid
                                     print 'pid ' + str(lpid) + ' is for ' +  self.tags[tag]['name']
                                 break  # break from this line's for tag in tagsection
-
+        with open(self.processout, 'w') as processout:
+            processout.truncate()
         for tag, process in self.tags.iteritems():
             print process
             if 'pid' in process:
-                print tag + ' ' + process['name'] + ' pid is '+ str(process['pid'])
+                lpid = process['pid']
+                lprocess = process['name']
+                print tag + ' ' + lprocess + ' pid is '+ str(lpid)
+                self.pids.append(lpid)
+                self.piddb[lpid] = {}
+                self.piddb[lpid]['process'] = lprocess
+                self.piddb[lpid]['tags'] = []
+                with open(self.processout, 'a+') as processout:
+                    linfo = lprocess + ':' + str(lpid) + '\n'
+                    processout.write(linfo)
 
 if __name__ == '__main__':
     lp = logParser(filterlevel='high')
 
     #just need to run once to update config.ini's tags section
-    lp.gettags()
-    lp.writetags()
+    #lp.gettags()
+    #lp.writetags()
 
-    lp.getPidsByTags()
+    #lp.getPidsByTags()
+    lp.getflow()
+
 
     print 'done'
