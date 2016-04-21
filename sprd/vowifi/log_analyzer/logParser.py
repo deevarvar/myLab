@@ -20,7 +20,7 @@ class logParser():
             configfile = 'config.ini'
             config = ConfigObj(configfile, file_error=True)
             self.config = config
-            self.files = {}
+            self.files = dict()
             self.files['log'] = config['files']['log']
             self.files['process'] = config['files']['process']
 
@@ -33,15 +33,15 @@ class logParser():
 
             self.process = filterinfo['juphoon'] + filterinfo['android']
             #pid array
-            self.pids = []
+            self.pids = list()
 
             #struct to contain 'process'(str), 'tags'(list)
-            self.piddb = {}
+            self.piddb = dict()
 
-            self.tags = {}
+            self.tags = dict()
 
             #keywords may be in wrong place, each
-            self.priority = {}
+            self.priority = dict()
 
             #prepare the log file handle
             self.log = glob.glob(self.files['log'])[0]
@@ -78,9 +78,9 @@ class logParser():
                             with open(self.trimlog, 'a+') as tlog:
                                 tlog.write(lprocess + ' is ' + lpid + '\n')
                             self.pids.append(lpid)
-                            self.piddb[lpid] = {}
+                            self.piddb[lpid] = dict()
                             self.piddb[lpid]['process'] = lprocess
-                            self.piddb[lpid]['tags'] = {}
+                            self.piddb[lpid]['tags'] = dict()
 
 
     def getflow(self, has_ps=True):
@@ -145,10 +145,14 @@ class logParser():
                     alltags = alltags + lprocesstag + ":"+str(lnum) + " "
                 tfile.write(self.piddb[pid]['process'] + "=" + alltags + '\n')
 
+
     def writetags(self):
+        """
+        this function is not used any more!
+        """
         #FIXME: need to manually remove those tags not needed
         #the logic is here, just need the first tag to identify
-        tagssections = {}
+        tagssections = dict()
         for i, pid in enumerate(self.pids):
             taglist = self.piddb[pid]['tags']
             if taglist:
@@ -163,18 +167,43 @@ class logParser():
         self.config['tags'] = tagssections
         self.config.write()
 
+    def dumptags(self):
+        print 'dump tagsinfo'
+        for process, tag in self.tags.iteritems():
+            print process
+            print tag
 
     def getPidsByTags(self):
         #lemon log is not so good
 
         tagsection = self.config['tags']
-        for tag in tagsection:
-            self.tags[tag] = {}
+        for process in tagsection:
+            self.tags[process] = dict()
+            self.tags[process]['tags'] = list()
+            self.tags[process]['found'] = 0
+
             #the whole string...
-            taginfo = tagsection[tag].split(',')
-            self.tags[tag]['name'] = taginfo[0]
-            self.tags[tag]['level'] = int(taginfo[1]) #NOTE convert str to int
-            self.tags[tag]['found'] = 0
+            taginfo = tagsection[process].split()
+            taglen = len(taginfo)
+            
+            #tags can be multiple
+            ##processname = tag1:num1 tag2:num2
+            if taglen == 0:
+                continue
+            for tagindex in xrange(0, taglen):
+                tagstr = taginfo[tagindex].split(':')
+                #error check
+                if len(tagstr) < 2:
+                    print 'taginfo is invalid :' + str(tagstr)
+                    continue
+                ltagelement = dict()
+                ltagelement['name'] = tagstr[0]
+                ltagelement['level'] = int(tagstr[1]) #ought to occur times
+                ltagelement['foundnum'] = 0
+                self.tags[process]['tags'].append(ltagelement)
+
+        #add function dump the tags status
+        #self.dumptags()
 
         if self.log:
             with open(self.log) as logfile:
@@ -182,7 +211,7 @@ class logParser():
                     lineinfo = line.split()
 
                     #for debug to scan only range
-                    #if lineno < 4421 or lineno > 4421:
+                    #if lineno < 3310 or lineno > 3315:
                     #    continue
                     #print lineinfo
 
@@ -194,44 +223,57 @@ class logParser():
                     ltag = lineinfo[5].replace(":", "")
                     lpid = lineinfo[2]
                     #print ltag + ' '+ str(lpid)
-                    #need to add priority to check if found
-                    for tag in tagsection:
-                        if self.tags[tag]['found'] != self.tags[tag]['level']:
-                            #print tag + ' vs ' + ltag
-                            if tag == ltag:
-                                print 'lineno is ' + str(lineno)+' found pid for ' + self.tags[tag]['name']
-                                self.tags[tag]['found'] += 1
-                                if self.tags[tag]['found'] == self.tags[tag]['level']:
-                                    self.tags[tag]['pid'] = lpid
-                                    print 'pid ' + str(lpid) + ' is for ' +  self.tags[tag]['name']
-                                break  # break from this line's for tag in tagsection
+                    #need to add priority to check if foundnumnum
+                    for process in tagsection:
+                        #print process
+                        tagdes = self.tags[process]['tags']  #list tag1:num1 tag2:num2
+                        foundflag = self.tags[process]['found']
+                        for i, taginfo in enumerate(tagdes):
+                            if taginfo['name'] == ltag: #find tag
+                                if  foundflag != 1 and (taginfo['foundnum'] != taginfo['level']): # check if occurnum ok
+                                    print 'lineno is ' + str(lineno)+' foundnum pid for ' + process
+                                    taginfo['foundnum'] += 1
+                                    if taginfo['foundnum'] == taginfo['level']: # ok add pid
+                                        self.tags[process]['pid'] = lpid
+                                        self.tags[process]['found'] = 1
+                                        print 'pid ' + str(lpid) + ' is for ' +  process
+                                    break # break from  for i, taginfo in enumerate(tagdes):
+                        else:
+                            continue # executed if the loop ended normally (no break)
+                        break    # executed if 'continue' was skipped (break)
+
         with open(self.processout, 'w') as processout:
             processout.truncate()
-        for tag, process in self.tags.iteritems():
+        for process, content in self.tags.iteritems():
             print process
-            if 'pid' in process:
-                lpid = process['pid']
-                lprocess = process['name']
-                print tag + ' ' + lprocess + ' pid is '+ str(lpid)
+            print content
+
+            if 'pid' in content:
+                lpid = content['pid']
+                print process + ' pid is '+ str(lpid)
                 with open(self.processout, 'a+') as processout:
-                    linfo = lprocess + ':' + str(lpid) + '\n'
+                    linfo = process + ':' + str(lpid) + '\n'
                     processout.write(linfo)
 
-    '''
-        The function is used to get all tags and tags' num from existing ps log
-    '''
+
     def getTagsNum(self):
+        """
+        The function is used to get all tags and tags' num from existing ps log
+        """
         self.gettags()
+
+
 
 if __name__ == '__main__':
     lp = logParser(filterlevel='high')
 
     #just need to run once to update config.ini's tags section
-    #lp.gettags()
+    #lp.getTagsNum()
+
     #lp.writetags()
-    lp.getTagsNum()
-    #lp.getPidsByTags()
-    #lp.getflow()
+
+    lp.getPidsByTags()
+
 
 
     print 'done'
