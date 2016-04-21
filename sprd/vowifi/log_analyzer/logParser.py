@@ -80,12 +80,14 @@ class logParser():
                             self.pids.append(lpid)
                             self.piddb[lpid] = {}
                             self.piddb[lpid]['process'] = lprocess
-                            self.piddb[lpid]['tags'] = []
+                            self.piddb[lpid]['tags'] = {}
 
-    def getflow(self):
-        #self.getpid()
 
-        self.getPidsByTags()
+    def getflow(self, has_ps=True):
+        if has_ps:
+            self.getpid()
+        else:
+            self.getPidsByTags()
         if self.log:
             #get main log's date, 0-main-04-17-23-20-45.log
             matchindex = 0
@@ -113,18 +115,20 @@ class logParser():
                                 tlog.write(line)
                             #get tags
 
-                            #the two tags are non-sense
+                            #the two tags make no sense
                             if ltag == "System.out" or ltag == "System":
                                 continue
                             if ltag not in self.piddb[pid]['tags']:
-                                self.piddb[pid]['tags'].append(ltag)
+                                self.piddb[pid]['tags'][ltag] = 1
+                            else:
+                                self.piddb[pid]['tags'][ltag] += 1
 
         print "total " + str(matchindex) + " lines."
 
     def gettags(self):
         #just parse the high level's log
         #use dict to store the pid
-        self.getflow()
+        self.getflow(has_ps=True)
 
         with open(self.tagfile, 'w') as ptags:
             ptags.truncate()
@@ -132,8 +136,13 @@ class logParser():
         with open(self.tagfile, "a+") as tfile:
             for i, pid in enumerate(self.pids):
                 alltags = ''
-                for i,processtag in enumerate(self.piddb[pid]['tags']):
-                    alltags = alltags + processtag + " "
+                #here sort tags by occornums
+                ltagdict = self.piddb[pid]['tags']
+                sortedtags = sorted(ltagdict.items(), key=lambda x:x[1], reverse=True)
+                for i,element in enumerate(sortedtags):
+                    lprocesstag = element[0]
+                    lnum = element[1]
+                    alltags = alltags + lprocesstag + ":"+str(lnum) + " "
                 tfile.write(self.piddb[pid]['process'] + "=" + alltags + '\n')
 
     def writetags(self):
@@ -204,13 +213,15 @@ class logParser():
                 lpid = process['pid']
                 lprocess = process['name']
                 print tag + ' ' + lprocess + ' pid is '+ str(lpid)
-                self.pids.append(lpid)
-                self.piddb[lpid] = {}
-                self.piddb[lpid]['process'] = lprocess
-                self.piddb[lpid]['tags'] = []
                 with open(self.processout, 'a+') as processout:
                     linfo = lprocess + ':' + str(lpid) + '\n'
                     processout.write(linfo)
+
+    '''
+        The function is used to get all tags and tags' num from existing ps log
+    '''
+    def getTagsNum(self):
+        self.gettags()
 
 if __name__ == '__main__':
     lp = logParser(filterlevel='high')
@@ -218,9 +229,9 @@ if __name__ == '__main__':
     #just need to run once to update config.ini's tags section
     #lp.gettags()
     #lp.writetags()
-
+    lp.getTagsNum()
     #lp.getPidsByTags()
-    lp.getflow()
+    #lp.getflow()
 
 
     print 'done'
