@@ -1,6 +1,17 @@
 #-*- coding=utf-8 -*-
 #author: zhihua.ye@spreadtrum.com
 
+
+
+
+#TOOD: 1. fix log parse tag bug
+#      2. add logic to iterate main log and merge radio.log
+#      3. add merge by timeline function
+
+
+
+
+
 import os
 import sys
 import glob
@@ -47,7 +58,8 @@ class logParser():
             self.log = glob.glob(self.files['log'])[0]
             timestamp = self.log[7:].split('.')[0]
             self.trimlog = timestamp + '_' + filterlevel + '.log'
-
+            with open(self.trimlog, 'w') as tlog:
+                tlog.truncate()#index = 0
             self.processout = 'processout.log'
 
             self.tagfile = "processtags"
@@ -56,7 +68,7 @@ class logParser():
             self.lemonoccurnum = 50
 
         except (ConfigObjError, IOError) as e:
-             print 'Could not read "%s": %s' % (configfile, e)
+             print('Could not read "%s": %s' % (configfile, e))
 
     '''
         the function is used to get pid from ps output
@@ -66,8 +78,6 @@ class logParser():
         #note: use native ps, not busybox ps, sample is listed below
         #system    1681  283   724960 65316 SyS_epoll_ b6d38f54 S com.juphoon.sprd.service
         if pfile:
-            with open(self.trimlog, 'w') as tlog:
-                tlog.truncate()#index = 0
             with open(pfile) as processfile:
                 for line in processfile:
                     for i,pname in enumerate(self.process):
@@ -97,15 +107,15 @@ class logParser():
                         lineinfo = line.split()
                         #error check
                         if len(lineinfo) < 6:
-                            print line
-                            print "line " + str(lineno) + " is incorrect"
+                            print(line)
+                            print("line " + str(lineno) + " is incorrect")
                             break
 
                         lpid = lineinfo[2]
                         ltag = lineinfo[5].replace(":", "")
 
                         if (lpid is None) or (ltag is None):
-                            print "lpid or ltag is none"
+                            print("lpid or ltag is none")
                             continue
 
                         if pid == lpid:
@@ -123,7 +133,7 @@ class logParser():
                             else:
                                 self.piddb[pid]['tags'][ltag] += 1
 
-        print "total " + str(matchindex) + " lines."
+        print("total " + str(matchindex) + " lines.")
 
     def gettags(self):
         #just parse the high level's log
@@ -168,10 +178,10 @@ class logParser():
         self.config.write()
 
     def dumptags(self):
-        print 'dump tagsinfo'
+        print('dump tagsinfo')
         for process, tag in self.tags.iteritems():
-            print process
-            print tag
+            print(process)
+            print(tag)
 
     def getPidsByTags(self):
         #lemon log is not so good
@@ -190,11 +200,11 @@ class logParser():
             ##processname = tag1:num1 tag2:num2
             if taglen == 0:
                 continue
-            for tagindex in xrange(0, taglen):
+            for tagindex in range(0, taglen):
                 tagstr = taginfo[tagindex].split(':')
                 #error check
                 if len(tagstr) < 2:
-                    print 'taginfo is invalid :' + str(tagstr)
+                    print('taginfo is invalid :' + str(tagstr))
                     continue
                 ltagelement = dict()
                 ltagelement['name'] = tagstr[0]
@@ -217,7 +227,7 @@ class logParser():
 
                     #error check
                     if len(lineinfo) < 6:
-                        print "line " + str(lineno) + " is incorrect"
+                        print("line " + str(lineno) + " is incorrect")
                         continue
 
                     ltag = lineinfo[5].replace(":", "")
@@ -232,7 +242,7 @@ class logParser():
                             if taginfo['name'] == ltag: #find tag
                                 # if already found and check if occurnum ok
                                 if  foundflag != 1 and (taginfo['foundnum'] != taginfo['level']):
-                                    print 'lineno is ' + str(lineno)+' foundnum pid for ' + process
+                                    print('lineno is ' + str(lineno)+' foundnum pid for ' + process)
                                     taginfo['foundnum'] += 1
                                     if taginfo['foundnum'] == taginfo['level']: # ok add pid
                                         self.tags[process]['pid'] = lpid
@@ -242,7 +252,7 @@ class logParser():
                                         self.piddb[lpid] = dict()
                                         self.piddb[lpid]['process'] = process
                                         self.piddb[lpid]['tags'] = dict()
-                                        print 'pid ' + str(lpid) + ' is for ' +  process
+                                        print('pid ' + str(lpid) + ' is for ' +  process)
                                     break # break from  for i, taginfo in enumerate(tagdes):
                         else:
                             continue # executed if the loop ended normally (no break)
@@ -251,12 +261,12 @@ class logParser():
         with open(self.processout, 'w') as processout:
             processout.truncate()
         for process, content in self.tags.iteritems():
-            print process
-            print content
+            print(process)
+            print(content)
 
             if 'pid' in content:
                 lpid = content['pid']
-                print process + ' pid is '+ str(lpid)
+                print(process + ' pid is '+ str(lpid))
                 with open(self.processout, 'a+') as processout:
                     linfo = process + ':' + str(lpid) + '\n'
                     processout.write(linfo)
@@ -274,4 +284,4 @@ if __name__ == '__main__':
     lp = logParser(filterlevel='high')
 
     lp.getflow(has_ps=False)
-    print 'done'
+    print('done')
