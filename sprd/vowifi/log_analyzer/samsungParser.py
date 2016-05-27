@@ -19,6 +19,7 @@ class samsungParser():
         try:
             configfile = 'config.ini'
             config = ConfigObj(configfile, file_error=True)
+            self.config = config
             self.files = dict()
             self.files['log'] =  config['samsung']['log']
             self.keywords = dict()
@@ -40,13 +41,14 @@ class samsungParser():
         with open(self.trimlog, 'w') as tlog:
             tlog.truncate()
 
+        rePattern = r'' + self.keywords['recv'] + '|' + self.keywords['sendreq'] + '|' + self.keywords['sendrsp']
+        samsungPattern = re.compile(rePattern)
+        print "all output will be redirected to " + self.trimlog
         with open(samsungfile) as sfile:
-            for line in sfile:
-                rePattern = r'' + self.keywords['recv'] + '|' + self.keywords['sendreq'] + '|' + self.keywords['sendrsp']
-                samsungPattern = re.compile(rePattern)
+            for lineno, line in enumerate(sfile):
                 if samsungPattern.search(line):
                     with open(self.trimlog, 'a+') as tlog:
-                        tlog.write(line)
+                        tlog.write(str(lineno) + ' ' + line)
 
 
 if __name__ == '__main__':

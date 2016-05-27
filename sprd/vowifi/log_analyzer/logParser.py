@@ -55,7 +55,11 @@ class logParser():
             self.priority = dict()
 
             #prepare the log file handle
-            self.log = glob.glob(self.files['log'])[0]
+            logList = glob.glob(self.files['log'])[0]
+            if not logList:
+                print 'no log file found.'
+                return
+            self.log = logList[0]
             timestamp = self.log[7:].split('.')[0]
             self.trimlog = timestamp + '_' + filterlevel + '.log'
             with open(self.trimlog, 'w') as tlog:
@@ -74,7 +78,11 @@ class logParser():
         the function is used to get pid from ps output
     '''
     def getpid(self):
-        pfile = glob.glob(self.files['process'])[0]
+        pfileList = glob.glob(self.files['process'])[0]
+        if not pfileList:
+            print 'no process log file found.'
+            return
+        pfile = pfileList[0]
         #note: use native ps, not busybox ps, sample is listed below
         #system    1681  283   724960 65316 SyS_epoll_ b6d38f54 S com.juphoon.sprd.service
         if pfile:
