@@ -17,6 +17,7 @@ TODO:
 1. seqdiag
 2. dig into sip message
 3. add record of previous send msg
+4. mkdir for each log
 
 
 
@@ -151,6 +152,7 @@ class flowParser():
                 if sprdPattern.search(line):
                     with open(self.lemonlog, 'a+') as llog:
                         llog.write(str(lineno) + " " + line)
+                    #TODO: add logic to add sip msg
 
 
     def drawDemoDiag(self):
@@ -233,7 +235,7 @@ class flowParser():
                 if not method:
                     print 'recv direction no request method in line ' + str(lineno)
                     return
-                self.diagstr += "UE <- NETWORK [label = \"" + method +"\"];\n"
+                self.diagstr += "UE <- NETWORK [label = \"" + method + " No." + str(lineno)+"\"];\n"
 
 
                 break;
@@ -246,7 +248,7 @@ class flowParser():
                     print 'recv direction no rsp in line ' + str(lineno)
                     return
 
-                self.diagstr += "UE <- NETWORK [label = \"" + rspstr + "\"];\n"
+                self.diagstr += "UE <- NETWORK [label = \"" + rspstr + " No." + str(lineno)+"\"];\n"
 
                 break;
             start += 1
@@ -278,11 +280,11 @@ class flowParser():
             waterline = self.filelines[start]
             if timeretags in waterline:
                 print start, "retransmit previous non-invite request"
-                self.diagstr += "UE -> NETWORK [label = \"retransmit non-invite req\"];\n"
+                self.diagstr += "UE -> NETWORK [label = \"retrans non-invite req" + " No." + str(lineno)+"\"];\n"
                 break;
             if timeratags in waterline:
                 print start, "retransmit previous invite request"
-                self.diagstr += "UE -> NETWORK [label = \"retransmit invite req\"];\n"
+                self.diagstr += "UE -> NETWORK [label = \"retrans invite req" + " No." + str(lineno)+"\"];\n"
                 break;
 
             if requesttags in waterline:
@@ -294,7 +296,7 @@ class flowParser():
                 if not method:
                     print 'send direction no request method in line ' + str(lineno)
                     return
-                self.diagstr += "UE -> NETWORK [label = \"" + method +"\"];\n"
+                self.diagstr += "UE -> NETWORK [label = \"" + method + " No." + str(lineno)+"\"];\n"
                 break
             if responsetags in waterline:
                 #is response
@@ -305,7 +307,7 @@ class flowParser():
                     print 'send direction no rsp in line ' + str(lineno)
                     return
 
-                self.diagstr += "UE -> NETWORK [label = \"" + rspstr + "\"];\n"
+                self.diagstr += "UE -> NETWORK [label = \"" + rspstr + " No." + str(lineno)+"\"];\n"
 
                 break;
             start = start - 1
