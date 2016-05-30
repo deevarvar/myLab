@@ -217,14 +217,17 @@ class flowParser():
                 if sprdPattern.search(line):
                     with open(self.lemonlog, 'a+') as llog:
                         llog.write(str(lineno) + " " + line)
-                    #TODO: add logic to add sip msg
 
-                    #if it is receivertags, search forward
-                    if receiverpattern.search(line):
-                        self.getRecvSip(line, lineno)
-                    #if it is sendertags, search backward
-                    if senderpattern.search(line):
-                        self.getSendSip(line, lineno)
+                #if it is receivertags, search forward
+                if receiverpattern.search(line):
+                    with open(self.lemonlog, 'a+') as llog:
+                        llog.write(str(lineno) + " " + line)
+                    self.getRecvSip(line, lineno)
+                #if it is sendertags, search backward
+                if senderpattern.search(line):
+                    self.getSendSip(line, lineno)
+                    with open(self.lemonlog, 'a+') as llog:
+                        llog.write(str(lineno) + " " + line)
 
     def drawDemoDiag(self):
         #http://blockdiag.com/en/seqdiag/examples.html
