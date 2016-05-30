@@ -90,6 +90,7 @@ class flowParser():
             self.adaptertags = config['sprd']['adaptertags']
             self.sendertags = config['sprd']['sendertags']
             self.receivertags =  config['sprd']['receivertags']
+            self.siptags = config['sprd']['siptags']
 
             self.files = dict()
             self.files['log'] = config['files']['log']
@@ -99,9 +100,15 @@ class flowParser():
                 print 'no log file found.'
                 return
             self.log = logList[0]
+
+            #first we just cache all lines
+            with open(self.log) as logfile:
+                self.loglines = logfile.readlines()
+
             self.lemonlog = 'lemon_' +  self.log
             with open(self.lemonlog, 'w') as tlog:
                 tlog.truncate()
+
 
             #reg type
             self.regtype = 'udp'
@@ -137,6 +144,61 @@ class flowParser():
             self.regtype = 'tcp'
         print 'regtype is ' + self.regtype
 
+    def getSendSip(self,line,lineno):
+        senddatalen =  self.getSendLen(line)
+        if not senddatalen:
+            print 'no recv data len in line ' + str(lineno)
+            return
+
+        #search backward
+        found = 0
+        index = lineno - 1
+
+        while index >= 0:
+            if self.siptags in self.loglines[index]:
+                found +=1
+                print 'found send siptags in ' + str(index) + ', found num is ' + str(found)
+                if found == 1:
+                    end =  index
+                    index = index - 1
+                else:
+                    start = index
+                    break
+            else:
+                index = index - 1
+        with open(self.lemonlog, 'a+') as llog:
+            print start, end
+            for pindex in range(start,end+1):
+                llog.write(self.loglines[pindex])
+
+    def getRecvSip(self,line, lineno):
+        recvdatalen = self.getRecvLen(line)
+        if not recvdatalen:
+            print 'no recv data len in line ' + str(lineno)
+            return
+        #search forward
+        #we have to search two siptags and write the lines between the two tags
+        found = 0
+        index = lineno + 1
+
+        while index <=  len(self.loglines):
+            if self.siptags in self.loglines[index]:
+                found += 1
+                print 'found recv siptags in ' + str(index) + ', found num is ' + str(found)
+                if found == 1:
+                    start = index
+                    index += 1
+                else:
+                    end = index
+                    #if we found two siptags then break
+                    break
+            else:
+                index += 1
+        with open(self.lemonlog, 'a+') as llog:
+            print start, end
+            for pindex in range(start,end+1):
+                llog.write(self.loglines[pindex])
+
     def getFlow(self):
         #rePattern = r'' + 'fsm(.*)' + ' | \[TIMER.*\]' + '|recv.*data' + '| process request' + '|process response'
         lemonpattern = self.getPattern(self.lemontags)
@@ -145,6 +207,9 @@ class flowParser():
             print 'lemonpattern is none!'
             return
         sprdPattern = re.compile(lemonpattern)
+        senderpattern = re.compile(r'' + self.sendertags)
+        receiverpattern = re.compile(r'' +  self.receivertags)
+
         print "all output will be redirected to " + self.lemonlog
         with open(self.log) as logfile:
             for lineno, line in enumerate(logfile):
@@ -154,8 +219,15 @@ class flowParser():
                         llog.write(str(lineno) + " " + line)
                     #TODO: add logic to add sip msg
 
+                    #if it is receivertags, search forward
+                    if receiverpattern.search(line):
+                        self.getRecvSip(line, lineno)
+                    #if it is sendertags, search backward
+                    if senderpattern.search(line):
+                        self.getSendSip(line, lineno)
 
     def drawDemoDiag(self):
+        #http://blockdiag.com/en/seqdiag/examples.html
         diagram_definition = u"""
            seqdiag {
               browser  -> webserver [label = "GET /index.html"];
@@ -175,6 +247,30 @@ class flowParser():
             return None
         recvdatalen = int(matchpattern.group(1))
         return recvdatalen
+
+    def getRecvLen(self, line):
+        #first of all , check the recv data's length
+        recvpattern = r'.*recv.*data\(len:(.*)\).*'
+        recvdatalen = self.getDataLen(recvpattern, line)
+
+        #FIXME: the 250 is some kind of exp value
+        if recvdatalen < 250:
+            print 'receiving non-SIP msg, len is ' + str(recvdatalen)
+            return None
+        else:
+            return recvdatalen
+
+
+    def getSendLen(self, line):
+        #get length
+        sendpattern = r'.*send data\[(.*)\].*to.*'
+        senddatalen = self.getDataLen(sendpattern, line)
+        #FIXME: the 250 is some kind of exp value
+        if senddatalen < 250:
+            print 'send non-SIP msg , len is ' + str(senddatalen)
+            return  None
+        else:
+            return senddatalen
 
     def getReqMethod(self, line):
         requestpattern = re.compile(".* process request \<(.*)\>.*")
@@ -206,27 +302,20 @@ class flowParser():
         #when "recv data", search forward
         #note: sip msg is usually larger than 250 bytes.
         #print line,
-        #first of all , check the recv data's length
-        line = self.filelines[lineno]
-        print lineno,line,
-
-        recvpattern = r'.*recv.*data\(len:(.*)\).*'
-        recvdatalen = self.getDataLen(recvpattern, line)
+        line = self.lemonlines[lineno]
+        recvdatalen = self.getRecvLen(line)
 
         if not recvdatalen:
             print 'no recv data len in line' + str(lineno)
             return
-        #FIXME: the 250 is some kind of exp value
-        if recvdatalen < 250:
-            print 'receiving non-SIP msg, len is ' + str(recvdatalen) + ', in line ' + str(lineno)
-            return
+
         #start to search forward
         start = lineno+1
         requesttags = "process request"
         responsetags = "process response"
 
-        while start <= len(self.filelines):
-            waterline = self.filelines[start]
+        while start <= len(self.lemonlines):
+            waterline = self.lemonlines[start]
             if requesttags in waterline:
                 #is request
                 print start,waterline, ' recv req'
@@ -261,23 +350,15 @@ class flowParser():
         timeretags = "TIMER E"
         timeratags = "TIMER A"
 
-        line = self.filelines[lineno]
-        #get length
-        sendpattern = r'.*send data\[(.*)\].*to.*'
-        senddatalen = self.getDataLen(sendpattern, line)
+        line = self.lemonlines[lineno]
+        senddatalen = self.getSendLen(line)
         if not senddatalen:
             print 'no send data len in line' + str(lineno)
             return
-
-        #FIXME: the 250 is some kind of exp value
-        if senddatalen < 250:
-            print 'send non-SIP msg , len is ' + str(senddatalen) + ', in line ' + str(lineno)
-            return
         #start to search backward
-        print lineno,line,
         start = lineno - 1
         while start >= 0:
-            waterline = self.filelines[start]
+            waterline = self.lemonlines[start]
             if timeretags in waterline:
                 print start, "retransmit previous non-invite request"
                 self.diagstr += "UE -> NETWORK [label = \"retrans non-invite req" + " No." + str(lineno)+"\"];\n"
@@ -325,7 +406,8 @@ class flowParser():
 
         #first we just cache all lines
         with open(self.lemonlog) as lemonlog:
-            self.filelines = lemonlog.readlines()
+            self.lemonlines = lemonlog.readlines()
+
         with open(self.lemonlog) as lemonlog:
             for lineno,line in enumerate(lemonlog):
                 #big loop
@@ -333,8 +415,6 @@ class flowParser():
                     self.searchRecv(lineno,  lemonlog)
                 if senderpattern.search(line):
                     self.searchSend(lineno, lemonlog)
-
-                pass
 
     def drawLemonDiag(self):
         diagram_definition = u"""seqdiag {"""
