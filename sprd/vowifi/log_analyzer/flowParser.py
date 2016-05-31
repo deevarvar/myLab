@@ -14,10 +14,12 @@ simplify the process:
 1. sendto error
 
 TODO:
-1. seqdiag
+1. seqdiag DONE
+
 2. dig into sip message
-3. add record of previous send msg
-4. mkdir for each log
+#  2.1 record every request/response
+#  2.2 record each field in req/resp
+#  2.3 prepare the field parser
 
 
 
@@ -77,12 +79,18 @@ import re
 from configobj import ConfigObj,ConfigObjError
 from seqdiag import parser, builder, drawer
 
+#add user defined lib
+sys.path.append('./lib')
+from SipParser import SipParser
+
+path = os.path.dirname(os.path.realpath(__file__))
+
 
 
 class flowParser():
     def __init__(self):
         try:
-            configfile = 'config.ini'
+            configfile = path + '/config.ini'
             config = ConfigObj(configfile, file_error=True)
             self.config = config
             self.lemontags = config['sprd']['lemontags']
@@ -108,6 +116,10 @@ class flowParser():
             self.lemonlog = 'lemon_' +  self.log
             with open(self.lemonlog, 'w') as tlog:
                 tlog.truncate()
+
+            #important structure: sipmsgs, is a list with order
+            self.sipmsgs = list()
+
 
 
             #reg type
@@ -168,8 +180,15 @@ class flowParser():
                 index = index - 1
         with open(self.lemonlog, 'a+') as llog:
             print start, end
-            for pindex in range(start,end+1):
+            sendsip = dict()
+            sendsip['send'] = True
+            sendsip['lineno'] = lineno
+            sendsip['msg'] = list()
+            for pindex in range(start+1,end):
+                sendsip['msg'].append(self.loglines[pindex])
                 llog.write(self.loglines[pindex])
+        self.sipmsgs.append(sendsip)
+
 
     def getRecvSip(self,line, lineno):
         recvdatalen = self.getRecvLen(line)
@@ -196,8 +215,15 @@ class flowParser():
                 index += 1
         with open(self.lemonlog, 'a+') as llog:
             print start, end
-            for pindex in range(start,end+1):
+            recvsip = dict()
+            recvsip['send'] = False
+            recvsip['msg'] = list()
+            recvsip['lineno'] = lineno
+            #record req line and other fields here
+            for pindex in range(start+1,end):
+                recvsip['msg'].append(self.loglines[pindex])
                 llog.write(self.loglines[pindex])
+        self.sipmsgs.append(recvsip)
 
     def getFlow(self):
         #rePattern = r'' + 'fsm(.*)' + ' | \[TIMER.*\]' + '|recv.*data' + '| process request' + '|process response'
@@ -396,7 +422,12 @@ class flowParser():
                 break;
             start = start - 1
 
-    def parseFlow(self):
+
+    def parseFlowOld(self):
+        '''
+            obsoleted function, old function which will not be used any more
+        :return:
+        '''
         # NOTE:
         #     1. identify msg sender: UTPT.*send data/msg recviver: recv data
         #      Timer E's send data
@@ -419,11 +450,40 @@ class flowParser():
                 if senderpattern.search(line):
                     self.searchSend(lineno, lemonlog)
 
+    def parseFlow(self):
+        '''
+            generate the diag from self.sipmsgs
+        :return:
+        '''
+        sipparser = SipParser(configpath='./')
+        for index, sipobj in enumerate(self.sipmsgs):
+            lineno = sipobj['lineno']
+            #1. get direction
+            if sipobj['send'] == True:
+                direct = '->'
+            else:
+                direct = '<-'
+            #2. parse the sip, it is also a list
+            sip = sipobj['msg']
+            for msgindex,header in enumerate(sip):
+                #get reqeust line/status line, other header
+                method = sipparser.getMethod(header)
+                if method:
+                    print 'found method ' + method  + ' in ' + str(index) + ' sip msg'
+                    self.diagstr += "UE " + direct + " NETWORK [label = \"" + method + " No." + str(lineno)+"\"];\n"
+                    break
+
+                status = sipparser.getStatusLine(header)
+                if status:
+                    print 'found status ' + status + ' in ' +  str(index) + ' sip msg'
+                    self.diagstr += "UE " + direct + " NETWORK [label = \"" + status + " No." + str(lineno)+"\"];\n"
+                    break
+
     def drawLemonDiag(self):
-        diagram_definition = u"""seqdiag {"""
+        diagram_definition = u"""seqdiag {\n"""
 
         diagram_definition += self.diagstr
-        diagram_definition += u""" }"""
+        diagram_definition += u""" }\n"""
         # generate the diag string and draw it
         print diagram_definition
         tree = parser.parse_string(diagram_definition)
@@ -437,5 +497,7 @@ if __name__ == '__main__':
     fp = flowParser()
     fp.getFlow()
     #fp.drawDemoDiag()
+    #fp.parseFlowOld()
     fp.parseFlow()
     fp.drawLemonDiag()
+    #print len(fp.sipmsgs)
