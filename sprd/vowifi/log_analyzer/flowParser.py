@@ -175,6 +175,10 @@ class flowParser():
                     index = index - 1
                 else:
                     start = index
+                    #record the timestamp
+                    fields = self.loglines[index].split(' ')
+                    #04-17 23:21:24.420
+                    timestamp = fields[0] + ' ' + fields[1]
                     break
             else:
                 index = index - 1
@@ -183,6 +187,7 @@ class flowParser():
             sendsip = dict()
             sendsip['send'] = True
             sendsip['lineno'] = lineno
+            sendsip['timestamp'] = timestamp
             sendsip['msg'] = list()
             for pindex in range(start+1,end):
                 sendsip['msg'].append(self.loglines[pindex])
@@ -209,6 +214,10 @@ class flowParser():
                     index += 1
                 else:
                     end = index
+                    #record the timestamp
+                    fields = self.loglines[index].split(' ')
+                    #04-17 23:21:24.420
+                    timestamp = fields[0] + ' ' + fields[1]
                     #if we found two siptags then break
                     break
             else:
@@ -219,6 +228,7 @@ class flowParser():
             recvsip['send'] = False
             recvsip['msg'] = list()
             recvsip['lineno'] = lineno
+            recvsip['timestamp'] = timestamp
             #record req line and other fields here
             for pindex in range(start+1,end):
                 recvsip['msg'].append(self.loglines[pindex])
@@ -242,18 +252,18 @@ class flowParser():
                 self.getRegType(line)
                 if sprdPattern.search(line):
                     with open(self.lemonlog, 'a+') as llog:
-                        llog.write(str(lineno) + " " + line)
+                        llog.write(line)
 
                 #if it is receivertags, search forward
                 if receiverpattern.search(line):
                     with open(self.lemonlog, 'a+') as llog:
-                        llog.write(str(lineno) + " " + line)
+                        llog.write(line)
                     self.getRecvSip(line, lineno)
                 #if it is sendertags, search backward
                 if senderpattern.search(line):
                     self.getSendSip(line, lineno)
                     with open(self.lemonlog, 'a+') as llog:
-                        llog.write(str(lineno) + " " + line)
+                        llog.write(line)
 
     def drawDemoDiag(self):
         #http://blockdiag.com/en/seqdiag/examples.html
@@ -450,6 +460,23 @@ class flowParser():
                 if senderpattern.search(line):
                     self.searchSend(lineno, lemonlog)
 
+
+    def assembleDiagStr(self,diaginfo):
+        #UE -> NETWORK [label = "200 OK", note = "Cseq 1 REGISTER\n lineno: 888"];
+        #TODO: UE and NETWORK maybe need to change
+        basedirect =  "UE " + diaginfo['direct'] + " NETWORK "
+        label =  "[label = \"" + diaginfo['label'] + "\""
+
+        timestamp = "\"time: " + diaginfo['timestamp'] + "\n"
+        cseq = " CSeq: " + diaginfo['cseq'] + '\n'
+        lineno = " lineno: " + str(diaginfo['lineno']) + "\""
+        note = ", note = " + timestamp + cseq + lineno
+
+        label = label + note + "];"
+        #print label
+        self.diagstr +=  basedirect + label
+
+
     def parseFlow(self):
         '''
             generate the diag from self.sipmsgs
@@ -458,6 +485,7 @@ class flowParser():
         sipparser = SipParser(configpath='./')
         for index, sipobj in enumerate(self.sipmsgs):
             lineno = sipobj['lineno']
+            timestamp = sipobj['timestamp']
             #1. get direction
             if sipobj['send'] == True:
                 direct = '->'
@@ -465,19 +493,38 @@ class flowParser():
                 direct = '<-'
             #2. parse the sip, it is also a list
             sip = sipobj['msg']
+            diaginfo = dict()
             for msgindex,header in enumerate(sip):
                 #get reqeust line/status line, other header
+                cseq = sipparser.getCSeq(header)
+                if cseq:
+                    print 'found cseq ' + cseq  + ' in ' + str(index) + ' sip msg'
+                    diaginfo['cseq'] = cseq
+                    continue
                 method = sipparser.getMethod(header)
+
                 if method:
                     print 'found method ' + method  + ' in ' + str(index) + ' sip msg'
-                    self.diagstr += "UE " + direct + " NETWORK [label = \"" + method + " No." + str(lineno)+"\"];\n"
-                    break
+                    diaginfo['lineno'] = lineno
+                    diaginfo['direct'] = direct
+                    diaginfo['label'] =  method
+                    diaginfo['timestamp'] = timestamp
+                    #self.diagstr += "UE " + direct + " NETWORK [label = \"" + method + " No." + str(lineno)+"\"];\n"
+                    continue
 
                 status = sipparser.getStatusLine(header)
                 if status:
                     print 'found status ' + status + ' in ' +  str(index) + ' sip msg'
-                    self.diagstr += "UE " + direct + " NETWORK [label = \"" + status + " No." + str(lineno)+"\"];\n"
-                    break
+                    diaginfo['lineno'] = lineno
+                    diaginfo['direct'] = direct
+                    diaginfo['label'] = status
+                    diaginfo['timestamp'] = timestamp
+                    #self.diagstr += "UE " + direct + " NETWORK [label = \"" + status + " No." + str(lineno)+"\"];\n"
+                    continue
+
+            #add function to construct the diagram string
+            if diaginfo:
+                self.assembleDiagStr(diaginfo)
 
     def drawLemonDiag(self):
         diagram_definition = u"""seqdiag {\n"""
