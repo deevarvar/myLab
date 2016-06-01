@@ -20,7 +20,8 @@ TODO:
 #  2.1 record every request/response
 #  2.2 record each field in req/resp
 #  2.3 prepare the field parser
-
+#  2.4 store all import field into array and then parse all UE.
+#     record INVITE's call-id
 
 
 1. attach
@@ -120,12 +121,22 @@ class flowParser():
             #important structure: sipmsgs, is a list with order
             self.sipmsgs = list()
 
-
+            self.sipparser = SipParser(configpath='./')
 
             #reg type
             self.regtype = 'udp'
             #seqdiag str
             self.diagstr = ""
+
+            #record recompiled sip msg, which include more important msg
+            self.trimsips = list()
+
+            #record all entity UE or Network
+            self.entities = list()
+
+
+
+
         except (ConfigObjError, IOError) as e:
              print('Could not read "%s": %s' % (configfile, e))
 
@@ -462,7 +473,7 @@ class flowParser():
 
 
     def assembleDiagStr(self,diaginfo):
-        #UE -> NETWORK [label = "200 OK", note = "Cseq 1 REGISTER\n lineno: 888"];
+        #sample UE -> NETWORK [label = "200 OK", note = "Cseq 1 REGISTER\n lineno: 888"];
         #TODO: UE and NETWORK maybe need to change
         basedirect =  "UE " + diaginfo['direct'] + " NETWORK "
         label =  "[label = \"" + diaginfo['label'] + "\""
@@ -472,9 +483,42 @@ class flowParser():
         lineno = " lineno: " + str(diaginfo['lineno']) + "\""
         note = ", note = " + timestamp + cseq + lineno
 
-        label = label + note + "];"
+        label = label + note + "];\n"
         #print label
         self.diagstr +=  basedirect + label
+
+
+    def dumpTrimsip(self):
+        '''
+        use to dump all trimp sip with important info
+        :return:
+        '''
+        for sipindex, sip in enumerate(self.trimsips):
+            print 'request index is ' + str(sipindex)
+            for key,value in sip.iteritems():
+                print str(key) + ':' + str(value)
+
+    def analyzeSip(self):
+        #get all UE's phone number,
+        #check if reinivte does not have sdp
+
+        #rules are listed below:
+        # 1. only invite has 'from', 'to'
+        #
+        for sipindex, sip in enumerate(self.trimsips):
+            for key,value in sip.iteritems():
+                if key == 'from' or key == 'to':
+                    num = self.sipparser.getNumber(value)
+                    if num not in self.entities:
+                        self.entities.append(num)
+
+        print len(self.entities)
+        #dump all the entities
+        for index, entity in enumerate(self.entities):
+            print entity
+
+
+
 
 
     def parseFlow(self):
@@ -482,7 +526,7 @@ class flowParser():
             generate the diag from self.sipmsgs
         :return:
         '''
-        sipparser = SipParser(configpath='./')
+        sipparser = self.sipparser
         for index, sipobj in enumerate(self.sipmsgs):
             lineno = sipobj['lineno']
             timestamp = sipobj['timestamp']
@@ -494,22 +538,44 @@ class flowParser():
             #2. parse the sip, it is also a list
             sip = sipobj['msg']
             diaginfo = dict()
+            diaginfo['isinvite'] = False
             for msgindex,header in enumerate(sip):
                 #get reqeust line/status line, other header
-                cseq = sipparser.getCSeq(header)
-                if cseq:
-                    print 'found cseq ' + cseq  + ' in ' + str(index) + ' sip msg'
-                    diaginfo['cseq'] = cseq
-                    continue
-                method = sipparser.getMethod(header)
 
+                method = sipparser.getMethod(header)
                 if method:
                     print 'found method ' + method  + ' in ' + str(index) + ' sip msg'
                     diaginfo['lineno'] = lineno
                     diaginfo['direct'] = direct
                     diaginfo['label'] =  method
                     diaginfo['timestamp'] = timestamp
-                    #self.diagstr += "UE " + direct + " NETWORK [label = \"" + method + " No." + str(lineno)+"\"];\n"
+                    #if method is INVITE, check Call-ID and From, to
+                    if method == 'INVITE':
+                        diaginfo['isinvite'] = True
+                    continue
+
+                if diaginfo['isinvite']:
+                    if 'callid' not in diaginfo:
+                        callid = sipparser.getHeaderContent(header, 'Call-ID')
+                        if callid:
+                            diaginfo['callid'] = callid
+
+                    if 'from' not in diaginfo:
+                        fromtag = sipparser.getHeaderContent(header, 'From')
+                        if fromtag:
+                            diaginfo['from'] = fromtag
+
+                    if 'to' not in diaginfo:
+                        totag = sipparser.getHeaderContent(header, 'To')
+                        if totag:
+                            diaginfo['to'] = totag
+
+
+
+                cseq = sipparser.getCSeq(header)
+                if cseq:
+                    print 'found cseq ' + cseq  + ' in ' + str(index) + ' sip msg'
+                    diaginfo['cseq'] = cseq
                     continue
 
                 status = sipparser.getStatusLine(header)
@@ -523,8 +589,14 @@ class flowParser():
                     continue
 
             #add function to construct the diagram string
+            #TODO: store all possible sips
+            self.trimsips.append(diaginfo)
             if diaginfo:
                 self.assembleDiagStr(diaginfo)
+        #dump the trim sip
+        self.dumpTrimsip()
+        #analyze the trim sip
+        self.analyzeSip()
 
     def drawLemonDiag(self):
         diagram_definition = u"""seqdiag {\n"""

@@ -19,25 +19,26 @@ class SipParser():
             self.rspline = config['sipParser']['rspline']
             self.headerline = config['sipParser']['headerline']
             self.cseqline = config['sipParser']['cseqline']
+            self.numpattern = config['sipParser']['numpattern']
 
             #define compact headers
             #http://www.cs.columbia.edu/sip/compact.html
             self.sipcompact = dict()
-            self.sipcompact['a'] = 'Accept-Contact'
-            self.sipcompact['b'] = 'Referred-By'
-            self.sipcompact['c'] = 'Content-Type'
-            self.sipcompact['e'] = 'Content-Encoding'
-            self.sipcompact['f'] = 'From'
-            self.sipcompact['i'] = 'Call-ID'
-            self.sipcompact['k'] = 'Supported'
-            self.sipcompact['l'] = 'Content-Length'
-            self.sipcompact['m'] = 'Contact'
-            self.sipcompact['o'] = 'Event'
-            self.sipcompact['r'] = 'Refer-To'
-            self.sipcompact['s'] = 'Subject'
-            self.sipcompact['t'] = 'To'
-            self.sipcompact['u'] = 'Allow-Events'
-            self.sipcompact['v'] = 'Via'
+            self.sipcompact['Accept-Contact'] = 'a'
+            self.sipcompact['Referred-By'] = 'b'
+            self.sipcompact['Content-Type'] = 'c'
+            self.sipcompact['Content-Encoding'] = 'e'
+            self.sipcompact['From'] = 'f'
+            self.sipcompact['Call-ID'] = 'i'
+            self.sipcompact['Supported'] = 'k'
+            self.sipcompact['Content-Length'] = 'l'
+            self.sipcompact['Contact'] = 'm'
+            self.sipcompact['Event'] = 'o'
+            self.sipcompact['Refer-To'] = 'r'
+            self.sipcompact['Subject'] = 's'
+            self.sipcompact['To'] = 't'
+            self.sipcompact['Allow-Events'] = 'u'
+            self.sipcompact['Via'] = 'v'
 
 
         except (ConfigObjError, IOError) as e:
@@ -49,7 +50,7 @@ class SipParser():
         if not match:
             print 'no req in line ' + line
             return
-        method = match.group(1)
+        method = match.group(1).strip()
         print method
         return method
 
@@ -59,7 +60,7 @@ class SipParser():
         if not match:
             print 'no rsp in line ' + line
             return
-        status = match.group(1)
+        status = match.group(1).strip()
         print status
         return status
 
@@ -69,9 +70,31 @@ class SipParser():
         if not match:
             print 'no cseq in line ' + line
             return
-        cseq = match.group(1)
+        cseq = match.group(1).strip()
         print cseq
         return cseq
+
+    def checkCompact(self, source, target):
+        if source == target or  (target in self.sipcompact and source == self.sipcompact[target]):
+            print 'found header ' + target
+            return True
+        else:
+            return False
+
+    def getHeaderContent(self,line, headername):
+        pair = self.getHeaderline(line)
+
+        if not pair:
+            return None
+
+        header = pair['header']
+        content = pair['content']
+        if self.checkCompact(header, headername):
+            return content
+        else:
+            print 'no ' + headername + ' in line ' + line
+            return None
+
 
     def getHeaderline(self, line):
         headerpattern = re.compile(self.headerline)
@@ -84,11 +107,22 @@ class SipParser():
         content = match.group(2)
         pair = dict()
         pair['header'] = header
-        pair['content'] = content
+        pair['content'] = content.strip()
         print 'header is ' + pair['header'] + ', content is ' + pair['content']
         return pair
 
+    def getNumber(self, string):
+        numpattern = re.compile(self.numpattern)
+        match = numpattern.search(string)
+        if not match:
+            print 'no num in string ' + string
+            return
+        num = match.group(1).strip()
+        print num
+        return num
+
 if __name__ == '__main__':
+    #TODO write own ut function
     reqline = "04-17 23:21:27.697  1681  2968 D LEMON   : REGISTER sip:ims.mnc872.mcc405.3gppnetwork.org SIP/2.0"
     sp = SipParser()
     sp.getMethod(reqline)
@@ -98,3 +132,18 @@ if __name__ == '__main__':
     sp.getHeaderline(headerline)
     cseqline = "04-17 23:34:39.275  1681  2968 D LEMON   : CSeq:9 ACK"
     sp.getCSeq(cseqline)
+
+    callidline1 = "05-05 16:09:30.385  1965  2897 D LEMON   : i:I2bu99501.6v.eopCs2421Cn.i@[2405:204:1a03:45c7::2aa3:38ac]"
+    callidline2 = "05-05 16:07:55.412  1965  2897 D LEMON   : Call-ID: I2bu99501.6v.eopCs2421Cn.i@[2405:204:1a03:45c7::2aa3:38ac]"
+    sp.getHeaderContent(callidline1, 'Call-ID')
+    sp.getHeaderContent(callidline2, 'Call-ID')
+
+    fromline1 = "05-05 16:16:36.286  1965  2897 D LEMON   : From: \"+917011021774\"<sip:+917011021774@ims.mnc872.mcc405.3gppnetwork.org>;tag=chi6.0WU1e0Z4WD9"
+    fromline2 = "05-05 16:16:36.195  1965  2897 D LEMON   : f:\"+917011021774\"<sip:+917011021774@ims.mnc872.mcc405.3gppnetwork.org>;tag=chi6.0WU1e0Z4WD9"
+    sp.getHeaderContent(fromline1, 'From')
+    sp.getHeaderContent(fromline2, 'From')
+
+    fromtag = "from:<sip:+917011021754@ims.mnc872.mcc405.3gppnetwork.org>;tag=atqPR_w.eSVudV4213iBTI1a_7"
+    totag = "to:\"+917011021774\"<sip:+917011021774@ims.mnc872.mcc405.3gppnetwork.org>;tag=chi6.0WU1e0Z4WD9"
+    sp.getNumber(fromtag)
+    sp.getNumber(totag)
