@@ -1,0 +1,1594 @@
+04-29 15:55:08.457  1945  2046 D LEMON   : 15:55:08.457 ZOS: INFO: fsm(ADNS) sess@[2943848516] state <IDLE> run [USER FQDN ] event ok.
+04-29 15:55:08.457  1945  2046 D LEMON   : 15:55:08.457 ZOS: INFO: fsm(ADNS) sess@[2943848516] state <IDLE> to <FQDNIPV6>.
+04-29 15:55:08.472  1945  2046 D LEMON   : 15:55:08.472 UTPT: INFO: conn[0x1] send data[60] to [192.168.8.1:53] ok.
+04-29 15:55:08.473  1945  2046 D LEMON   : 15:55:08.473 ZOS: INFO: fsm(ADNS) sess@[2943848516] state <FQDNIPV6> run [USER FQDN ] event ok.
+04-29 15:55:09.727  1945  2043 D LEMON   : 15:55:09.727 UTPT: INFO: recv udp data(len:60) from [192.168.8.1:53].
+04-29 15:55:09.728  1945  2839 D LEMON   : 15:55:09.728 UTPT: INFO: conn[0x1] send data[60] to [0.0.0.0:53] ok.
+04-29 15:55:14.729  1945  2046 D LEMON   : 15:55:14.729 ZOS: INFO: fsm(ADNS) sess@[2943848516] state <FQDNIPV6> run [DNS] event ok.
+04-29 15:55:14.730  1945  2046 D LEMON   : 15:55:14.730 ZOS: INFO: fsm(ADNS) sess@[2943848516] state <FQDNIPV6> run [USER FQDN ] event ok.
+04-29 15:55:14.730  1945  2046 D LEMON   : 15:55:14.730 ZOS: INFO: fsm(ADNS) sess@[2943848516] state <FQDNIPV6> to <FQDN>.
+04-29 15:55:14.730  1945  2046 D LEMON   : 15:55:14.730 ZOS: INFO: fsm(ADNS) sess@[2943848516] state <FQDN> run [USER FQDN ] event ok.
+04-29 15:55:14.754  1945  2046 D LEMON   : 15:55:14.754 UTPT: INFO: conn[0x2] send data[60] to [192.168.8.1:53] ok.
+04-29 15:55:14.754  1945  2046 D LEMON   : 15:55:14.754 ZOS: INFO: fsm(ADNS) sess@[2943848516] state <FQDN> run [USER FQDN ] event ok.
+04-29 15:55:14.807  1945  2043 D LEMON   : 15:55:14.807 UTPT: INFO: recv udp data(len:92) from [192.168.8.1:53].
+04-29 15:55:14.809  1945  2046 D LEMON   : 15:55:14.809 ZOS: INFO: fsm(ADNS) sess@[2943848516] state <FQDN> run [DNS] event ok.
+04-29 15:55:14.810  1945  2046 D LEMON   : 15:55:14.810 ZOS: INFO: fsm(ADNS) sess@[2943848516] state <FQDN> run [USER FQDN ] event ok.
+04-29 15:55:14.810  1945  2046 D LEMON   : 15:55:14.810 ZOS: INFO: fsm(ADNS) sess@[2943848516] state <FQDN> to <ESTABLISHED>.
+04-29 15:55:14.815  1945  2046 D LEMON   : 15:55:14.815 ZOS: INFO: fsm(ADNS) sess@[2943848516] state <ESTABLISHED> run [USER STOP] event ok.
+04-29 15:55:14.815  1945  2046 D LEMON   : 15:55:14.815 ZOS: INFO: fsm(ADNS) sess@[2943848516] state <ESTABLISHED> to <TERMINATED>.
+04-29 15:55:16.988  1933  2056 D LEMON   : 15:55:16.988 ZOS: INFO: fsm(MRF_REG) reg@[17] state <IDLE> run [USER REGISTER] event ok.
+04-29 15:55:16.988  1933  2056 D LEMON   : 15:55:16.988 ZOS: INFO: fsm(MRF_REG) reg@[17] state <IDLE> to <REGING>.
+04-29 15:55:16.989  1933  2891 D LEMON   : 15:55:16.989 SIP: INFO: dlg @10004 process request <REGISTER>.
+04-29 15:55:16.989  1933  2891 D LEMON   : 15:55:16.989 SIP: INFO: module create tmr<0xC> [TIMER E] ok.
+04-29 15:55:16.989  1933  2891 D LEMON   : 15:55:16.989 SIP: INFO: module create tmr<0xD> [TIMER F] ok.
+04-29 15:55:16.989  1933  2891 D LEMON   : 15:55:16.989 SIP: INFO: module create tmr<0xE> [TIMER K] ok.
+04-29 15:55:16.989  1933  2891 D LEMON   : 15:55:16.989 SIP: INFO: module create tmr<0xF> [TIMER WAIT_CONN] ok.
+04-29 15:55:16.989  1933  2891 D LEMON   : 15:55:16.989 SIP: INFO: module create tmr<0x10> [TIMER C] ok.
+04-29 15:55:16.989  1933  2891 D LEMON   : 15:55:16.989 ZOS: INFO: fsm(SIP_VRTD) vrtd@[65540] state <IDLE> run [CIM_REQ] event ok.
+04-29 15:55:16.989  1933  2891 D LEMON   : 15:55:16.989 ZOS: INFO: fsm(SIP_VRTD) vrtd@[65540] state <IDLE> to <REQ OUT>.
+04-29 15:55:16.990  1933  2891 D LEMON   : 15:55:16.990 SIP: INFO: trans @10006 process request <REGISTER>.
+04-29 15:55:16.994  1933  2891 D LEMON   : REGISTER sip:ims.mnc872.mcc405.3gppnetwork.org SIP/2.0
+04-29 15:55:16.994  1933  2891 D LEMON   : To: <sip:405872000010354@ims.mnc872.mcc405.3gppnetwork.org>
+04-29 15:55:16.994  1933  2891 D LEMON   : From: <sip:405872000010354@ims.mnc872.mcc405.3gppnetwork.org>;tag=J0deoMhinod59eRC0Ly321*t4-
+04-29 15:55:16.994  1933  2891 D LEMON   : Contact: <sip:405872000010354@[2405:204:1803:1f53::251a:e0ad]:5060;transport=udp>;+sip.instance="<urn:gsma:imei:86740002-050381-3>";expires=86400;+g.3gpp.icsi-ref="urn%%3Aurn-7%%3A3gpp-service.ims.icsi.mmtel";video;+g.3gpp.smsip
+04-29 15:55:16.994  1933  2891 D LEMON   : Supported: path,gruu,outbound,sec-agree
+04-29 15:55:16.994  1933  2891 D LEMON   : Allow: INVITE,ACK,OPTIONS,BYE,CANCEL,REGISTER,INFO,PRACK,SUBSCRIBE,NOTIFY,MESSAGE,REFER
+04-29 15:55:16.994  1933  2891 D LEMON   : P-Access-Network-Info: IEEE-802.11;i-wlan-node-id=4045da1352c7
+04-29 15:55:16.994  1933  2891 D LEMON   : Security-Client: ipsec-3gpp;prot=esp;alg=hmac-md5-96;ealg=null;mod=trans;spi-c=2850665821;spi-s=2850665822;port-c=36862;port-s=5255,ipsec-3gpp;prot=esp;alg=hmac-md5-96;ealg=des-ede3-cbc;mod=trans;spi-c=2850665821;spi-s=2850665822;port-c=36862;port-s=5255,ipsec-3gpp;prot=esp;alg=hmac-md5-96;ealg=aes-cbc;mod=trans;spi-c=2850665821;spi-s=2850665822;port-c=36862;port-s=5255,ipsec-3gpp;prot=esp;alg=hmac-sha-1-96;ealg=null;mod=trans;spi-c=2850665821;spi-s=2850665822;port-c=36862;port-s=5255,ipsec-3gpp;prot=esp;alg=hmac-sha-1-96;ealg=des-ede3-cbc;mod=trans;spi-c=2850665821;spi-s=2850665822;port-c=36862;port-s=5255,ipsec-3gpp;prot=esp;alg=hmac-sha-1-96;ealg=aes-cbc;mod=trans;spi-c=2850665821;spi-s=2850665822;port-c=36862;port-s=5255
+04-29 15:55:16.994  1933  2891 D LEMON   : Proxy-Require: sec-agree
+04-29 15:55:16.994  1933  2891 D LEMON   : Require: sec-agree
+04-29 15:55:16.994  1933  2891 D LEMON   : Authorization: Digest username="405872000010354@ims.mnc872.mcc405.3gppnetwork.org",uri="sip:ims.mnc872.mcc405.3gppnetwork.org",realm="ims.mnc872.mcc405.3gppnetwork.org",nonce="",response="",algorithm=AKAv1-MD5
+04-29 15:55:16.994  1933  2891 D LEMON   : Call-ID: adeoMhinod59eRC0Lx321ibgx3@[2405:204:1803:1f53::251a:e0ad]
+04-29 15:55:16.994  1933  2891 D LEMON   : CSeq: 1 REGISTER
+04-29 15:55:16.994  1933  2891 D LEMON   : Max-Forwards: 70
+04-29 15:55:16.994  1933  2891 D LEMON   : User-Agent: VoWIFI/WFC UA
+04-29 15:55:16.994  1933  2891 D LEMON   : Via: SIP/2.0/UDP [2405:204:1803:1f53::251a:e0ad]:5060;branch=z9hG4bKx3adeoMhinod59eRC0Lz321jbg;rport
+04-29 15:55:16.994  1933  2891 D LEMON   : Content-Length: 0
+04-29 15:55:16.994  1933  2891 D LEMON   : 
+04-29 15:55:16.994  1933  2891 D LEMON   : 
+04-29 15:55:16.995  1933  2891 D LEMON   : 15:55:16.995 UTPT: INFO: conn[0x3] send data[1881] to [2405:200:330:1581::1b:5060] ok.
+04-29 15:55:16.996  1933  2891 D LEMON   : 15:55:16.996 SIP: INFO: module start tmr<0xC> [TIMER E] <2000ms> ok.
+04-29 15:55:16.996  1933  2891 D LEMON   : 15:55:16.996 SIP: INFO: module start tmr<0xD> [TIMER F] <128000ms> ok.
+04-29 15:55:16.996  1933  2891 D LEMON   : 15:55:16.996 ZOS: INFO: fsm(SIP_NICT) trans@[65542] state <IDLE> run [SEND_NONINVITE] event ok.
+04-29 15:55:16.996  1933  2891 D LEMON   : 15:55:16.996 ZOS: INFO: fsm(SIP_NICT) trans@[65542] state <IDLE> to <TRYING>.
+04-29 15:55:17.559  1933  2058 D LEMON   : 15:55:17.559 UTPT: INFO: recv udp data(len:1304) from [2405:200:330:1581::1b:5060].
+04-29 15:55:17.564  1933  2891 D LEMON   : SIP/2.0 401 Unauthorized
+04-29 15:55:17.564  1933  2891 D LEMON   : t:<sip:405872000010354@ims.mnc872.mcc405.3gppnetwork.org>;tag=2030250368
+04-29 15:55:17.564  1933  2891 D LEMON   : f:<sip:405872000010354@ims.mnc872.mcc405.3gppnetwork.org>;tag=J0deoMhinod59eRC0Ly321*t4-
+04-29 15:55:17.564  1933  2891 D LEMON   : i:adeoMhinod59eRC0Lx321ibgx3@[2405:204:1803:1f53::251a:e0ad]
+04-29 15:55:17.564  1933  2891 D LEMON   : CSeq:1 REGISTER
+04-29 15:55:17.564  1933  2891 D LEMON   : v:SIP/2.0/UDP [2405:204:1803:1f53::251a:e0ad]:5060;branch=z9hG4bKx3adeoMhinod59eRC0Lz321jbg;rport=5060;received=2405:204:1803:1f53::251a:e0ad
+04-29 15:55:17.564  1933  2891 D LEMON   : WWW-Authenticate:Digest realm="ims.mnc872.mcc405.3gppnetwork.org",nonce="GHeNIgAAAABYsbrUAAAAAJMDTJ/D3AAApy7DHuUz5VcxODQ0OTcwNQ==",algorithm=AKAv1-MD5,qop="auth"
+04-29 15:55:17.564  1933  2891 D LEMON   : l:0
+04-29 15:55:17.564  1933  2891 D LEMON   : Security-Server:ipsec-3gpp;q=0.6;alg=hmac-md5-96;ealg=aes-cbc;spi-c=1460503848;spi-s=1460503849;port-c=32920;port-s=5067
+04-29 15:55:17.564  1933  2891 D LEMON   : Security-Server:ipsec-3gpp;q=0.4;alg=hmac-md5-96;ealg=des-ede3-cbc;spi-c=1460503848;spi-s=1460503849;port-c=32920;port-s=5067
+04-29 15:55:17.564  1933  2891 D LEMON   : Security-Server:ipsec-3gpp;q=0.3;alg=hmac-md5-96;spi-c=1460503848;spi-s=1460503849;port-c=32920;port-s=5067
+04-29 15:55:17.564  1933  2891 D LEMON   : Security-Server:ipsec-3gpp;q=0.1;alg=hmac-sha-1-96;ealg=des-ede3-cbc;spi-c=1460503848;spi-s=1460503849;port-c=32920;port-s=5067
+04-29 15:55:17.564  1933  2891 D LEMON   : Security-Server:ipsec-3gpp;q=0.2;alg=hmac-sha-1-96;ealg=aes-cbc;spi-c=1460503848;spi-s=1460503849;port-c=32920;port-s=5067
+04-29 15:55:17.564  1933  2891 D LEMON   : Security-Server:ipsec-3gpp;q=0.5;alg=hmac-sha-1-96;spi-c=1460503848;spi-s=1460503849;port-c=32920;port-s=5067
+04-29 15:55:17.564  1933  2891 D LEMON   : 
+04-29 15:55:17.564  1933  2891 D LEMON   : 
+04-29 15:55:17.565  1933  2891 D LEMON   : 15:55:17.565 SIP: INFO: trans @10006 process response <REGISTER:401>.
+04-29 15:55:17.565  1933  2891 D LEMON   : 15:55:17.565 SIP: INFO: module stop tmr<0xC> [TIMER E] ok.
+04-29 15:55:17.574  1933  2891 D LEMON   : 15:55:17.565 SIP: INFO: module stop tmr<0xD> [TIMER F] ok.
+04-29 15:55:17.574  1933  2891 D LEMON   : 15:55:17.574 SIP: INFO: module start tmr<0xE> [TIMER K] <17000ms> ok.
+04-29 15:55:17.574  1933  2891 D LEMON   : 15:55:17.574 ZOS: INFO: fsm(SIP_NICT) trans@[65542] state <TRYING> run [RECV_3456XX] event ok.
+04-29 15:55:17.574  1933  2891 D LEMON   : 15:55:17.574 ZOS: INFO: fsm(SIP_NICT) trans@[65542] state <TRYING> to <COMPLETED>.
+04-29 15:55:17.575  1933  2891 D LEMON   : 15:55:17.575 SIP: INFO: dlg @10004 process response <REGISTER:401>.
+04-29 15:55:17.586  1933  2891 D LEMON   : 15:55:17.586 ZOS: INFO: fsm(SIP_VRTD) vrtd@[65540] state <REQ OUT> run [RECV_RSP] event ok.
+04-29 15:55:17.586  1933  2891 D LEMON   : 15:55:17.586 ZOS: INFO: fsm(SIP_VRTD) vrtd@[65540] state <REQ OUT> to <TERMINATED>.
+04-29 15:55:18.377  1933  2891 D LEMON   : 15:55:18.377 SIP: INFO: dlg @10005 process request <REGISTER>.
+04-29 15:55:18.377  1933  2891 D LEMON   : 15:55:18.377 SIP: INFO: module create tmr<0x12> [TIMER E] ok.
+04-29 15:55:18.378  1933  2891 D LEMON   : 15:55:18.378 SIP: INFO: module create tmr<0x13> [TIMER F] ok.
+04-29 15:55:18.378  1933  2891 D LEMON   : 15:55:18.378 SIP: INFO: module create tmr<0x14> [TIMER K] ok.
+04-29 15:55:18.378  1933  2891 D LEMON   : 15:55:18.378 SIP: INFO: module create tmr<0x15> [TIMER WAIT_CONN] ok.
+04-29 15:55:18.378  1933  2891 D LEMON   : 15:55:18.378 SIP: INFO: module create tmr<0x16> [TIMER C] ok.
+04-29 15:55:18.378  1933  2891 D LEMON   : 15:55:18.378 ZOS: INFO: fsm(SIP_VRTD) vrtd@[65541] state <IDLE> run [CIM_REQ] event ok.
+04-29 15:55:18.378  1933  2891 D LEMON   : 15:55:18.378 ZOS: INFO: fsm(SIP_VRTD) vrtd@[65541] state <IDLE> to <REQ OUT>.
+04-29 15:55:18.379  1933  2891 D LEMON   : 15:55:18.379 SIP: INFO: trans @10007 process request <REGISTER>.
+04-29 15:55:18.381  1933  2891 D LEMON   : REGISTER sip:ims.mnc872.mcc405.3gppnetwork.org SIP/2.0
+04-29 15:55:18.381  1933  2891 D LEMON   : To: <sip:405872000010354@ims.mnc872.mcc405.3gppnetwork.org>
+04-29 15:55:18.381  1933  2891 D LEMON   : From: <sip:405872000010354@ims.mnc872.mcc405.3gppnetwork.org>;tag=J0deoMhinod59eRC0Ly321*t4-
+04-29 15:55:18.381  1933  2891 D LEMON   : Contact: <sip:405872000010354@[2405:204:1803:1f53::251a:e0ad]:5255;transport=udp>;+sip.instance="<urn:gsma:imei:86740002-050381-3>";expires=86400;+g.3gpp.icsi-ref="urn%%3Aurn-7%%3A3gpp-service.ims.icsi.mmtel";video;+g.3gpp.smsip
+04-29 15:55:18.381  1933  2891 D LEMON   : Supported: path,gruu,outbound,sec-agree
+04-29 15:55:18.381  1933  2891 D LEMON   : Allow: INVITE,ACK,OPTIONS,BYE,CANCEL,REGISTER,INFO,PRACK,SUBSCRIBE,NOTIFY,MESSAGE,REFER
+04-29 15:55:18.381  1933  2891 D LEMON   : P-Access-Network-Info: IEEE-802.11;i-wlan-node-id=4045da1352c7
+04-29 15:55:18.381  1933  2891 D LEMON   : Security-Client: ipsec-3gpp;prot=esp;alg=hmac-md5-96;ealg=null;mod=trans;spi-c=2850665821;spi-s=2850665822;port-c=36862;port-s=5255,ipsec-3gpp;prot=esp;alg=hmac-md5-96;ealg=des-ede3-cbc;mod=trans;spi-c=2850665821;spi-s=2850665822;port-c=36862;port-s=5255,ipsec-3gpp;prot=esp;alg=hmac-md5-96;ealg=aes-cbc;mod=trans;spi-c=2850665821;spi-s=2850665822;port-c=36862;port-s=5255,ipsec-3gpp;prot=esp;alg=hmac-sha-1-96;ealg=null;mod=trans;spi-c=2850665821;spi-s=2850665822;port-c=36862;port-s=5255,ipsec-3gpp;prot=esp;alg=hmac-sha-1-96;ealg=des-ede3-cbc;mod=trans;spi-c=2850665821;spi-s=2850665822;port-c=36862;port-s=5255,ipsec-3gpp;prot=esp;alg=hmac-sha-1-96;ealg=aes-cbc;mod=trans;spi-c=2850665821;spi-s=2850665822;port-c=36862;port-s=5255
+04-29 15:55:18.381  1933  2891 D LEMON   : Security-Verify: ipsec-3gpp;prot=esp;alg=hmac-md5-96;ealg=aes-cbc;mod=trans;spi-c=1460503848;spi-s=1460503849;port-c=32920;port-s=5067;q=0.6
+04-29 15:55:18.381  1933  2891 D LEMON   : Security-Verify: ipsec-3gpp;prot=esp;alg=hmac-md5-96;ealg=des-ede3-cbc;mod=trans;spi-c=1460503848;spi-s=1460503849;port-c=32920;port-s=5067;q=0.4
+04-29 15:55:18.381  1933  2891 D LEMON   : Security-Verify: ipsec-3gpp;prot=esp;alg=hmac-md5-96;ealg=null;mod=trans;spi-c=1460503848;spi-s=1460503849;port-c=32920;port-s=5067;q=0.3
+04-29 15:55:18.381  1933  2891 D LEMON   : Security-Verify: ipsec-3gpp;prot=esp;alg=hmac-sha-1-96;ealg=des-ede3-cbc;mod=trans;spi-c=1460503848;spi-s=1460503849;port-c=32920;port-s=5067;q=0.1
+04-29 15:55:18.381  1933  2891 D LEMON   : Security-Verify: ipsec-3gpp;prot=esp;alg=hmac-sha-1-96;ealg=aes-cbc;mod=trans;spi-c=1460503848;spi-s=1460503849;port-c=32920;port-s=5067;q=0.2
+04-29 15:55:18.381  1933  2891 D LEMON   : Security-Verify: ipsec-3gpp;prot=esp;alg=hmac-sha-1-96;ealg=null;mod=trans;spi-c=1460503848;spi-s=1460503849;port-c=32920;port-s=5067;q=0.5
+04-29 15:55:18.381  1933  2891 D LEMON   : Proxy-Require: sec-agree
+04-29 15:55:18.381  1933  2891 D LEMON   : Require: sec-agree
+04-29 15:55:18.381  1933  2891 D LEMON   : CSeq: 2 REGISTER
+04-29 15:55:18.381  1933  2891 D LEMON   : Call-ID: adeoMhinod59eRC0Lx321ibgx3@[2405:204:1803:1f53::251a:e0ad]
+04-29 15:55:18.381  1933  2891 D LEMON   : Authorization: Digest realm="ims.mnc872.mcc405.3gppnetwork.org",algorithm=AKAv1-MD5,qop=auth,nonce="GHeNIgAAAABYsbrUAAAAAJMDTJ/D3AAApy7DHuUz5VcxODQ0OTcwNQ==",username="405872000010354@ims.mnc872.mcc405.3gppnetwork.org",uri="sip:ims.mnc872.mcc405.3gppnetwork.org",response="3d4c20d1d9f1cf16134336e220a56006",cnonce="6c0cf8806c0cf880",nc=00000001
+04-29 15:55:18.381  1933  2891 D LEMON   : Max-Forwards: 70
+04-29 15:55:18.381  1933  2891 D LEMON   : User-Agent: VoWIFI/WFC UA
+04-29 15:55:18.381  1933  2891 D LEMON   : Via: SIP/2.0/UDP [2405:204:1803:1f53::251a:e0ad]:5255;branch=z9hG4bK.-J0deoMhinod59eRC0LA321+t;rport
+04-29 15:55:18.381  1933  2891 D LEMON   : Content-Length: 0
+04-29 15:55:18.381  1933  2891 D LEMON   : 
+04-29 15:55:18.381  1933  2891 D LEMON   : 
+04-29 15:55:18.382  1933  2891 D LEMON   : 15:55:18.382 UTPT: INFO: conn[0x4] send data[2878] to [2405:200:330:1581::1b:5067] ok.
+04-29 15:55:18.383  1933  2891 D LEMON   : 15:55:18.383 SIP: INFO: module start tmr<0x12> [TIMER E] <2000ms> ok.
+04-29 15:55:18.383  1933  2891 D LEMON   : 15:55:18.383 SIP: INFO: module start tmr<0x13> [TIMER F] <128000ms> ok.
+04-29 15:55:18.383  1933  2891 D LEMON   : 15:55:18.383 ZOS: INFO: fsm(SIP_NICT) trans@[65543] state <IDLE> run [SEND_NONINVITE] event ok.
+04-29 15:55:18.383  1933  2891 D LEMON   : 15:55:18.383 ZOS: INFO: fsm(SIP_NICT) trans@[65543] state <IDLE> to <TRYING>.
+04-29 15:55:18.385  1933  2056 D LEMON   : 15:55:18.385 ZOS: INFO: fsm(MRF_REG) reg@[17] state <REGING> run [USER ENTER PWD] event ok.
+04-29 15:55:20.383  1933  2891 D LEMON   : 15:55:20.383 SIP: INFO: core timer process trans event tmr<0x12> [TIMER E].
+04-29 15:55:20.384  1933  2891 D LEMON   : REGISTER sip:ims.mnc872.mcc405.3gppnetwork.org SIP/2.0
+04-29 15:55:20.384  1933  2891 D LEMON   : To: <sip:405872000010354@ims.mnc872.mcc405.3gppnetwork.org>
+04-29 15:55:20.384  1933  2891 D LEMON   : From: <sip:405872000010354@ims.mnc872.mcc405.3gppnetwork.org>;tag=J0deoMhinod59eRC0Ly321*t4-
+04-29 15:55:20.384  1933  2891 D LEMON   : Contact: <sip:405872000010354@[2405:204:1803:1f53::251a:e0ad]:5255;transport=udp>;+sip.instance="<urn:gsma:imei:86740002-050381-3>";expires=86400;+g.3gpp.icsi-ref="urn%%3Aurn-7%%3A3gpp-service.ims.icsi.mmtel";video;+g.3gpp.smsip
+04-29 15:55:20.384  1933  2891 D LEMON   : Supported: path,gruu,outbound,sec-agree
+04-29 15:55:20.384  1933  2891 D LEMON   : Allow: INVITE,ACK,OPTIONS,BYE,CANCEL,REGISTER,INFO,PRACK,SUBSCRIBE,NOTIFY,MESSAGE,REFER
+04-29 15:55:20.384  1933  2891 D LEMON   : P-Access-Network-Info: IEEE-802.11;i-wlan-node-id=4045da1352c7
+04-29 15:55:20.384  1933  2891 D LEMON   : Security-Client: ipsec-3gpp;prot=esp;alg=hmac-md5-96;ealg=null;mod=trans;spi-c=2850665821;spi-s=2850665822;port-c=36862;port-s=5255,ipsec-3gpp;prot=esp;alg=hmac-md5-96;ealg=des-ede3-cbc;mod=trans;spi-c=2850665821;spi-s=2850665822;port-c=36862;port-s=5255,ipsec-3gpp;prot=esp;alg=hmac-md5-96;ealg=aes-cbc;mod=trans;spi-c=2850665821;spi-s=2850665822;port-c=36862;port-s=5255,ipsec-3gpp;prot=esp;alg=hmac-sha-1-96;ealg=null;mod=trans;spi-c=2850665821;spi-s=2850665822;port-c=36862;port-s=5255,ipsec-3gpp;prot=esp;alg=hmac-sha-1-96;ealg=des-ede3-cbc;mod=trans;spi-c=2850665821;spi-s=2850665822;port-c=36862;port-s=5255,ipsec-3gpp;prot=esp;alg=hmac-sha-1-96;ealg=aes-cbc;mod=trans;spi-c=2850665821;spi-s=2850665822;port-c=36862;port-s=5255
+04-29 15:55:20.384  1933  2891 D LEMON   : Security-Verify: ipsec-3gpp;prot=esp;alg=hmac-md5-96;ealg=aes-cbc;mod=trans;spi-c=1460503848;spi-s=1460503849;port-c=32920;port-s=5067;q=0.6
+04-29 15:55:20.384  1933  2891 D LEMON   : Security-Verify: ipsec-3gpp;prot=esp;alg=hmac-md5-96;ealg=des-ede3-cbc;mod=trans;spi-c=1460503848;spi-s=1460503849;port-c=32920;port-s=5067;q=0.4
+04-29 15:55:20.384  1933  2891 D LEMON   : Security-Verify: ipsec-3gpp;prot=esp;alg=hmac-md5-96;ealg=null;mod=trans;spi-c=1460503848;spi-s=1460503849;port-c=32920;port-s=5067;q=0.3
+04-29 15:55:20.384  1933  2891 D LEMON   : Security-Verify: ipsec-3gpp;prot=esp;alg=hmac-sha-1-96;ealg=des-ede3-cbc;mod=trans;spi-c=1460503848;spi-s=1460503849;port-c=32920;port-s=5067;q=0.1
+04-29 15:55:20.384  1933  2891 D LEMON   : Security-Verify: ipsec-3gpp;prot=esp;alg=hmac-sha-1-96;ealg=aes-cbc;mod=trans;spi-c=1460503848;spi-s=1460503849;port-c=32920;port-s=5067;q=0.2
+04-29 15:55:20.384  1933  2891 D LEMON   : Security-Verify: ipsec-3gpp;prot=esp;alg=hmac-sha-1-96;ealg=null;mod=trans;spi-c=1460503848;spi-s=1460503849;port-c=32920;port-s=5067;q=0.5
+04-29 15:55:20.384  1933  2891 D LEMON   : Proxy-Require: sec-agree
+04-29 15:55:20.384  1933  2891 D LEMON   : Require: sec-agree
+04-29 15:55:20.384  1933  2891 D LEMON   : CSeq: 2 REGISTER
+04-29 15:55:20.384  1933  2891 D LEMON   : Call-ID: adeoMhinod59eRC0Lx321ibgx3@[2405:204:1803:1f53::251a:e0ad]
+04-29 15:55:20.384  1933  2891 D LEMON   : Authorization: Digest realm="ims.mnc872.mcc405.3gppnetwork.org",algorithm=AKAv1-MD5,qop=auth,nonce="GHeNIgAAAABYsbrUAAAAAJMDTJ/D3AAApy7DHuUz5VcxODQ0OTcwNQ==",username="405872000010354@ims.mnc872.mcc405.3gppnetwork.org",uri="sip:ims.mnc872.mcc405.3gppnetwork.org",response="3d4c20d1d9f1cf16134336e220a56006",cnonce="6c0cf8806c0cf880",nc=00000001
+04-29 15:55:20.384  1933  2891 D LEMON   : Max-Forwards: 70
+04-29 15:55:20.384  1933  2891 D LEMON   : User-Agent: VoWIFI/WFC UA
+04-29 15:55:20.384  1933  2891 D LEMON   : Via: SIP/2.0/UDP [2405:204:1803:1f53::251a:e0ad]:5255;branch=z9hG4bK.-J0deoMhinod59eRC0LA321+t;rport
+04-29 15:55:20.384  1933  2891 D LEMON   : Content-Length: 0
+04-29 15:55:20.384  1933  2891 D LEMON   : 
+04-29 15:55:20.384  1933  2891 D LEMON   : 
+04-29 15:55:20.385  1933  2891 D LEMON   : 15:55:20.385 UTPT: INFO: conn[0x4] send data[2878] to [2405:200:330:1581::1b:5067] ok.
+04-29 15:55:20.386  1933  2891 D LEMON   : 15:55:20.386 SIP: INFO: module start tmr<0x12> [TIMER E] <4000ms> ok.
+04-29 15:55:20.386  1933  2891 D LEMON   : 15:55:20.386 ZOS: INFO: fsm(SIP_NICT) trans@[65543] state <TRYING> run [TM_TE] event ok.
+04-29 15:55:20.820  1933  2058 D LEMON   : 15:55:20.820 UTPT: INFO: recv udp data(len:817) from [2405:200:330:1581::1b:32920].
+04-29 15:55:20.821  1933  2891 D LEMON   : SIP/2.0 200 OK
+04-29 15:55:20.821  1933  2891 D LEMON   : t:<sip:405872000010354@ims.mnc872.mcc405.3gppnetwork.org>;tag=1173578506
+04-29 15:55:20.821  1933  2891 D LEMON   : f:<sip:405872000010354@ims.mnc872.mcc405.3gppnetwork.org>;tag=J0deoMhinod59eRC0Ly321*t4-
+04-29 15:55:20.821  1933  2891 D LEMON   : CSeq:2 REGISTER
+04-29 15:55:20.821  1933  2891 D LEMON   : i:adeoMhinod59eRC0Lx321ibgx3@[2405:204:1803:1f53::251a:e0ad]
+04-29 15:55:20.821  1933  2891 D LEMON   : v:SIP/2.0/UDP [2405:204:1803:1f53::251a:e0ad]:5255;branch=z9hG4bK.-J0deoMhinod59eRC0LA321+t;rport=36862;received=2405:204:1803:1f53::251a:e0ad
+04-29 15:55:20.821  1933  2891 D LEMON   : m:<sip:405872000010354@[2405:204:1803:1f53::251a:e0ad]:5255;transport=udp>;+sip.instance="<urn:gsma:imei:86740002-050381-3>";+g.3gpp.icsi-ref="urn%%3Aurn-7%%3A3gpp-service.ims.icsi.mmtel";video;+g.3gpp.smsip;expires=86400
+04-29 15:55:20.821  1933  2891 D LEMON   : P-Associated-URI:<sip:+917011021569@ims.mnc872.mcc405.3gppnetwork.org>
+04-29 15:55:20.821  1933  2891 D LEMON   : P-Associated-URI:<tel:+917011021569>
+04-29 15:55:20.821  1933  2891 D LEMON   : l:0
+04-29 15:55:20.821  1933  2891 D LEMON   : Path:<sip:dl1pcfx0402gm.ims.mnc872.mcc405.3gppnetwork.org:5060;lskpmc=P9J>
+04-29 15:55:20.821  1933  2891 D LEMON   : 
+04-29 15:55:20.821  1933  2891 D LEMON   : 
+04-29 15:55:20.822  1933  2891 D LEMON   : 15:55:20.822 SIP: INFO: trans @10007 process response <REGISTER:200>.
+04-29 15:55:20.822  1933  2891 D LEMON   : 15:55:20.822 SIP: INFO: module stop tmr<0x12> [TIMER E] ok.
+04-29 15:55:20.822  1933  2891 D LEMON   : 15:55:20.822 SIP: INFO: module stop tmr<0x13> [TIMER F] ok.
+04-29 15:55:20.822  1933  2891 D LEMON   : 15:55:20.822 SIP: INFO: module start tmr<0x14> [TIMER K] <17000ms> ok.
+04-29 15:55:20.822  1933  2891 D LEMON   : 15:55:20.822 ZOS: INFO: fsm(SIP_NICT) trans@[65543] state <TRYING> run [RECV_2XX] event ok.
+04-29 15:55:20.822  1933  2891 D LEMON   : 15:55:20.822 ZOS: INFO: fsm(SIP_NICT) trans@[65543] state <TRYING> to <COMPLETED>.
+04-29 15:55:20.823  1933  2891 D LEMON   : 15:55:20.823 SIP: INFO: dlg @10005 process response <REGISTER:200>.
+04-29 15:55:20.831  1933  2056 D LEMON   : 15:55:20.831 ZOS: INFO: fsm(MRF_REG) reg@[17] state <REGING> run [CIM CNF] event ok.
+04-29 15:55:20.831  1933  2056 D LEMON   : 15:55:20.831 ZOS: INFO: fsm(MRF_REG) reg@[17] state <REGING> to <REGED>.
+04-29 15:55:20.841  1933  2891 D LEMON   : 15:55:20.841 ZOS: INFO: fsm(SIP_VRTD) vrtd@[65541] state <REQ OUT> run [RECV_RSP] event ok.
+04-29 15:55:20.841  1933  2891 D LEMON   : 15:55:20.841 ZOS: INFO: fsm(SIP_VRTD) vrtd@[65541] state <REQ OUT> to <TERMINATED>.
+04-29 15:55:20.871  1933  2891 D LEMON   : 15:55:20.871 SIP: INFO: module create tmr<0x19> [TIMER WAIT_SAM] ok.
+04-29 15:55:20.871  1933  2891 D LEMON   : 15:55:20.871 SIP: INFO: module create tmr<0x1A> [TIMER SEND_2XX] ok.
+04-29 15:55:20.872  1933  2891 D LEMON   : 15:55:20.872 SIP: INFO: module create tmr<0x1B> [TIMER STOP_2XX] ok.
+04-29 15:55:20.872  1933  2891 D LEMON   : 15:55:20.872 SIP: INFO: module create tmr<0x1C> [TIMER SUBS] ok.
+04-29 15:55:20.872  1933  2891 D LEMON   : 15:55:20.872 SIP: INFO: dlg sub@80010005 process request <SUBSCRIBE>.
+04-29 15:55:20.873  1933  2891 D LEMON   : 15:55:20.873 SIP: INFO: module create tmr<0x1D> [TIMER E] ok.
+04-29 15:55:20.873  1933  2891 D LEMON   : 15:55:20.873 SIP: INFO: module create tmr<0x1E> [TIMER F] ok.
+04-29 15:55:20.873  1933  2891 D LEMON   : 15:55:20.873 SIP: INFO: module create tmr<0x1F> [TIMER K] ok.
+04-29 15:55:20.873  1933  2891 D LEMON   : 15:55:20.873 SIP: INFO: module create tmr<0x20> [TIMER WAIT_CONN] ok.
+04-29 15:55:20.873  1933  2891 D LEMON   : 15:55:20.873 SIP: INFO: module create tmr<0x21> [TIMER C] ok.
+04-29 15:55:20.873  1933  2891 D LEMON   : 15:55:20.873 ZOS: INFO: fsm(SIP_SUBS) subs@[2147549189] state <IDLE> run [DAM_REQ] event ok.
+04-29 15:55:20.873  1933  2891 D LEMON   : 15:55:20.873 ZOS: INFO: fsm(SIP_SUBS) subs@[2147549189] state <IDLE> to <SUBS_OUT>.
+04-29 15:55:20.874  1933  2891 D LEMON   : 15:55:20.874 SIP: INFO: trans @10008 process request <SUBSCRIBE>.
+04-29 15:55:20.874  1933  2891 D LEMON   : SUBSCRIBE sip:+917011021569@ims.mnc872.mcc405.3gppnetwork.org SIP/2.0
+04-29 15:55:20.874  1933  2891 D LEMON   : From: <sip:+917011021569@ims.mnc872.mcc405.3gppnetwork.org>;tag=-t.-J0deoMhinod59eRC0LC321
+04-29 15:55:20.874  1933  2891 D LEMON   : To: <sip:+917011021569@ims.mnc872.mcc405.3gppnetwork.org>
+04-29 15:55:20.874  1933  2891 D LEMON   : Contact: <sip:405872000010354@[2405:204:1803:1f53::251a:e0ad]:5255>;+sip.instance="<urn:gsma:imei:86740002-050381-3>"
+04-29 15:55:20.874  1933  2891 D LEMON   : Supported: path,gruu,outbound,sec-agree
+04-29 15:55:20.874  1933  2891 D LEMON   : Event: reg
+04-29 15:55:20.874  1933  2891 D LEMON   : Accept: application/reginfo+xml
+04-29 15:55:20.874  1933  2891 D LEMON   : Expires: 86460
+04-29 15:55:20.874  1933  2891 D LEMON   : P-Access-Network-Info: IEEE-802.11;i-wlan-node-id=4045da1352c7
+04-29 15:55:20.874  1933  2891 D LEMON   : Security-Verify: ipsec-3gpp;prot=esp;alg=hmac-md5-96;ealg=aes-cbc;mod=trans;spi-c=1460503848;spi-s=1460503849;port-c=32920;port-s=5067;q=0.6
+04-29 15:55:20.874  1933  2891 D LEMON   : Security-Verify: ipsec-3gpp;prot=esp;alg=hmac-md5-96;ealg=des-ede3-cbc;mod=trans;spi-c=1460503848;spi-s=1460503849;port-c=32920;port-s=5067;q=0.4
+04-29 15:55:20.874  1933  2891 D LEMON   : Security-Verify: ipsec-3gpp;prot=esp;alg=hmac-md5-96;ealg=null;mod=trans;spi-c=1460503848;spi-s=1460503849;port-c=32920;port-s=5067;q=0.3
+04-29 15:55:20.874  1933  2891 D LEMON   : Security-Verify: ipsec-3gpp;prot=esp;alg=hmac-sha-1-96;ealg=des-ede3-cbc;mod=trans;spi-c=1460503848;spi-s=1460503849;port-c=32920;port-s=5067;q=0.1
+04-29 15:55:20.874  1933  2891 D LEMON   : Security-Verify: ipsec-3gpp;prot=esp;alg=hmac-sha-1-96;ealg=aes-cbc;mod=trans;spi-c=1460503848;spi-s=1460503849;port-c=32920;port-s=5067;q=0.2
+04-29 15:55:20.874  1933  2891 D LEMON   : Security-Verify: ipsec-3gpp;prot=esp;alg=hmac-sha-1-96;ealg=null;mod=trans;spi-c=1460503848;spi-s=1460503849;port-c=32920;port-s=5067;q=0.5
+04-29 15:55:20.874  1933  2891 D LEMON   : Proxy-Require: sec-agree
+04-29 15:55:20.874  1933  2891 D LEMON   : Require: sec-agree
+04-29 15:55:20.874  1933  2891 D LEMON   : Call-ID: bgx3adeoMhinod59eRC0LB321i@[2405:204:1803:1f53::251a:e0ad]
+04-29 15:55:20.874  1933  2891 D LEMON   : CSeq: 1 SUBSCRIBE
+04-29 15:55:20.874  1933  2891 D LEMON   : Max-Forwards: 70
+04-29 15:55:20.874  1933  2891 D LEMON   : User-Agent: VoWIFI/WFC UA
+04-29 15:55:20.874  1933  2891 D LEMON   : Via: SIP/2.0/UDP [2405:204:1803:1f53::251a:e0ad]:5255;branch=z9hG4bK1jbgx3adeoMhinod59eRC0LD32;rport
+04-29 15:55:20.874  1933  2891 D LEMON   : Content-Length: 0
+04-29 15:55:20.874  1933  2891 D LEMON   : 
+04-29 15:55:20.874  1933  2891 D LEMON   : 
+04-29 15:55:20.879  1933  2891 D LEMON   : 15:55:20.879 UTPT: INFO: conn[0x4] send data[1671] to [2405:200:330:1581::1b:5067] ok.
+04-29 15:55:20.879  1933  2891 D LEMON   : 15:55:20.879 SIP: INFO: module start tmr<0x1D> [TIMER E] <2000ms> ok.
+04-29 15:55:20.879  1933  2891 D LEMON   : 15:55:20.879 SIP: INFO: module start tmr<0x1E> [TIMER F] <128000ms> ok.
+04-29 15:55:20.879  1933  2891 D LEMON   : 15:55:20.879 ZOS: INFO: fsm(SIP_NICT) trans@[65544] state <IDLE> run [SEND_NONINVITE] event ok.
+04-29 15:55:20.879  1933  2891 D LEMON   : 15:55:20.879 ZOS: INFO: fsm(SIP_NICT) trans@[65544] state <IDLE> to <TRYING>.
+04-29 15:55:20.880  1933  2056 D LEMON   : 15:55:20.880 ZOS: INFO: fsm(MRF_SUBS) subs@[18] state <IDLE> run [USER SUBSCRIBE] event ok.
+04-29 15:55:20.880  1933  2056 D LEMON   : 15:55:20.880 ZOS: INFO: fsm(MRF_SUBS) subs@[18] state <IDLE> to <SUBS_OUT>.
+04-29 15:55:21.111  1933  2058 D LEMON   : 15:55:21.111 UTPT: INFO: recv udp data(len:630) from [2405:200:330:1581::1b:32920].
+04-29 15:55:21.111  1933  2891 D LEMON   : SIP/2.0 200 OK
+04-29 15:55:21.111  1933  2891 D LEMON   : f:<sip:+917011021569@ims.mnc872.mcc405.3gppnetwork.org>;tag=-t.-J0deoMhinod59eRC0LC321
+04-29 15:55:21.111  1933  2891 D LEMON   : t:<sip:+917011021569@ims.mnc872.mcc405.3gppnetwork.org>;tag=1544821200
+04-29 15:55:21.111  1933  2891 D LEMON   : i:bgx3adeoMhinod59eRC0LB321i@[2405:204:1803:1f53::251a:e0ad]
+04-29 15:55:21.111  1933  2891 D LEMON   : CSeq:1 SUBSCRIBE
+04-29 15:55:21.111  1933  2891 D LEMON   : v:SIP/2.0/UDP [2405:204:1803:1f53::251a:e0ad]:5255;branch=z9hG4bK1jbgx3adeoMhinod59eRC0LD32;rport=36862;received=2405:204:1803:1f53::251a:e0ad
+04-29 15:55:21.111  1933  2891 D LEMON   : Expires:86400
+04-29 15:55:21.111  1933  2891 D LEMON   : m:<sip:dl1scfx1501mw.ims.mnc872.mcc405.3gppnetwork.org:5090;lskpmc=S5K>
+04-29 15:55:21.111  1933  2891 D LEMON   : Record-Route:<sip:[2405:200:330:1581::1b]:5067;routing_id=pcscf_a_side;lskpmc=P9J;lr;serv_user=[2405:204:1803:1f53::251a:e0ad]:36862>
+04-29 15:55:21.111  1933  2891 D LEMON   : l:0
+04-29 15:55:21.111  1933  2891 D LEMON   : 
+04-29 15:55:21.111  1933  2891 D LEMON   : 
+04-29 15:55:21.112  1933  2058 D LEMON   : 15:55:21.112 UTPT: INFO: recv udp data(len:2058) from [2405:200:330:1581::1b:32920].
+04-29 15:55:21.116  1933  2891 D LEMON   : NOTIFY sip:405872000010354@[2405:204:1803:1f53::251a:e0ad]:5255 SIP/2.0
+04-29 15:55:21.116  1933  2891 D LEMON   : v:SIP/2.0/UDP [2405:200:330:1581::1b]:5067;branch=z9hG4bK_IMSCL1550631.000_60512d2cc156a2d007cae5869b8c5c0b;lskpmc=P9J
+04-29 15:55:21.116  1933  2891 D LEMON   : Record-Route:<sip:[2405:200:330:1581::1b]:5067;routing_id=pcscf_a_side;lskpmc=P9J;lr>
+04-29 15:55:21.116  1933  2891 D LEMON   : f:<sip:+917011021569@ims.mnc872.mcc405.3gppnetwork.org>;tag=1544821200
+04-29 15:55:21.116  1933  2891 D LEMON   : t:<sip:+917011021569@ims.mnc872.mcc405.3gppnetwork.org>;tag=-t.-J0deoMhinod59eRC0LC321
+04-29 15:55:21.116  1933  2891 D LEMON   : o:reg
+04-29 15:55:21.116  1933  2891 D LEMON   : i:bgx3adeoMhinod59eRC0LB321i@[2405:204:1803:1f53::251a:e0ad]
+04-29 15:55:21.116  1933  2891 D LEMON   : Subscription-State:active
+04-29 15:55:21.116  1933  2891 D LEMON   : CSeq:1 NOTIFY
+04-29 15:55:21.116  1933  2891 D LEMON   : c:application/reginfo+xml
+04-29 15:55:21.116  1933  2891 D LEMON   : m:<sip:dl1scfx1501mw.ims.mnc872.mcc405.3gppnetwork.org:5090;lskpmc=S5K>
+04-29 15:55:21.116  1933  2891 D LEMON   : Max-Forwards:68
+04-29 15:55:21.116  1933  2891 D LEMON   : l:1380
+04-29 15:55:21.116  1933  2891 D LEMON   : 
+04-29 15:55:21.116  1933  2891 D LEMON   : <?xml version="1.0"?><reginfo xmlns="urn:ietf:params:xml:ns:reginfo" xmlns:gr="urn:ietf:params:xml:ns:gruuinfo" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:ere="urn:3gpp:ns:extRegExp:1.0" xmlns:cp="urn:ietf:params:xml:ns:common-policy" xmlns:eri="urn:3gpp:ns:extRegInfo:1.0" version="0" state="full"><registration aor="sip:+917011021569@ims.mnc872.mcc405.3gppnetwork.org" id="5eb69dca5K1461851269175839" state="active"><contact id="5K1461851269175839" state="active" event="created"><uri>sip:405872000010354@[2405:204:1803:1f53::251a:e0ad]:5255;transport=udp</uri><unknown-param name="+sip.instance">"&lt;urn:gsma:imei:86740002-050381-3&gt;"</unknown-param><unknown-param name="+g.3gpp.icsi-ref">urn%%3Aurn-7%%3A3gpp-service.ims.icsi.mmtel</unknown-param><unknown-param name="video"/><unknown-param name="+g.3gpp.smsip"/></contact></registration><registration aor="tel:+917011021569" id="0b595c965K1461851269175839" state="active"><contact id="5K1461851269175839" state="active" event="created"><uri>sip:405872000010354@[2405:204:1803:1f53::251a:e0ad]:5255;transport=udp</uri><unknown-param name="+sip.instance">"&lt;urn:gsma:imei:86740002-050381-3&gt;"</unknown-param><unknown-param name="+g.3gpp.icsi-ref">urn%%3Aurn-7%%3A3gpp-service.ims.icsi.mmtel</unknown-param><unknown-param name="video"/><unknown-param name="+g.3gpp.smsip"/></contact></registration></reginfo>
+04-29 15:55:21.112  1933  2891 D LEMON   : 15:55:21.112 SIP: INFO: trans @10008 process response <SUBSCRIBE:200>.
+04-29 15:55:21.112  1933  2891 D LEMON   : 15:55:21.112 SIP: INFO: module stop tmr<0x1D> [TIMER E] ok.
+04-29 15:55:21.112  1933  2891 D LEMON   : 15:55:21.112 SIP: INFO: module stop tmr<0x1E> [TIMER F] ok.
+04-29 15:55:21.112  1933  2891 D LEMON   : 15:55:21.112 SIP: INFO: module start tmr<0x1F> [TIMER K] <17000ms> ok.
+04-29 15:55:21.112  1933  2891 D LEMON   : 15:55:21.112 ZOS: INFO: fsm(SIP_NICT) trans@[65544] state <TRYING> run [RECV_2XX] event ok.
+04-29 15:55:21.112  1933  2891 D LEMON   : 15:55:21.112 ZOS: INFO: fsm(SIP_NICT) trans@[65544] state <TRYING> to <COMPLETED>.
+04-29 15:55:21.113  1933  2891 D LEMON   : 15:55:21.113 SIP: INFO: dlg sub@80010005 process response <SUBSCRIBE:200>.
+04-29 15:55:21.113  1933  2891 D LEMON   : 15:55:21.113 SIP: INFO: module start tmr<0x1C> [TIMER SUBS] <86400000ms> ok.
+04-29 15:55:21.114  1933  2056 D LEMON   : 15:55:21.114 ZOS: INFO: fsm(MRF_SUBS) subs@[18] state <SUBS_OUT> run [DAM CNF] event ok.
+04-29 15:55:21.114  1933  2056 D LEMON   : 15:55:21.114 ZOS: INFO: fsm(MRF_SUBS) subs@[18] state <SUBS_OUT> to <CONFIRMED>.
+04-29 15:55:21.116  1933  2891 D LEMON   : 15:55:21.116 ZOS: INFO: fsm(SIP_SUBS) subs@[2147549189] state <SUBS_OUT> run [RECV_SUBS_RSP] event ok.
+04-29 15:55:21.116  1933  2891 D LEMON   : 15:55:21.116 ZOS: INFO: fsm(SIP_SUBS) subs@[2147549189] state <SUBS_OUT> to <CONFIRMED>.
+04-29 15:55:21.117  1933  2891 D LEMON   : 15:55:21.117 SIP: INFO: module create tmr<0x22> [TIMER J] ok.
+04-29 15:55:21.117  1933  2891 D LEMON   : 15:55:21.117 SIP: INFO: module create tmr<0x23> [TIMER C] ok.
+04-29 15:55:21.117  1933  2891 D LEMON   : 15:55:21.117 SIP: INFO: trans @10009 process request <NOTIFY>.
+04-29 15:55:21.117  1933  2891 D LEMON   : 15:55:21.117 SIP: INFO: module start tmr<0x23> [TIMER C] <200000ms> ok.
+04-29 15:55:21.118  1933  2891 D LEMON   : 15:55:21.118 ZOS: INFO: fsm(SIP_NIST) trans@[65545] state <IDLE> run [RECV_NONINVITE] event ok.
+04-29 15:55:21.118  1933  2891 D LEMON   : 15:55:21.118 ZOS: INFO: fsm(SIP_NIST) trans@[65545] state <IDLE> to <TRYING>.
+04-29 15:55:21.118  1933  2891 D LEMON   : 15:55:21.118 SIP: INFO: dlg sub@80010005 process request <NOTIFY>.
+04-29 15:55:21.118  1933  2891 D LEMON   : 15:55:21.118 SIP: INFO: module stop tmr<0x1C> [TIMER SUBS] ok.
+04-29 15:55:21.119  1933  2056 D LEMON   : 15:55:21.119 ZOS: INFO: fsm(MRF_SUBS) subs@[18] state <CONFIRMED> run [DAM IND] event ok.
+04-29 15:55:21.119  1933  2056 D LEMON   : 15:55:21.119 ZOS: INFO: fsm(MRF_REG) reg@[17] state <REGED> run [FSM SUBSCRIBE NOTIFY] event ok.
+04-29 15:55:21.120  1933  2891 D LEMON   : 15:55:21.120 ZOS: INFO: fsm(SIP_SUBS) subs@[2147549189] state <CONFIRMED> run [RECV_NTFY] event ok.
+04-29 15:55:21.121  1933  2891 D LEMON   : 15:55:21.121 SIP: INFO: dlg sub@80010005 process response <NOTIFY:200>.
+04-29 15:55:21.121  1933  2891 D LEMON   : 15:55:21.121 ZOS: INFO: fsm(SIP_SUBS) subs@[2147549189] state <CONFIRMED> run [NTFY_RSP] event ok.
+04-29 15:55:21.121  1933  2891 D LEMON   : 15:55:21.121 SIP: INFO: trans @10009 process response <NOTIFY:200>.
+04-29 15:55:21.122  1933  2891 D LEMON   : SIP/2.0 200 OK
+04-29 15:55:21.122  1933  2891 D LEMON   : From: <sip:+917011021569@ims.mnc872.mcc405.3gppnetwork.org>;tag=1544821200
+04-29 15:55:21.122  1933  2891 D LEMON   : To: <sip:+917011021569@ims.mnc872.mcc405.3gppnetwork.org>;tag=-t.-J0deoMhinod59eRC0LC321
+04-29 15:55:21.122  1933  2891 D LEMON   : Supported: path,gruu,outbound
+04-29 15:55:21.122  1933  2891 D LEMON   : Call-ID: bgx3adeoMhinod59eRC0LB321i@[2405:204:1803:1f53::251a:e0ad]
+04-29 15:55:21.122  1933  2891 D LEMON   : CSeq: 1 NOTIFY
+04-29 15:55:21.122  1933  2891 D LEMON   : Max-Forwards: 70
+04-29 15:55:21.122  1933  2891 D LEMON   : Server: VoWIFI/WFC UA
+04-29 15:55:21.122  1933  2891 D LEMON   : Via: SIP/2.0/UDP [2405:200:330:1581::1b]:5067;branch=z9hG4bK_IMSCL1550631.000_60512d2cc156a2d007cae5869b8c5c0b;lskpmc=P9J;received=2405:200:330:1581::1b
+04-29 15:55:21.122  1933  2891 D LEMON   : Content-Length: 0
+04-29 15:55:21.122  1933  2891 D LEMON   : 
+04-29 15:55:21.122  1933  2891 D LEMON   : 
+04-29 15:55:21.123  1933  2891 D LEMON   : 15:55:21.123 UTPT: INFO: conn[0x4] send data[514] to [2405:200:330:1581::1b:5067] ok.
+04-29 15:55:21.123  1933  2891 D LEMON   : 15:55:21.123 SIP: INFO: module stop tmr<0x23> [TIMER C] ok.
+04-29 15:55:21.123  1933  2891 D LEMON   : 15:55:21.123 SIP: INFO: module start tmr<0x22> [TIMER J] <128000ms> ok.
+04-29 15:55:21.123  1933  2891 D LEMON   : 15:55:21.123 ZOS: INFO: fsm(SIP_NIST) trans@[65545] state <TRYING> run [SEND_2XX] event ok.
+04-29 15:55:21.123  1933  2891 D LEMON   : 15:55:21.123 ZOS: INFO: fsm(SIP_NIST) trans@[65545] state <TRYING> to <COMPLETED>.
+04-29 15:55:23.158  1933  2058 D LEMON   : 15:55:23.158 UTPT: INFO: recv udp data(len:2058) from [2405:200:330:1581::1b:32920].
+04-29 15:55:23.159  1933  2891 D LEMON   : NOTIFY sip:405872000010354@[2405:204:1803:1f53::251a:e0ad]:5255 SIP/2.0
+04-29 15:55:23.159  1933  2891 D LEMON   : v:SIP/2.0/UDP [2405:200:330:1581::1b]:5067;branch=z9hG4bK_IMSCL1550631.000_60512d2cc156a2d007cae5869b8c5c0b;lskpmc=P9J
+04-29 15:55:23.159  1933  2891 D LEMON   : Record-Route:<sip:[2405:200:330:1581::1b]:5067;routing_id=pcscf_a_side;lskpmc=P9J;lr>
+04-29 15:55:23.159  1933  2891 D LEMON   : f:<sip:+917011021569@ims.mnc872.mcc405.3gppnetwork.org>;tag=1544821200
+04-29 15:55:23.159  1933  2891 D LEMON   : t:<sip:+917011021569@ims.mnc872.mcc405.3gppnetwork.org>;tag=-t.-J0deoMhinod59eRC0LC321
+04-29 15:55:23.159  1933  2891 D LEMON   : o:reg
+04-29 15:55:23.159  1933  2891 D LEMON   : i:bgx3adeoMhinod59eRC0LB321i@[2405:204:1803:1f53::251a:e0ad]
+04-29 15:55:23.159  1933  2891 D LEMON   : Subscription-State:active
+04-29 15:55:23.159  1933  2891 D LEMON   : CSeq:1 NOTIFY
+04-29 15:55:23.159  1933  2891 D LEMON   : c:application/reginfo+xml
+04-29 15:55:23.159  1933  2891 D LEMON   : m:<sip:dl1scfx1501mw.ims.mnc872.mcc405.3gppnetwork.org:5090;lskpmc=S5K>
+04-29 15:55:23.159  1933  2891 D LEMON   : Max-Forwards:68
+04-29 15:55:23.159  1933  2891 D LEMON   : l:1380
+04-29 15:55:23.159  1933  2891 D LEMON   : 
+04-29 15:55:23.159  1933  2891 D LEMON   : <?xml version="1.0"?><reginfo xmlns="urn:ietf:params:xml:ns:reginfo" xmlns:gr="urn:ietf:params:xml:ns:gruuinfo" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:ere="urn:3gpp:ns:extRegExp:1.0" xmlns:cp="urn:ietf:params:xml:ns:common-policy" xmlns:eri="urn:3gpp:ns:extRegInfo:1.0" version="0" state="full"><registration aor="sip:+917011021569@ims.mnc872.mcc405.3gppnetwork.org" id="5eb69dca5K1461851269175839" state="active"><contact id="5K1461851269175839" state="active" event="created"><uri>sip:405872000010354@[2405:204:1803:1f53::251a:e0ad]:5255;transport=udp</uri><unknown-param name="+sip.instance">"&lt;urn:gsma:imei:86740002-050381-3&gt;"</unknown-param><unknown-param name="+g.3gpp.icsi-ref">urn%%3Aurn-7%%3A3gpp-service.ims.icsi.mmtel</unknown-param><unknown-param name="video"/><unknown-param name="+g.3gpp.smsip"/></contact></registration><registration aor="tel:+917011021569" id="0b595c965K1461851269175839" state="active"><contact id="5K1461851269175839" state="active" event="created"><uri>sip:405872000010354@[2405:204:1803:1f53::251a:e0ad]:5255;transport=udp</uri><unknown-param name="+sip.instance">"&lt;urn:gsma:imei:86740002-050381-3&gt;"</unknown-param><unknown-param name="+g.3gpp.icsi-ref">urn%%3Aurn-7%%3A3gpp-service.ims.icsi.mmtel</unknown-param><unknown-param name="video"/><unknown-param name="+g.3gpp.smsip"/></contact></registration></reginfo>
+04-29 15:55:23.161  1933  2891 D LEMON   : 15:55:23.161 SIP: INFO: trans @10009 process request <NOTIFY>.
+04-29 15:55:23.162  1933  2891 D LEMON   : SIP/2.0 200 OK
+04-29 15:55:23.162  1933  2891 D LEMON   : From: <sip:+917011021569@ims.mnc872.mcc405.3gppnetwork.org>;tag=1544821200
+04-29 15:55:23.162  1933  2891 D LEMON   : To: <sip:+917011021569@ims.mnc872.mcc405.3gppnetwork.org>;tag=-t.-J0deoMhinod59eRC0LC321
+04-29 15:55:23.162  1933  2891 D LEMON   : Supported: path,gruu,outbound
+04-29 15:55:23.162  1933  2891 D LEMON   : Call-ID: bgx3adeoMhinod59eRC0LB321i@[2405:204:1803:1f53::251a:e0ad]
+04-29 15:55:23.162  1933  2891 D LEMON   : CSeq: 1 NOTIFY
+04-29 15:55:23.162  1933  2891 D LEMON   : Max-Forwards: 70
+04-29 15:55:23.162  1933  2891 D LEMON   : Server: VoWIFI/WFC UA
+04-29 15:55:23.162  1933  2891 D LEMON   : Via: SIP/2.0/UDP [2405:200:330:1581::1b]:5067;branch=z9hG4bK_IMSCL1550631.000_60512d2cc156a2d007cae5869b8c5c0b;lskpmc=P9J;received=2405:200:330:1581::1b
+04-29 15:55:23.162  1933  2891 D LEMON   : Content-Length: 0
+04-29 15:55:23.162  1933  2891 D LEMON   : 
+04-29 15:55:23.162  1933  2891 D LEMON   : 
+04-29 15:55:23.164  1933  2891 D LEMON   : 15:55:23.164 UTPT: INFO: conn[0x4] send data[514] to [2405:200:330:1581::1b:5067] ok.
+04-29 15:55:23.164  1933  2891 D LEMON   : 15:55:23.164 ZOS: INFO: fsm(SIP_NIST) trans@[65545] state <COMPLETED> run [RECV_NONINVITE] event ok.
+04-29 15:55:27.250  1933  2058 D LEMON   : 15:55:27.250 UTPT: INFO: recv udp data(len:2058) from [2405:200:330:1581::1b:32920].
+04-29 15:55:27.251  1933  2891 D LEMON   : NOTIFY sip:405872000010354@[2405:204:1803:1f53::251a:e0ad]:5255 SIP/2.0
+04-29 15:55:27.251  1933  2891 D LEMON   : v:SIP/2.0/UDP [2405:200:330:1581::1b]:5067;branch=z9hG4bK_IMSCL1550631.000_60512d2cc156a2d007cae5869b8c5c0b;lskpmc=P9J
+04-29 15:55:27.251  1933  2891 D LEMON   : Record-Route:<sip:[2405:200:330:1581::1b]:5067;routing_id=pcscf_a_side;lskpmc=P9J;lr>
+04-29 15:55:27.251  1933  2891 D LEMON   : f:<sip:+917011021569@ims.mnc872.mcc405.3gppnetwork.org>;tag=1544821200
+04-29 15:55:27.251  1933  2891 D LEMON   : t:<sip:+917011021569@ims.mnc872.mcc405.3gppnetwork.org>;tag=-t.-J0deoMhinod59eRC0LC321
+04-29 15:55:27.251  1933  2891 D LEMON   : o:reg
+04-29 15:55:27.251  1933  2891 D LEMON   : i:bgx3adeoMhinod59eRC0LB321i@[2405:204:1803:1f53::251a:e0ad]
+04-29 15:55:27.251  1933  2891 D LEMON   : Subscription-State:active
+04-29 15:55:27.251  1933  2891 D LEMON   : CSeq:1 NOTIFY
+04-29 15:55:27.251  1933  2891 D LEMON   : c:application/reginfo+xml
+04-29 15:55:27.251  1933  2891 D LEMON   : m:<sip:dl1scfx1501mw.ims.mnc872.mcc405.3gppnetwork.org:5090;lskpmc=S5K>
+04-29 15:55:27.251  1933  2891 D LEMON   : Max-Forwards:68
+04-29 15:55:27.251  1933  2891 D LEMON   : l:1380
+04-29 15:55:27.251  1933  2891 D LEMON   : 
+04-29 15:55:27.251  1933  2891 D LEMON   : <?xml version="1.0"?><reginfo xmlns="urn:ietf:params:xml:ns:reginfo" xmlns:gr="urn:ietf:params:xml:ns:gruuinfo" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:ere="urn:3gpp:ns:extRegExp:1.0" xmlns:cp="urn:ietf:params:xml:ns:common-policy" xmlns:eri="urn:3gpp:ns:extRegInfo:1.0" version="0" state="full"><registration aor="sip:+917011021569@ims.mnc872.mcc405.3gppnetwork.org" id="5eb69dca5K1461851269175839" state="active"><contact id="5K1461851269175839" state="active" event="created"><uri>sip:405872000010354@[2405:204:1803:1f53::251a:e0ad]:5255;transport=udp</uri><unknown-param name="+sip.instance">"&lt;urn:gsma:imei:86740002-050381-3&gt;"</unknown-param><unknown-param name="+g.3gpp.icsi-ref">urn%%3Aurn-7%%3A3gpp-service.ims.icsi.mmtel</unknown-param><unknown-param name="video"/><unknown-param name="+g.3gpp.smsip"/></contact></registration><registration aor="tel:+917011021569" id="0b595c965K1461851269175839" state="active"><contact id="5K1461851269175839" state="active" event="created"><uri>sip:405872000010354@[2405:204:1803:1f53::251a:e0ad]:5255;transport=udp</uri><unknown-param name="+sip.instance">"&lt;urn:gsma:imei:86740002-050381-3&gt;"</unknown-param><unknown-param name="+g.3gpp.icsi-ref">urn%%3Aurn-7%%3A3gpp-service.ims.icsi.mmtel</unknown-param><unknown-param name="video"/><unknown-param name="+g.3gpp.smsip"/></contact></registration></reginfo>
+04-29 15:55:27.252  1933  2891 D LEMON   : 15:55:27.252 SIP: INFO: trans @10009 process request <NOTIFY>.
+04-29 15:55:27.253  1933  2891 D LEMON   : SIP/2.0 200 OK
+04-29 15:55:27.253  1933  2891 D LEMON   : From: <sip:+917011021569@ims.mnc872.mcc405.3gppnetwork.org>;tag=1544821200
+04-29 15:55:27.253  1933  2891 D LEMON   : To: <sip:+917011021569@ims.mnc872.mcc405.3gppnetwork.org>;tag=-t.-J0deoMhinod59eRC0LC321
+04-29 15:55:27.253  1933  2891 D LEMON   : Supported: path,gruu,outbound
+04-29 15:55:27.253  1933  2891 D LEMON   : Call-ID: bgx3adeoMhinod59eRC0LB321i@[2405:204:1803:1f53::251a:e0ad]
+04-29 15:55:27.253  1933  2891 D LEMON   : CSeq: 1 NOTIFY
+04-29 15:55:27.253  1933  2891 D LEMON   : Max-Forwards: 70
+04-29 15:55:27.253  1933  2891 D LEMON   : Server: VoWIFI/WFC UA
+04-29 15:55:27.253  1933  2891 D LEMON   : Via: SIP/2.0/UDP [2405:200:330:1581::1b]:5067;branch=z9hG4bK_IMSCL1550631.000_60512d2cc156a2d007cae5869b8c5c0b;lskpmc=P9J;received=2405:200:330:1581::1b
+04-29 15:55:27.253  1933  2891 D LEMON   : Content-Length: 0
+04-29 15:55:27.253  1933  2891 D LEMON   : 
+04-29 15:55:27.253  1933  2891 D LEMON   : 
+04-29 15:55:27.255  1933  2891 D LEMON   : 15:55:27.255 UTPT: INFO: conn[0x4] send data[514] to [2405:200:330:1581::1b:5067] ok.
+04-29 15:55:27.255  1933  2891 D LEMON   : 15:55:27.255 ZOS: INFO: fsm(SIP_NIST) trans@[65545] state <COMPLETED> run [RECV_NONINVITE] event ok.
+04-29 15:55:34.574  1933  2891 D LEMON   : 15:55:34.574 SIP: INFO: core timer process trans event tmr<0xE> [TIMER K].
+04-29 15:55:34.574  1933  2891 D LEMON   : 15:55:34.574 ZOS: INFO: fsm(SIP_NICT) trans@[65542] state <COMPLETED> run [TM_TK] event ok.
+04-29 15:55:34.574  1933  2891 D LEMON   : 15:55:34.574 ZOS: INFO: fsm(SIP_NICT) trans@[65542] state <COMPLETED> to <TERMINATED>.
+04-29 15:55:34.575  1933  2891 D LEMON   : 15:55:34.575 SIP: INFO: module delete tmr<0xC> [TIMER E] ok.
+04-29 15:55:34.575  1933  2891 D LEMON   : 15:55:34.575 SIP: INFO: module delete tmr<0xD> [TIMER F] ok.
+04-29 15:55:34.575  1933  2891 D LEMON   : 15:55:34.575 SIP: INFO: module delete tmr<0xE> [TIMER K] ok.
+04-29 15:55:34.575  1933  2891 D LEMON   : 15:55:34.575 SIP: INFO: module delete tmr<0xF> [TIMER WAIT_CONN] ok.
+04-29 15:55:34.575  1933  2891 D LEMON   : 15:55:34.575 SIP: INFO: module delete tmr<0x10> [TIMER C] ok.
+04-29 15:55:37.825  1933  2891 D LEMON   : 15:55:37.825 SIP: INFO: core timer process trans event tmr<0x14> [TIMER K].
+04-29 15:55:37.826  1933  2891 D LEMON   : 15:55:37.826 ZOS: INFO: fsm(SIP_NICT) trans@[65543] state <COMPLETED> run [TM_TK] event ok.
+04-29 15:55:37.826  1933  2891 D LEMON   : 15:55:37.826 ZOS: INFO: fsm(SIP_NICT) trans@[65543] state <COMPLETED> to <TERMINATED>.
+04-29 15:55:37.826  1933  2891 D LEMON   : 15:55:37.826 SIP: INFO: module delete tmr<0x12> [TIMER E] ok.
+04-29 15:55:37.826  1933  2891 D LEMON   : 15:55:37.826 SIP: INFO: module delete tmr<0x13> [TIMER F] ok.
+04-29 15:55:37.827  1933  2891 D LEMON   : 15:55:37.826 SIP: INFO: module delete tmr<0x14> [TIMER K] ok.
+04-29 15:55:37.827  1933  2891 D LEMON   : 15:55:37.827 SIP: INFO: module delete tmr<0x15> [TIMER WAIT_CONN] ok.
+04-29 15:55:37.827  1933  2891 D LEMON   : 15:55:37.827 SIP: INFO: module delete tmr<0x16> [TIMER C] ok.
+04-29 15:55:38.113  1933  2891 D LEMON   : 15:55:38.112 SIP: INFO: core timer process trans event tmr<0x1F> [TIMER K].
+04-29 15:55:38.113  1933  2891 D LEMON   : 15:55:38.113 ZOS: INFO: fsm(SIP_NICT) trans@[65544] state <COMPLETED> run [TM_TK] event ok.
+04-29 15:55:38.113  1933  2891 D LEMON   : 15:55:38.113 ZOS: INFO: fsm(SIP_NICT) trans@[65544] state <COMPLETED> to <TERMINATED>.
+04-29 15:55:38.113  1933  2891 D LEMON   : 15:55:38.113 SIP: INFO: module delete tmr<0x1D> [TIMER E] ok.
+04-29 15:55:38.113  1933  2891 D LEMON   : 15:55:38.113 SIP: INFO: module delete tmr<0x1E> [TIMER F] ok.
+04-29 15:55:38.114  1933  2891 D LEMON   : 15:55:38.113 SIP: INFO: module delete tmr<0x1F> [TIMER K] ok.
+04-29 15:55:38.114  1933  2891 D LEMON   : 15:55:38.114 SIP: INFO: module delete tmr<0x20> [TIMER WAIT_CONN] ok.
+04-29 15:55:38.114  1933  2891 D LEMON   : 15:55:38.114 SIP: INFO: module delete tmr<0x21> [TIMER C] ok.
+04-29 15:55:38.114  1933  2891 D LEMON   : 15:55:38.114 ZOS: INFO: fsm(SIP_SUBS) subs@[2147549189] state <CONFIRMED> run [TXN_TERMINATED] event ok.
+04-29 15:55:51.798  1933  2891 D LEMON   : 15:55:51.798 SIP: INFO: module create tmr<0x2B> [TIMER SEND_2XX] ok.
+04-29 15:55:51.801  1933  2891 D LEMON   : INVITE sip:+917011021641@ims.mnc872.mcc405.3gppnetwork.org SIP/2.0
+04-29 15:55:51.801  1933  2891 D LEMON   : From: <sip:+917011021569@ims.mnc872.mcc405.3gppnetwork.org>;tag=321ibgx3adeoMhinod59eRC0LF
+04-29 15:55:51.801  1933  2891 D LEMON   : To: "+917011021641"<sip:+917011021641@ims.mnc872.mcc405.3gppnetwork.org>
+04-29 15:55:51.801  1933  2891 D LEMON   : P-Preferred-Identity: <sip:+917011021569@ims.mnc872.mcc405.3gppnetwork.org>
+04-29 15:55:51.801  1933  2891 D LEMON   : Contact: <sip:405872000010354@[2405:204:1803:1f53::251a:e0ad]:5255>;+sip.instance="<urn:gsma:imei:86740002-050381-3>";+g.3gpp.icsi-ref="urn%%3Aurn-7%%3A3gpp-service.ims.icsi.mmtel";video;+g.3gpp.icsi-ref="urn%%3Aurn-7%%3A3gpp-service.ims.icsi.mmtel"
+04-29 15:55:51.801  1933  2891 D LEMON   : Accept-Contact: *;+g.3gpp.icsi-ref="urn%%3Aurn-7%%3A3gpp-service.ims.icsi.mmtel"
+04-29 15:55:51.801  1933  2891 D LEMON   : P-Early-Media: supported
+04-29 15:55:51.801  1933  2891 D LEMON   : Session-Expires: 1800
+04-29 15:55:51.801  1933  2891 D LEMON   : Min-SE: 600
+04-29 15:55:51.801  1933  2891 D LEMON   : Supported: 100rel,join,norefersub,replaces,timer,sec-agree
+04-29 15:55:51.801  1933  2891 D LEMON   : Allow: INVITE,ACK,BYE,CANCEL,UPDATE,REGISTER,INFO,PRACK,SUBSCRIBE,NOTIFY,MESSAGE,REFER,PUBLISH
+04-29 15:55:51.801  1933  2891 D LEMON   : P-Access-Network-Info: IEEE-802.11;i-wlan-node-id=4045da1352c7
+04-29 15:55:51.801  1933  2891 D LEMON   : Security-Verify: ipsec-3gpp;prot=esp;alg=hmac-md5-96;ealg=aes-cbc;mod=trans;spi-c=1460503848;spi-s=1460503849;port-c=32920;port-s=5067;q=0.6
+04-29 15:55:51.801  1933  2891 D LEMON   : Security-Verify: ipsec-3gpp;prot=esp;alg=hmac-md5-96;ealg=des-ede3-cbc;mod=trans;spi-c=1460503848;spi-s=1460503849;port-c=32920;port-s=5067;q=0.4
+04-29 15:55:51.801  1933  2891 D LEMON   : Security-Verify: ipsec-3gpp;prot=esp;alg=hmac-md5-96;ealg=null;mod=trans;spi-c=1460503848;spi-s=1460503849;port-c=32920;port-s=5067;q=0.3
+04-29 15:55:51.801  1933  2891 D LEMON   : Security-Verify: ipsec-3gpp;prot=esp;alg=hmac-sha-1-96;ealg=des-ede3-cbc;mod=trans;spi-c=1460503848;spi-s=1460503849;port-c=32920;port-s=5067;q=0.1
+04-29 15:55:51.801  1933  2891 D LEMON   : Security-Verify: ipsec-3gpp;prot=esp;alg=hmac-sha-1-96;ealg=aes-cbc;mod=trans;spi-c=1460503848;spi-s=1460503849;port-c=32920;port-s=5067;q=0.2
+04-29 15:55:51.801  1933  2891 D LEMON   : Security-Verify: ipsec-3gpp;prot=esp;alg=hmac-sha-1-96;ealg=null;mod=trans;spi-c=1460503848;spi-s=1460503849;port-c=32920;port-s=5067;q=0.5
+04-29 15:55:51.801  1933  2891 D LEMON   : Proxy-Require: sec-agree
+04-29 15:55:51.801  1933  2891 D LEMON   : Require: sec-agree
+04-29 15:55:51.801  1933  2891 D LEMON   : Call-ID: 219t.-J0deoMhinod59eRC0LE3@[2405:204:1803:1f53::251a:e0ad]
+04-29 15:55:51.801  1933  2891 D LEMON   : CSeq: 1 INVITE
+04-29 15:55:51.801  1933  2891 D LEMON   : Max-Forwards: 70
+04-29 15:55:51.801  1933  2891 D LEMON   : User-Agent: VoWIFI/WFC UA
+04-29 15:55:51.801  1933  2891 D LEMON   : Via: SIP/2.0/UDP [2405:204:1803:1f53::251a:e0ad]:5255;branch=z9hG4bKG321gt.-J0deoMhinod59eRC0L;rport
+04-29 15:55:51.801  1933  2891 D LEMON   : Content-Type: application/sdp
+04-29 15:55:51.801  1933  2891 D LEMON   : Content-Length: 368
+04-29 15:55:51.801  1933  2891 D LEMON   : 
+04-29 15:55:51.801  1933  2891 D LEMON   : v=0
+04-29 15:55:51.801  1933  2891 D LEMON   : o=405872000010354 2688247764 2688247764 IN IP6 2405:204:1803:1f53::251a:e0ad
+04-29 15:55:51.801  1933  2891 D LEMON   : s=-
+04-29 15:55:51.801  1933  2891 D LEMON   : c=IN IP6 2405:204:1803:1f53::251a:e0ad
+04-29 15:55:51.801  1933  2891 D LEMON   : t=0 0
+04-29 15:55:51.801  1933  2891 D LEMON   : m=audio 37086 RTP/AVP 104 103 101
+04-29 15:55:51.801  1933  2891 D LEMON   : a=rtpmap:104 AMR-WB/16000
+04-29 15:55:51.801  1933  2891 D LEMON   : a=fmtp:104 octet-align=1
+04-29 15:55:51.801  1933  2891 D LEMON   : a=rtpmap:103 AMR/8000
+04-29 15:55:51.801  1933  2891 D LEMON   : a=fmtp:103 mode-set=0,1,2,3,4,5;octet-align=1
+04-29 15:55:51.801  1933  2891 D LEMON   : a=ptime:20
+04-29 15:55:51.801  1933  2891 D LEMON   : a=maxptime:400
+04-29 15:55:51.801  1933  2891 D LEMON   : a=rtpmap:101 telephone-event/8000
+04-29 15:55:51.801  1933  2891 D LEMON   : a=sendrecv
+04-29 15:55:51.801  1933  2891 D LEMON   : 
+04-29 15:55:51.802  1933  2891 D LEMON   : 15:55:51.801 UTPT: INFO: conn[0x4] send data[2482] to [2405:200:330:1581::1b:5067] ok.
+04-29 15:55:51.802  1933  2891 D LEMON   : 15:55:51.802 SIP: INFO: module start tmr<0x2D> [TIMER A] <2000ms> ok.
+04-29 15:55:51.802  1933  2891 D LEMON   : 15:55:51.802 SIP: INFO: module start tmr<0x2E> [TIMER B] <128000ms> ok.
+04-29 15:55:51.802  1933  2891 D LEMON   : 15:55:51.802 SIP: INFO: module start tmr<0x31> [TIMER C] <200000ms> ok.
+04-29 15:55:51.802  1933  2891 D LEMON   : 15:55:51.802 ZOS: INFO: fsm(SIP_ICT) trans@[65542] state <IDLE> run [SEND_INVITE] event ok.
+04-29 15:55:51.802  1933  2891 D LEMON   : 15:55:51.802 ZOS: INFO: fsm(SIP_ICT) trans@[65542] state <IDLE> to <CALLING>.
+04-29 15:55:51.802  1933  2056 D LEMON   : 15:55:51.802 ZOS: INFO: fsm(MTF_CALL) conn@[17] state <IDLE> run [USER CALL] event ok.
+04-29 15:55:51.802  1933  2056 D LEMON   : 15:55:51.802 ZOS: INFO: fsm(MTF_CALL) conn@[17] state <IDLE> to <CALLING>.
+04-29 15:55:51.805  1933  1933 D LEMON   : 15:55:51.805 RSE: INFO: gui notify LeaveSessOutgoing.
+04-29 15:55:53.047  1933  2058 D LEMON   : 15:55:53.047 UTPT: INFO: recv udp data(len:408) from [2405:200:330:1581::1b:32920].
+04-29 15:55:53.048  1933  2891 D LEMON   : SIP/2.0 100 Trying
+04-29 15:55:53.048  1933  2891 D LEMON   : f:<sip:+917011021569@ims.mnc872.mcc405.3gppnetwork.org>;tag=321ibgx3adeoMhinod59eRC0LF
+04-29 15:55:53.048  1933  2891 D LEMON   : t:"+917011021641"<sip:+917011021641@ims.mnc872.mcc405.3gppnetwork.org>
+04-29 15:55:53.048  1933  2891 D LEMON   : i:219t.-J0deoMhinod59eRC0LE3@[2405:204:1803:1f53::251a:e0ad]
+04-29 15:55:53.048  1933  2891 D LEMON   : CSeq:1 INVITE
+04-29 15:55:53.048  1933  2891 D LEMON   : v:SIP/2.0/UDP [2405:204:1803:1f53::251a:e0ad]:5255;branch=z9hG4bKG321gt.-J0deoMhinod59eRC0L;rport=36862;received=2405:204:1803:1f53::251a:e0ad
+04-29 15:55:53.048  1933  2891 D LEMON   : l:0
+04-29 15:55:53.048  1933  2891 D LEMON   : 
+04-29 15:55:53.048  1933  2891 D LEMON   : 
+04-29 15:55:53.049  1933  2891 D LEMON   : 15:55:53.049 SIP: INFO: trans @10006 process response <INVITE:100>.
+04-29 15:55:53.049  1933  2891 D LEMON   : 15:55:53.049 SIP: INFO: module stop tmr<0x2D> [TIMER A] ok.
+04-29 15:55:53.050  1933  2891 D LEMON   : 15:55:53.049 SIP: INFO: module stop tmr<0x2E> [TIMER B] ok.
+04-29 15:55:53.050  1933  2891 D LEMON   : 15:55:53.050 SIP: INFO: module stop tmr<0x31> [TIMER C] ok.
+04-29 15:55:53.050  1933  2891 D LEMON   : 15:55:53.050 SIP: INFO: module start tmr<0x31> [TIMER C] <200000ms> ok.
+04-29 15:55:53.050  1933  2891 D LEMON   : 15:55:53.050 ZOS: INFO: fsm(SIP_ICT) trans@[65542] state <CALLING> run [RECV_1XX] event ok.
+04-29 15:55:53.050  1933  2891 D LEMON   : 15:55:53.050 ZOS: INFO: fsm(SIP_ICT) trans@[65542] state <CALLING> to <PROCEEDING>.
+04-29 15:55:53.051  1933  2891 D LEMON   : 15:55:53.051 SIP: INFO: dlg @20005 process response <INVITE:100>.
+04-29 15:55:53.052  1933  2056 D LEMON   : 15:55:53.052 ZOS: INFO: fsm(MTF_CALL) conn@[17] state <CALLING> run [SIM CNF] event ok.
+04-29 15:55:53.055  1933  2891 D LEMON   : 15:55:53.055 ZOS: INFO: fsm(SIP_IVT) dlg@[131077] state <IVT_OUT> run [RECV_1XX] event ok.
+04-29 15:55:53.055  1933  2891 D LEMON   : 15:55:53.055 ZOS: INFO: fsm(SIP_IVT) dlg@[131077] state <IVT_OUT> to <EARLY UAC>.
+04-29 15:55:54.378  1933  2058 D LEMON   : 15:55:54.378 UTPT: INFO: recv udp data(len:1378) from [2405:200:330:1581::1b:32920].
+04-29 15:55:54.379  1933  2891 D LEMON   : SIP/2.0 183 Session Progress
+04-29 15:55:54.379  1933  2891 D LEMON   : l:272
+04-29 15:55:54.379  1933  2891 D LEMON   : f:<sip:+917011021569@ims.mnc872.mcc405.3gppnetwork.org>;tag=321ibgx3adeoMhinod59eRC0LF
+04-29 15:55:54.379  1933  2891 D LEMON   : t:"+917011021641"<sip:+917011021641@ims.mnc872.mcc405.3gppnetwork.org>;tag=VU0iBUW4hc8jbe6a
+04-29 15:55:54.379  1933  2891 D LEMON   : v:SIP/2.0/UDP [2405:204:1803:1f53::251a:e0ad]:5255;branch=z9hG4bKG321gt.-J0deoMhinod59eRC0L;rport=36862;received=2405:204:1803:1f53::251a:e0ad
+04-29 15:55:54.379  1933  2891 D LEMON   : i:219t.-J0deoMhinod59eRC0LE3@[2405:204:1803:1f53::251a:e0ad]
+04-29 15:55:54.379  1933  2891 D LEMON   : CSeq:1 INVITE
+04-29 15:55:54.379  1933  2891 D LEMON   : Record-Route:<sip:[2405:200:330:1581::1b]:5067;routing_id=pcscf_a_side;lskpmc=P9J;lr>
+04-29 15:55:54.379  1933  2891 D LEMON   : RSeq:1
+04-29 15:55:54.379  1933  2891 D LEMON   : m:<sip:405872000010425@10.56.4.19:5070;transport=TCP;yop=00.00.04111090.0000.7014>;+g.3gpp.icsi-ref="urn%%3Aurn-7%%3A3gpp-service.ims.icsi.mmtel";video;+sip.instance="<urn:gsma:imei:86740002-050413-0>"
+04-29 15:55:54.379  1933  2891 D LEMON   : Require:100rel
+04-29 15:55:54.379  1933  2891 D LEMON   : k:100rel,join,precondition,replaces,timer,histinfo,eventlist,norefersub,tdialog
+04-29 15:55:54.379  1933  2891 D LEMON   : Allow:ACK,BYE,CANCEL,INFO,INVITE,NOTIFY,OPTIONS,PRACK,REFER,UPDATE
+04-29 15:55:54.379  1933  2891 D LEMON   : Feature-Caps:*;+g.3gpp.srvcc;+g.3gpp.icsi-ref="urn%%3Aurn-7%%3A3gpp-service.ims.icsi.mmtel"
+04-29 15:55:54.379  1933  2891 D LEMON   : c:application/sdp
+04-29 15:55:54.379  1933  2891 D LEMON   : Content-Disposition:session;handling=required
+04-29 15:55:54.379  1933  2891 D LEMON   : Server:VoWIFI/WFC UA
+04-29 15:55:54.379  1933  2891 D LEMON   : P-Early-Media:supported
+04-29 15:55:54.379  1933  2891 D LEMON   : 
+04-29 15:55:54.379  1933  2891 D LEMON   : v=0
+04-29 15:55:54.379  1933  2891 D LEMON   : o=405872000010425 0 0 IN IP6 ims.mnc872.mcc405.3gppnetwork.org
+04-29 15:55:54.379  1933  2891 D LEMON   : s=-
+04-29 15:55:54.379  1933  2891 D LEMON   : c=IN IP6 2405:200:330:1587::11
+04-29 15:55:54.379  1933  2891 D LEMON   : t=0 0
+04-29 15:55:54.379  1933  2891 D LEMON   : m=audio 37774 RTP/AVP 104 101
+04-29 15:55:54.379  1933  2891 D LEMON   : a=rtpmap:104 AMR-WB/16000
+04-29 15:55:54.379  1933  2891 D LEMON   : a=fmtp:104 octet-align=1
+04-29 15:55:54.379  1933  2891 D LEMON   : a=ptime:20
+04-29 15:55:54.379  1933  2891 D LEMON   : a=maxptime:144
+04-29 15:55:54.379  1933  2891 D LEMON   : a=rtpmap:101 telephone-event/8000
+04-29 15:55:54.379  1933  2891 D LEMON   : a=sendrecv
+04-29 15:55:54.379  1933  2891 D LEMON   : 
+04-29 15:55:54.380  1933  2891 D LEMON   : 15:55:54.380 SIP: INFO: trans @10006 process response <INVITE:183>.
+04-29 15:55:54.380  1933  2891 D LEMON   : 15:55:54.380 SIP: INFO: module stop tmr<0x31> [TIMER C] ok.
+04-29 15:55:54.380  1933  2891 D LEMON   : 15:55:54.380 SIP: INFO: module start tmr<0x31> [TIMER C] <200000ms> ok.
+04-29 15:55:54.380  1933  2891 D LEMON   : 15:55:54.380 ZOS: INFO: fsm(SIP_ICT) trans@[65542] state <PROCEEDING> run [RECV_1XX] event ok.
+04-29 15:55:54.381  1933  2891 D LEMON   : 15:55:54.381 SIP: INFO: dlg @20005 process response <INVITE:183>.
+04-29 15:55:54.388  1933  2891 D LEMON   : 15:55:54.388 ZOS: INFO: fsm(SIP_IVT) dlg@[131077] state <EARLY UAC> run [RECV_1XX] event ok.
+04-29 15:55:54.409  1933  2056 D LEMON   : 15:55:54.409 ZOS: INFO: fsm(MTF_CALL) conn@[17] state <CALLING> run [SIM CNF] event ok.
+04-29 15:55:54.409  1933  2891 D LEMON   : 15:55:54.409 SIP: INFO: dlg @20005 process request <PRACK>.
+04-29 15:55:54.410  1933  2891 D LEMON   : 15:55:54.410 SIP: INFO: module create tmr<0x32> [TIMER E] ok.
+04-29 15:55:54.411  1933  2891 D LEMON   : 15:55:54.411 SIP: INFO: module create tmr<0x33> [TIMER F] ok.
+04-29 15:55:54.411  1933  2891 D LEMON   : 15:55:54.411 SIP: INFO: module create tmr<0x34> [TIMER K] ok.
+04-29 15:55:54.411  1933  2891 D LEMON   : 15:55:54.411 SIP: INFO: module create tmr<0x35> [TIMER WAIT_CONN] ok.
+04-29 15:55:54.411  1933  2891 D LEMON   : 15:55:54.411 SIP: INFO: module create tmr<0x36> [TIMER C] ok.
+04-29 15:55:54.411  1933  2891 D LEMON   : 15:55:54.411 ZOS: INFO: fsm(SIP_IVT) dlg@[131077] state <EARLY UAC> run [SSM_REQ] event ok.
+04-29 15:55:54.411  1933  2891 D LEMON   : 15:55:54.411 SIP: INFO: trans @10007 process request <PRACK>.
+04-29 15:55:54.412  1933  2891 D LEMON   : PRACK sip:405872000010425@10.56.4.19:5070;transport=tcp;yop=00.00.04111090.0000.7014 SIP/2.0
+04-29 15:55:54.412  1933  2891 D LEMON   : From: <sip:+917011021569@ims.mnc872.mcc405.3gppnetwork.org>;tag=321ibgx3adeoMhinod59eRC0LF
+04-29 15:55:54.412  1933  2891 D LEMON   : To: "+917011021641"<sip:+917011021641@ims.mnc872.mcc405.3gppnetwork.org>;tag=VU0iBUW4hc8jbe6a
+04-29 15:55:54.412  1933  2891 D LEMON   : P-Access-Network-Info: IEEE-802.11;i-wlan-node-id=4045da1352c7
+04-29 15:55:54.412  1933  2891 D LEMON   : Proxy-Require: sec-agree
+04-29 15:55:54.412  1933  2891 D LEMON   : Require: sec-agree
+04-29 15:55:54.412  1933  2891 D LEMON   : Supported: sec-agree
+04-29 15:55:54.412  1933  2891 D LEMON   : Route: <sip:[2405:200:330:1581::1b]:5067;routing_id=pcscf_a_side;lskpmc=P9J;lr>
+04-29 15:55:54.412  1933  2891 D LEMON   : Call-ID: 219t.-J0deoMhinod59eRC0LE3@[2405:204:1803:1f53::251a:e0ad]
+04-29 15:55:54.412  1933  2891 D LEMON   : CSeq: 2 PRACK
+04-29 15:55:54.412  1933  2891 D LEMON   : Max-Forwards: 70
+04-29 15:55:54.412  1933  2891 D LEMON   : User-Agent: VoWIFI/WFC UA
+04-29 15:55:54.412  1933  2891 D LEMON   : Via: SIP/2.0/UDP [2405:204:1803:1f53::251a:e0ad]:5255;branch=z9hG4bKCH321oayK32aCjOQbKem59eouh;rport
+04-29 15:55:54.412  1933  2891 D LEMON   : RAck: 1 1 INVITE
+04-29 15:55:54.412  1933  2891 D LEMON   : Content-Length: 0
+04-29 15:55:54.412  1933  2891 D LEMON   : 
+04-29 15:55:54.412  1933  2891 D LEMON   : 
+04-29 15:55:54.413  1933  2891 D LEMON   : 15:55:54.413 UTPT: INFO: conn[0x4] send data[764] to [2405:200:330:1581::1b:5067] ok.
+04-29 15:55:54.413  1933  2891 D LEMON   : 15:55:54.413 SIP: INFO: module start tmr<0x32> [TIMER E] <2000ms> ok.
+04-29 15:55:54.413  1933  1933 D LEMON   : 15:55:54.413 RSE: INFO: gui notify LeaveSessAlerted.
+04-29 15:55:54.413  1933  2891 D LEMON   : 15:55:54.413 SIP: INFO: module start tmr<0x33> [TIMER F] <128000ms> ok.
+04-29 15:55:54.413  1933  2891 D LEMON   : 15:55:54.413 ZOS: INFO: fsm(SIP_NICT) trans@[65543] state <IDLE> run [SEND_NONINVITE] event ok.
+04-29 15:55:54.413  1933  2891 D LEMON   : 15:55:54.413 ZOS: INFO: fsm(SIP_NICT) trans@[65543] state <IDLE> to <TRYING>.
+04-29 15:55:54.904  1933  2058 D LEMON   : 15:55:54.904 UTPT: INFO: recv udp data(len:573) from [2405:200:330:1581::1b:32920].
+04-29 15:55:54.905  1933  2891 D LEMON   : SIP/2.0 200 OK
+04-29 15:55:54.905  1933  2891 D LEMON   : l:0
+04-29 15:55:54.905  1933  2891 D LEMON   : f:<sip:+917011021569@ims.mnc872.mcc405.3gppnetwork.org>;tag=321ibgx3adeoMhinod59eRC0LF
+04-29 15:55:54.905  1933  2891 D LEMON   : t:"+917011021641"<sip:+917011021641@ims.mnc872.mcc405.3gppnetwork.org>;tag=VU0iBUW4hc8jbe6a
+04-29 15:55:54.905  1933  2891 D LEMON   : v:SIP/2.0/UDP [2405:204:1803:1f53::251a:e0ad]:5255;branch=z9hG4bKCH321oayK32aCjOQbKem59eouh;rport=36862;received=2405:204:1803:1f53::251a:e0ad
+04-29 15:55:54.905  1933  2891 D LEMON   : i:219t.-J0deoMhinod59eRC0LE3@[2405:204:1803:1f53::251a:e0ad]
+04-29 15:55:54.905  1933  2891 D LEMON   : CSeq:2 PRACK
+04-29 15:55:54.905  1933  2891 D LEMON   : k:100rel,precondition,timer,histinfo,eventlist,norefersub
+04-29 15:55:54.905  1933  2891 D LEMON   : Allow:ACK,BYE,CANCEL,INFO,INVITE,NOTIFY,OPTIONS,PRACK,REFER,UPDATE
+04-29 15:55:54.905  1933  2891 D LEMON   : Server:VoWIFI/WFC UA
+04-29 15:55:54.905  1933  2891 D LEMON   : 
+04-29 15:55:54.905  1933  2891 D LEMON   : 
+04-29 15:55:54.906  1933  2891 D LEMON   : 15:55:54.906 SIP: INFO: trans @10007 process response <PRACK:200>.
+04-29 15:55:54.906  1933  2891 D LEMON   : 15:55:54.906 SIP: INFO: module stop tmr<0x32> [TIMER E] ok.
+04-29 15:55:54.906  1933  2891 D LEMON   : 15:55:54.906 SIP: INFO: module stop tmr<0x33> [TIMER F] ok.
+04-29 15:55:54.907  1933  2891 D LEMON   : 15:55:54.907 SIP: INFO: module start tmr<0x34> [TIMER K] <17000ms> ok.
+04-29 15:55:54.907  1933  2891 D LEMON   : 15:55:54.907 ZOS: INFO: fsm(SIP_NICT) trans@[65543] state <TRYING> run [RECV_2XX] event ok.
+04-29 15:55:54.907  1933  2891 D LEMON   : 15:55:54.907 ZOS: INFO: fsm(SIP_NICT) trans@[65543] state <TRYING> to <COMPLETED>.
+04-29 15:55:54.907  1933  2891 D LEMON   : 15:55:54.907 SIP: INFO: dlg @20005 process response <PRACK:200>.
+04-29 15:55:54.908  1933  2056 D LEMON   : 15:55:54.908 ZOS: ERROR: fsm(MTF_CALL) conn@[17] state <CALLING> run [SSM CNF] unknown event.
+04-29 15:55:54.912  1933  2891 D LEMON   : 15:55:54.912 ZOS: INFO: fsm(SIP_IVT) dlg@[131077] state <EARLY UAC> run [RECV_SSM_RSP] event ok.
+04-29 15:55:54.937  1933  2058 D LEMON   : 15:55:54.937 UTPT: INFO: recv udp data(len:1004) from [2405:200:330:1581::1b:32920].
+04-29 15:55:54.938  1933  2891 D LEMON   : SIP/2.0 180 Ringing
+04-29 15:55:54.938  1933  2891 D LEMON   : l:0
+04-29 15:55:54.938  1933  2891 D LEMON   : f:<sip:+917011021569@ims.mnc872.mcc405.3gppnetwork.org>;tag=321ibgx3adeoMhinod59eRC0LF
+04-29 15:55:54.938  1933  2891 D LEMON   : t:"+917011021641"<sip:+917011021641@ims.mnc872.mcc405.3gppnetwork.org>;tag=VU0iBUW4hc8jbe6a
+04-29 15:55:54.938  1933  2891 D LEMON   : v:SIP/2.0/UDP [2405:204:1803:1f53::251a:e0ad]:5255;branch=z9hG4bKG321gt.-J0deoMhinod59eRC0L;rport=36862;received=2405:204:1803:1f53::251a:e0ad
+04-29 15:55:54.938  1933  2891 D LEMON   : i:219t.-J0deoMhinod59eRC0LE3@[2405:204:1803:1f53::251a:e0ad]
+04-29 15:55:54.938  1933  2891 D LEMON   : CSeq:1 INVITE
+04-29 15:55:54.938  1933  2891 D LEMON   : Record-Route:<sip:[2405:200:330:1581::1b]:5067;routing_id=pcscf_a_side;lskpmc=P9J;lr>
+04-29 15:55:54.938  1933  2891 D LEMON   : m:<sip:405872000010425@10.56.4.19:5070;transport=TCP;yop=00.00.04111090.0000.7014>;+g.3gpp.icsi-ref="urn%%3Aurn-7%%3A3gpp-service.ims.icsi.mmtel";video;+sip.instance="<urn:gsma:imei:86740002-050413-0>"
+04-29 15:55:54.938  1933  2891 D LEMON   : k:100rel,join,precondition,replaces,timer,histinfo,eventlist,norefersub,tdialog
+04-29 15:55:54.938  1933  2891 D LEMON   : Allow:ACK,BYE,CANCEL,INFO,INVITE,NOTIFY,OPTIONS,PRACK,REFER,UPDATE
+04-29 15:55:54.938  1933  2891 D LEMON   : Feature-Caps:*;+g.3gpp.srvcc;+g.3gpp.icsi-ref="urn%%3Aurn-7%%3A3gpp-service.ims.icsi.mmtel"
+04-29 15:55:54.938  1933  2891 D LEMON   : Server:VoWIFI/WFC UA
+04-29 15:55:54.938  1933  2891 D LEMON   : P-Early-Media:sendonly
+04-29 15:55:54.938  1933  2891 D LEMON   : 
+04-29 15:55:54.938  1933  2891 D LEMON   : 
+04-29 15:55:54.939  1933  2891 D LEMON   : 15:55:54.939 SIP: INFO: trans @10006 process response <INVITE:180>.
+04-29 15:55:54.939  1933  2891 D LEMON   : 15:55:54.939 SIP: INFO: module stop tmr<0x31> [TIMER C] ok.
+04-29 15:55:54.939  1933  2891 D LEMON   : 15:55:54.939 SIP: INFO: module start tmr<0x31> [TIMER C] <200000ms> ok.
+04-29 15:55:54.939  1933  2891 D LEMON   : 15:55:54.939 ZOS: INFO: fsm(SIP_ICT) trans@[65542] state <PROCEEDING> run [RECV_1XX] event ok.
+04-29 15:55:54.941  1933  2891 D LEMON   : 15:55:54.941 SIP: INFO: dlg @20005 process response <INVITE:180>.
+04-29 15:55:54.944  1933  2056 D LEMON   : 15:55:54.944 ZOS: INFO: fsm(MTF_CALL) conn@[17] state <CALLING> run [SIM CNF] event ok.
+04-29 15:55:54.948  1933  2891 D LEMON   : 15:55:54.948 ZOS: INFO: fsm(SIP_IVT) dlg@[131077] state <EARLY UAC> run [RECV_1XX] event ok.
+04-29 15:55:54.951  1933  1933 D LEMON   : 15:55:54.951 RSE: INFO: gui notify LeaveSessAlerted.
+04-29 15:55:57.018  1933  2058 D LEMON   : 15:55:57.018 UTPT: INFO: recv udp data(len:1101) from [2405:200:330:1581::1b:32920].
+04-29 15:55:57.020  1933  2891 D LEMON   : UPDATE sip:405872000010354@[2405:204:1803:1f53::251a:e0ad]:5255 SIP/2.0
+04-29 15:55:57.020  1933  2891 D LEMON   : v:SIP/2.0/UDP [2405:200:330:1581::1b]:5067;branch=z9hG4bK_IMSCL1550631.000_b44875f345d37f66decb6bb15c16398a;lskpmc=P9J
+04-29 15:55:57.020  1933  2891 D LEMON   : Record-Route:<sip:[2405:200:330:1581::1b]:5067;routing_id=pcscf_a_side;lskpmc=P9J;lr>
+04-29 15:55:57.020  1933  2891 D LEMON   : l:259
+04-29 15:55:57.020  1933  2891 D LEMON   : f:"+917011021641"<sip:+917011021641@ims.mnc872.mcc405.3gppnetwork.org>;tag=VU0iBUW4hc8jbe6a
+04-29 15:55:57.020  1933  2891 D LEMON   : t:<sip:+917011021569@ims.mnc872.mcc405.3gppnetwork.org>;tag=321ibgx3adeoMhinod59eRC0LF
+04-29 15:55:57.020  1933  2891 D LEMON   : i:219t.-J0deoMhinod59eRC0LE3@[2405:204:1803:1f53::251a:e0ad]
+04-29 15:55:57.020  1933  2891 D LEMON   : CSeq:1 UPDATE
+04-29 15:55:57.020  1933  2891 D LEMON   : Max-Forwards:59
+04-29 15:55:57.020  1933  2891 D LEMON   : m:<sip:405872000010425@10.56.4.19:5070;transport=TCP;yop=00.00.04111090.0000.7014>;+g.3gpp.icsi-ref="urn%%3Aurn-7%%3A3gpp-service.ims.icsi.mmtel";video;+sip.instance="<urn:gsma:imei:86740002-050413-0>"
+04-29 15:55:57.020  1933  2891 D LEMON   : c:application/sdp
+04-29 15:55:57.020  1933  2891 D LEMON   : Content-Disposition:session;handling=required
+04-29 15:55:57.020  1933  2891 D LEMON   : d:no-fork
+04-29 15:55:57.020  1933  2891 D LEMON   : 
+04-29 15:55:57.020  1933  2891 D LEMON   : v=0
+04-29 15:55:57.020  1933  2891 D LEMON   : o=- 0 1 IN IP6 ims.mnc872.mcc405.3gppnetwork.org
+04-29 15:55:57.020  1933  2891 D LEMON   : s=media server session
+04-29 15:55:57.020  1933  2891 D LEMON   : t=0 0
+04-29 15:55:57.020  1933  2891 D LEMON   : m=audio 37774 RTP/AVP 104
+04-29 15:55:57.020  1933  2891 D LEMON   : c=IN IP6 2405:200:330:1587::11
+04-29 15:55:57.020  1933  2891 D LEMON   : a=rtpmap:104 AMR-WB/16000
+04-29 15:55:57.020  1933  2891 D LEMON   : a=fmtp:104 octet-align=1; mode-change-capability=2
+04-29 15:55:57.020  1933  2891 D LEMON   : a=rtcp-xr
+04-29 15:55:57.020  1933  2891 D LEMON   : a=ptime:20
+04-29 15:55:57.020  1933  2891 D LEMON   : a=sendrecv
+04-29 15:55:57.020  1933  2891 D LEMON   : 
+04-29 15:55:57.021  1933  2891 D LEMON   : 15:55:57.021 SIP: INFO: module create tmr<0x37> [TIMER J] ok.
+04-29 15:55:57.021  1933  2891 D LEMON   : 15:55:57.021 SIP: INFO: module create tmr<0x38> [TIMER C] ok.
+04-29 15:55:57.022  1933  2891 D LEMON   : 15:55:57.021 SIP: INFO: trans @10008 process request <UPDATE>.
+04-29 15:55:57.022  1933  2891 D LEMON   : 15:55:57.022 SIP: INFO: module start tmr<0x38> [TIMER C] <200000ms> ok.
+04-29 15:55:57.022  1933  2891 D LEMON   : 15:55:57.022 ZOS: INFO: fsm(SIP_NIST) trans@[65544] state <IDLE> run [RECV_NONINVITE] event ok.
+04-29 15:55:57.022  1933  2891 D LEMON   : 15:55:57.022 ZOS: INFO: fsm(SIP_NIST) trans@[65544] state <IDLE> to <TRYING>.
+04-29 15:55:57.022  1933  2891 D LEMON   : 15:55:57.022 SIP: INFO: dlg @20005 process request <UPDATE>.
+04-29 15:55:57.027  1933  2891 D LEMON   : 15:55:57.027 ZOS: INFO: fsm(SIP_IVT) dlg@[131077] state <EARLY UAC> run [RECV_SSM_REQ] event ok.
+04-29 15:55:57.163  1933  2891 D LEMON   : 15:55:57.163 SIP: INFO: dlg @20005 process response <UPDATE:200>.
+04-29 15:55:57.163  1933  2891 D LEMON   : 15:55:57.163 ZOS: INFO: fsm(SIP_IVT) dlg@[131077] state <EARLY UAC> run [SSM_RSP] event ok.
+04-29 15:55:57.163  1933  2056 D LEMON   : 15:55:57.163 ZOS: INFO: fsm(MTF_CALL) conn@[17] state <CALLING> run [SSM IND] event ok.
+04-29 15:55:57.163  1933  2891 D LEMON   : 15:55:57.163 SIP: INFO: trans @10008 process response <UPDATE:200>.
+04-29 15:55:57.164  1933  2891 D LEMON   : SIP/2.0 200 OK
+04-29 15:55:57.164  1933  2891 D LEMON   : From: "+917011021641"<sip:+917011021641@ims.mnc872.mcc405.3gppnetwork.org>;tag=VU0iBUW4hc8jbe6a
+04-29 15:55:57.164  1933  2891 D LEMON   : To: <sip:+917011021569@ims.mnc872.mcc405.3gppnetwork.org>;tag=321ibgx3adeoMhinod59eRC0LF
+04-29 15:55:57.164  1933  2891 D LEMON   : P-Access-Network-Info: IEEE-802.11;i-wlan-node-id=4045da1352c7
+04-29 15:55:57.164  1933  2891 D LEMON   : Supported: 100rel,join,norefersub,replaces,timer
+04-29 15:55:57.164  1933  2891 D LEMON   : Allow: INVITE,ACK,BYE,CANCEL,UPDATE,REGISTER,INFO,PRACK,SUBSCRIBE,NOTIFY,MESSAGE,REFER,PUBLISH
+04-29 15:55:57.164  1933  2891 D LEMON   : Contact: <sip:405872000010354@[2405:204:1803:1f53::251a:e0ad]:5255>;+sip.instance="<urn:gsma:imei:86740002-050381-3>";+g.3gpp.icsi-ref="urn%%3Aurn-7%%3A3gpp-service.ims.icsi.mmtel";video
+04-29 15:55:57.164  1933  2891 D LEMON   : Record-Route: <sip:[2405:200:330:1581::1b]:5067;routing_id=pcscf_a_side;lskpmc=P9J;lr>
+04-29 15:55:57.164  1933  2891 D LEMON   : Call-ID: 219t.-J0deoMhinod59eRC0LE3@[2405:204:1803:1f53::251a:e0ad]
+04-29 15:55:57.164  1933  2891 D LEMON   : CSeq: 1 UPDATE
+04-29 15:55:57.164  1933  2891 D LEMON   : Max-Forwards: 70
+04-29 15:55:57.164  1933  2891 D LEMON   : Server: VoWIFI/WFC UA
+04-29 15:55:57.164  1933  2891 D LEMON   : Via: SIP/2.0/UDP [2405:200:330:1581::1b]:5067;branch=z9hG4bK_IMSCL1550631.000_b44875f345d37f66decb6bb15c16398a;lskpmc=P9J;received=2405:200:330:1581::1b
+04-29 15:55:57.164  1933  2891 D LEMON   : Content-Type: application/sdp
+04-29 15:55:57.164  1933  2891 D LEMON   : Content-Length: 301
+04-29 15:55:57.164  1933  2891 D LEMON   : 
+04-29 15:55:57.164  1933  2891 D LEMON   : v=0
+04-29 15:55:57.164  1933  2891 D LEMON   : o=405872000010354 2688247764 2688247765 IN IP6 2405:204:1803:1f53::251a:e0ad
+04-29 15:55:57.164  1933  2891 D LEMON   : s=-
+04-29 15:55:57.164  1933  2891 D LEMON   : c=IN IP6 2405:204:1803:1f53::251a:e0ad
+04-29 15:55:57.164  1933  2891 D LEMON   : t=0 0
+04-29 15:55:57.164  1933  2891 D LEMON   : m=audio 37086 RTP/AVP 104
+04-29 15:55:57.164  1933  2891 D LEMON   : a=rtpmap:104 AMR-WB/16000
+04-29 15:55:57.164  1933  2891 D LEMON   : a=fmtp:104 octet-align=1;mode-change-period=2;mode-change-capability=2
+04-29 15:55:57.164  1933  2891 D LEMON   : a=ptime:20
+04-29 15:55:57.164  1933  2891 D LEMON   : a=maxptime:144
+04-29 15:55:57.164  1933  2891 D LEMON   : a=sendrecv
+04-29 15:55:57.164  1933  2891 D LEMON   : 
+04-29 15:55:57.165  1933  2891 D LEMON   : 15:55:57.165 UTPT: INFO: conn[0x4] send data[1322] to [2405:200:330:1581::1b:5067] ok.
+04-29 15:55:57.165  1933  2891 D LEMON   : 15:55:57.165 SIP: INFO: module stop tmr<0x38> [TIMER C] ok.
+04-29 15:55:57.165  1933  2891 D LEMON   : 15:55:57.165 SIP: INFO: module start tmr<0x37> [TIMER J] <128000ms> ok.
+04-29 15:55:57.166  1933  2891 D LEMON   : 15:55:57.165 ZOS: INFO: fsm(SIP_NIST) trans@[65544] state <TRYING> run [SEND_2XX] event ok.
+04-29 15:55:57.167  1933  2891 D LEMON   : 15:55:57.166 ZOS: INFO: fsm(SIP_NIST) trans@[65544] state <TRYING> to <COMPLETED>.
+04-29 15:55:57.167  1933  1933 D LEMON   : 15:55:57.167 RSE: INFO: gui notify LeaveSessAddAudioOk.
+04-29 15:55:57.463  1933  2058 D LEMON   : 15:55:57.463 UTPT: INFO: recv udp data(len:1114) from [2405:200:330:1581::1b:32920].
+04-29 15:55:57.464  1933  2891 D LEMON   : UPDATE sip:405872000010354@[2405:204:1803:1f53::251a:e0ad]:5255 SIP/2.0
+04-29 15:55:57.464  1933  2891 D LEMON   : v:SIP/2.0/UDP [2405:200:330:1581::1b]:5067;branch=z9hG4bK_IMSCL1550631.000_e2ceeb8fa8cd683d26f0579cf134cc98;lskpmc=P9J
+04-29 15:55:57.464  1933  2891 D LEMON   : Record-Route:<sip:[2405:200:330:1581::1b]:5067;routing_id=pcscf_a_side;lskpmc=P9J;lr>
+04-29 15:55:57.464  1933  2891 D LEMON   : l:272
+04-29 15:55:57.464  1933  2891 D LEMON   : f:"+917011021641"<sip:+917011021641@ims.mnc872.mcc405.3gppnetwork.org>;tag=VU0iBUW4hc8jbe6a
+04-29 15:55:57.464  1933  2891 D LEMON   : t:<sip:+917011021569@ims.mnc872.mcc405.3gppnetwork.org>;tag=321ibgx3adeoMhinod59eRC0LF
+04-29 15:55:57.464  1933  2891 D LEMON   : i:219t.-J0deoMhinod59eRC0LE3@[2405:204:1803:1f53::251a:e0ad]
+04-29 15:55:57.464  1933  2891 D LEMON   : CSeq:2 UPDATE
+04-29 15:55:57.464  1933  2891 D LEMON   : Max-Forwards:59
+04-29 15:55:57.464  1933  2891 D LEMON   : m:<sip:405872000010425@10.56.4.19:5070;transport=TCP;yop=00.00.04111090.0000.7014>;+g.3gpp.icsi-ref="urn%%3Aurn-7%%3A3gpp-service.ims.icsi.mmtel";video;+sip.instance="<urn:gsma:imei:86740002-050413-0>"
+04-29 15:55:57.464  1933  2891 D LEMON   : c:application/sdp
+04-29 15:55:57.464  1933  2891 D LEMON   : Content-Disposition:session;handling=required
+04-29 15:55:57.464  1933  2891 D LEMON   : d:no-fork
+04-29 15:55:57.464  1933  2891 D LEMON   : 
+04-29 15:55:57.464  1933  2891 D LEMON   : v=0
+04-29 15:55:57.464  1933  2891 D LEMON   : o=405872000010425 0 2 IN IP6 ims.mnc872.mcc405.3gppnetwork.org
+04-29 15:55:57.464  1933  2891 D LEMON   : s=-
+04-29 15:55:57.464  1933  2891 D LEMON   : c=IN IP6 2405:200:330:1587::11
+04-29 15:55:57.464  1933  2891 D LEMON   : t=0 0
+04-29 15:55:57.464  1933  2891 D LEMON   : m=audio 37774 RTP/AVP 104 101
+04-29 15:55:57.464  1933  2891 D LEMON   : a=rtpmap:104 AMR-WB/16000
+04-29 15:55:57.464  1933  2891 D LEMON   : a=fmtp:104 octet-align=1
+04-29 15:55:57.464  1933  2891 D LEMON   : a=ptime:20
+04-29 15:55:57.464  1933  2891 D LEMON   : a=maxptime:144
+04-29 15:55:57.464  1933  2891 D LEMON   : a=rtpmap:101 telephone-event/8000
+04-29 15:55:57.464  1933  2891 D LEMON   : a=sendrecv
+04-29 15:55:57.464  1933  2891 D LEMON   : 
+04-29 15:55:57.465  1933  2891 D LEMON   : 15:55:57.465 SIP: INFO: module create tmr<0x3A> [TIMER J] ok.
+04-29 15:55:57.465  1933  2891 D LEMON   : 15:55:57.465 SIP: INFO: module create tmr<0x3B> [TIMER C] ok.
+04-29 15:55:57.466  1933  2891 D LEMON   : 15:55:57.466 SIP: INFO: trans @20006 process request <UPDATE>.
+04-29 15:55:57.466  1933  2891 D LEMON   : 15:55:57.466 SIP: INFO: module start tmr<0x3B> [TIMER C] <200000ms> ok.
+04-29 15:55:57.466  1933  2891 D LEMON   : 15:55:57.466 ZOS: INFO: fsm(SIP_NIST) trans@[131078] state <IDLE> run [RECV_NONINVITE] event ok.
+04-29 15:55:57.466  1933  2891 D LEMON   : 15:55:57.466 ZOS: INFO: fsm(SIP_NIST) trans@[131078] state <IDLE> to <TRYING>.
+04-29 15:55:57.467  1933  2891 D LEMON   : 15:55:57.467 SIP: INFO: dlg @20005 process request <UPDATE>.
+04-29 15:55:57.476  1933  2891 D LEMON   : 15:55:57.476 ZOS: INFO: fsm(SIP_IVT) dlg@[131077] state <EARLY UAC> run [RECV_SSM_REQ] event ok.
+04-29 15:55:57.564  1933  2056 D LEMON   : 15:55:57.564 ZOS: INFO: fsm(MTF_CALL) conn@[17] state <CALLING> run [SSM IND] event ok.
+04-29 15:55:57.565  1933  2891 D LEMON   : 15:55:57.565 SIP: INFO: dlg @20005 process response <UPDATE:200>.
+04-29 15:55:57.565  1933  2891 D LEMON   : 15:55:57.565 ZOS: INFO: fsm(SIP_IVT) dlg@[131077] state <EARLY UAC> run [SSM_RSP] event ok.
+04-29 15:55:57.567  1933  1933 D LEMON   : 15:55:57.567 RSE: INFO: gui notify LeaveSessMdfyed.
+04-29 15:55:57.570  1933  2891 D LEMON   : 15:55:57.570 SIP: INFO: trans @20006 process response <UPDATE:200>.
+04-29 15:55:57.571  1933  2891 D LEMON   : SIP/2.0 200 OK
+04-29 15:55:57.571  1933  2891 D LEMON   : From: "+917011021641"<sip:+917011021641@ims.mnc872.mcc405.3gppnetwork.org>;tag=VU0iBUW4hc8jbe6a
+04-29 15:55:57.571  1933  2891 D LEMON   : To: <sip:+917011021569@ims.mnc872.mcc405.3gppnetwork.org>;tag=321ibgx3adeoMhinod59eRC0LF
+04-29 15:55:57.571  1933  2891 D LEMON   : P-Access-Network-Info: IEEE-802.11;i-wlan-node-id=4045da1352c7
+04-29 15:55:57.571  1933  2891 D LEMON   : Supported: 100rel,join,norefersub,replaces,timer
+04-29 15:55:57.571  1933  2891 D LEMON   : Allow: INVITE,ACK,BYE,CANCEL,UPDATE,REGISTER,INFO,PRACK,SUBSCRIBE,NOTIFY,MESSAGE,REFER,PUBLISH
+04-29 15:55:57.571  1933  2891 D LEMON   : Contact: <sip:405872000010354@[2405:204:1803:1f53::251a:e0ad]:5255>;+sip.instance="<urn:gsma:imei:86740002-050381-3>";+g.3gpp.icsi-ref="urn%%3Aurn-7%%3A3gpp-service.ims.icsi.mmtel";video
+04-29 15:55:57.571  1933  2891 D LEMON   : Record-Route: <sip:[2405:200:330:1581::1b]:5067;routing_id=pcscf_a_side;lskpmc=P9J;lr>
+04-29 15:55:57.571  1933  2891 D LEMON   : Call-ID: 219t.-J0deoMhinod59eRC0LE3@[2405:204:1803:1f53::251a:e0ad]
+04-29 15:55:57.571  1933  2891 D LEMON   : CSeq: 2 UPDATE
+04-29 15:55:57.571  1933  2891 D LEMON   : Max-Forwards: 70
+04-29 15:55:57.571  1933  2891 D LEMON   : Server: VoWIFI/WFC UA
+04-29 15:55:57.571  1933  2891 D LEMON   : Via: SIP/2.0/UDP [2405:200:330:1581::1b]:5067;branch=z9hG4bK_IMSCL1550631.000_e2ceeb8fa8cd683d26f0579cf134cc98;lskpmc=P9J;received=2405:200:330:1581::1b
+04-29 15:55:57.571  1933  2891 D LEMON   : Content-Type: application/sdp
+04-29 15:55:57.571  1933  2891 D LEMON   : Content-Length: 301
+04-29 15:55:57.571  1933  2891 D LEMON   : 
+04-29 15:55:57.571  1933  2891 D LEMON   : v=0
+04-29 15:55:57.571  1933  2891 D LEMON   : o=405872000010354 2688247764 2688247766 IN IP6 2405:204:1803:1f53::251a:e0ad
+04-29 15:55:57.571  1933  2891 D LEMON   : s=-
+04-29 15:55:57.571  1933  2891 D LEMON   : c=IN IP6 2405:204:1803:1f53::251a:e0ad
+04-29 15:55:57.571  1933  2891 D LEMON   : t=0 0
+04-29 15:55:57.571  1933  2891 D LEMON   : m=audio 37086 RTP/AVP 104
+04-29 15:55:57.571  1933  2891 D LEMON   : a=rtpmap:104 AMR-WB/16000
+04-29 15:55:57.571  1933  2891 D LEMON   : a=fmtp:104 octet-align=1;mode-change-period=2;mode-change-capability=2
+04-29 15:55:57.571  1933  2891 D LEMON   : a=ptime:20
+04-29 15:55:57.571  1933  2891 D LEMON   : a=maxptime:144
+04-29 15:55:57.571  1933  2891 D LEMON   : a=sendrecv
+04-29 15:55:57.571  1933  2891 D LEMON   : 
+04-29 15:55:57.571  1933  2891 D LEMON   : 15:55:57.571 UTPT: INFO: conn[0x4] send data[1322] to [2405:200:330:1581::1b:5067] ok.
+04-29 15:55:57.573  1933  2891 D LEMON   : 15:55:57.572 SIP: INFO: module stop tmr<0x3B> [TIMER C] ok.
+04-29 15:55:57.573  1933  2891 D LEMON   : 15:55:57.573 SIP: INFO: module start tmr<0x3A> [TIMER J] <128000ms> ok.
+04-29 15:55:57.573  1933  2891 D LEMON   : 15:55:57.573 ZOS: INFO: fsm(SIP_NIST) trans@[131078] state <TRYING> run [SEND_2XX] event ok.
+04-29 15:55:57.573  1933  2891 D LEMON   : 15:55:57.573 ZOS: INFO: fsm(SIP_NIST) trans@[131078] state <TRYING> to <COMPLETED>.
+04-29 15:55:57.916  1933  2058 D LEMON   : 15:55:57.916 UTPT: INFO: recv udp data(len:999) from [2405:200:330:1581::1b:32920].
+04-29 15:55:57.917  1933  2891 D LEMON   : SIP/2.0 183 Session Progress
+04-29 15:55:57.917  1933  2891 D LEMON   : l:0
+04-29 15:55:57.917  1933  2891 D LEMON   : f:<sip:+917011021569@ims.mnc872.mcc405.3gppnetwork.org>;tag=321ibgx3adeoMhinod59eRC0LF
+04-29 15:55:57.917  1933  2891 D LEMON   : t:"+917011021641"<sip:+917011021641@ims.mnc872.mcc405.3gppnetwork.org>;tag=VU0iBUW4hc8jbe6a
+04-29 15:55:57.917  1933  2891 D LEMON   : v:SIP/2.0/UDP [2405:204:1803:1f53::251a:e0ad]:5255;branch=z9hG4bKG321gt.-J0deoMhinod59eRC0L;rport=36862;received=2405:204:1803:1f53::251a:e0ad
+04-29 15:55:57.917  1933  2891 D LEMON   : i:219t.-J0deoMhinod59eRC0LE3@[2405:204:1803:1f53::251a:e0ad]
+04-29 15:55:57.917  1933  2891 D LEMON   : CSeq:1 INVITE
+04-29 15:55:57.917  1933  2891 D LEMON   : Record-Route:<sip:[2405:200:330:1581::1b]:5067;routing_id=pcscf_a_side;lskpmc=P9J;lr>
+04-29 15:55:57.917  1933  2891 D LEMON   : m:<sip:405872000010425@10.56.4.19:5070;transport=TCP;yop=00.00.04111090.0000.7014>;+g.3gpp.icsi-ref="urn%%3Aurn-7%%3A3gpp-service.ims.icsi.mmtel";video;+sip.instance="<urn:gsma:imei:86740002-050413-0>"
+04-29 15:55:57.917  1933  2891 D LEMON   : k:100rel,precondition,timer,histinfo,eventlist,norefersub,tdialog
+04-29 15:55:57.917  1933  2891 D LEMON   : Allow:ACK,BYE,CANCEL,INFO,INVITE,NOTIFY,OPTIONS,PRACK,REFER,UPDATE
+04-29 15:55:57.917  1933  2891 D LEMON   : Feature-Caps:*;+g.3gpp.srvcc;+g.3gpp.icsi-ref="urn%%3Aurn-7%%3A3gpp-service.ims.icsi.mmtel"
+04-29 15:55:57.917  1933  2891 D LEMON   : Server:VoWIFI/WFC UA
+04-29 15:55:57.917  1933  2891 D LEMON   : P-Early-Media:sendonly
+04-29 15:55:57.917  1933  2891 D LEMON   : 
+04-29 15:55:57.917  1933  2891 D LEMON   : 
+04-29 15:55:57.918  1933  2891 D LEMON   : 15:55:57.918 SIP: INFO: trans @10006 process response <INVITE:183>.
+04-29 15:55:57.918  1933  2891 D LEMON   : 15:55:57.918 SIP: INFO: module stop tmr<0x31> [TIMER C] ok.
+04-29 15:55:57.918  1933  2891 D LEMON   : 15:55:57.918 SIP: INFO: module start tmr<0x31> [TIMER C] <200000ms> ok.
+04-29 15:55:57.918  1933  2891 D LEMON   : 15:55:57.918 ZOS: INFO: fsm(SIP_ICT) trans@[65542] state <PROCEEDING> run [RECV_1XX] event ok.
+04-29 15:55:57.919  1933  2891 D LEMON   : 15:55:57.919 SIP: INFO: dlg @20005 process response <INVITE:183>.
+04-29 15:55:57.921  1933  2056 D LEMON   : 15:55:57.921 ZOS: INFO: fsm(MTF_CALL) conn@[17] state <CALLING> run [SIM CNF] event ok.
+04-29 15:55:57.938  1933  1933 D LEMON   : 15:55:57.938 RSE: INFO: gui notify LeaveSessAlerted.
+04-29 15:55:57.952  1933  2891 D LEMON   : 15:55:57.952 ZOS: INFO: fsm(SIP_IVT) dlg@[131077] state <EARLY UAC> run [RECV_1XX] event ok.
+04-29 15:55:58.237  1933  2058 D LEMON   : 15:55:58.237 UTPT: INFO: recv udp data(len:1076) from [2405:200:330:1581::1b:32920].
+04-29 15:55:58.238  1933  2891 D LEMON   : SIP/2.0 200 OK
+04-29 15:55:58.238  1933  2891 D LEMON   : l:0
+04-29 15:55:58.238  1933  2891 D LEMON   : f:<sip:+917011021569@ims.mnc872.mcc405.3gppnetwork.org>;tag=321ibgx3adeoMhinod59eRC0LF
+04-29 15:55:58.238  1933  2891 D LEMON   : t:"+917011021641"<sip:+917011021641@ims.mnc872.mcc405.3gppnetwork.org>;tag=VU0iBUW4hc8jbe6a
+04-29 15:55:58.238  1933  2891 D LEMON   : v:SIP/2.0/UDP [2405:204:1803:1f53::251a:e0ad]:5255;branch=z9hG4bKG321gt.-J0deoMhinod59eRC0L;rport=36862;received=2405:204:1803:1f53::251a:e0ad
+04-29 15:55:58.238  1933  2891 D LEMON   : i:219t.-J0deoMhinod59eRC0LE3@[2405:204:1803:1f53::251a:e0ad]
+04-29 15:55:58.238  1933  2891 D LEMON   : CSeq:1 INVITE
+04-29 15:55:58.238  1933  2891 D LEMON   : Record-Route:<sip:[2405:200:330:1581::1b]:5067;routing_id=pcscf_a_side;lskpmc=P9J;lr>
+04-29 15:55:58.238  1933  2891 D LEMON   : Privacy:none
+04-29 15:55:58.238  1933  2891 D LEMON   : P-Asserted-Identity:<sip:+917011021641@ims.mnc872.mcc405.3gppnetwork.org;user=phone>
+04-29 15:55:58.238  1933  2891 D LEMON   : x:1800;refresher=uac
+04-29 15:55:58.238  1933  2891 D LEMON   : m:<sip:405872000010425@10.56.4.19:5070;transport=TCP;yop=00.00.04111090.0000.7014>;+g.3gpp.icsi-ref="urn%%3Aurn-7%%3A3gpp-service.ims.icsi.mmtel";video;+sip.instance="<urn:gsma:imei:86740002-050413-0>"
+04-29 15:55:58.238  1933  2891 D LEMON   : Require:timer
+04-29 15:55:58.238  1933  2891 D LEMON   : k:100rel,precondition,timer,histinfo,eventlist,norefersub,tdialog
+04-29 15:55:58.238  1933  2891 D LEMON   : Allow:ACK,BYE,CANCEL,INFO,INVITE,NOTIFY,OPTIONS,PRACK,REFER,UPDATE
+04-29 15:55:58.238  1933  2891 D LEMON   : Feature-Caps:*;+g.3gpp.srvcc;+g.3gpp.icsi-ref="urn%%3Aurn-7%%3A3gpp-service.ims.icsi.mmtel"
+04-29 15:55:58.238  1933  2891 D LEMON   : 
+04-29 15:55:58.238  1933  2891 D LEMON   : 
+04-29 15:55:58.239  1933  2891 D LEMON   : 15:55:58.239 SIP: INFO: trans @10006 process response <INVITE:200>.
+04-29 15:55:58.239  1933  2891 D LEMON   : 15:55:58.239 SIP: INFO: module stop tmr<0x31> [TIMER C] ok.
+04-29 15:55:58.239  1933  2891 D LEMON   : 15:55:58.239 ZOS: INFO: fsm(SIP_ICT) trans@[65542] state <PROCEEDING> run [RECV_2XX] event ok.
+04-29 15:55:58.239  1933  2891 D LEMON   : 15:55:58.239 ZOS: INFO: fsm(SIP_ICT) trans@[65542] state <PROCEEDING> to <TERMINATED>.
+04-29 15:55:58.240  1933  2891 D LEMON   : 15:55:58.240 SIP: INFO: dlg @20005 process response <INVITE:200>.
+04-29 15:55:58.240  1933  2891 D LEMON   : 15:55:58.240 SIP: INFO: module start tmr<0x2A> [TIMER WAIT_SAM] <128000ms> ok.
+04-29 15:55:58.244  1933  2056 D LEMON   : 15:55:58.244 ZOS: INFO: fsm(MTF_CALL) conn@[17] state <CALLING> run [SIM CNF] event ok.
+04-29 15:55:58.244  1933  2056 D LEMON   : 15:55:58.244 ZOS: INFO: fsm(MTF_CALL) conn@[17] state <CALLING> to <CONNECTED>.
+04-29 15:55:58.248  1933  2891 D LEMON   : 15:55:58.248 ZOS: INFO: fsm(SIP_IVT) dlg@[131077] state <EARLY UAC> run [RECV_2XX] event ok.
+04-29 15:55:58.248  1933  2891 D LEMON   : 15:55:58.248 ZOS: INFO: fsm(SIP_IVT) dlg@[131077] state <EARLY UAC> to <CONFIRMED>.
+04-29 15:55:58.248  1933  2891 D LEMON   : 15:55:58.248 SIP: INFO: module delete tmr<0x2D> [TIMER A] ok.
+04-29 15:55:58.248  1933  2891 D LEMON   : 15:55:58.248 SIP: INFO: module delete tmr<0x2E> [TIMER B] ok.
+04-29 15:55:58.249  1933  2891 D LEMON   : 15:55:58.249 SIP: INFO: module delete tmr<0x2F> [TIMER D] ok.
+04-29 15:55:58.249  1933  2891 D LEMON   : 15:55:58.249 SIP: INFO: module delete tmr<0x30> [TIMER WAIT_CONN] ok.
+04-29 15:55:58.249  1933  2891 D LEMON   : 15:55:58.249 SIP: INFO: module delete tmr<0x31> [TIMER C] ok.
+04-29 15:55:58.253  1933  2891 D LEMON   : 15:55:58.253 SIP: INFO: dlg @20005 process request <ACK>.
+04-29 15:55:58.257  1933  1933 D LEMON   : 15:55:58.257 RSE: INFO: gui notify LeaveSessTalking.
+04-29 15:55:58.254  1933  2891 D LEMON   : ACK sip:405872000010425@10.56.4.19:5070;transport=tcp;yop=00.00.04111090.0000.7014 SIP/2.0
+04-29 15:55:58.254  1933  2891 D LEMON   : From: <sip:+917011021569@ims.mnc872.mcc405.3gppnetwork.org>;tag=321ibgx3adeoMhinod59eRC0LF
+04-29 15:55:58.254  1933  2891 D LEMON   : To: "+917011021641"<sip:+917011021641@ims.mnc872.mcc405.3gppnetwork.org>;tag=VU0iBUW4hc8jbe6a
+04-29 15:55:58.254  1933  2891 D LEMON   : Contact: <sip:405872000010354@[2405:204:1803:1f53::251a:e0ad]:5255>;+sip.instance="<urn:gsma:imei:86740002-050381-3>";+g.3gpp.icsi-ref="urn%%3Aurn-7%%3A3gpp-service.ims.icsi.mmtel";video
+04-29 15:55:58.254  1933  2891 D LEMON   : P-Access-Network-Info: IEEE-802.11;i-wlan-node-id=4045da1352c7
+04-29 15:55:58.254  1933  2891 D LEMON   : Proxy-Require: sec-agree
+04-29 15:55:58.254  1933  2891 D LEMON   : Require: sec-agree
+04-29 15:55:58.254  1933  2891 D LEMON   : Supported: sec-agree
+04-29 15:55:58.254  1933  2891 D LEMON   : Route: <sip:[2405:200:330:1581::1b]:5067;routing_id=pcscf_a_side;lskpmc=P9J;lr>
+04-29 15:55:58.254  1933  2891 D LEMON   : Call-ID: 219t.-J0deoMhinod59eRC0LE3@[2405:204:1803:1f53::251a:e0ad]
+04-29 15:55:58.254  1933  2891 D LEMON   : CSeq: 1 ACK
+04-29 15:55:58.254  1933  2891 D LEMON   : Max-Forwards: 70
+04-29 15:55:58.254  1933  2891 D LEMON   : User-Agent: VoWIFI/WFC UA
+04-29 15:55:58.254  1933  2891 D LEMON   : Via: SIP/2.0/UDP [2405:204:1803:1f53::251a:e0ad]:36862;branch=z9hG4bKhCI321ft.-J2aCjOQbKem59eou;rport
+04-29 15:55:58.254  1933  2891 D LEMON   : Content-Length: 0
+04-29 15:55:58.254  1933  2891 D LEMON   : 
+04-29 15:55:58.254  1933  2891 D LEMON   : 
+04-29 15:55:58.267  1933  2891 D LEMON   : 15:55:58.266 UTPT: INFO: conn[0x4] send data[929] to [2405:200:330:1581::1b:5067] ok.
+04-29 15:55:58.268  1933  2891 D LEMON   : 15:55:58.268 SIP: INFO: module stop tmr<0x2A> [TIMER WAIT_SAM] ok.
+04-29 15:55:58.268  1933  2891 D LEMON   : 15:55:58.268 ZOS: INFO: fsm(SIP_IVT) dlg@[131077] state <CONFIRMED> run [SAM_REQ] event ok.
+04-29 15:55:58.444  1933  2056 D LEMON   : 15:55:58.444 ZOS: INFO: fsm(MTF_CALL) conn@[17] state <CONNECTED> run [WAIT MEDIA] event ok.
+04-29 15:56:01.758  1933  2891 D LEMON   : 15:56:01.758 SIP: INFO: dlg @20005 process request <INVITE>.
+04-29 15:56:01.758  1933  2891 D LEMON   : 15:56:01.758 SIP: INFO: module create tmr<0x3D> [TIMER A] ok.
+04-29 15:56:01.758  1933  2891 D LEMON   : 15:56:01.758 SIP: INFO: module create tmr<0x3E> [TIMER B] ok.
+04-29 15:56:01.758  1933  2891 D LEMON   : 15:56:01.758 SIP: INFO: module create tmr<0x3F> [TIMER D] ok.
+04-29 15:56:01.758  1933  2891 D LEMON   : 15:56:01.758 SIP: INFO: module create tmr<0x40> [TIMER WAIT_CONN] ok.
+04-29 15:56:01.759  1933  2891 D LEMON   : 15:56:01.759 SIP: INFO: module create tmr<0x41> [TIMER C] ok.
+04-29 15:56:01.759  1933  2891 D LEMON   : 15:56:01.759 ZOS: INFO: fsm(SIP_IVT) dlg@[131077] state <CONFIRMED> run [SMM_REQ] event ok.
+04-29 15:56:01.759  1933  2891 D LEMON   : 15:56:01.759 ZOS: INFO: fsm(SIP_IVT) dlg@[131077] state <CONFIRMED> to <MODIFY OUT>.
+04-29 15:56:01.760  1933  2891 D LEMON   : 15:56:01.760 SIP: INFO: trans @20007 process request <INVITE>.
+04-29 15:56:01.761  1933  2056 D LEMON   : 15:56:01.761 ZOS: INFO: fsm(MTF_CALL) conn@[17] state <CONNECTED> run [USER HOLD] event ok.
+04-29 15:56:01.761  1933  2056 D LEMON   : 15:56:01.761 ZOS: INFO: fsm(MTF_CALL) conn@[17] state <CONNECTED> to <MODIFYOUT>.
+04-29 15:56:01.760  1933  2891 D LEMON   : INVITE sip:405872000010425@10.56.4.19:5070;transport=tcp;yop=00.00.04111090.0000.7014 SIP/2.0
+04-29 15:56:01.760  1933  2891 D LEMON   : From: <sip:+917011021569@ims.mnc872.mcc405.3gppnetwork.org>;tag=321ibgx3adeoMhinod59eRC0LF
+04-29 15:56:01.760  1933  2891 D LEMON   : To: "+917011021641"<sip:+917011021641@ims.mnc872.mcc405.3gppnetwork.org>;tag=VU0iBUW4hc8jbe6a
+04-29 15:56:01.760  1933  2891 D LEMON   : Contact: <sip:405872000010354@[2405:204:1803:1f53::251a:e0ad]:5255>;+sip.instance="<urn:gsma:imei:86740002-050381-3>";+g.3gpp.icsi-ref="urn%%3Aurn-7%%3A3gpp-service.ims.icsi.mmtel";video
+04-29 15:56:01.760  1933  2891 D LEMON   : Supported: 100rel,join,norefersub,replaces,timer,sec-agree
+04-29 15:56:01.760  1933  2891 D LEMON   : Allow: INVITE,ACK,BYE,CANCEL,UPDATE,REGISTER,INFO,PRACK,SUBSCRIBE,NOTIFY,MESSAGE,REFER,PUBLISH
+04-29 15:56:01.760  1933  2891 D LEMON   : Session-Expires: 1800
+04-29 15:56:01.760  1933  2891 D LEMON   : Min-SE: 600
+04-29 15:56:01.760  1933  2891 D LEMON   : P-Access-Network-Info: IEEE-802.11;i-wlan-node-id=4045da1352c7
+04-29 15:56:01.760  1933  2891 D LEMON   : Security-Verify: ipsec-3gpp;prot=esp;alg=hmac-md5-96;ealg=aes-cbc;mod=trans;spi-c=1460503848;spi-s=1460503849;port-c=32920;port-s=5067;q=0.6
+04-29 15:56:01.760  1933  2891 D LEMON   : Security-Verify: ipsec-3gpp;prot=esp;alg=hmac-md5-96;ealg=des-ede3-cbc;mod=trans;spi-c=1460503848;spi-s=1460503849;port-c=32920;port-s=5067;q=0.4
+04-29 15:56:01.760  1933  2891 D LEMON   : Security-Verify: ipsec-3gpp;prot=esp;alg=hmac-md5-96;ealg=null;mod=trans;spi-c=1460503848;spi-s=1460503849;port-c=32920;port-s=5067;q=0.3
+04-29 15:56:01.760  1933  2891 D LEMON   : Security-Verify: ipsec-3gpp;prot=esp;alg=hmac-sha-1-96;ealg=des-ede3-cbc;mod=trans;spi-c=1460503848;spi-s=1460503849;port-c=32920;port-s=5067;q=0.1
+04-29 15:56:01.760  1933  2891 D LEMON   : Security-Verify: ipsec-3gpp;prot=esp;alg=hmac-sha-1-96;ealg=aes-cbc;mod=trans;spi-c=1460503848;spi-s=1460503849;port-c=32920;port-s=5067;q=0.2
+04-29 15:56:01.760  1933  2891 D LEMON   : Security-Verify: ipsec-3gpp;prot=esp;alg=hmac-sha-1-96;ealg=null;mod=trans;spi-c=1460503848;spi-s=1460503849;port-c=32920;port-s=5067;q=0.5
+04-29 15:56:01.760  1933  2891 D LEMON   : Proxy-Require: sec-agree
+04-29 15:56:01.760  1933  2891 D LEMON   : Require: sec-agree
+04-29 15:56:01.760  1933  2891 D LEMON   : Route: <sip:[2405:200:330:1581::1b]:5067;routing_id=pcscf_a_side;lskpmc=P9J;lr>
+04-29 15:56:01.760  1933  2891 D LEMON   : Call-ID: 219t.-J0deoMhinod59eRC0LE3@[2405:204:1803:1f53::251a:e0ad]
+04-29 15:56:01.760  1933  2891 D LEMON   : CSeq: 3 INVITE
+04-29 15:56:01.760  1933  2891 D LEMON   : Max-Forwards: 70
+04-29 15:56:01.760  1933  2891 D LEMON   : User-Agent: VoWIFI/WFC UA
+04-29 15:56:01.760  1933  2891 D LEMON   : Via: SIP/2.0/UDP [2405:204:1803:1f53::251a:e0ad]:5255;branch=z9hG4bKuhCJ321payK32aCjOQbKem59eo;rport
+04-29 15:56:01.760  1933  2891 D LEMON   : Content-Type: application/sdp
+04-29 15:56:01.760  1933  2891 D LEMON   : Content-Length: 329
+04-29 15:56:01.760  1933  2891 D LEMON   : 
+04-29 15:56:01.760  1933  2891 D LEMON   : v=0
+04-29 15:56:01.760  1933  2891 D LEMON   : o=405872000010354 2688247764 2688247767 IN IP6 2405:204:1803:1f53::251a:e0ad
+04-29 15:56:01.760  1933  2891 D LEMON   : s=-
+04-29 15:56:01.760  1933  2891 D LEMON   : c=IN IP6 2405:204:1803:1f53::251a:e0ad
+04-29 15:56:01.760  1933  2891 D LEMON   : t=0 0
+04-29 15:56:01.760  1933  2891 D LEMON   : m=audio 37086 RTP/AVP 104 103
+04-29 15:56:01.760  1933  2891 D LEMON   : a=rtpmap:104 AMR-WB/16000
+04-29 15:56:01.760  1933  2891 D LEMON   : a=fmtp:104 octet-align=1
+04-29 15:56:01.760  1933  2891 D LEMON   : a=rtpmap:103 AMR/8000
+04-29 15:56:01.760  1933  2891 D LEMON   : a=fmtp:103 mode-set=0,1,2,3,4,5;octet-align=1
+04-29 15:56:01.760  1933  2891 D LEMON   : a=ptime:20
+04-29 15:56:01.760  1933  2891 D LEMON   : a=maxptime:400
+04-29 15:56:01.760  1933  2891 D LEMON   : a=sendonly
+04-29 15:56:01.760  1933  2891 D LEMON   : 
+04-29 15:56:01.777  1933  2891 D LEMON   : 15:56:01.777 UTPT: INFO: conn[0x4] send data[2328] to [2405:200:330:1581::1b:5067] ok.
+04-29 15:56:01.777  1933  2891 D LEMON   : 15:56:01.777 SIP: INFO: module start tmr<0x3D> [TIMER A] <2000ms> ok.
+04-29 15:56:01.777  1933  2891 D LEMON   : 15:56:01.777 SIP: INFO: module start tmr<0x3E> [TIMER B] <128000ms> ok.
+04-29 15:56:01.777  1933  2891 D LEMON   : 15:56:01.777 SIP: INFO: module start tmr<0x41> [TIMER C] <200000ms> ok.
+04-29 15:56:01.777  1933  2891 D LEMON   : 15:56:01.777 ZOS: INFO: fsm(SIP_ICT) trans@[131079] state <IDLE> run [SEND_INVITE] event ok.
+04-29 15:56:01.777  1933  2891 D LEMON   : 15:56:01.777 ZOS: INFO: fsm(SIP_ICT) trans@[131079] state <IDLE> to <CALLING>.
+04-29 15:56:02.010  1933  2058 D LEMON   : 15:56:02.010 UTPT: INFO: recv udp data(len:429) from [2405:200:330:1581::1b:32920].
+04-29 15:56:02.014  1933  2891 D LEMON   : SIP/2.0 100 Trying
+04-29 15:56:02.014  1933  2891 D LEMON   : f:<sip:+917011021569@ims.mnc872.mcc405.3gppnetwork.org>;tag=321ibgx3adeoMhinod59eRC0LF
+04-29 15:56:02.014  1933  2891 D LEMON   : t:"+917011021641"<sip:+917011021641@ims.mnc872.mcc405.3gppnetwork.org>;tag=VU0iBUW4hc8jbe6a
+04-29 15:56:02.014  1933  2891 D LEMON   : i:219t.-J0deoMhinod59eRC0LE3@[2405:204:1803:1f53::251a:e0ad]
+04-29 15:56:02.014  1933  2891 D LEMON   : CSeq:3 INVITE
+04-29 15:56:02.014  1933  2891 D LEMON   : v:SIP/2.0/UDP [2405:204:1803:1f53::251a:e0ad]:5255;branch=z9hG4bKuhCJ321payK32aCjOQbKem59eo;rport=36862;received=2405:204:1803:1f53::251a:e0ad
+04-29 15:56:02.014  1933  2891 D LEMON   : l:0
+04-29 15:56:02.014  1933  2891 D LEMON   : 
+04-29 15:56:02.014  1933  2891 D LEMON   : 
+04-29 15:56:02.014  1933  2891 D LEMON   : 15:56:02.014 SIP: INFO: trans @20007 process response <INVITE:100>.
+04-29 15:56:02.014  1933  2891 D LEMON   : 15:56:02.014 SIP: INFO: module stop tmr<0x3D> [TIMER A] ok.
+04-29 15:56:02.014  1933  2891 D LEMON   : 15:56:02.014 SIP: INFO: module stop tmr<0x3E> [TIMER B] ok.
+04-29 15:56:02.014  1933  2891 D LEMON   : 15:56:02.014 SIP: INFO: module stop tmr<0x41> [TIMER C] ok.
+04-29 15:56:02.015  1933  2891 D LEMON   : 15:56:02.015 SIP: INFO: module start tmr<0x41> [TIMER C] <200000ms> ok.
+04-29 15:56:02.015  1933  2891 D LEMON   : 15:56:02.015 ZOS: INFO: fsm(SIP_ICT) trans@[131079] state <CALLING> run [RECV_1XX] event ok.
+04-29 15:56:02.015  1933  2891 D LEMON   : 15:56:02.015 ZOS: INFO: fsm(SIP_ICT) trans@[131079] state <CALLING> to <PROCEEDING>.
+04-29 15:56:02.015  1933  2891 D LEMON   : 15:56:02.015 SIP: INFO: dlg @20005 process response <INVITE:100>.
+04-29 15:56:02.015  1933  2891 D LEMON   : 15:56:02.015 ZOS: INFO: fsm(SIP_IVT) dlg@[131077] state <MODIFY OUT> run [RECV_1XX] event ok.
+04-29 15:56:04.679  1933  2058 D LEMON   : 15:56:04.679 UTPT: INFO: recv udp data(len:1313) from [2405:200:330:1581::1b:32920].
+04-29 15:56:04.680  1933  2891 D LEMON   : SIP/2.0 200 OK
+04-29 15:56:04.680  1933  2891 D LEMON   : l:233
+04-29 15:56:04.680  1933  2891 D LEMON   : f:<sip:+917011021569@ims.mnc872.mcc405.3gppnetwork.org>;tag=321ibgx3adeoMhinod59eRC0LF
+04-29 15:56:04.680  1933  2891 D LEMON   : t:"+917011021641"<sip:+917011021641@ims.mnc872.mcc405.3gppnetwork.org>;tag=VU0iBUW4hc8jbe6a
+04-29 15:56:04.680  1933  2891 D LEMON   : v:SIP/2.0/UDP [2405:204:1803:1f53::251a:e0ad]:5255;branch=z9hG4bKuhCJ321payK32aCjOQbKem59eo;rport=36862;received=2405:204:1803:1f53::251a:e0ad
+04-29 15:56:04.680  1933  2891 D LEMON   : i:219t.-J0deoMhinod59eRC0LE3@[2405:204:1803:1f53::251a:e0ad]
+04-29 15:56:04.680  1933  2891 D LEMON   : CSeq:3 INVITE
+04-29 15:56:04.680  1933  2891 D LEMON   : Record-Route:<sip:[2405:200:330:1581::1b]:5067;routing_id=pcscf_a_side;lskpmc=P9J;lr>
+04-29 15:56:04.680  1933  2891 D LEMON   : x:1800;refresher=uac
+04-29 15:56:04.680  1933  2891 D LEMON   : m:<sip:405872000010425@10.56.4.19:5070;transport=TCP;yop=00.00.04111090.0000.7014>;+g.3gpp.icsi-ref="urn%%3Aurn-7%%3A3gpp-service.ims.icsi.mmtel";video;+sip.instance="<urn:gsma:imei:86740002-050413-0>"
+04-29 15:56:04.680  1933  2891 D LEMON   : Require:timer
+04-29 15:56:04.680  1933  2891 D LEMON   : k:100rel,join,precondition,replaces,timer,histinfo,eventlist,norefersub,tdialog
+04-29 15:56:04.680  1933  2891 D LEMON   : Allow:ACK,BYE,CANCEL,INFO,INVITE,NOTIFY,OPTIONS,PRACK,REFER,UPDATE
+04-29 15:56:04.680  1933  2891 D LEMON   : Feature-Caps:*;+g.3gpp.srvcc;+g.3gpp.icsi-ref="urn%%3Aurn-7%%3A3gpp-service.ims.icsi.mmtel"
+04-29 15:56:04.680  1933  2891 D LEMON   : c:application/sdp
+04-29 15:56:04.680  1933  2891 D LEMON   : Content-Disposition:session;handling=required
+04-29 15:56:04.680  1933  2891 D LEMON   : Server:VoWIFI/WFC UA
+04-29 15:56:04.680  1933  2891 D LEMON   : 
+04-29 15:56:04.680  1933  2891 D LEMON   : v=0
+04-29 15:56:04.680  1933  2891 D LEMON   : o=405872000010425 0 3 IN IP6 ims.mnc872.mcc405.3gppnetwork.org
+04-29 15:56:04.680  1933  2891 D LEMON   : s=-
+04-29 15:56:04.680  1933  2891 D LEMON   : c=IN IP6 2405:200:330:1587::11
+04-29 15:56:04.680  1933  2891 D LEMON   : t=0 0
+04-29 15:56:04.680  1933  2891 D LEMON   : m=audio 37774 RTP/AVP 104
+04-29 15:56:04.680  1933  2891 D LEMON   : a=rtpmap:104 AMR-WB/16000
+04-29 15:56:04.680  1933  2891 D LEMON   : a=fmtp:104 octet-align=1
+04-29 15:56:04.680  1933  2891 D LEMON   : a=ptime:20
+04-29 15:56:04.680  1933  2891 D LEMON   : a=maxptime:144
+04-29 15:56:04.680  1933  2891 D LEMON   : a=recvonly
+04-29 15:56:04.680  1933  2891 D LEMON   : 
+04-29 15:56:04.682  1933  2891 D LEMON   : 15:56:04.682 SIP: INFO: trans @20007 process response <INVITE:200>.
+04-29 15:56:04.682  1933  2891 D LEMON   : 15:56:04.682 SIP: INFO: module stop tmr<0x41> [TIMER C] ok.
+04-29 15:56:04.682  1933  2891 D LEMON   : 15:56:04.682 ZOS: INFO: fsm(SIP_ICT) trans@[131079] state <PROCEEDING> run [RECV_2XX] event ok.
+04-29 15:56:04.682  1933  2891 D LEMON   : 15:56:04.682 ZOS: INFO: fsm(SIP_ICT) trans@[131079] state <PROCEEDING> to <TERMINATED>.
+04-29 15:56:04.683  1933  2891 D LEMON   : 15:56:04.683 SIP: INFO: dlg @20005 process response <INVITE:200>.
+04-29 15:56:04.683  1933  2891 D LEMON   : 15:56:04.683 SIP: INFO: module start tmr<0x2A> [TIMER WAIT_SAM] <128000ms> ok.
+04-29 15:56:04.690  1933  2056 D LEMON   : 15:56:04.690 ZOS: INFO: fsm(MTF_CALL) conn@[17] state <MODIFYOUT> run [SMM CNF] event ok.
+04-29 15:56:04.690  1933  2056 D LEMON   : 15:56:04.690 ZOS: INFO: fsm(MTF_CALL) conn@[17] state <MODIFYOUT> to <CONNECTED>.
+04-29 15:56:04.697  1933  2891 D LEMON   : 15:56:04.697 ZOS: INFO: fsm(SIP_IVT) dlg@[131077] state <MODIFY OUT> run [RECV_2XX] event ok.
+04-29 15:56:04.698  1933  2891 D LEMON   : 15:56:04.697 ZOS: INFO: fsm(SIP_IVT) dlg@[131077] state <MODIFY OUT> to <CONFIRMED>.
+04-29 15:56:04.698  1933  2891 D LEMON   : 15:56:04.698 SIP: INFO: module delete tmr<0x3D> [TIMER A] ok.
+04-29 15:56:04.698  1933  2891 D LEMON   : 15:56:04.698 SIP: INFO: module delete tmr<0x3E> [TIMER B] ok.
+04-29 15:56:04.698  1933  2891 D LEMON   : 15:56:04.698 SIP: INFO: module delete tmr<0x3F> [TIMER D] ok.
+04-29 15:56:04.700  1933  2891 D LEMON   : 15:56:04.700 SIP: INFO: module delete tmr<0x40> [TIMER WAIT_CONN] ok.
+04-29 15:56:04.700  1933  2891 D LEMON   : 15:56:04.700 SIP: INFO: module delete tmr<0x41> [TIMER C] ok.
+04-29 15:56:04.703  1933  1933 D LEMON   : 15:56:04.703 RSE: INFO: gui notify LeaveSessHoldOk.
+04-29 15:56:04.710  1933  2891 D LEMON   : 15:56:04.709 SIP: INFO: dlg @20005 process request <ACK>.
+04-29 15:56:04.711  1933  2891 D LEMON   : ACK sip:405872000010425@10.56.4.19:5070;transport=tcp;yop=00.00.04111090.0000.7014 SIP/2.0
+04-29 15:56:04.711  1933  2891 D LEMON   : From: <sip:+917011021569@ims.mnc872.mcc405.3gppnetwork.org>;tag=321ibgx3adeoMhinod59eRC0LF
+04-29 15:56:04.711  1933  2891 D LEMON   : To: "+917011021641"<sip:+917011021641@ims.mnc872.mcc405.3gppnetwork.org>;tag=VU0iBUW4hc8jbe6a
+04-29 15:56:04.711  1933  2891 D LEMON   : Contact: <sip:405872000010354@[2405:204:1803:1f53::251a:e0ad]:5255>;+sip.instance="<urn:gsma:imei:86740002-050381-3>";+g.3gpp.icsi-ref="urn%%3Aurn-7%%3A3gpp-service.ims.icsi.mmtel";video
+04-29 15:56:04.711  1933  2891 D LEMON   : P-Access-Network-Info: IEEE-802.11;i-wlan-node-id=4045da1352c7
+04-29 15:56:04.711  1933  2891 D LEMON   : Proxy-Require: sec-agree
+04-29 15:56:04.711  1933  2891 D LEMON   : Require: sec-agree
+04-29 15:56:04.711  1933  2891 D LEMON   : Supported: sec-agree
+04-29 15:56:04.711  1933  2891 D LEMON   : Route: <sip:[2405:200:330:1581::1b]:5067;routing_id=pcscf_a_side;lskpmc=P9J;lr>
+04-29 15:56:04.711  1933  2891 D LEMON   : Call-ID: 219t.-J0deoMhinod59eRC0LE3@[2405:204:1803:1f53::251a:e0ad]
+04-29 15:56:04.711  1933  2891 D LEMON   : CSeq: 3 ACK
+04-29 15:56:04.711  1933  2891 D LEMON   : Max-Forwards: 70
+04-29 15:56:04.711  1933  2891 D LEMON   : User-Agent: VoWIFI/WFC UA
+04-29 15:56:04.711  1933  2891 D LEMON   : Via: SIP/2.0/UDP [2405:204:1803:1f53::251a:e0ad]:36862;branch=z9hG4bKouhCK321ct.-J2aCjOQbKem59e;rport
+04-29 15:56:04.711  1933  2891 D LEMON   : Content-Length: 0
+04-29 15:56:04.711  1933  2891 D LEMON   : 
+04-29 15:56:04.711  1933  2891 D LEMON   : 
+04-29 15:56:04.711  1933  2891 D LEMON   : 15:56:04.711 UTPT: INFO: conn[0x4] send data[929] to [2405:200:330:1581::1b:5067] ok.
+04-29 15:56:04.712  1933  2891 D LEMON   : 15:56:04.712 SIP: INFO: module stop tmr<0x2A> [TIMER WAIT_SAM] ok.
+04-29 15:56:04.712  1933  2891 D LEMON   : 15:56:04.712 ZOS: INFO: fsm(SIP_IVT) dlg@[131077] state <CONFIRMED> run [SAM_REQ] event ok.
+04-29 15:56:05.271  1933  2058 D LEMON   : 15:56:05.271 UTPT: INFO: recv udp data(len:1013) from [2405:200:330:1581::1b:32920].
+04-29 15:56:05.272  1933  2891 D LEMON   : INVITE sip:405872000010354@[2405:204:1803:1f53::251a:e0ad]:5255 SIP/2.0
+04-29 15:56:05.272  1933  2891 D LEMON   : v:SIP/2.0/UDP [2405:200:330:1581::1b]:5067;branch=z9hG4bK_IMSCL1550631.000_c56207a4045505c20c7f71f12d7cee9b;lskpmc=P9J
+04-29 15:56:05.272  1933  2891 D LEMON   : Record-Route:<sip:[2405:200:330:1581::1b]:5067;routing_id=pcscf_a_side;lskpmc=P9J;lr>
+04-29 15:56:05.272  1933  2891 D LEMON   : l:0
+04-29 15:56:05.272  1933  2891 D LEMON   : f:"+917011021641"<sip:+917011021641@ims.mnc872.mcc405.3gppnetwork.org>;tag=VU0iBUW4hc8jbe6a
+04-29 15:56:05.272  1933  2891 D LEMON   : t:<sip:+917011021569@ims.mnc872.mcc405.3gppnetwork.org>;tag=321ibgx3adeoMhinod59eRC0LF
+04-29 15:56:05.272  1933  2891 D LEMON   : i:219t.-J0deoMhinod59eRC0LE3@[2405:204:1803:1f53::251a:e0ad]
+04-29 15:56:05.272  1933  2891 D LEMON   : CSeq:3 INVITE
+04-29 15:56:05.272  1933  2891 D LEMON   : Max-Forwards:59
+04-29 15:56:05.272  1933  2891 D LEMON   : x:1800;refresher=uas
+04-29 15:56:05.272  1933  2891 D LEMON   : Min-SE:600
+04-29 15:56:05.272  1933  2891 D LEMON   : m:<sip:405872000010425@10.56.4.19:5070;transport=TCP;yop=00.00.04111090.0000.7014>;+g.3gpp.icsi-ref="urn%%3Aurn-7%%3A3gpp-service.ims.icsi.mmtel";video;+sip.instance="<urn:gsma:imei:86740002-050413-0>"
+04-29 15:56:05.272  1933  2891 D LEMON   : k:timer,tdialog
+04-29 15:56:05.272  1933  2891 D LEMON   : Allow:ACK,BYE,CANCEL,INFO,INVITE,NOTIFY,OPTIONS,REFER
+04-29 15:56:05.272  1933  2891 D LEMON   : Feature-Caps:*;+g.3gpp.srvcc;+g.3gpp.icsi-ref="urn%%3Aurn-7%%3A3gpp-service.ims.icsi.mmtel"
+04-29 15:56:05.272  1933  2891 D LEMON   : Server:VoWIFI/WFC UA
+04-29 15:56:05.272  1933  2891 D LEMON   : P-Com.Nokia.B2BUA-Involved:no
+04-29 15:56:05.272  1933  2891 D LEMON   : 
+04-29 15:56:05.272  1933  2891 D LEMON   : 
+04-29 15:56:05.273  1933  2891 D LEMON   : 15:56:05.273 SIP: INFO: module create tmr<0x42> [TIMER G] ok.
+04-29 15:56:05.273  1933  2891 D LEMON   : 15:56:05.273 SIP: INFO: module create tmr<0x43> [TIMER H] ok.
+04-29 15:56:05.273  1933  2891 D LEMON   : 15:56:05.273 SIP: INFO: module create tmr<0x44> [TIMER I] ok.
+04-29 15:56:05.273  1933  2891 D LEMON   : 15:56:05.273 SIP: INFO: module create tmr<0x45> [TIMER L] ok.
+04-29 15:56:05.273  1933  2891 D LEMON   : 15:56:05.273 SIP: INFO: module create tmr<0x46> [TIMER C] ok.
+04-29 15:56:05.273  1933  2891 D LEMON   : 15:56:05.273 SIP: INFO: trans @20008 process request <INVITE>.
+04-29 15:56:05.274  1933  2891 D LEMON   : 15:56:05.274 SIP: INFO: module start tmr<0x46> [TIMER C] <200000ms> ok.
+04-29 15:56:05.275  1933  2891 D LEMON   : 15:56:05.275 ZOS: INFO: fsm(SIP_IST) trans@[131080] state <IDLE> run [RECV_INVITE] event ok.
+04-29 15:56:05.275  1933  2891 D LEMON   : 15:56:05.275 ZOS: INFO: fsm(SIP_IST) trans@[131080] state <IDLE> to <PROCEEDING>.
+04-29 15:56:05.275  1933  2891 D LEMON   : 15:56:05.275 SIP: INFO: dlg @20005 process request <INVITE>.
+04-29 15:56:05.276  1933  2891 D LEMON   : SIP/2.0 100 Trying
+04-29 15:56:05.276  1933  2891 D LEMON   : To: <sip:+917011021569@ims.mnc872.mcc405.3gppnetwork.org>;tag=321ibgx3adeoMhinod59eRC0LF
+04-29 15:56:05.276  1933  2891 D LEMON   : From: "+917011021641"<sip:+917011021641@ims.mnc872.mcc405.3gppnetwork.org>;tag=VU0iBUW4hc8jbe6a
+04-29 15:56:05.276  1933  2891 D LEMON   : CSeq: 3 INVITE
+04-29 15:56:05.276  1933  2891 D LEMON   : Call-ID: 219t.-J0deoMhinod59eRC0LE3@[2405:204:1803:1f53::251a:e0ad]
+04-29 15:56:05.276  1933  2891 D LEMON   : Via: SIP/2.0/UDP [2405:200:330:1581::1b]:5067;branch=z9hG4bK_IMSCL1550631.000_c56207a4045505c20c7f71f12d7cee9b;lskpmc=P9J;received=2405:200:330:1581::1b
+04-29 15:56:05.276  1933  2891 D LEMON   : Content-Length: 0
+04-29 15:56:05.276  1933  2891 D LEMON   : 
+04-29 15:56:05.276  1933  2891 D LEMON   : 
+04-29 15:56:05.277  1933  2891 D LEMON   : 15:56:05.276 UTPT: INFO: conn[0x4] send data[467] to [2405:200:330:1581::1b:5067] ok.
+04-29 15:56:05.282  1933  2056 D LEMON   : 15:56:05.280 ZOS: INFO: fsm(MTF_CALL) conn@[17] state <CONNECTED> run [SMM IND] event ok.
+04-29 15:56:05.293  1933  2891 D LEMON   : 15:56:05.293 ZOS: INFO: fsm(SIP_IVT) dlg@[131077] state <CONFIRMED> run [RECV_INVITE] event ok.
+04-29 15:56:05.293  1933  2891 D LEMON   : 15:56:05.293 ZOS: INFO: fsm(SIP_IVT) dlg@[131077] state <CONFIRMED> to <MODIFY IN>.
+04-29 15:56:05.296  1933  2891 D LEMON   : 15:56:05.296 SIP: INFO: dlg @20005 process response <INVITE:200>.
+04-29 15:56:05.301  1933  2891 D LEMON   : 15:56:05.296 SIP: INFO: module start tmr<0x2B> [TIMER SEND_2XX] <2000ms> ok.
+04-29 15:56:05.301  1933  2891 D LEMON   : 15:56:05.301 SIP: INFO: module start tmr<0x2C> [TIMER STOP_2XX] <128000ms> ok.
+04-29 15:56:05.301  1933  2891 D LEMON   : 15:56:05.301 ZOS: INFO: fsm(SIP_IVT) dlg@[131077] state <MODIFY IN> run [SMM_RSP] event ok.
+04-29 15:56:05.301  1933  2891 D LEMON   : 15:56:05.301 ZOS: INFO: fsm(SIP_IVT) dlg@[131077] state <MODIFY IN> to <CONFIRMED>.
+04-29 15:56:05.302  1933  2891 D LEMON   : 15:56:05.302 SIP: INFO: trans @20008 process response <INVITE:200>.
+04-29 15:56:05.302  1933  2891 D LEMON   : 15:56:05.302 SIP: INFO: module stop tmr<0x46> [TIMER C] ok.
+04-29 15:56:05.302  1933  2891 D LEMON   : SIP/2.0 200 OK
+04-29 15:56:05.302  1933  2891 D LEMON   : From: "+917011021641"<sip:+917011021641@ims.mnc872.mcc405.3gppnetwork.org>;tag=VU0iBUW4hc8jbe6a
+04-29 15:56:05.302  1933  2891 D LEMON   : To: <sip:+917011021569@ims.mnc872.mcc405.3gppnetwork.org>;tag=321ibgx3adeoMhinod59eRC0LF
+04-29 15:56:05.302  1933  2891 D LEMON   : P-Access-Network-Info: IEEE-802.11;i-wlan-node-id=4045da1352c7
+04-29 15:56:05.302  1933  2891 D LEMON   : Supported: 100rel,join,norefersub,replaces,timer
+04-29 15:56:05.302  1933  2891 D LEMON   : Allow: INVITE,ACK,BYE,CANCEL,UPDATE,REGISTER,INFO,PRACK,SUBSCRIBE,NOTIFY,MESSAGE,REFER,PUBLISH
+04-29 15:56:05.302  1933  2891 D LEMON   : Session-Expires: 1800;refresher=uas
+04-29 15:56:05.302  1933  2891 D LEMON   : Min-SE: 600
+04-29 15:56:05.302  1933  2891 D LEMON   : Require: timer
+04-29 15:56:05.302  1933  2891 D LEMON   : Contact: <sip:405872000010354@[2405:204:1803:1f53::251a:e0ad]:5255>;+sip.instance="<urn:gsma:imei:86740002-050381-3>";+g.3gpp.icsi-ref="urn%%3Aurn-7%%3A3gpp-service.ims.icsi.mmtel";video
+04-29 15:56:05.302  1933  2891 D LEMON   : Record-Route: <sip:[2405:200:330:1581::1b]:5067;routing_id=pcscf_a_side;lskpmc=P9J;lr>
+04-29 15:56:05.302  1933  2891 D LEMON   : Call-ID: 219t.-J0deoMhinod59eRC0LE3@[2405:204:1803:1f53::251a:e0ad]
+04-29 15:56:05.302  1933  2891 D LEMON   : CSeq: 3 INVITE
+04-29 15:56:05.302  1933  2891 D LEMON   : Max-Forwards: 70
+04-29 15:56:05.302  1933  2891 D LEMON   : Server: VoWIFI/WFC UA
+04-29 15:56:05.302  1933  2891 D LEMON   : Record-Route: <sip:[2405:200:330:1581::1b]:5067;routing_id=pcscf_a_side;lskpmc=P9J;lr>
+04-29 15:56:05.302  1933  2891 D LEMON   : Via: SIP/2.0/UDP [2405:200:330:1581::1b]:5067;branch=z9hG4bK_IMSCL1550631.000_c56207a4045505c20c7f71f12d7cee9b;lskpmc=P9J;received=2405:200:330:1581::1b
+04-29 15:56:05.302  1933  2891 D LEMON   : Content-Type: application/sdp
+04-29 15:56:05.302  1933  2891 D LEMON   : Content-Length: 301
+04-29 15:56:05.302  1933  2891 D LEMON   : 
+04-29 15:56:05.302  1933  2891 D LEMON   : v=0
+04-29 15:56:05.302  1933  2891 D LEMON   : o=405872000010354 2688247764 2688247768 IN IP6 2405:204:1803:1f53::251a:e0ad
+04-29 15:56:05.302  1933  2891 D LEMON   : s=-
+04-29 15:56:05.302  1933  2891 D LEMON   : c=IN IP6 2405:204:1803:1f53::251a:e0ad
+04-29 15:56:05.302  1933  2891 D LEMON   : t=0 0
+04-29 15:56:05.302  1933  2891 D LEMON   : m=audio 37086 RTP/AVP 104
+04-29 15:56:05.302  1933  2891 D LEMON   : a=rtpmap:104 AMR-WB/16000
+04-29 15:56:05.302  1933  2891 D LEMON   : a=fmtp:104 octet-align=1;mode-change-period=2;mode-change-capability=2
+04-29 15:56:05.302  1933  2891 D LEMON   : a=ptime:20
+04-29 15:56:05.302  1933  2891 D LEMON   : a=maxptime:144
+04-29 15:56:05.302  1933  2891 D LEMON   : a=sendonly
+04-29 15:56:05.302  1933  2891 D LEMON   : 
+04-29 15:56:05.304  1933  2891 D LEMON   : 15:56:05.304 UTPT: INFO: conn[0x4] send data[1476] to [2405:200:330:1581::1b:5067] ok.
+04-29 15:56:05.305  1933  2891 D LEMON   : 15:56:05.305 ZOS: INFO: fsm(SIP_IST) trans@[131080] state <PROCEEDING> run [SEND_2XX] event ok.
+04-29 15:56:05.305  1933  2891 D LEMON   : 15:56:05.305 ZOS: INFO: fsm(SIP_IST) trans@[131080] state <PROCEEDING> to <TERMINATED>.
+04-29 15:56:05.305  1933  2891 D LEMON   : 15:56:05.305 SIP: INFO: module delete tmr<0x42> [TIMER G] ok.
+04-29 15:56:05.305  1933  2891 D LEMON   : 15:56:05.305 SIP: INFO: module delete tmr<0x43> [TIMER H] ok.
+04-29 15:56:05.305  1933  2891 D LEMON   : 15:56:05.305 SIP: INFO: module delete tmr<0x44> [TIMER I] ok.
+04-29 15:56:05.305  1933  2891 D LEMON   : 15:56:05.305 SIP: INFO: module delete tmr<0x45> [TIMER L] ok.
+04-29 15:56:05.305  1933  2891 D LEMON   : 15:56:05.305 SIP: INFO: module delete tmr<0x46> [TIMER C] ok.
+04-29 15:56:05.817  1933  2058 D LEMON   : 15:56:05.817 UTPT: INFO: recv udp data(len:894) from [2405:200:330:1581::1b:32920].
+04-29 15:56:05.817  1933  2891 D LEMON   : ACK sip:405872000010354@[2405:204:1803:1f53::251a:e0ad]:5255 SIP/2.0
+04-29 15:56:05.817  1933  2891 D LEMON   : v:SIP/2.0/UDP [2405:200:330:1581::1b]:5067;branch=z9hG4bK_IMSCL1550631.000_e4c3f00d3b76ff647940ae0b897e1e19;lskpmc=P9J
+04-29 15:56:05.817  1933  2891 D LEMON   : Record-Route:<sip:[2405:200:330:1581::1b]:5067;routing_id=pcscf_a_side;lskpmc=P9J;lr>
+04-29 15:56:05.817  1933  2891 D LEMON   : l:259
+04-29 15:56:05.817  1933  2891 D LEMON   : f:"+917011021641"<sip:+917011021641@ims.mnc872.mcc405.3gppnetwork.org>;tag=VU0iBUW4hc8jbe6a
+04-29 15:56:05.817  1933  2891 D LEMON   : t:<sip:+917011021569@ims.mnc872.mcc405.3gppnetwork.org>;tag=321ibgx3adeoMhinod59eRC0LF
+04-29 15:56:05.817  1933  2891 D LEMON   : i:219t.-J0deoMhinod59eRC0LE3@[2405:204:1803:1f53::251a:e0ad]
+04-29 15:56:05.817  1933  2891 D LEMON   : CSeq:3 ACK
+04-29 15:56:05.817  1933  2891 D LEMON   : Max-Forwards:59
+04-29 15:56:05.817  1933  2891 D LEMON   : d:no-fork
+04-29 15:56:05.817  1933  2891 D LEMON   : c:application/sdp
+04-29 15:56:05.817  1933  2891 D LEMON   : Content-Disposition:session;handling=required
+04-29 15:56:05.817  1933  2891 D LEMON   : 
+04-29 15:56:05.817  1933  2891 D LEMON   : v=0
+04-29 15:56:05.817  1933  2891 D LEMON   : o=- 0 4 IN IP6 ims.mnc872.mcc405.3gppnetwork.org
+04-29 15:56:05.817  1933  2891 D LEMON   : s=media server session
+04-29 15:56:05.817  1933  2891 D LEMON   : t=0 0
+04-29 15:56:05.817  1933  2891 D LEMON   : m=audio 37774 RTP/AVP 104
+04-29 15:56:05.817  1933  2891 D LEMON   : c=IN IP6 2405:200:330:1587::11
+04-29 15:56:05.817  1933  2891 D LEMON   : a=rtpmap:104 AMR-WB/16000
+04-29 15:56:05.817  1933  2891 D LEMON   : a=fmtp:104 octet-align=1; mode-change-capability=2
+04-29 15:56:05.817  1933  2891 D LEMON   : a=rtcp-xr
+04-29 15:56:05.817  1933  2891 D LEMON   : a=ptime:20
+04-29 15:56:05.817  1933  2891 D LEMON   : a=recvonly
+04-29 15:56:05.817  1933  2891 D LEMON   : 
+04-29 15:56:05.819  1933  2891 D LEMON   : 15:56:05.819 SIP: INFO: dlg @20005 process request <ACK>.
+04-29 15:56:05.819  1933  2891 D LEMON   : 15:56:05.819 SIP: INFO: module stop tmr<0x2B> [TIMER SEND_2XX] ok.
+04-29 15:56:05.819  1933  2891 D LEMON   : 15:56:05.819 SIP: INFO: module stop tmr<0x2C> [TIMER STOP_2XX] ok.
+04-29 15:56:05.825  1933  2056 D LEMON   : 15:56:05.825 ZOS: INFO: fsm(MTF_CALL) conn@[17] state <CONNECTED> run [SAM IND] event ok.
+04-29 15:56:05.829  1933  2891 D LEMON   : 15:56:05.829 ZOS: INFO: fsm(SIP_IVT) dlg@[131077] state <CONFIRMED> run [RECV_ACK] event ok.
+04-29 15:56:05.831  1933  1933 D LEMON   : 15:56:05.831 RSE: INFO: gui notify LeaveSessMdfyed.
+04-29 15:56:11.696  1933  2891 D LEMON   : 15:56:11.696 SIP: INFO: dlg @20005 process request <INVITE>.
+04-29 15:56:11.697  1933  2891 D LEMON   : 15:56:11.697 SIP: INFO: module create tmr<0x47> [TIMER A] ok.
+04-29 15:56:11.697  1933  2891 D LEMON   : 15:56:11.697 SIP: INFO: module create tmr<0x48> [TIMER B] ok.
+04-29 15:56:11.698  1933  2891 D LEMON   : 15:56:11.698 SIP: INFO: module create tmr<0x49> [TIMER D] ok.
+04-29 15:56:11.698  1933  2891 D LEMON   : 15:56:11.698 SIP: INFO: module create tmr<0x4A> [TIMER WAIT_CONN] ok.
+04-29 15:56:11.699  1933  2891 D LEMON   : 15:56:11.699 SIP: INFO: module create tmr<0x4B> [TIMER C] ok.
+04-29 15:56:11.699  1933  2891 D LEMON   : 15:56:11.699 ZOS: INFO: fsm(SIP_IVT) dlg@[131077] state <CONFIRMED> run [SMM_REQ] event ok.
+04-29 15:56:11.699  1933  2891 D LEMON   : 15:56:11.699 ZOS: INFO: fsm(SIP_IVT) dlg@[131077] state <CONFIRMED> to <MODIFY OUT>.
+04-29 15:56:11.700  1933  2891 D LEMON   : 15:56:11.699 SIP: INFO: trans @20009 process request <INVITE>.
+04-29 15:56:11.701  1933  2891 D LEMON   : INVITE sip:405872000010425@10.56.4.19:5070;transport=tcp;yop=00.00.04111090.0000.7014 SIP/2.0
+04-29 15:56:11.701  1933  2891 D LEMON   : From: <sip:+917011021569@ims.mnc872.mcc405.3gppnetwork.org>;tag=321ibgx3adeoMhinod59eRC0LF
+04-29 15:56:11.701  1933  2891 D LEMON   : To: "+917011021641"<sip:+917011021641@ims.mnc872.mcc405.3gppnetwork.org>;tag=VU0iBUW4hc8jbe6a
+04-29 15:56:11.701  1933  2891 D LEMON   : Contact: <sip:405872000010354@[2405:204:1803:1f53::251a:e0ad]:5255>;+sip.instance="<urn:gsma:imei:86740002-050381-3>";+g.3gpp.icsi-ref="urn%%3Aurn-7%%3A3gpp-service.ims.icsi.mmtel";video
+04-29 15:56:11.701  1933  2891 D LEMON   : Supported: 100rel,join,norefersub,replaces,timer,sec-agree
+04-29 15:56:11.701  1933  2891 D LEMON   : Allow: INVITE,ACK,BYE,CANCEL,UPDATE,REGISTER,INFO,PRACK,SUBSCRIBE,NOTIFY,MESSAGE,REFER,PUBLISH
+04-29 15:56:11.701  1933  2891 D LEMON   : Session-Expires: 1800
+04-29 15:56:11.701  1933  2891 D LEMON   : Min-SE: 600
+04-29 15:56:11.701  1933  2891 D LEMON   : P-Access-Network-Info: IEEE-802.11;i-wlan-node-id=4045da1352c7
+04-29 15:56:11.701  1933  2891 D LEMON   : Security-Verify: ipsec-3gpp;prot=esp;alg=hmac-md5-96;ealg=aes-cbc;mod=trans;spi-c=1460503848;spi-s=1460503849;port-c=32920;port-s=5067;q=0.6
+04-29 15:56:11.701  1933  2891 D LEMON   : Security-Verify: ipsec-3gpp;prot=esp;alg=hmac-md5-96;ealg=des-ede3-cbc;mod=trans;spi-c=1460503848;spi-s=1460503849;port-c=32920;port-s=5067;q=0.4
+04-29 15:56:11.701  1933  2891 D LEMON   : Security-Verify: ipsec-3gpp;prot=esp;alg=hmac-md5-96;ealg=null;mod=trans;spi-c=1460503848;spi-s=1460503849;port-c=32920;port-s=5067;q=0.3
+04-29 15:56:11.701  1933  2891 D LEMON   : Security-Verify: ipsec-3gpp;prot=esp;alg=hmac-sha-1-96;ealg=des-ede3-cbc;mod=trans;spi-c=1460503848;spi-s=1460503849;port-c=32920;port-s=5067;q=0.1
+04-29 15:56:11.701  1933  2891 D LEMON   : Security-Verify: ipsec-3gpp;prot=esp;alg=hmac-sha-1-96;ealg=aes-cbc;mod=trans;spi-c=1460503848;spi-s=1460503849;port-c=32920;port-s=5067;q=0.2
+04-29 15:56:11.701  1933  2891 D LEMON   : Security-Verify: ipsec-3gpp;prot=esp;alg=hmac-sha-1-96;ealg=null;mod=trans;spi-c=1460503848;spi-s=1460503849;port-c=32920;port-s=5067;q=0.5
+04-29 15:56:11.701  1933  2891 D LEMON   : Proxy-Require: sec-agree
+04-29 15:56:11.701  1933  2891 D LEMON   : Require: sec-agree
+04-29 15:56:11.701  1933  2891 D LEMON   : Route: <sip:[2405:200:330:1581::1b]:5067;routing_id=pcscf_a_side;lskpmc=P9J;lr>
+04-29 15:56:11.701  1933  2891 D LEMON   : Call-ID: 219t.-J0deoMhinod59eRC0LE3@[2405:204:1803:1f53::251a:e0ad]
+04-29 15:56:11.701  1933  2891 D LEMON   : CSeq: 4 INVITE
+04-29 15:56:11.701  1933  2891 D LEMON   : Max-Forwards: 70
+04-29 15:56:11.701  1933  2891 D LEMON   : User-Agent: VoWIFI/WFC UA
+04-29 15:56:11.701  1933  2891 D LEMON   : Via: SIP/2.0/UDP [2405:204:1803:1f53::251a:e0ad]:5255;branch=z9hG4bKeouhCL321oayK32aCjOQbKem59;rport
+04-29 15:56:11.701  1933  2891 D LEMON   : Content-Type: application/sdp
+04-29 15:56:11.701  1933  2891 D LEMON   : Content-Length: 329
+04-29 15:56:11.701  1933  2891 D LEMON   : 
+04-29 15:56:11.701  1933  2891 D LEMON   : v=0
+04-29 15:56:11.701  1933  2891 D LEMON   : o=405872000010354 2688247764 2688247770 IN IP6 2405:204:1803:1f53::251a:e0ad
+04-29 15:56:11.701  1933  2891 D LEMON   : s=-
+04-29 15:56:11.701  1933  2891 D LEMON   : c=IN IP6 2405:204:1803:1f53::251a:e0ad
+04-29 15:56:11.701  1933  2891 D LEMON   : t=0 0
+04-29 15:56:11.701  1933  2891 D LEMON   : m=audio 37086 RTP/AVP 104 103
+04-29 15:56:11.701  1933  2891 D LEMON   : a=rtpmap:104 AMR-WB/16000
+04-29 15:56:11.701  1933  2891 D LEMON   : a=fmtp:104 octet-align=1
+04-29 15:56:11.701  1933  2891 D LEMON   : a=rtpmap:103 AMR/8000
+04-29 15:56:11.701  1933  2891 D LEMON   : a=fmtp:103 mode-set=0,1,2,3,4,5;octet-align=1
+04-29 15:56:11.701  1933  2891 D LEMON   : a=ptime:20
+04-29 15:56:11.701  1933  2891 D LEMON   : a=maxptime:400
+04-29 15:56:11.701  1933  2891 D LEMON   : a=sendrecv
+04-29 15:56:11.701  1933  2891 D LEMON   : 
+04-29 15:56:11.702  1933  2891 D LEMON   : 15:56:11.702 UTPT: INFO: conn[0x4] send data[2328] to [2405:200:330:1581::1b:5067] ok.
+04-29 15:56:11.702  1933  2891 D LEMON   : 15:56:11.702 SIP: INFO: module start tmr<0x47> [TIMER A] <2000ms> ok.
+04-29 15:56:11.702  1933  2891 D LEMON   : 15:56:11.702 SIP: INFO: module start tmr<0x48> [TIMER B] <128000ms> ok.
+04-29 15:56:11.702  1933  2891 D LEMON   : 15:56:11.702 SIP: INFO: module start tmr<0x4B> [TIMER C] <200000ms> ok.
+04-29 15:56:11.703  1933  2056 D LEMON   : 15:56:11.698 ZOS: INFO: fsm(MTF_CALL) conn@[17] state <CONNECTED> run [USER UNHOLD] event ok.
+04-29 15:56:11.703  1933  2056 D LEMON   : 15:56:11.703 ZOS: INFO: fsm(MTF_CALL) conn@[17] state <CONNECTED> to <MODIFYOUT>.
+04-29 15:56:11.707  1933  2891 D LEMON   : 15:56:11.702 ZOS: INFO: fsm(SIP_ICT) trans@[131081] state <IDLE> run [SEND_INVITE] event ok.
+04-29 15:56:11.707  1933  2891 D LEMON   : 15:56:11.707 ZOS: INFO: fsm(SIP_ICT) trans@[131081] state <IDLE> to <CALLING>.
+04-29 15:56:11.901  1933  2891 D LEMON   : 15:56:11.901 SIP: INFO: core timer process trans event tmr<0x34> [TIMER K].
+04-29 15:56:11.901  1933  2891 D LEMON   : 15:56:11.901 ZOS: INFO: fsm(SIP_NICT) trans@[65543] state <COMPLETED> run [TM_TK] event ok.
+04-29 15:56:11.901  1933  2891 D LEMON   : 15:56:11.901 ZOS: INFO: fsm(SIP_NICT) trans@[65543] state <COMPLETED> to <TERMINATED>.
+04-29 15:56:11.902  1933  2891 D LEMON   : 15:56:11.902 SIP: INFO: module delete tmr<0x32> [TIMER E] ok.
+04-29 15:56:11.902  1933  2891 D LEMON   : 15:56:11.902 SIP: INFO: module delete tmr<0x33> [TIMER F] ok.
+04-29 15:56:11.902  1933  2891 D LEMON   : 15:56:11.902 SIP: INFO: module delete tmr<0x34> [TIMER K] ok.
+04-29 15:56:11.902  1933  2891 D LEMON   : 15:56:11.902 SIP: INFO: module delete tmr<0x35> [TIMER WAIT_CONN] ok.
+04-29 15:56:11.902  1933  2891 D LEMON   : 15:56:11.902 SIP: INFO: module delete tmr<0x36> [TIMER C] ok.
+04-29 15:56:11.903  1933  2891 D LEMON   : 15:56:11.903 ZOS: INFO: fsm(SIP_IVT) dlg@[131077] state <MODIFY OUT> run [TXN_TERMINATED] event ok.
+04-29 15:56:12.068  1933  2058 D LEMON   : 15:56:12.068 UTPT: INFO: recv udp data(len:429) from [2405:200:330:1581::1b:32920].
+04-29 15:56:12.069  1933  2891 D LEMON   : SIP/2.0 100 Trying
+04-29 15:56:12.069  1933  2891 D LEMON   : f:<sip:+917011021569@ims.mnc872.mcc405.3gppnetwork.org>;tag=321ibgx3adeoMhinod59eRC0LF
+04-29 15:56:12.069  1933  2891 D LEMON   : t:"+917011021641"<sip:+917011021641@ims.mnc872.mcc405.3gppnetwork.org>;tag=VU0iBUW4hc8jbe6a
+04-29 15:56:12.069  1933  2891 D LEMON   : i:219t.-J0deoMhinod59eRC0LE3@[2405:204:1803:1f53::251a:e0ad]
+04-29 15:56:12.069  1933  2891 D LEMON   : CSeq:4 INVITE
+04-29 15:56:12.069  1933  2891 D LEMON   : v:SIP/2.0/UDP [2405:204:1803:1f53::251a:e0ad]:5255;branch=z9hG4bKeouhCL321oayK32aCjOQbKem59;rport=36862;received=2405:204:1803:1f53::251a:e0ad
+04-29 15:56:12.069  1933  2891 D LEMON   : l:0
+04-29 15:56:12.069  1933  2891 D LEMON   : 
+04-29 15:56:12.069  1933  2891 D LEMON   : 
+04-29 15:56:12.070  1933  2891 D LEMON   : 15:56:12.070 SIP: INFO: trans @20009 process response <INVITE:100>.
+04-29 15:56:12.070  1933  2891 D LEMON   : 15:56:12.070 SIP: INFO: module stop tmr<0x47> [TIMER A] ok.
+04-29 15:56:12.070  1933  2891 D LEMON   : 15:56:12.070 SIP: INFO: module stop tmr<0x48> [TIMER B] ok.
+04-29 15:56:12.071  1933  2891 D LEMON   : 15:56:12.070 SIP: INFO: module stop tmr<0x4B> [TIMER C] ok.
+04-29 15:56:12.071  1933  2891 D LEMON   : 15:56:12.071 SIP: INFO: module start tmr<0x4B> [TIMER C] <200000ms> ok.
+04-29 15:56:12.071  1933  2891 D LEMON   : 15:56:12.071 ZOS: INFO: fsm(SIP_ICT) trans@[131081] state <CALLING> run [RECV_1XX] event ok.
+04-29 15:56:12.071  1933  2891 D LEMON   : 15:56:12.071 ZOS: INFO: fsm(SIP_ICT) trans@[131081] state <CALLING> to <PROCEEDING>.
+04-29 15:56:12.071  1933  2891 D LEMON   : 15:56:12.071 SIP: INFO: dlg @20005 process response <INVITE:100>.
+04-29 15:56:12.072  1933  2891 D LEMON   : 15:56:12.072 ZOS: INFO: fsm(SIP_IVT) dlg@[131077] state <MODIFY OUT> run [RECV_1XX] event ok.
+04-29 15:56:12.170  1933  2058 D LEMON   : 15:56:12.170 UTPT: INFO: recv udp data(len:1303) from [2405:200:330:1581::1b:32920].
+04-29 15:56:12.171  1933  2891 D LEMON   : SIP/2.0 200 OK
+04-29 15:56:12.171  1933  2891 D LEMON   : l:259
+04-29 15:56:12.171  1933  2891 D LEMON   : f:<sip:+917011021569@ims.mnc872.mcc405.3gppnetwork.org>;tag=321ibgx3adeoMhinod59eRC0LF
+04-29 15:56:12.171  1933  2891 D LEMON   : t:"+917011021641"<sip:+917011021641@ims.mnc872.mcc405.3gppnetwork.org>;tag=VU0iBUW4hc8jbe6a
+04-29 15:56:12.171  1933  2891 D LEMON   : v:SIP/2.0/UDP [2405:204:1803:1f53::251a:e0ad]:5255;branch=z9hG4bKeouhCL321oayK32aCjOQbKem59;rport=36862;received=2405:204:1803:1f53::251a:e0ad
+04-29 15:56:12.171  1933  2891 D LEMON   : i:219t.-J0deoMhinod59eRC0LE3@[2405:204:1803:1f53::251a:e0ad]
+04-29 15:56:12.171  1933  2891 D LEMON   : CSeq:4 INVITE
+04-29 15:56:12.171  1933  2891 D LEMON   : Record-Route:<sip:[2405:200:330:1581::1b]:5067;routing_id=pcscf_a_side;lskpmc=P9J;lr>
+04-29 15:56:12.171  1933  2891 D LEMON   : x:1800;refresher=uac
+04-29 15:56:12.171  1933  2891 D LEMON   : m:<sip:405872000010425@10.56.4.19:5070;transport=TCP;yop=00.00.04111090.0000.7014>;+g.3gpp.icsi-ref="urn%%3Aurn-7%%3A3gpp-service.ims.icsi.mmtel";video;+sip.instance="<urn:gsma:imei:86740002-050413-0>"
+04-29 15:56:12.171  1933  2891 D LEMON   : Require:timer
+04-29 15:56:12.171  1933  2891 D LEMON   : k:100rel,precondition,timer,histinfo,eventlist,norefersub,tdialog
+04-29 15:56:12.171  1933  2891 D LEMON   : Allow:ACK,BYE,CANCEL,INFO,INVITE,NOTIFY,OPTIONS,PRACK,REFER,UPDATE
+04-29 15:56:12.171  1933  2891 D LEMON   : Feature-Caps:*;+g.3gpp.srvcc;+g.3gpp.icsi-ref="urn%%3Aurn-7%%3A3gpp-service.ims.icsi.mmtel"
+04-29 15:56:12.171  1933  2891 D LEMON   : c:application/sdp
+04-29 15:56:12.171  1933  2891 D LEMON   : Content-Disposition:session;handling=required
+04-29 15:56:12.171  1933  2891 D LEMON   : 
+04-29 15:56:12.171  1933  2891 D LEMON   : v=0
+04-29 15:56:12.171  1933  2891 D LEMON   : o=- 0 5 IN IP6 ims.mnc872.mcc405.3gppnetwork.org
+04-29 15:56:12.171  1933  2891 D LEMON   : s=media server session
+04-29 15:56:12.171  1933  2891 D LEMON   : t=0 0
+04-29 15:56:12.171  1933  2891 D LEMON   : m=audio 37774 RTP/AVP 104
+04-29 15:56:12.171  1933  2891 D LEMON   : c=IN IP6 2405:200:330:1587::11
+04-29 15:56:12.171  1933  2891 D LEMON   : a=rtpmap:104 AMR-WB/16000
+04-29 15:56:12.171  1933  2891 D LEMON   : a=fmtp:104 octet-align=1; mode-change-capability=2
+04-29 15:56:12.171  1933  2891 D LEMON   : a=rtcp-xr
+04-29 15:56:12.171  1933  2891 D LEMON   : a=ptime:20
+04-29 15:56:12.171  1933  2891 D LEMON   : a=sendrecv
+04-29 15:56:12.171  1933  2891 D LEMON   : 
+04-29 15:56:12.172  1933  2891 D LEMON   : 15:56:12.172 SIP: INFO: trans @20009 process response <INVITE:200>.
+04-29 15:56:12.172  1933  2891 D LEMON   : 15:56:12.172 SIP: INFO: module stop tmr<0x4B> [TIMER C] ok.
+04-29 15:56:12.173  1933  2891 D LEMON   : 15:56:12.173 ZOS: INFO: fsm(SIP_ICT) trans@[131081] state <PROCEEDING> run [RECV_2XX] event ok.
+04-29 15:56:12.173  1933  2891 D LEMON   : 15:56:12.173 ZOS: INFO: fsm(SIP_ICT) trans@[131081] state <PROCEEDING> to <TERMINATED>.
+04-29 15:56:12.174  1933  2891 D LEMON   : 15:56:12.174 SIP: INFO: dlg @20005 process response <INVITE:200>.
+04-29 15:56:12.174  1933  2891 D LEMON   : 15:56:12.174 SIP: INFO: module start tmr<0x2A> [TIMER WAIT_SAM] <128000ms> ok.
+04-29 15:56:12.181  1933  2891 D LEMON   : 15:56:12.181 ZOS: INFO: fsm(SIP_IVT) dlg@[131077] state <MODIFY OUT> run [RECV_2XX] event ok.
+04-29 15:56:12.181  1933  2891 D LEMON   : 15:56:12.181 ZOS: INFO: fsm(SIP_IVT) dlg@[131077] state <MODIFY OUT> to <CONFIRMED>.
+04-29 15:56:12.182  1933  2891 D LEMON   : 15:56:12.182 SIP: INFO: module delete tmr<0x47> [TIMER A] ok.
+04-29 15:56:12.182  1933  2891 D LEMON   : 15:56:12.182 SIP: INFO: module delete tmr<0x48> [TIMER B] ok.
+04-29 15:56:12.182  1933  2891 D LEMON   : 15:56:12.182 SIP: INFO: module delete tmr<0x49> [TIMER D] ok.
+04-29 15:56:12.182  1933  2891 D LEMON   : 15:56:12.182 SIP: INFO: module delete tmr<0x4A> [TIMER WAIT_CONN] ok.
+04-29 15:56:12.183  1933  2056 D LEMON   : 15:56:12.183 ZOS: INFO: fsm(MTF_CALL) conn@[17] state <MODIFYOUT> run [SMM CNF] event ok.
+04-29 15:56:12.183  1933  2056 D LEMON   : 15:56:12.183 ZOS: INFO: fsm(MTF_CALL) conn@[17] state <MODIFYOUT> to <CONNECTED>.
+04-29 15:56:12.186  1933  2891 D LEMON   : 15:56:12.186 SIP: INFO: module delete tmr<0x4B> [TIMER C] ok.
+04-29 15:56:12.188  1933  1933 D LEMON   : 15:56:12.188 RSE: INFO: gui notify LeaveSessUnHoldOk.
+04-29 15:56:12.190  1933  2891 D LEMON   : 15:56:12.190 SIP: INFO: dlg @20005 process request <ACK>.
+04-29 15:56:12.190  1933  2891 D LEMON   : ACK sip:405872000010425@10.56.4.19:5070;transport=tcp;yop=00.00.04111090.0000.7014 SIP/2.0
+04-29 15:56:12.190  1933  2891 D LEMON   : From: <sip:+917011021569@ims.mnc872.mcc405.3gppnetwork.org>;tag=321ibgx3adeoMhinod59eRC0LF
+04-29 15:56:12.190  1933  2891 D LEMON   : To: "+917011021641"<sip:+917011021641@ims.mnc872.mcc405.3gppnetwork.org>;tag=VU0iBUW4hc8jbe6a
+04-29 15:56:12.190  1933  2891 D LEMON   : Contact: <sip:405872000010354@[2405:204:1803:1f53::251a:e0ad]:5255>;+sip.instance="<urn:gsma:imei:86740002-050381-3>";+g.3gpp.icsi-ref="urn%%3Aurn-7%%3A3gpp-service.ims.icsi.mmtel";video
+04-29 15:56:12.190  1933  2891 D LEMON   : P-Access-Network-Info: IEEE-802.11;i-wlan-node-id=4045da1352c7
+04-29 15:56:12.190  1933  2891 D LEMON   : Proxy-Require: sec-agree
+04-29 15:56:12.190  1933  2891 D LEMON   : Require: sec-agree
+04-29 15:56:12.190  1933  2891 D LEMON   : Supported: sec-agree
+04-29 15:56:12.190  1933  2891 D LEMON   : Route: <sip:[2405:200:330:1581::1b]:5067;routing_id=pcscf_a_side;lskpmc=P9J;lr>
+04-29 15:56:12.190  1933  2891 D LEMON   : Call-ID: 219t.-J0deoMhinod59eRC0LE3@[2405:204:1803:1f53::251a:e0ad]
+04-29 15:56:12.190  1933  2891 D LEMON   : CSeq: 4 ACK
+04-29 15:56:12.190  1933  2891 D LEMON   : Max-Forwards: 70
+04-29 15:56:12.190  1933  2891 D LEMON   : User-Agent: VoWIFI/WFC UA
+04-29 15:56:12.190  1933  2891 D LEMON   : Via: SIP/2.0/UDP [2405:204:1803:1f53::251a:e0ad]:36862;branch=z9hG4bK9eouhCM321bt.-J2aCjOQbKem5;rport
+04-29 15:56:12.190  1933  2891 D LEMON   : Content-Length: 0
+04-29 15:56:12.190  1933  2891 D LEMON   : 
+04-29 15:56:12.190  1933  2891 D LEMON   : 
+04-29 15:56:12.191  1933  2891 D LEMON   : 15:56:12.191 UTPT: INFO: conn[0x4] send data[929] to [2405:200:330:1581::1b:5067] ok.
+04-29 15:56:12.191  1933  2891 D LEMON   : 15:56:12.191 SIP: INFO: module stop tmr<0x2A> [TIMER WAIT_SAM] ok.
+04-29 15:56:12.191  1933  2891 D LEMON   : 15:56:12.191 ZOS: INFO: fsm(SIP_IVT) dlg@[131077] state <CONFIRMED> run [SAM_REQ] event ok.
+04-29 15:56:13.182  1933  2058 D LEMON   : 15:56:13.182 UTPT: INFO: recv udp data(len:1013) from [2405:200:330:1581::1b:32920].
+04-29 15:56:13.183  1933  2891 D LEMON   : INVITE sip:405872000010354@[2405:204:1803:1f53::251a:e0ad]:5255 SIP/2.0
+04-29 15:56:13.183  1933  2891 D LEMON   : v:SIP/2.0/UDP [2405:200:330:1581::1b]:5067;branch=z9hG4bK_IMSCL1550631.000_bb193ba21d69b9606fad47c09608790f;lskpmc=P9J
+04-29 15:56:13.183  1933  2891 D LEMON   : Record-Route:<sip:[2405:200:330:1581::1b]:5067;routing_id=pcscf_a_side;lskpmc=P9J;lr>
+04-29 15:56:13.183  1933  2891 D LEMON   : l:0
+04-29 15:56:13.183  1933  2891 D LEMON   : f:"+917011021641"<sip:+917011021641@ims.mnc872.mcc405.3gppnetwork.org>;tag=VU0iBUW4hc8jbe6a
+04-29 15:56:13.183  1933  2891 D LEMON   : t:<sip:+917011021569@ims.mnc872.mcc405.3gppnetwork.org>;tag=321ibgx3adeoMhinod59eRC0LF
+04-29 15:56:13.183  1933  2891 D LEMON   : i:219t.-J0deoMhinod59eRC0LE3@[2405:204:1803:1f53::251a:e0ad]
+04-29 15:56:13.183  1933  2891 D LEMON   : CSeq:4 INVITE
+04-29 15:56:13.183  1933  2891 D LEMON   : Max-Forwards:59
+04-29 15:56:13.183  1933  2891 D LEMON   : x:1800;refresher=uas
+04-29 15:56:13.183  1933  2891 D LEMON   : Min-SE:600
+04-29 15:56:13.183  1933  2891 D LEMON   : m:<sip:405872000010425@10.56.4.19:5070;transport=TCP;yop=00.00.04111090.0000.7014>;+g.3gpp.icsi-ref="urn%%3Aurn-7%%3A3gpp-service.ims.icsi.mmtel";video;+sip.instance="<urn:gsma:imei:86740002-050413-0>"
+04-29 15:56:13.183  1933  2891 D LEMON   : k:timer,tdialog
+04-29 15:56:13.183  1933  2891 D LEMON   : Allow:ACK,BYE,CANCEL,INFO,INVITE,NOTIFY,OPTIONS,REFER
+04-29 15:56:13.183  1933  2891 D LEMON   : Feature-Caps:*;+g.3gpp.srvcc;+g.3gpp.icsi-ref="urn%%3Aurn-7%%3A3gpp-service.ims.icsi.mmtel"
+04-29 15:56:13.183  1933  2891 D LEMON   : Server:VoWIFI/WFC UA
+04-29 15:56:13.183  1933  2891 D LEMON   : P-Com.Nokia.B2BUA-Involved:no
+04-29 15:56:13.183  1933  2891 D LEMON   : 
+04-29 15:56:13.183  1933  2891 D LEMON   : 
+04-29 15:56:13.183  1933  2891 D LEMON   : 15:56:13.183 SIP: INFO: module create tmr<0x4C> [TIMER G] ok.
+04-29 15:56:13.184  1933  2891 D LEMON   : 15:56:13.184 SIP: INFO: module create tmr<0x4D> [TIMER H] ok.
+04-29 15:56:13.184  1933  2891 D LEMON   : 15:56:13.184 SIP: INFO: module create tmr<0x4E> [TIMER I] ok.
+04-29 15:56:13.184  1933  2891 D LEMON   : 15:56:13.184 SIP: INFO: module create tmr<0x4F> [TIMER L] ok.
+04-29 15:56:13.184  1933  2891 D LEMON   : 15:56:13.184 SIP: INFO: module create tmr<0x50> [TIMER C] ok.
+04-29 15:56:13.184  1933  2891 D LEMON   : 15:56:13.184 SIP: INFO: trans @20007 process request <INVITE>.
+04-29 15:56:13.185  1933  2891 D LEMON   : 15:56:13.184 SIP: INFO: module start tmr<0x50> [TIMER C] <200000ms> ok.
+04-29 15:56:13.185  1933  2891 D LEMON   : 15:56:13.185 ZOS: INFO: fsm(SIP_IST) trans@[131079] state <IDLE> run [RECV_INVITE] event ok.
+04-29 15:56:13.185  1933  2891 D LEMON   : 15:56:13.185 ZOS: INFO: fsm(SIP_IST) trans@[131079] state <IDLE> to <PROCEEDING>.
+04-29 15:56:13.185  1933  2891 D LEMON   : 15:56:13.185 SIP: INFO: dlg @20005 process request <INVITE>.
+04-29 15:56:13.185  1933  2891 D LEMON   : SIP/2.0 100 Trying
+04-29 15:56:13.185  1933  2891 D LEMON   : To: <sip:+917011021569@ims.mnc872.mcc405.3gppnetwork.org>;tag=321ibgx3adeoMhinod59eRC0LF
+04-29 15:56:13.185  1933  2891 D LEMON   : From: "+917011021641"<sip:+917011021641@ims.mnc872.mcc405.3gppnetwork.org>;tag=VU0iBUW4hc8jbe6a
+04-29 15:56:13.185  1933  2891 D LEMON   : CSeq: 4 INVITE
+04-29 15:56:13.185  1933  2891 D LEMON   : Call-ID: 219t.-J0deoMhinod59eRC0LE3@[2405:204:1803:1f53::251a:e0ad]
+04-29 15:56:13.185  1933  2891 D LEMON   : Via: SIP/2.0/UDP [2405:200:330:1581::1b]:5067;branch=z9hG4bK_IMSCL1550631.000_bb193ba21d69b9606fad47c09608790f;lskpmc=P9J;received=2405:200:330:1581::1b
+04-29 15:56:13.185  1933  2891 D LEMON   : Content-Length: 0
+04-29 15:56:13.185  1933  2891 D LEMON   : 
+04-29 15:56:13.185  1933  2891 D LEMON   : 
+04-29 15:56:13.186  1933  2891 D LEMON   : 15:56:13.186 UTPT: INFO: conn[0x4] send data[467] to [2405:200:330:1581::1b:5067] ok.
+04-29 15:56:13.190  1933  2056 D LEMON   : 15:56:13.190 ZOS: INFO: fsm(MTF_CALL) conn@[17] state <CONNECTED> run [SMM IND] event ok.
+04-29 15:56:13.193  1933  2891 D LEMON   : 15:56:13.193 ZOS: INFO: fsm(SIP_IVT) dlg@[131077] state <CONFIRMED> run [RECV_INVITE] event ok.
+04-29 15:56:13.193  1933  2891 D LEMON   : 15:56:13.193 ZOS: INFO: fsm(SIP_IVT) dlg@[131077] state <CONFIRMED> to <MODIFY IN>.
+04-29 15:56:13.195  1933  2891 D LEMON   : 15:56:13.195 SIP: INFO: dlg @20005 process response <INVITE:200>.
+04-29 15:56:13.195  1933  2891 D LEMON   : 15:56:13.195 SIP: INFO: module start tmr<0x2B> [TIMER SEND_2XX] <2000ms> ok.
+04-29 15:56:13.195  1933  2891 D LEMON   : 15:56:13.195 SIP: INFO: module start tmr<0x2C> [TIMER STOP_2XX] <128000ms> ok.
+04-29 15:56:13.195  1933  2891 D LEMON   : 15:56:13.195 ZOS: INFO: fsm(SIP_IVT) dlg@[131077] state <MODIFY IN> run [SMM_RSP] event ok.
+04-29 15:56:13.195  1933  2891 D LEMON   : 15:56:13.195 ZOS: INFO: fsm(SIP_IVT) dlg@[131077] state <MODIFY IN> to <CONFIRMED>.
+04-29 15:56:13.196  1933  2891 D LEMON   : 15:56:13.195 SIP: INFO: trans @20007 process response <INVITE:200>.
+04-29 15:56:13.196  1933  2891 D LEMON   : 15:56:13.196 SIP: INFO: module stop tmr<0x50> [TIMER C] ok.
+04-29 15:56:13.197  1933  2891 D LEMON   : SIP/2.0 200 OK
+04-29 15:56:13.197  1933  2891 D LEMON   : From: "+917011021641"<sip:+917011021641@ims.mnc872.mcc405.3gppnetwork.org>;tag=VU0iBUW4hc8jbe6a
+04-29 15:56:13.197  1933  2891 D LEMON   : To: <sip:+917011021569@ims.mnc872.mcc405.3gppnetwork.org>;tag=321ibgx3adeoMhinod59eRC0LF
+04-29 15:56:13.197  1933  2891 D LEMON   : P-Access-Network-Info: IEEE-802.11;i-wlan-node-id=4045da1352c7
+04-29 15:56:13.197  1933  2891 D LEMON   : Supported: 100rel,join,norefersub,replaces,timer
+04-29 15:56:13.197  1933  2891 D LEMON   : Allow: INVITE,ACK,BYE,CANCEL,UPDATE,REGISTER,INFO,PRACK,SUBSCRIBE,NOTIFY,MESSAGE,REFER,PUBLISH
+04-29 15:56:13.197  1933  2891 D LEMON   : Session-Expires: 1800;refresher=uas
+04-29 15:56:13.197  1933  2891 D LEMON   : Min-SE: 600
+04-29 15:56:13.197  1933  2891 D LEMON   : Require: timer
+04-29 15:56:13.197  1933  2891 D LEMON   : Contact: <sip:405872000010354@[2405:204:1803:1f53::251a:e0ad]:5255>;+sip.instance="<urn:gsma:imei:86740002-050381-3>";+g.3gpp.icsi-ref="urn%%3Aurn-7%%3A3gpp-service.ims.icsi.mmtel";video
+04-29 15:56:13.197  1933  2891 D LEMON   : Record-Route: <sip:[2405:200:330:1581::1b]:5067;routing_id=pcscf_a_side;lskpmc=P9J;lr>
+04-29 15:56:13.197  1933  2891 D LEMON   : Call-ID: 219t.-J0deoMhinod59eRC0LE3@[2405:204:1803:1f53::251a:e0ad]
+04-29 15:56:13.197  1933  2891 D LEMON   : CSeq: 4 INVITE
+04-29 15:56:13.197  1933  2891 D LEMON   : Max-Forwards: 70
+04-29 15:56:13.197  1933  2891 D LEMON   : Server: VoWIFI/WFC UA
+04-29 15:56:13.197  1933  2891 D LEMON   : Record-Route: <sip:[2405:200:330:1581::1b]:5067;routing_id=pcscf_a_side;lskpmc=P9J;lr>
+04-29 15:56:13.197  1933  2891 D LEMON   : Via: SIP/2.0/UDP [2405:200:330:1581::1b]:5067;branch=z9hG4bK_IMSCL1550631.000_bb193ba21d69b9606fad47c09608790f;lskpmc=P9J;received=2405:200:330:1581::1b
+04-29 15:56:13.197  1933  2891 D LEMON   : Content-Type: application/sdp
+04-29 15:56:13.197  1933  2891 D LEMON   : Content-Length: 301
+04-29 15:56:13.197  1933  2891 D LEMON   : 
+04-29 15:56:13.197  1933  2891 D LEMON   : v=0
+04-29 15:56:13.197  1933  2891 D LEMON   : o=405872000010354 2688247764 2688247771 IN IP6 2405:204:1803:1f53::251a:e0ad
+04-29 15:56:13.197  1933  2891 D LEMON   : s=-
+04-29 15:56:13.197  1933  2891 D LEMON   : c=IN IP6 2405:204:1803:1f53::251a:e0ad
+04-29 15:56:13.197  1933  2891 D LEMON   : t=0 0
+04-29 15:56:13.197  1933  2891 D LEMON   : m=audio 37086 RTP/AVP 104
+04-29 15:56:13.197  1933  2891 D LEMON   : a=rtpmap:104 AMR-WB/16000
+04-29 15:56:13.197  1933  2891 D LEMON   : a=fmtp:104 octet-align=1;mode-change-period=2;mode-change-capability=2
+04-29 15:56:13.197  1933  2891 D LEMON   : a=ptime:20
+04-29 15:56:13.197  1933  2891 D LEMON   : a=maxptime:144
+04-29 15:56:13.197  1933  2891 D LEMON   : a=sendrecv
+04-29 15:56:13.197  1933  2891 D LEMON   : 
+04-29 15:56:13.198  1933  2891 D LEMON   : 15:56:13.198 UTPT: INFO: conn[0x4] send data[1476] to [2405:200:330:1581::1b:5067] ok.
+04-29 15:56:13.199  1933  2891 D LEMON   : 15:56:13.199 ZOS: INFO: fsm(SIP_IST) trans@[131079] state <PROCEEDING> run [SEND_2XX] event ok.
+04-29 15:56:13.199  1933  2891 D LEMON   : 15:56:13.199 ZOS: INFO: fsm(SIP_IST) trans@[131079] state <PROCEEDING> to <TERMINATED>.
+04-29 15:56:13.199  1933  2891 D LEMON   : 15:56:13.199 SIP: INFO: module delete tmr<0x4C> [TIMER G] ok.
+04-29 15:56:13.199  1933  2891 D LEMON   : 15:56:13.199 SIP: INFO: module delete tmr<0x4D> [TIMER H] ok.
+04-29 15:56:13.199  1933  2891 D LEMON   : 15:56:13.199 SIP: INFO: module delete tmr<0x4E> [TIMER I] ok.
+04-29 15:56:13.199  1933  2891 D LEMON   : 15:56:13.199 SIP: INFO: module delete tmr<0x4F> [TIMER L] ok.
+04-29 15:56:13.200  1933  2891 D LEMON   : 15:56:13.200 SIP: INFO: module delete tmr<0x50> [TIMER C] ok.
+04-29 15:56:14.381  1933  2058 D LEMON   : 15:56:14.380 UTPT: INFO: recv udp data(len:916) from [2405:200:330:1581::1b:32920].
+04-29 15:56:14.382  1933  2891 D LEMON   : ACK sip:405872000010354@[2405:204:1803:1f53::251a:e0ad]:5255 SIP/2.0
+04-29 15:56:14.382  1933  2891 D LEMON   : v:SIP/2.0/UDP [2405:200:330:1581::1b]:5067;branch=z9hG4bK_IMSCL1550631.000_8569235d96cf1f7337fe6a17eafd0b0e;lskpmc=P9J
+04-29 15:56:14.382  1933  2891 D LEMON   : Record-Route:<sip:[2405:200:330:1581::1b]:5067;routing_id=pcscf_a_side;lskpmc=P9J;lr>
+04-29 15:56:14.382  1933  2891 D LEMON   : l:281
+04-29 15:56:14.382  1933  2891 D LEMON   : f:"+917011021641"<sip:+917011021641@ims.mnc872.mcc405.3gppnetwork.org>;tag=VU0iBUW4hc8jbe6a
+04-29 15:56:14.382  1933  2891 D LEMON   : t:<sip:+917011021569@ims.mnc872.mcc405.3gppnetwork.org>;tag=321ibgx3adeoMhinod59eRC0LF
+04-29 15:56:14.382  1933  2891 D LEMON   : i:219t.-J0deoMhinod59eRC0LE3@[2405:204:1803:1f53::251a:e0ad]
+04-29 15:56:14.382  1933  2891 D LEMON   : CSeq:4 ACK
+04-29 15:56:14.382  1933  2891 D LEMON   : Max-Forwards:59
+04-29 15:56:14.382  1933  2891 D LEMON   : d:no-fork
+04-29 15:56:14.382  1933  2891 D LEMON   : c:application/sdp
+04-29 15:56:14.382  1933  2891 D LEMON   : Content-Disposition:session;handling=required
+04-29 15:56:14.382  1933  2891 D LEMON   : 
+04-29 15:56:14.382  1933  2891 D LEMON   : v=0
+04-29 15:56:14.382  1933  2891 D LEMON   : o=405872000010425 0 6 IN IP6 ims.mnc872.mcc405.3gppnetwork.org
+04-29 15:56:14.382  1933  2891 D LEMON   : s=-
+04-29 15:56:14.382  1933  2891 D LEMON   : c=IN IP6 2405:200:330:1587::11
+04-29 15:56:14.382  1933  2891 D LEMON   : t=0 0
+04-29 15:56:14.382  1933  2891 D LEMON   : m=audio 37774 RTP/AVP 104
+04-29 15:56:14.382  1933  2891 D LEMON   : a=rtpmap:104 AMR-WB/16000
+04-29 15:56:14.382  1933  2891 D LEMON   : a=fmtp:104 octet-align=1; mode-change-period=2; mode-change-capability=2
+04-29 15:56:14.382  1933  2891 D LEMON   : a=ptime:20
+04-29 15:56:14.382  1933  2891 D LEMON   : a=maxptime:144
+04-29 15:56:14.382  1933  2891 D LEMON   : a=sendrecv
+04-29 15:56:14.382  1933  2891 D LEMON   : 
+04-29 15:56:14.386  1933  2891 D LEMON   : 15:56:14.386 SIP: INFO: dlg @20005 process request <ACK>.
+04-29 15:56:14.386  1933  2891 D LEMON   : 15:56:14.386 SIP: INFO: module stop tmr<0x2B> [TIMER SEND_2XX] ok.
+04-29 15:56:14.386  1933  2891 D LEMON   : 15:56:14.386 SIP: INFO: module stop tmr<0x2C> [TIMER STOP_2XX] ok.
+04-29 15:56:14.391  1933  2056 D LEMON   : 15:56:14.391 ZOS: INFO: fsm(MTF_CALL) conn@[17] state <CONNECTED> run [SAM IND] event ok.
+04-29 15:56:14.398  1933  2891 D LEMON   : 15:56:14.392 ZOS: INFO: fsm(SIP_IVT) dlg@[131077] state <CONFIRMED> run [RECV_ACK] event ok.
+04-29 15:56:14.398  1933  1933 D LEMON   : 15:56:14.398 RSE: INFO: gui notify LeaveSessMdfyed.
+04-29 15:56:49.638  1933  2056 D LEMON   : 15:56:49.638 ZOS: INFO: fsm(MTF_CALL) conn@[17] state <CONNECTED> run [USER TERMINATE] event ok.
+04-29 15:56:49.638  1933  2056 D LEMON   : 15:56:49.638 ZOS: INFO: fsm(MTF_CALL) conn@[17] state <CONNECTED> to <TERMINATING>.
+04-29 15:56:49.640  1933  2891 D LEMON   : 15:56:49.640 SIP: INFO: dlg @20005 process request <BYE>.
+04-29 15:56:49.640  1933  2891 D LEMON   : 15:56:49.640 SIP: INFO: module create tmr<0x51> [TIMER E] ok.
+04-29 15:56:49.640  1933  2891 D LEMON   : 15:56:49.640 SIP: INFO: module create tmr<0x52> [TIMER F] ok.
+04-29 15:56:49.640  1933  2891 D LEMON   : 15:56:49.640 SIP: INFO: module create tmr<0x53> [TIMER K] ok.
+04-29 15:56:49.641  1933  2891 D LEMON   : 15:56:49.641 SIP: INFO: module create tmr<0x54> [TIMER WAIT_CONN] ok.
+04-29 15:56:49.641  1933  2891 D LEMON   : 15:56:49.641 SIP: INFO: module create tmr<0x55> [TIMER C] ok.
+04-29 15:56:49.641  1933  2891 D LEMON   : 15:56:49.641 ZOS: INFO: fsm(SIP_IVT) dlg@[131077] state <CONFIRMED> run [STM_REQ] event ok.
+04-29 15:56:49.641  1933  2891 D LEMON   : 15:56:49.641 ZOS: INFO: fsm(SIP_IVT) dlg@[131077] state <CONFIRMED> to <TERMINATING>.
+04-29 15:56:49.641  1933  2891 D LEMON   : 15:56:49.641 SIP: INFO: trans @20008 process request <BYE>.
+04-29 15:56:49.642  1933  2891 D LEMON   : BYE sip:405872000010425@10.56.4.19:5070;transport=tcp;yop=00.00.04111090.0000.7014 SIP/2.0
+04-29 15:56:49.642  1933  2891 D LEMON   : From: <sip:+917011021569@ims.mnc872.mcc405.3gppnetwork.org>;tag=321ibgx3adeoMhinod59eRC0LF
+04-29 15:56:49.642  1933  2891 D LEMON   : To: "+917011021641"<sip:+917011021641@ims.mnc872.mcc405.3gppnetwork.org>;tag=VU0iBUW4hc8jbe6a
+04-29 15:56:49.642  1933  2891 D LEMON   : P-Access-Network-Info: IEEE-802.11;i-wlan-node-id=4045da1352c7
+04-29 15:56:49.642  1933  2891 D LEMON   : Security-Verify: ipsec-3gpp;prot=esp;alg=hmac-md5-96;ealg=aes-cbc;mod=trans;spi-c=1460503848;spi-s=1460503849;port-c=32920;port-s=5067;q=0.6
+04-29 15:56:49.642  1933  2891 D LEMON   : Security-Verify: ipsec-3gpp;prot=esp;alg=hmac-md5-96;ealg=des-ede3-cbc;mod=trans;spi-c=1460503848;spi-s=1460503849;port-c=32920;port-s=5067;q=0.4
+04-29 15:56:49.642  1933  2891 D LEMON   : Security-Verify: ipsec-3gpp;prot=esp;alg=hmac-md5-96;ealg=null;mod=trans;spi-c=1460503848;spi-s=1460503849;port-c=32920;port-s=5067;q=0.3
+04-29 15:56:49.642  1933  2891 D LEMON   : Security-Verify: ipsec-3gpp;prot=esp;alg=hmac-sha-1-96;ealg=des-ede3-cbc;mod=trans;spi-c=1460503848;spi-s=1460503849;port-c=32920;port-s=5067;q=0.1
+04-29 15:56:49.642  1933  2891 D LEMON   : Security-Verify: ipsec-3gpp;prot=esp;alg=hmac-sha-1-96;ealg=aes-cbc;mod=trans;spi-c=1460503848;spi-s=1460503849;port-c=32920;port-s=5067;q=0.2
+04-29 15:56:49.642  1933  2891 D LEMON   : Security-Verify: ipsec-3gpp;prot=esp;alg=hmac-sha-1-96;ealg=null;mod=trans;spi-c=1460503848;spi-s=1460503849;port-c=32920;port-s=5067;q=0.5
+04-29 15:56:49.642  1933  2891 D LEMON   : Proxy-Require: sec-agree
+04-29 15:56:49.642  1933  2891 D LEMON   : Require: sec-agree
+04-29 15:56:49.642  1933  2891 D LEMON   : Supported: sec-agree
+04-29 15:56:49.642  1933  2891 D LEMON   : Route: <sip:[2405:200:330:1581::1b]:5067;routing_id=pcscf_a_side;lskpmc=P9J;lr>
+04-29 15:56:49.642  1933  2891 D LEMON   : Call-ID: 219t.-J0deoMhinod59eRC0LE3@[2405:204:1803:1f53::251a:e0ad]
+04-29 15:56:49.642  1933  2891 D LEMON   : CSeq: 5 BYE
+04-29 15:56:49.642  1933  2891 D LEMON   : Max-Forwards: 70
+04-29 15:56:49.642  1933  2891 D LEMON   : User-Agent: VoWIFI/WFC UA
+04-29 15:56:49.642  1933  2891 D LEMON   : Via: SIP/2.0/UDP [2405:204:1803:1f53::251a:e0ad]:5255;branch=z9hG4bK59eouhCN321payK32aCjOQbKem;rport
+04-29 15:56:49.642  1933  2891 D LEMON   : Content-Length: 0
+04-29 15:56:49.642  1933  2891 D LEMON   : 
+04-29 15:56:49.642  1933  2891 D LEMON   : 
+04-29 15:56:49.643  1933  2891 D LEMON   : 15:56:49.643 UTPT: INFO: conn[0x4] send data[1604] to [2405:200:330:1581::1b:5067] ok.
+04-29 15:56:49.643  1933  2891 D LEMON   : 15:56:49.643 SIP: INFO: module start tmr<0x51> [TIMER E] <2000ms> ok.
+04-29 15:56:49.644  1933  2891 D LEMON   : 15:56:49.644 SIP: INFO: module start tmr<0x52> [TIMER F] <128000ms> ok.
+04-29 15:56:49.644  1933  2891 D LEMON   : 15:56:49.644 ZOS: INFO: fsm(SIP_NICT) trans@[131080] state <IDLE> run [SEND_NONINVITE] event ok.
+04-29 15:56:49.644  1933  2891 D LEMON   : 15:56:49.644 ZOS: INFO: fsm(SIP_NICT) trans@[131080] state <IDLE> to <TRYING>.
+04-29 15:56:49.653  1933  1933 D LEMON   : 15:56:49.653 RSE: INFO: gui notify LeaveSessTerming.
+04-29 15:56:50.778  1933  2058 D LEMON   : 15:56:50.778 UTPT: INFO: recv udp data(len:685) from [2405:200:330:1581::1b:32920].
+04-29 15:56:50.780  1933  2891 D LEMON   : BYE sip:405872000010354@[2405:204:1803:1f53::251a:e0ad]:5255 SIP/2.0
+04-29 15:56:50.780  1933  2891 D LEMON   : v:SIP/2.0/UDP [2405:200:330:1581::1b]:5067;branch=z9hG4bK_IMSCL1550631.000_fa7053872c506bd6d1f4e097bac886ba;lskpmc=P9J
+04-29 15:56:50.780  1933  2891 D LEMON   : Record-Route:<sip:[2405:200:330:1581::1b]:5067;routing_id=pcscf_a_side;lskpmc=P9J;lr>
+04-29 15:56:50.780  1933  2891 D LEMON   : l:0
+04-29 15:56:50.780  1933  2891 D LEMON   : f:"+917011021641"<sip:+917011021641@ims.mnc872.mcc405.3gppnetwork.org>;tag=VU0iBUW4hc8jbe6a
+04-29 15:56:50.780  1933  2891 D LEMON   : t:<sip:+917011021569@ims.mnc872.mcc405.3gppnetwork.org>;tag=321ibgx3adeoMhinod59eRC0LF
+04-29 15:56:50.780  1933  2891 D LEMON   : i:219t.-J0deoMhinod59eRC0LE3@[2405:204:1803:1f53::251a:e0ad]
+04-29 15:56:50.780  1933  2891 D LEMON   : CSeq:5 BYE
+04-29 15:56:50.780  1933  2891 D LEMON   : Max-Forwards:59
+04-29 15:56:50.780  1933  2891 D LEMON   : k:timer
+04-29 15:56:50.780  1933  2891 D LEMON   : Reason:X.int;reasoncode=0x00000000;add-info=05CC.0001.0001
+04-29 15:56:50.780  1933  2891 D LEMON   : Reason:Q.850;cause=16
+04-29 15:56:50.780  1933  2891 D LEMON   : d:no-fork
+04-29 15:56:50.780  1933  2891 D LEMON   : User-Agent:VoWIFI/WFC UA
+04-29 15:56:50.780  1933  2891 D LEMON   : 
+04-29 15:56:50.780  1933  2891 D LEMON   : 
+04-29 15:56:50.780  1933  2891 D LEMON   : 15:56:50.780 SIP: INFO: module create tmr<0x56> [TIMER J] ok.
+04-29 15:56:50.781  1933  2891 D LEMON   : 15:56:50.781 SIP: INFO: module create tmr<0x57> [TIMER C] ok.
+04-29 15:56:50.781  1933  2891 D LEMON   : 15:56:50.781 SIP: INFO: trans @20009 process request <BYE>.
+04-29 15:56:50.781  1933  2891 D LEMON   : 15:56:50.781 SIP: INFO: module start tmr<0x57> [TIMER C] <200000ms> ok.
+04-29 15:56:50.781  1933  2891 D LEMON   : 15:56:50.781 ZOS: INFO: fsm(SIP_NIST) trans@[131081] state <IDLE> run [RECV_NONINVITE] event ok.
+04-29 15:56:50.781  1933  2891 D LEMON   : 15:56:50.781 ZOS: INFO: fsm(SIP_NIST) trans@[131081] state <IDLE> to <TRYING>.
+04-29 15:56:50.782  1933  2891 D LEMON   : 15:56:50.782 SIP: INFO: dlg @20005 process request <BYE>.
+04-29 15:56:50.782  1933  2891 D LEMON   : 15:56:50.782 ZOS: INFO: fsm(SIP_IVT) dlg@[131077] state <TERMINATING> run [RECV_REQ] event ok.
+04-29 15:56:50.782  1933  2891 D LEMON   : 15:56:50.782 SIP: INFO: trans @20009 process request <BYE>.
+04-29 15:56:50.782  1933  2891 D LEMON   : SIP/2.0 200 OK
+04-29 15:56:50.782  1933  2891 D LEMON   : To: <sip:+917011021569@ims.mnc872.mcc405.3gppnetwork.org>;tag=321ibgx3adeoMhinod59eRC0LF
+04-29 15:56:50.782  1933  2891 D LEMON   : From: "+917011021641"<sip:+917011021641@ims.mnc872.mcc405.3gppnetwork.org>;tag=VU0iBUW4hc8jbe6a
+04-29 15:56:50.782  1933  2891 D LEMON   : CSeq: 5 BYE
+04-29 15:56:50.782  1933  2891 D LEMON   : Call-ID: 219t.-J0deoMhinod59eRC0LE3@[2405:204:1803:1f53::251a:e0ad]
+04-29 15:56:50.782  1933  2891 D LEMON   : Via: SIP/2.0/UDP [2405:200:330:1581::1b]:5067;branch=z9hG4bK_IMSCL1550631.000_fa7053872c506bd6d1f4e097bac886ba;lskpmc=P9J;received=2405:200:330:1581::1b
+04-29 15:56:50.782  1933  2891 D LEMON   : Server: VoWIFI/WFC UA
+04-29 15:56:50.782  1933  2891 D LEMON   : Content-Length: 0
+04-29 15:56:50.782  1933  2891 D LEMON   : 
+04-29 15:56:50.782  1933  2891 D LEMON   : 
+04-29 15:56:50.783  1933  2891 D LEMON   : 15:56:50.783 UTPT: INFO: conn[0x4] send data[483] to [2405:200:330:1581::1b:5067] ok.
+04-29 15:56:50.783  1933  2891 D LEMON   : 15:56:50.783 SIP: INFO: module stop tmr<0x57> [TIMER C] ok.
+04-29 15:56:50.784  1933  2891 D LEMON   : 15:56:50.784 SIP: INFO: module start tmr<0x56> [TIMER J] <128000ms> ok.
+04-29 15:56:50.784  1933  2891 D LEMON   : 15:56:50.784 ZOS: INFO: fsm(SIP_NIST) trans@[131081] state <TRYING> run [SEND_2XX] event ok.
+04-29 15:56:50.784  1933  2891 D LEMON   : 15:56:50.784 ZOS: INFO: fsm(SIP_NIST) trans@[131081] state <TRYING> to <COMPLETED>.
+04-29 15:56:51.212  1933  2058 D LEMON   : 15:56:51.211 UTPT: INFO: recv udp data(len:771) from [2405:200:330:1581::1b:32920].
+04-29 15:56:51.212  1933  2891 D LEMON   : MESSAGE sip:405872000010354@[2405:204:1803:1f53::251a:e0ad]:5255;transport=udp SIP/2.0
+04-29 15:56:51.212  1933  2891 D LEMON   : v:SIP/2.0/UDP [2405:200:330:1581::1b]:5067;branch=z9hG4bK_IMSCL1550631.000_1a25f5777504fed2e7bbd3e6ed08a5c7;lskpmc=P9J
+04-29 15:56:51.212  1933  2891 D LEMON   : l:124
+04-29 15:56:51.212  1933  2891 D LEMON   : f:<sip:10.56.4.19>;tag=b_aV_95d0__ba03A
+04-29 15:56:51.212  1933  2891 D LEMON   : t:<sip:+917011021569@ims.mnc872.mcc405.3gppnetwork.org;user=phone>
+04-29 15:56:51.212  1933  2891 D LEMON   : i:0F3903EA3C19ABE9E5BC8835@0770ed9a0000
+04-29 15:56:51.212  1933  2891 D LEMON   : CSeq:1 MESSAGE
+04-29 15:56:51.212  1933  2891 D LEMON   : Max-Forwards:68
+04-29 15:56:51.212  1933  2891 D LEMON   : d:no-fork
+04-29 15:56:51.212  1933  2891 D LEMON   : P-Asserted-Identity:<sip:10.56.4.19>
+04-29 15:56:51.212  1933  2891 D LEMON   : a:*;+g.3gpp.smsip;require;explicit
+04-29 15:56:51.212  1933  2891 D LEMON   : c:application/vnd.3gpp.sms
+04-29 15:56:51.212  1933  2891 D LEMON   : Content-Disposition:render;handling=optional;sms
+04-29 15:56:51.212  1933  2891 D LEMON   : P-Called-Party-ID:<sip:+917011021569@ims.mnc872.mcc405.3gppnetwork.org;user=phone>
+04-29 15:56:51.212  1933  2891 D LEMON   : 
+04-29 15:56:51.212  1933  2891 D LEMON   : .......p...p...JbK.~..l..a@.1b."g.wz\...l6..j...Z.4-.] a..v.. ..]..@.w..v.A.wz\..@.4...Q..5=...Z ..|..s.4<^.b....L.A1..<v..
+04-29 15:56:51.213  1933  2891 D LEMON   : 15:56:51.213 SIP: INFO: module create tmr<0x58> [TIMER J] ok.
+04-29 15:56:51.213  1933  2891 D LEMON   : 15:56:51.213 SIP: INFO: module create tmr<0x59> [TIMER C] ok.
+04-29 15:56:51.214  1933  2891 D LEMON   : 15:56:51.214 SIP: INFO: trans @20007 process request <MESSAGE>.
+04-29 15:56:51.214  1933  2891 D LEMON   : 15:56:51.214 SIP: INFO: module start tmr<0x59> [TIMER C] <200000ms> ok.
+04-29 15:56:51.214  1933  2891 D LEMON   : 15:56:51.214 ZOS: INFO: fsm(SIP_NIST) trans@[131079] state <IDLE> run [RECV_NONINVITE] event ok.
+04-29 15:56:51.214  1933  2891 D LEMON   : 15:56:51.214 ZOS: INFO: fsm(SIP_NIST) trans@[131079] state <IDLE> to <TRYING>.
+04-29 15:56:51.215  1933  2891 D LEMON   : 15:56:51.215 SIP: INFO: dlg @10004 process request <MESSAGE>.
+04-29 15:56:51.231  1933  2891 D LEMON   : 15:56:51.231 ZOS: INFO: fsm(SIP_VRTD) vrtd@[65540] state <IDLE> run [RECV_REQ] event ok.
+04-29 15:56:51.231  1933  2891 D LEMON   : 15:56:51.231 ZOS: INFO: fsm(SIP_VRTD) vrtd@[65540] state <IDLE> to <REQ IN>.
+04-29 15:56:51.233  1933  2891 D LEMON   : 15:56:51.233 SIP: INFO: dlg @10004 process response <MESSAGE:200>.
+04-29 15:56:51.233  1933  2891 D LEMON   : 15:56:51.233 ZOS: INFO: fsm(SIP_VRTD) vrtd@[65540] state <REQ IN> run [CIM_RSP] event ok.
+04-29 15:56:51.255  1933  2891 D LEMON   : 15:56:51.255 ZOS: INFO: fsm(SIP_VRTD) vrtd@[65540] state <REQ IN> to <TERMINATING>.
+04-29 15:56:51.255  1933  2891 D LEMON   : 15:56:51.255 SIP: INFO: trans @20007 process response <MESSAGE:200>.
+04-29 15:56:51.256  1933  2891 D LEMON   : SIP/2.0 200 OK
+04-29 15:56:51.256  1933  2891 D LEMON   : From: <sip:10.56.4.19>;tag=b_aV_95d0__ba03A
+04-29 15:56:51.256  1933  2891 D LEMON   : To: <sip:+917011021569@ims.mnc872.mcc405.3gppnetwork.org;user=phone>;tag=m59eouhCO321otijJ2aCjOQbKe
+04-29 15:56:51.256  1933  2891 D LEMON   : Call-ID: 0F3903EA3C19ABE9E5BC8835@0770ed9a0000
+04-29 15:56:51.256  1933  2891 D LEMON   : CSeq: 1 MESSAGE
+04-29 15:56:51.256  1933  2891 D LEMON   : Max-Forwards: 70
+04-29 15:56:51.256  1933  2891 D LEMON   : Server: VoWIFI/WFC UA
+04-29 15:56:51.256  1933  2891 D LEMON   : Via: SIP/2.0/UDP [2405:200:330:1581::1b]:5067;branch=z9hG4bK_IMSCL1550631.000_1a25f5777504fed2e7bbd3e6ed08a5c7;lskpmc=P9J;received=2405:200:330:1581::1b
+04-29 15:56:51.256  1933  2891 D LEMON   : Content-Length: 0
+04-29 15:56:51.256  1933  2891 D LEMON   : 
+04-29 15:56:51.256  1933  2891 D LEMON   : 
+04-29 15:56:51.257  1933  2891 D LEMON   : 15:56:51.256 UTPT: INFO: conn[0x4] send data[443] to [2405:200:330:1581::1b:5067] ok.
+04-29 15:56:51.257  1933  2891 D LEMON   : 15:56:51.257 SIP: INFO: module stop tmr<0x59> [TIMER C] ok.
+04-29 15:56:51.257  1933  2891 D LEMON   : 15:56:51.257 SIP: INFO: module start tmr<0x58> [TIMER J] <128000ms> ok.
+04-29 15:56:51.259  1933  2891 D LEMON   : 15:56:51.257 ZOS: INFO: fsm(SIP_NIST) trans@[131079] state <TRYING> run [SEND_2XX] event ok.
+04-29 15:56:51.259  1933  2891 D LEMON   : 15:56:51.259 ZOS: INFO: fsm(SIP_NIST) trans@[131079] state <TRYING> to <COMPLETED>.
+04-29 15:56:51.282  1933  2891 D LEMON   : 15:56:51.282 SIP: INFO: dlg @10005 process request <MESSAGE>.
+04-29 15:56:51.282  1933  2891 D LEMON   : 15:56:51.282 SIP: INFO: module create tmr<0x5A> [TIMER E] ok.
+04-29 15:56:51.283  1933  2891 D LEMON   : 15:56:51.283 SIP: INFO: module create tmr<0x5B> [TIMER F] ok.
+04-29 15:56:51.283  1933  2891 D LEMON   : 15:56:51.283 SIP: INFO: module create tmr<0x5C> [TIMER K] ok.
+04-29 15:56:51.283  1933  2891 D LEMON   : 15:56:51.283 SIP: INFO: module create tmr<0x5D> [TIMER WAIT_CONN] ok.
+04-29 15:56:51.283  1933  2891 D LEMON   : 15:56:51.283 SIP: INFO: module create tmr<0x5E> [TIMER C] ok.
+04-29 15:56:51.283  1933  2891 D LEMON   : 15:56:51.283 ZOS: INFO: fsm(SIP_VRTD) vrtd@[65541] state <IDLE> run [CIM_REQ] event ok.
+04-29 15:56:51.283  1933  2891 D LEMON   : 15:56:51.283 ZOS: INFO: fsm(SIP_VRTD) vrtd@[65541] state <IDLE> to <REQ OUT>.
+04-29 15:56:51.283  1933  2891 D LEMON   : 15:56:51.283 SIP: INFO: trans @10006 process request <MESSAGE>.
+04-29 15:56:51.284  1933  2891 D LEMON   : MESSAGE sip:10.56.4.19 SIP/2.0
+04-29 15:56:51.284  1933  2891 D LEMON   : From: <sip:+917011021569@ims.mnc872.mcc405.3gppnetwork.org>;tag=Kem59eouhCQ321ntijJ2aCjOQb
+04-29 15:56:51.284  1933  2891 D LEMON   : To: <sip:10.56.4.19>
+04-29 15:56:51.284  1933  2891 D LEMON   : P-Preferred-Identity: <sip:+917011021569@ims.mnc872.mcc405.3gppnetwork.org>
+04-29 15:56:51.284  1933  2891 D LEMON   : Contact: <sip:405872000010354@[2405:204:1803:1f53::251a:e0ad]:5255>;+sip.instance="<urn:gsma:imei:86740002-050381-3>";+g.3gpp.icsi-ref="urn%%3Aurn-7%%3A3gpp-service.ims.icsi.oma.cpm.msg"
+04-29 15:56:51.284  1933  2891 D LEMON   : Accept-Contact: *;+g.3gpp.icsi-ref="urn%%3Aurn-7%%3A3gpp-service.ims.icsi.oma.cpm.msg"
+04-29 15:56:51.284  1933  2891 D LEMON   : In-Reply-To: 0F3903EA3C19ABE9E5BC8835@0770ed9a0000
+04-29 15:56:51.284  1933  2891 D LEMON   : Conversation-ID: db109a71-f00d-1033-9c71-e326cf056376
+04-29 15:56:51.284  1933  2891 D LEMON   : Contribution-ID: db109ba2-f00d-1033-8eff-0793589c2f0e
+04-29 15:56:51.284  1933  2891 D LEMON   : P-Access-Network-Info: IEEE-802.11;i-wlan-node-id=4045da1352c7
+04-29 15:56:51.284  1933  2891 D LEMON   : Security-Verify: ipsec-3gpp;prot=esp;alg=hmac-md5-96;ealg=aes-cbc;mod=trans;spi-c=1460503848;spi-s=1460503849;port-c=32920;port-s=5067;q=0.6
+04-29 15:56:51.284  1933  2891 D LEMON   : Security-Verify: ipsec-3gpp;prot=esp;alg=hmac-md5-96;ealg=des-ede3-cbc;mod=trans;spi-c=1460503848;spi-s=1460503849;port-c=32920;port-s=5067;q=0.4
+04-29 15:56:51.284  1933  2891 D LEMON   : Security-Verify: ipsec-3gpp;prot=esp;alg=hmac-md5-96;ealg=null;mod=trans;spi-c=1460503848;spi-s=1460503849;port-c=32920;port-s=5067;q=0.3
+04-29 15:56:51.284  1933  2891 D LEMON   : Security-Verify: ipsec-3gpp;prot=esp;alg=hmac-sha-1-96;ealg=des-ede3-cbc;mod=trans;spi-c=1460503848;spi-s=1460503849;port-c=32920;port-s=5067;q=0.1
+04-29 15:56:51.284  1933  2891 D LEMON   : Security-Verify: ipsec-3gpp;prot=esp;alg=hmac-sha-1-96;ealg=aes-cbc;mod=trans;spi-c=1460503848;spi-s=1460503849;port-c=32920;port-s=5067;q=0.2
+04-29 15:56:51.284  1933  2891 D LEMON   : Security-Verify: ipsec-3gpp;prot=esp;alg=hmac-sha-1-96;ealg=null;mod=trans;spi-c=1460503848;spi-s=1460503849;port-c=32920;port-s=5067;q=0.5
+04-29 15:56:51.284  1933  2891 D LEMON   : Proxy-Require: sec-agree
+04-29 15:56:51.284  1933  2891 D LEMON   : Require: sec-agree
+04-29 15:56:51.284  1933  2891 D LEMON   : Supported: sec-agree
+04-29 15:56:51.284  1933  2891 D LEMON   : Call-ID: em59eouhCP321oaRx32aCjOQbK@[2405:204:1803:1f53::251a:e0ad]
+04-29 15:56:51.284  1933  2891 D LEMON   : CSeq: 1 MESSAGE
+04-29 15:56:51.284  1933  2891 D LEMON   : Max-Forwards: 70
+04-29 15:56:51.284  1933  2891 D LEMON   : User-Agent: VoWIFI/WFC UA
+04-29 15:56:51.284  1933  2891 D LEMON   : Via: SIP/2.0/UDP [2405:204:1803:1f53::251a:e0ad]:5255;branch=z9hG4bKbKem59eouhCR321paRx32aCjOQ;rport
+04-29 15:56:51.284  1933  2891 D LEMON   : Content-Type: application/vnd.3gpp.sms
+04-29 15:56:51.284  1933  2891 D LEMON   : Content-Length: 6
+04-29 15:56:51.284  1933  2891 D LEMON   : 
+04-29 15:56:51.284  1933  2891 D LEMON   : ..A...
+04-29 15:56:51.285  1933  2891 D LEMON   : 15:56:51.285 UTPT: INFO: conn[0x4] send data[1951] to [2405:200:330:1581::1b:5067] ok.
+04-29 15:56:51.285  1933  2891 D LEMON   : 15:56:51.285 SIP: INFO: module start tmr<0x5A> [TIMER E] <2000ms> ok.
+04-29 15:56:51.285  1933  2891 D LEMON   : 15:56:51.285 SIP: INFO: module start tmr<0x5B> [TIMER F] <128000ms> ok.
+04-29 15:56:51.285  1933  2891 D LEMON   : 15:56:51.285 ZOS: INFO: fsm(SIP_NICT) trans@[65542] state <IDLE> run [SEND_NONINVITE] event ok.
+04-29 15:56:51.285  1933  2891 D LEMON   : 15:56:51.285 ZOS: INFO: fsm(SIP_NICT) trans@[65542] state <IDLE> to <TRYING>.
+04-29 15:56:51.641  1933  2891 D LEMON   : 15:56:51.641 SIP: INFO: core timer process trans event tmr<0x51> [TIMER E].
+04-29 15:56:51.642  1933  2891 D LEMON   : BYE sip:405872000010425@10.56.4.19:5070;transport=tcp;yop=00.00.04111090.0000.7014 SIP/2.0
+04-29 15:56:51.642  1933  2891 D LEMON   : From: <sip:+917011021569@ims.mnc872.mcc405.3gppnetwork.org>;tag=321ibgx3adeoMhinod59eRC0LF
+04-29 15:56:51.642  1933  2891 D LEMON   : To: "+917011021641"<sip:+917011021641@ims.mnc872.mcc405.3gppnetwork.org>;tag=VU0iBUW4hc8jbe6a
+04-29 15:56:51.642  1933  2891 D LEMON   : P-Access-Network-Info: IEEE-802.11;i-wlan-node-id=4045da1352c7
+04-29 15:56:51.642  1933  2891 D LEMON   : Security-Verify: ipsec-3gpp;prot=esp;alg=hmac-md5-96;ealg=aes-cbc;mod=trans;spi-c=1460503848;spi-s=1460503849;port-c=32920;port-s=5067;q=0.6
+04-29 15:56:51.642  1933  2891 D LEMON   : Security-Verify: ipsec-3gpp;prot=esp;alg=hmac-md5-96;ealg=des-ede3-cbc;mod=trans;spi-c=1460503848;spi-s=1460503849;port-c=32920;port-s=5067;q=0.4
+04-29 15:56:51.642  1933  2891 D LEMON   : Security-Verify: ipsec-3gpp;prot=esp;alg=hmac-md5-96;ealg=null;mod=trans;spi-c=1460503848;spi-s=1460503849;port-c=32920;port-s=5067;q=0.3
+04-29 15:56:51.642  1933  2891 D LEMON   : Security-Verify: ipsec-3gpp;prot=esp;alg=hmac-sha-1-96;ealg=des-ede3-cbc;mod=trans;spi-c=1460503848;spi-s=1460503849;port-c=32920;port-s=5067;q=0.1
+04-29 15:56:51.642  1933  2891 D LEMON   : Security-Verify: ipsec-3gpp;prot=esp;alg=hmac-sha-1-96;ealg=aes-cbc;mod=trans;spi-c=1460503848;spi-s=1460503849;port-c=32920;port-s=5067;q=0.2
+04-29 15:56:51.642  1933  2891 D LEMON   : Security-Verify: ipsec-3gpp;prot=esp;alg=hmac-sha-1-96;ealg=null;mod=trans;spi-c=1460503848;spi-s=1460503849;port-c=32920;port-s=5067;q=0.5
+04-29 15:56:51.642  1933  2891 D LEMON   : Proxy-Require: sec-agree
+04-29 15:56:51.642  1933  2891 D LEMON   : Require: sec-agree
+04-29 15:56:51.642  1933  2891 D LEMON   : Supported: sec-agree
+04-29 15:56:51.642  1933  2891 D LEMON   : Route: <sip:[2405:200:330:1581::1b]:5067;routing_id=pcscf_a_side;lskpmc=P9J;lr>
+04-29 15:56:51.642  1933  2891 D LEMON   : Call-ID: 219t.-J0deoMhinod59eRC0LE3@[2405:204:1803:1f53::251a:e0ad]
+04-29 15:56:51.642  1933  2891 D LEMON   : CSeq: 5 BYE
+04-29 15:56:51.642  1933  2891 D LEMON   : Max-Forwards: 70
+04-29 15:56:51.642  1933  2891 D LEMON   : User-Agent: VoWIFI/WFC UA
+04-29 15:56:51.642  1933  2891 D LEMON   : Via: SIP/2.0/UDP [2405:204:1803:1f53::251a:e0ad]:5255;branch=z9hG4bK59eouhCN321payK32aCjOQbKem;rport
+04-29 15:56:51.642  1933  2891 D LEMON   : Content-Length: 0
+04-29 15:56:51.642  1933  2891 D LEMON   : 
+04-29 15:56:51.642  1933  2891 D LEMON   : 
+04-29 15:56:51.643  1933  2891 D LEMON   : 15:56:51.643 UTPT: INFO: conn[0x4] send data[1604] to [2405:200:330:1581::1b:5067] ok.
+04-29 15:56:51.643  1933  2891 D LEMON   : 15:56:51.643 SIP: INFO: module start tmr<0x51> [TIMER E] <4000ms> ok.
+04-29 15:56:51.643  1933  2891 D LEMON   : 15:56:51.643 ZOS: INFO: fsm(SIP_NICT) trans@[131080] state <TRYING> run [TM_TE] event ok.
+04-29 15:56:51.653  1933  2058 D LEMON   : 15:56:51.652 UTPT: INFO: recv udp data(len:380) from [2405:200:330:1581::1b:32920].
+04-29 15:56:51.653  1933  2891 D LEMON   : SIP/2.0 202 Accepted
+04-29 15:56:51.653  1933  2891 D LEMON   : l:0
+04-29 15:56:51.653  1933  2891 D LEMON   : f:<sip:+917011021569@ims.mnc872.mcc405.3gppnetwork.org>;tag=Kem59eouhCQ321ntijJ2aCjOQb
+04-29 15:56:51.653  1933  2891 D LEMON   : t:<sip:10.56.4.19>;tag=YB2CA4900g54Z_hU
+04-29 15:56:51.653  1933  2891 D LEMON   : v:SIP/2.0/UDP [2405:204:1803:1f53::251a:e0ad]:5255;branch=z9hG4bKbKem59eouhCR321paRx32aCjOQ;rport=36862;received=2405:204:1803:1f53::251a:e0ad
+04-29 15:56:51.653  1933  2891 D LEMON   : i:em59eouhCP321oaRx32aCjOQbK@[2405:204:1803:1f53::251a:e0ad]
+04-29 15:56:51.653  1933  2891 D LEMON   : CSeq:1 MESSAGE
+04-29 15:56:51.653  1933  2891 D LEMON   : 
+04-29 15:56:51.653  1933  2891 D LEMON   : 
+04-29 15:56:51.654  1933  2891 D LEMON   : 15:56:51.654 SIP: INFO: trans @10006 process response <MESSAGE:202>.
+04-29 15:56:51.654  1933  2891 D LEMON   : 15:56:51.654 SIP: INFO: module stop tmr<0x5A> [TIMER E] ok.
+04-29 15:56:51.654  1933  2891 D LEMON   : 15:56:51.654 SIP: INFO: module stop tmr<0x5B> [TIMER F] ok.
+04-29 15:56:51.654  1933  2891 D LEMON   : 15:56:51.654 SIP: INFO: module start tmr<0x5C> [TIMER K] <17000ms> ok.
+04-29 15:56:51.654  1933  2891 D LEMON   : 15:56:51.654 ZOS: INFO: fsm(SIP_NICT) trans@[65542] state <TRYING> run [RECV_2XX] event ok.
+04-29 15:56:51.654  1933  2891 D LEMON   : 15:56:51.654 ZOS: INFO: fsm(SIP_NICT) trans@[65542] state <TRYING> to <COMPLETED>.
+04-29 15:56:51.654  1933  2891 D LEMON   : 15:56:51.654 SIP: INFO: dlg @10005 process response <MESSAGE:202>.
+04-29 15:56:51.661  1933  2891 D LEMON   : 15:56:51.661 ZOS: INFO: fsm(SIP_VRTD) vrtd@[65541] state <REQ OUT> run [RECV_RSP] event ok.
+04-29 15:56:51.661  1933  2891 D LEMON   : 15:56:51.661 ZOS: INFO: fsm(SIP_VRTD) vrtd@[65541] state <REQ OUT> to <TERMINATED>.
+04-29 15:56:52.234  1933  2058 D LEMON   : 15:56:52.234 UTPT: INFO: recv udp data(len:463) from [2405:200:330:1581::1b:32920].
+04-29 15:56:52.235  1933  2891 D LEMON   : SIP/2.0 481 Call/Transaction Does Not Exist - P - 14009
+04-29 15:56:52.235  1933  2891 D LEMON   : f:<sip:+917011021569@ims.mnc872.mcc405.3gppnetwork.org>;tag=321ibgx3adeoMhinod59eRC0LF
+04-29 15:56:52.235  1933  2891 D LEMON   : t:"+917011021641"<sip:+917011021641@ims.mnc872.mcc405.3gppnetwork.org>;tag=VU0iBUW4hc8jbe6a
+04-29 15:56:52.235  1933  2891 D LEMON   : i:219t.-J0deoMhinod59eRC0LE3@[2405:204:1803:1f53::251a:e0ad]
+04-29 15:56:52.235  1933  2891 D LEMON   : CSeq:5 BYE
+04-29 15:56:52.235  1933  2891 D LEMON   : v:SIP/2.0/UDP [2405:204:1803:1f53::251a:e0ad]:5255;branch=z9hG4bK59eouhCN321payK32aCjOQbKem;rport=36862;received=2405:204:1803:1f53::251a:e0ad
+04-29 15:56:52.235  1933  2891 D LEMON   : l:0
+04-29 15:56:52.235  1933  2891 D LEMON   : 
+04-29 15:56:52.235  1933  2891 D LEMON   : 
+04-29 15:56:52.235  1933  2891 D LEMON   : 15:56:52.235 SIP: INFO: trans @20008 process response <BYE:481>.
+04-29 15:56:52.235  1933  2891 D LEMON   : 15:56:52.235 SIP: INFO: module stop tmr<0x51> [TIMER E] ok.
+04-29 15:56:52.235  1933  2891 D LEMON   : 15:56:52.235 SIP: INFO: module stop tmr<0x52> [TIMER F] ok.
+04-29 15:56:52.236  1933  2891 D LEMON   : 15:56:52.236 SIP: INFO: module start tmr<0x53> [TIMER K] <17000ms> ok.
+04-29 15:56:52.236  1933  2891 D LEMON   : 15:56:52.236 ZOS: INFO: fsm(SIP_NICT) trans@[131080] state <TRYING> run [RECV_3456XX] event ok.
+04-29 15:56:52.236  1933  2891 D LEMON   : 15:56:52.236 ZOS: INFO: fsm(SIP_NICT) trans@[131080] state <TRYING> to <COMPLETED>.
+04-29 15:56:52.236  1933  2891 D LEMON   : 15:56:52.236 SIP: INFO: dlg @20005 process response <BYE:481>.
+04-29 15:56:52.250  1933  2891 D LEMON   : 15:56:52.250 ZOS: INFO: fsm(SIP_IVT) dlg@[131077] state <TERMINATING> run [RECV_RSP] event ok.
+04-29 15:56:54.639  1933  2056 D LEMON   : 15:56:54.639 ZOS: INFO: fsm(MTF_CALL) conn@[17] state <TERMINATING> run [WAIT TERM] event ok.
+04-29 15:56:54.640  1933  2056 D LEMON   : 15:56:54.639 ZOS: INFO: fsm(MTF_CALL) conn@[17] state <TERMINATING> to <TERMINATED>.
+04-29 15:57:08.651  1933  2891 D LEMON   : 15:57:08.651 SIP: INFO: core timer process trans event tmr<0x5C> [TIMER K].
+04-29 15:57:08.651  1933  2891 D LEMON   : 15:57:08.651 ZOS: INFO: fsm(SIP_NICT) trans@[65542] state <COMPLETED> run [TM_TK] event ok.
+04-29 15:57:08.651  1933  2891 D LEMON   : 15:57:08.651 ZOS: INFO: fsm(SIP_NICT) trans@[65542] state <COMPLETED> to <TERMINATED>.
+04-29 15:57:08.651  1933  2891 D LEMON   : 15:57:08.651 SIP: INFO: module delete tmr<0x5A> [TIMER E] ok.
+04-29 15:57:08.652  1933  2891 D LEMON   : 15:57:08.651 SIP: INFO: module delete tmr<0x5B> [TIMER F] ok.
+04-29 15:57:08.652  1933  2891 D LEMON   : 15:57:08.652 SIP: INFO: module delete tmr<0x5C> [TIMER K] ok.
+04-29 15:57:08.652  1933  2891 D LEMON   : 15:57:08.652 SIP: INFO: module delete tmr<0x5D> [TIMER WAIT_CONN] ok.
+04-29 15:57:08.652  1933  2891 D LEMON   : 15:57:08.652 SIP: INFO: module delete tmr<0x5E> [TIMER C] ok.
+04-29 15:57:09.234  1933  2891 D LEMON   : 15:57:09.234 SIP: INFO: core timer process trans event tmr<0x53> [TIMER K].
+04-29 15:57:09.234  1933  2891 D LEMON   : 15:57:09.234 ZOS: INFO: fsm(SIP_NICT) trans@[131080] state <COMPLETED> run [TM_TK] event ok.
+04-29 15:57:09.235  1933  2891 D LEMON   : 15:57:09.234 ZOS: INFO: fsm(SIP_NICT) trans@[131080] state <COMPLETED> to <TERMINATED>.
+04-29 15:57:09.235  1933  2891 D LEMON   : 15:57:09.235 SIP: INFO: module delete tmr<0x51> [TIMER E] ok.
+04-29 15:57:09.235  1933  2891 D LEMON   : 15:57:09.235 SIP: INFO: module delete tmr<0x52> [TIMER F] ok.
+04-29 15:57:09.235  1933  2891 D LEMON   : 15:57:09.235 SIP: INFO: module delete tmr<0x53> [TIMER K] ok.
+04-29 15:57:09.236  1933  2891 D LEMON   : 15:57:09.235 SIP: INFO: module delete tmr<0x54> [TIMER WAIT_CONN] ok.
+04-29 15:57:09.236  1933  2891 D LEMON   : 15:57:09.236 SIP: INFO: module delete tmr<0x55> [TIMER C] ok.
+04-29 15:57:09.236  1933  2891 D LEMON   : 15:57:09.236 ZOS: INFO: fsm(SIP_IVT) dlg@[131077] state <TERMINATING> run [TXN_TERMINATED] event ok.
+04-29 15:57:29.121  1933  2891 D LEMON   : 15:57:29.121 SIP: INFO: core timer process trans event tmr<0x22> [TIMER J].
+04-29 15:57:29.122  1933  2891 D LEMON   : 15:57:29.121 ZOS: INFO: fsm(SIP_NIST) trans@[65545] state <COMPLETED> run [TM_TJ] event ok.
+04-29 15:57:29.122  1933  2891 D LEMON   : 15:57:29.122 ZOS: INFO: fsm(SIP_NIST) trans@[65545] state <COMPLETED> to <TERMINATED>.
+04-29 15:57:29.122  1933  2891 D LEMON   : 15:57:29.122 SIP: INFO: module delete tmr<0x22> [TIMER J] ok.
+04-29 15:57:29.122  1933  2891 D LEMON   : 15:57:29.122 SIP: INFO: module delete tmr<0x23> [TIMER C] ok.
+04-29 15:57:29.122  1933  2891 D LEMON   : 15:57:29.122 ZOS: INFO: fsm(SIP_SUBS) subs@[2147549189] state <CONFIRMED> run [TXN_TERMINATED] event ok.
