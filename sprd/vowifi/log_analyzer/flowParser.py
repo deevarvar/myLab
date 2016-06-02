@@ -104,6 +104,7 @@ class flowParser():
             self.sendertags = config['sprd']['sendertags']
             self.receivertags =  config['sprd']['receivertags']
             self.siptags = config['sprd']['siptags']
+            self.datalentags = config['sprd']['datalentags']
 
             self.files = dict()
             self.files['log'] = config['files']['log']
@@ -177,6 +178,7 @@ class flowParser():
             self.regtype = 'tcp'
         print 'regtype is ' + self.regtype
 
+
     def getSendSip(self,line,lineno):
         senddatalen =  self.getSendLen(line)
         if not senddatalen:
@@ -185,24 +187,36 @@ class flowParser():
 
         #search backward
         found = 0
-        index = lineno - 1
+        searchstart = lineno - 1
+        dataindex = lineno - 1
+        #there may be race condition, receive two request at the same time
+        #log may delay
+        #NOTE: need to find pattern 'data length: 400' first
+        datalenanchor = self.datalentags + str(senddatalen)
+        print 'data anchor is ' + datalenanchor
+        while dataindex >= 0:
+            if datalenanchor not in self.loglines[dataindex]:
+                dataindex = dataindex - 1
+            else:
+                break
 
-        while index >= 0:
-            if self.siptags in self.loglines[index]:
+
+        while searchstart >= dataindex:
+            if self.siptags in self.loglines[searchstart]:
                 found +=1
-                print 'found send siptags in ' + str(index) + ', found num is ' + str(found)
+                print 'found send siptags in ' + str(searchstart) + ', found num is ' + str(found)
                 if found == 1:
-                    end =  index
-                    index = index - 1
+                    end =  searchstart
+                    searchstart = searchstart - 1
                 else:
-                    start = index
+                    start = searchstart
                     #record the timestamp
-                    fields = self.loglines[index].split(' ')
+                    fields = self.loglines[searchstart].split(' ')
                     #04-17 23:21:24.420
                     timestamp = fields[0] + ' ' + fields[1]
                     break
             else:
-                index = index - 1
+                searchstart = searchstart - 1
         with open(self.lemonlog, 'a+') as llog:
             print start, end
             sendsip = dict()
@@ -224,25 +238,38 @@ class flowParser():
         #search forward
         #we have to search two siptags and write the lines between the two tags
         found = 0
-        index = lineno + 1
+        searchstart = lineno + 1
+        dataindex = lineno + 1
 
-        while index <=  len(self.loglines):
-            if self.siptags in self.loglines[index]:
+        #there may be race condition, receive two request at the same time
+        #log may delay
+        #NOTE: need to find pattern 'data length: 400' first
+        datalenanchor = self.datalentags + str(recvdatalen)
+        print 'data anchor is ' + datalenanchor
+        while dataindex >= 0:
+            if datalenanchor not in self.loglines[dataindex]:
+                dataindex = dataindex + 1
+            else:
+                break
+
+        searchstart = dataindex
+        while searchstart <=  len(self.loglines):
+            if self.siptags in self.loglines[searchstart]:
                 found += 1
-                print 'found recv siptags in ' + str(index) + ', found num is ' + str(found)
+                print 'found recv siptags in ' + str(searchstart) + ', found num is ' + str(found)
                 if found == 1:
-                    start = index
-                    index += 1
+                    start = searchstart
+                    searchstart += 1
                 else:
-                    end = index
+                    end = searchstart
                     #record the timestamp
-                    fields = self.loglines[index].split(' ')
+                    fields = self.loglines[searchstart].split(' ')
                     #04-17 23:21:24.420
                     timestamp = fields[0] + ' ' + fields[1]
                     #if we found two siptags then break
                     break
             else:
-                index += 1
+                searchstart += 1
         with open(self.lemonlog, 'a+') as llog:
             print start, end
             recvsip = dict()
@@ -519,9 +546,9 @@ class flowParser():
     def findUE(self):
         for sipindex, sip in enumerate(self.diagsips):
             if sip['isregister']:
-                #TODO: identify REGISTER
+                #TODO/FIXME: identify REGISTER
                 # use cseq:.*REGISTER to tell
-                print 'start to probe the REGISTER msg'
+                print 'ignore REGISTER msg'
                 pass
 
             else:
@@ -559,14 +586,23 @@ class flowParser():
         right = ''
         direct = ''
 
+        #TODO:change the order of the elements
+
+
         for sipindex, sip in enumerate(self.diagsips):
             #TODO: add logic to check REGISTER
             callid = sip['callid']
             if sip['isregister']:
-                #TODO: identify REGISTER
+                #TODO/FIXME: identify REGISTER in right logic
                 # use cseq:.*REGISTER to tell
                 print 'need to probe the REGISTER msg'
-                pass
+                #always is send
+                direct = ' -> '
+                leftnum = self.callidmapmomt[callid]['mo']
+                rightnum = self.callidmapmomt[callid]['mt']
+                left = elements[leftnum]
+                right = elements[rightnum]
+
             else:
                 if sip['send']:
                     #NOTE: space is important
@@ -589,10 +625,12 @@ class flowParser():
 
             timestamp = "\"time: " + sip['timestamp'] + "\n"
             cseq = " CSeq: " + sip['cseq'] + '\n'
-            callid = " Call-ID: "+ sip['callid'] + '\n'
-            lineno = " lineno: " + str(sip['lineno']) + "\""
+            #callid = " Call-ID: "+ sip['callid'] + '\n'
+            fromtag = " From: " + sip['fromnum'] + '\n'
+            totag = " To: " + sip['tonum'] + '\n'
+            lineno = " log lineno: " + str(sip['lineno']) + "\""
 
-            note = ", note = " + timestamp + cseq + callid+ lineno
+            note = ", note = " + timestamp + cseq + fromtag + totag + lineno
 
             label = label + note + "];\n"
             #print label
@@ -639,13 +677,22 @@ class flowParser():
             momt = dict()
             #IMPORTANT: record caller and callee via call-id
             if callid not in self.callidmapmomt:
-                if sip['send']:
-                    #FIXME: need to add register logic
+                #FIXME/TODO: identify REGISTER in right logic
+                if sip['isregister']:
+                    momt['mo'] =  self.getRealNum(fromnum)
+                    momt['mt'] = 'NETWORK'
+                elif sip['issubs']:
                     momt['mo'] = self.getRealNum(fromnum)
-                    momt['mt'] = self.getRealNum(tonum)
+                    momt['mt'] = 'NETWORK'
                 else:
-                    momt['mo'] = self.getRealNum(tonum)
-                    momt['mt'] = self.getRealNum(fromnum)
+
+                    if sip['send']:
+                        #FIXME: need to add register logic
+                        momt['mo'] = self.getRealNum(fromnum)
+                        momt['mt'] = self.getRealNum(tonum)
+                    else:
+                        momt['mo'] = self.getRealNum(tonum)
+                        momt['mt'] = self.getRealNum(fromnum)
 
                 self.callidmapmomt[callid] = momt
 
