@@ -24,6 +24,10 @@ TODO:
 #     record INVITE's call-id
 
 
+#3. add a basic ui
+#4. add a html page file
+
+
 1. attach
 ImsCMUtils: switch to Vowifi
 IKE flow
@@ -129,11 +133,17 @@ class flowParser():
             self.diagstr = ""
 
             #record recompiled sip msg, which include more important msg
-            self.trimsips = list()
+            self.diagsips = list()
 
             #record all entity UE or Network
             self.entities = list()
 
+            #record all caller/calee using call-id to map
+            #NOTE: assume mo means left, mt means right...
+            self.callidmapmomt = dict()
+
+            #record ue's num
+            self.uenum = ''
 
 
 
@@ -265,6 +275,8 @@ class flowParser():
                     with open(self.lemonlog, 'a+') as llog:
                         llog.write(line)
 
+                #FIXME: there may be race condition
+                #the data print can be different.
                 #if it is receivertags, search forward
                 if receiverpattern.search(line):
                     with open(self.lemonlog, 'a+') as llog:
@@ -472,50 +484,179 @@ class flowParser():
                     self.searchSend(lineno, lemonlog)
 
 
-    def assembleDiagStr(self,diaginfo):
+    def dumpDiagsip(self):
+        '''
+        use to dump all trimp sip with important info
+        :return:
+        '''
+        for sipindex, sip in enumerate(self.diagsips):
+            print 'request index is ' + str(sipindex)
+            for key,value in sip.iteritems():
+                print str(key) + ':' + str(value)
+
+    def assembleDiagStrOld(self,diaginfo):
         #sample UE -> NETWORK [label = "200 OK", note = "Cseq 1 REGISTER\n lineno: 888"];
+        if diaginfo['send']:
+            direct = '->'
+        else:
+            direct = '<-'
+
         #TODO: UE and NETWORK maybe need to change
-        basedirect =  "UE " + diaginfo['direct'] + " NETWORK "
+        basedirect =  "UE " + direct + " NETWORK "
         label =  "[label = \"" + diaginfo['label'] + "\""
 
         timestamp = "\"time: " + diaginfo['timestamp'] + "\n"
         cseq = " CSeq: " + diaginfo['cseq'] + '\n'
+        callid = " Call-ID: "+ diaginfo['callid'] + '\n'
         lineno = " lineno: " + str(diaginfo['lineno']) + "\""
-        note = ", note = " + timestamp + cseq + lineno
+
+        note = ", note = " + timestamp + cseq + callid+ lineno
 
         label = label + note + "];\n"
         #print label
         self.diagstr +=  basedirect + label
 
+    def findUE(self):
+        for sipindex, sip in enumerate(self.diagsips):
+            if sip['isregister']:
+                #TODO: identify REGISTER
+                # use cseq:.*REGISTER to tell
+                print 'start to probe the REGISTER msg'
+                pass
 
-    def dumpTrimsip(self):
-        '''
-        use to dump all trimp sip with important info
-        :return:
-        '''
-        for sipindex, sip in enumerate(self.trimsips):
-            print 'request index is ' + str(sipindex)
-            for key,value in sip.iteritems():
-                print str(key) + ':' + str(value)
+            else:
+                #from the direction, can tell the ue's num
+                if sip['send']:
+                    self.uenum = sip['fromnum']
+                else:
+                    self.uenum = sip['tonum']
+                break
+
+
+    def assembleDiagStr(self):
+        #first define all UE and network name
+        elements = dict()
+        #add stub for NETWORK
+        elements['NETWORK'] = 'NETWORK'
+        self.findUE()
+
+        for index, entity in enumerate(self.entities):
+            if entity == self.uenum:
+                #seqdial's title do not support + char??!!
+                elements[self.uenum] = 'UE_' + entity.strip('+')
+            else:
+                elements[entity] = 'otherUE_' + entity.strip('+')
+
+
+        if self.uenum:
+            print 'ue name is '+ elements[self.uenum]
+
+
+        #1. element order
+        #2. get the UE's number
+        #
+        left = ''
+        right = ''
+        direct = ''
+
+        for sipindex, sip in enumerate(self.diagsips):
+            #TODO: add logic to check REGISTER
+            callid = sip['callid']
+            if sip['isregister']:
+                #TODO: identify REGISTER
+                # use cseq:.*REGISTER to tell
+                print 'need to probe the REGISTER msg'
+                pass
+            else:
+                if sip['send']:
+                    #NOTE: space is important
+                    direct = ' -> '
+                    #find left/right by callid
+
+                    leftnum = self.callidmapmomt[callid]['mo']
+                    rightnum = self.callidmapmomt[callid]['mt']
+                    left = elements[leftnum]
+                    right = elements[rightnum]
+                else:
+                    direct = ' <- '
+                    leftnum = self.callidmapmomt[callid]['mo']
+                    rightnum = self.callidmapmomt[callid]['mt']
+                    left = elements[leftnum]
+                    right = elements[rightnum]
+
+            basedirect =  left + direct + right
+            label =  " [label = \"" + sip['label'] + "\""
+
+            timestamp = "\"time: " + sip['timestamp'] + "\n"
+            cseq = " CSeq: " + sip['cseq'] + '\n'
+            callid = " Call-ID: "+ sip['callid'] + '\n'
+            lineno = " lineno: " + str(sip['lineno']) + "\""
+
+            note = ", note = " + timestamp + cseq + callid+ lineno
+
+            label = label + note + "];\n"
+            #print label
+            self.diagstr +=  basedirect + label
+
+    def getRealNum(self,string):
+        #FIXME: special handling for MESSAGE's deliver report
+        # the num may be a address
+        if self.sipparser.checkIp(string):
+            return 'NETWORK'
+        else:
+             return string
+
+
+    def dumpcallidmaping(self):
+        for callid,momt in self.callidmapmomt.iteritems():
+            print 'callid is ' + callid
+            for key,value in momt.iteritems():
+                print 'key is '+ key + ', value is ' + value
+
 
     def analyzeSip(self):
         #get all UE's phone number,
         #check if reinivte does not have sdp
 
         #rules are listed below:
-        # 1. only invite has 'from', 'to'
-        #
-        for sipindex, sip in enumerate(self.trimsips):
-            for key,value in sip.iteritems():
-                if key == 'from' or key == 'to':
-                    num = self.sipparser.getNumber(value)
-                    if num not in self.entities:
-                        self.entities.append(num)
+        # 1. only invite has 'fromnum', 'tonum'
+        # 2. use call-id to identify the caller/callee
+        # 3. TODO: MESSAGE should be parsed
+        # 4: SUBSCRIBE/NOTIFY
+        # 5: REGISTER
+        for sipindex, sip in enumerate(self.diagsips):
 
-        print len(self.entities)
+            fromnum = sip['fromnum']
+            tonum = sip['tonum']
+            callid = sip['callid']
+
+            if self.sipparser.checkIp(fromnum) == False:
+                if fromnum not in self.entities:
+                    self.entities.append(fromnum)
+            if self.sipparser.checkIp(tonum) == False:
+                if tonum not in self.entities:
+                    self.entities.append(tonum)
+            momt = dict()
+            #IMPORTANT: record caller and callee via call-id
+            if callid not in self.callidmapmomt:
+                if sip['send']:
+                    #FIXME: need to add register logic
+                    momt['mo'] = self.getRealNum(fromnum)
+                    momt['mt'] = self.getRealNum(tonum)
+                else:
+                    momt['mo'] = self.getRealNum(tonum)
+                    momt['mt'] = self.getRealNum(fromnum)
+
+                self.callidmapmomt[callid] = momt
+
+
+        #print 'entities num is ' + str(len(self.entities))
+        #print 'callid num is ' + str(len(self.callids))
         #dump all the entities
         for index, entity in enumerate(self.entities):
             print entity
+
+        self.dumpcallidmaping()
 
 
 
@@ -539,6 +680,9 @@ class flowParser():
             sip = sipobj['msg']
             diaginfo = dict()
             diaginfo['isinvite'] = False
+            diaginfo['isregister'] = False
+            diaginfo['issubs'] = False
+            diaginfo['send'] = sipobj['send']
             for msgindex,header in enumerate(sip):
                 #get reqeust line/status line, other header
 
@@ -546,30 +690,40 @@ class flowParser():
                 if method:
                     print 'found method ' + method  + ' in ' + str(index) + ' sip msg'
                     diaginfo['lineno'] = lineno
-                    diaginfo['direct'] = direct
                     diaginfo['label'] =  method
                     diaginfo['timestamp'] = timestamp
-                    #if method is INVITE, check Call-ID and From, to
-                    if method == 'INVITE':
+                    #if method is INVITE/OPTIONS/UPDATE/INFO/REFER/MESSAGE, check Call-ID and From, to
+                    if method == 'INVITE' or method == 'OPTIONS' or method == 'UPDATE' \
+                            or method == 'INFO' or method == 'REFER' or method == 'MESSAGE':
                         diaginfo['isinvite'] = True
-                    continue
+                        continue
 
-                if diaginfo['isinvite']:
-                    if 'callid' not in diaginfo:
-                        callid = sipparser.getHeaderContent(header, 'Call-ID')
-                        if callid:
-                            diaginfo['callid'] = callid
+                    if method == 'REGISTER' :
+                        diaginfo['isregister'] = True
+                        continue
 
-                    if 'from' not in diaginfo:
-                        fromtag = sipparser.getHeaderContent(header, 'From')
-                        if fromtag:
-                            diaginfo['from'] = fromtag
+                    if method == 'SUBSCRIBE' or method == 'NOTIFY' or method == 'PUBLISH':
+                        diaginfo['issubs'] = True
+                        continue
 
-                    if 'to' not in diaginfo:
-                        totag = sipparser.getHeaderContent(header, 'To')
-                        if totag:
-                            diaginfo['to'] = totag
+                if 'callid' not in diaginfo:
+                    callid = sipparser.getHeaderContent(header, 'Call-ID')
+                    if callid:
+                        diaginfo['callid'] = callid
 
+                if 'from' not in diaginfo:
+                    fromtag = sipparser.getHeaderContent(header, 'From')
+                    if fromtag:
+                        diaginfo['from'] = fromtag
+                        num = sipparser.getNumber(fromtag)
+                        diaginfo['fromnum'] = num
+
+                if 'to' not in diaginfo:
+                    totag = sipparser.getHeaderContent(header, 'To')
+                    if totag:
+                        diaginfo['to'] = totag
+                        num = sipparser.getNumber(totag)
+                        diaginfo['tonum'] = num
 
 
                 cseq = sipparser.getCSeq(header)
@@ -582,21 +736,23 @@ class flowParser():
                 if status:
                     print 'found status ' + status + ' in ' +  str(index) + ' sip msg'
                     diaginfo['lineno'] = lineno
-                    diaginfo['direct'] = direct
                     diaginfo['label'] = status
                     diaginfo['timestamp'] = timestamp
                     #self.diagstr += "UE " + direct + " NETWORK [label = \"" + status + " No." + str(lineno)+"\"];\n"
                     continue
 
             #add function to construct the diagram string
-            #TODO: store all possible sips
-            self.trimsips.append(diaginfo)
-            if diaginfo:
-                self.assembleDiagStr(diaginfo)
+            self.diagsips.append(diaginfo)
+            #oboselete logic
+            #if diaginfo:
+                #self.assembleDiagStrOld(diaginfo)
         #dump the trim sip
-        self.dumpTrimsip()
+        self.dumpDiagsip()
         #analyze the trim sip
         self.analyzeSip()
+        if self.diagsips:
+            self.assembleDiagStr()
+
 
     def drawLemonDiag(self):
         diagram_definition = u"""seqdiag {\n"""
@@ -607,7 +763,8 @@ class flowParser():
         print diagram_definition
         tree = parser.parse_string(diagram_definition)
         diagram = builder.ScreenNodeBuilder.build(tree)
-        draw = drawer.DiagramDraw('PNG', diagram, filename="diagram.png")
+        pngname = self.log.split('.')[0] + '.png'
+        draw = drawer.DiagramDraw('PNG', diagram, filename=pngname)
         draw.draw()
         draw.save()
         pass

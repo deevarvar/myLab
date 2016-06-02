@@ -20,6 +20,7 @@ class SipParser():
             self.headerline = config['sipParser']['headerline']
             self.cseqline = config['sipParser']['cseqline']
             self.numpattern = config['sipParser']['numpattern']
+            self.ippattern = config['sipParser']['ippattern']
 
             #define compact headers
             #http://www.cs.columbia.edu/sip/compact.html
@@ -117,9 +118,22 @@ class SipParser():
         if not match:
             print 'no num in string ' + string
             return
-        num = match.group(1).strip()
-        print num
+
+        num = match.group(2).strip()
+        num = num.split('@')[0]
+        #print num
         return num
+
+    def checkIp(self, string):
+        ippattern = re.compile(self.ippattern)
+        match = ippattern.search(string)
+        if not match:
+            print 'no ip in string ' + string
+            return False
+        else:
+            ip = match.group(0).strip()
+            print ip
+            return True
 
 if __name__ == '__main__':
     #TODO write own ut function
@@ -145,5 +159,13 @@ if __name__ == '__main__':
 
     fromtag = "from:<sip:+917011021754@ims.mnc872.mcc405.3gppnetwork.org>;tag=atqPR_w.eSVudV4213iBTI1a_7"
     totag = "to:\"+917011021774\"<sip:+917011021774@ims.mnc872.mcc405.3gppnetwork.org>;tag=chi6.0WU1e0Z4WD9"
-    sp.getNumber(fromtag)
-    sp.getNumber(totag)
+    fromteltag = "f:<tel:+917011021790>;tag=7B_g338Ve240ZYaA"
+    smstotag = "To:<sip:10.56.4.26>"
+    fromnum = sp.getNumber(fromtag)
+    tonum = sp.getNumber(totag)
+    fromtel = sp.getNumber(fromteltag)
+    smsto = sp.getNumber(smstotag)
+    print fromnum, tonum, fromtel, smsto
+
+    ip = sp.checkIp(smstotag)
+    print ip
