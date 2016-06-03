@@ -83,18 +83,23 @@ import glob
 import re
 from configobj import ConfigObj,ConfigObjError
 from seqdiag import parser, builder, drawer
+from time import gmtime, strftime
+import logging
 
 #add user defined lib
 sys.path.append('./lib')
 from SipParser import SipParser
-
+from logConf import logConf
 path = os.path.dirname(os.path.realpath(__file__))
 
 
 
 class flowParser():
     def __init__(self):
+
         try:
+            self.timestamp = strftime("%Y_%m_%d_%H_%M_%S", gmtime())
+            self.logpath = './' + str(self.timestamp) + '.log'
             configfile = path + '/config.ini'
             config = ConfigObj(configfile, file_error=True)
             self.config = config
@@ -105,13 +110,19 @@ class flowParser():
             self.receivertags =  config['sprd']['receivertags']
             self.siptags = config['sprd']['siptags']
             self.datalentags = config['sprd']['datalentags']
+            self.loglevel =  config['logging']['loglevel']
+
+            #have to set loglevel to interger...
+            self.logger = logConf(logpath=self.logpath, debuglevel=logging.getLevelName(self.loglevel))
+            self.sipparser = SipParser(configpath='./')
+
 
             self.files = dict()
             self.files['log'] = config['files']['log']
-            print self.files['log']
+            self.logger.logger.debug('log file pattern is ' +  self.files['log'])
             logList = glob.glob(self.files['log'])
             if not logList:
-                print 'no log file found.'
+                self.logger.logger.error('no log file found.')
                 return
             self.log = logList[0]
 
@@ -126,7 +137,9 @@ class flowParser():
             #important structure: sipmsgs, is a list with order
             self.sipmsgs = list()
 
-            self.sipparser = SipParser(configpath='./')
+
+
+
 
             #reg type
             self.regtype = 'udp'
@@ -149,7 +162,11 @@ class flowParser():
 
 
         except (ConfigObjError, IOError) as e:
-             print('Could not read "%s": %s' % (configfile, e))
+             print 'Could not read "%s": %s' % (configfile, e)
+
+
+    def findmainlog(self, path):
+        pass
 
     def getPattern(self, taglist):
         if taglist :
@@ -163,7 +180,7 @@ class flowParser():
                 pattern += taglist
             return pattern
         else:
-            print 'tags is empty'
+            self.logger.logger.error('tags is empty')
             return None
 
     def getRegType(self, line):
@@ -176,13 +193,13 @@ class flowParser():
             self.regtype = 'udp'
         else:
             self.regtype = 'tcp'
-        print 'regtype is ' + self.regtype
+        self.logger.logger.info('regtype is ' + self.regtype)
 
 
     def getSendSip(self,line,lineno):
         senddatalen =  self.getSendLen(line)
         if not senddatalen:
-            print 'no recv data len in line ' + str(lineno)
+            self.logger.logger.error('no recv data len in line ' + str(lineno))
             return
 
         #search backward
@@ -193,7 +210,7 @@ class flowParser():
         #log may delay
         #NOTE: need to find pattern 'data length: 400' first
         datalenanchor = self.datalentags + str(senddatalen)
-        print 'data anchor is ' + datalenanchor
+        self.logger.logger.info('data anchor is ' + datalenanchor)
         while dataindex >= 0:
             if datalenanchor not in self.loglines[dataindex]:
                 dataindex = dataindex - 1
@@ -204,7 +221,7 @@ class flowParser():
         while searchstart >= dataindex:
             if self.siptags in self.loglines[searchstart]:
                 found +=1
-                print 'found send siptags in ' + str(searchstart) + ', found num is ' + str(found)
+                self.logger.logger.info('found send siptags in ' + str(searchstart) + ', found num is ' + str(found))
                 if found == 1:
                     end =  searchstart
                     searchstart = searchstart - 1
@@ -218,7 +235,7 @@ class flowParser():
             else:
                 searchstart = searchstart - 1
         with open(self.lemonlog, 'a+') as llog:
-            print start, end
+            self.logger.logger.info('dump line from ' + str(start) + ' to ' + str(end))
             sendsip = dict()
             sendsip['send'] = True
             sendsip['lineno'] = lineno
@@ -233,7 +250,7 @@ class flowParser():
     def getRecvSip(self,line, lineno):
         recvdatalen = self.getRecvLen(line)
         if not recvdatalen:
-            print 'no recv data len in line ' + str(lineno)
+            self.logger.logger.error('no recv data len in line ' + str(lineno))
             return
         #search forward
         #we have to search two siptags and write the lines between the two tags
@@ -245,7 +262,7 @@ class flowParser():
         #log may delay
         #NOTE: need to find pattern 'data length: 400' first
         datalenanchor = self.datalentags + str(recvdatalen)
-        print 'data anchor is ' + datalenanchor
+        self.logger.logger.info('data anchor is ' + datalenanchor)
         while dataindex >= 0:
             if datalenanchor not in self.loglines[dataindex]:
                 dataindex = dataindex + 1
@@ -256,7 +273,7 @@ class flowParser():
         while searchstart <=  len(self.loglines):
             if self.siptags in self.loglines[searchstart]:
                 found += 1
-                print 'found recv siptags in ' + str(searchstart) + ', found num is ' + str(found)
+                self.logger.logger.info('found recv siptags in ' + str(searchstart) + ', found num is ' + str(found))
                 if found == 1:
                     start = searchstart
                     searchstart += 1
@@ -271,7 +288,7 @@ class flowParser():
             else:
                 searchstart += 1
         with open(self.lemonlog, 'a+') as llog:
-            print start, end
+            self.logger.logger.info('dump line from ' + str(start) + ' to ' + str(end))
             recvsip = dict()
             recvsip['send'] = False
             recvsip['msg'] = list()
@@ -286,15 +303,15 @@ class flowParser():
     def getFlow(self):
         #rePattern = r'' + 'fsm(.*)' + ' | \[TIMER.*\]' + '|recv.*data' + '| process request' + '|process response'
         lemonpattern = self.getPattern(self.lemontags)
-        print 'lemon pattern is ' + lemonpattern
+        self.logger.logger.info('lemon pattern is ' + lemonpattern)
         if not lemonpattern:
-            print 'lemonpattern is none!'
+            self.logger.logger.error('lemonpattern is none!')
             return
         sprdPattern = re.compile(lemonpattern)
         senderpattern = re.compile(r'' + self.sendertags)
         receiverpattern = re.compile(r'' +  self.receivertags)
 
-        print "all output will be redirected to " + self.lemonlog
+        self.logger.logger.info("all output will be redirected to " + self.lemonlog)
         with open(self.log) as logfile:
             for lineno, line in enumerate(logfile):
                 self.getRegType(line)
@@ -344,7 +361,7 @@ class flowParser():
 
         #FIXME: the 250 is some kind of exp value
         if recvdatalen < 250:
-            print 'receiving non-SIP msg, len is ' + str(recvdatalen)
+            self.logger.logger.warn('receiving non-SIP msg, len is ' + str(recvdatalen))
             return None
         else:
             return recvdatalen
@@ -356,7 +373,7 @@ class flowParser():
         senddatalen = self.getDataLen(sendpattern, line)
         #FIXME: the 250 is some kind of exp value
         if senddatalen < 250:
-            print 'send non-SIP msg , len is ' + str(senddatalen)
+            self.logger.logger.warn('send non-SIP msg , len is ' + str(senddatalen))
             return  None
         else:
             return senddatalen
@@ -367,7 +384,7 @@ class flowParser():
         matchpattern = requestpattern.match(line)
 
         if not matchpattern:
-            print "not match method line", line, requestpattern
+            self.logger.logger.info("not match method line " + line + requestpattern)
             return None
 
         method = matchpattern.group(1)
@@ -378,7 +395,7 @@ class flowParser():
         matchpattern = rsppattern.match(line)
 
         if not matchpattern:
-            print "not match rsp pattern in  line", line, rsppattern
+            self.logger.logger.info("not match rsp pattern in  line " + line + rsppattern)
             return None
 
         rspmatch = matchpattern.group(1)
@@ -395,7 +412,7 @@ class flowParser():
         recvdatalen = self.getRecvLen(line)
 
         if not recvdatalen:
-            print 'no recv data len in line' + str(lineno)
+            self.logger.logger.error('no recv data len in line' + str(lineno))
             return
 
         #start to search forward
@@ -407,11 +424,11 @@ class flowParser():
             waterline = self.lemonlines[start]
             if requesttags in waterline:
                 #is request
-                print start,waterline, ' recv req'
+                self.logger.logger.info(start,waterline, ' recv req')
 
                 method = self.getReqMethod(waterline)
                 if not method:
-                    print 'recv direction no request method in line ' + str(lineno)
+                    self.logger.logger.info('recv direction no request method in line ' + str(lineno))
                     return
                 self.diagstr += "UE <- NETWORK [label = \"" + method + " No." + str(lineno)+"\"];\n"
 
@@ -419,11 +436,11 @@ class flowParser():
                 break;
             if responsetags in waterline:
                 #is response
-                print start,waterline, ' recv rsp'
+                self.logger.logger.info(start,waterline, ' recv rsp')
 
                 rspstr = self.getRspCode(waterline)
                 if not rspstr:
-                    print 'recv direction no rsp in line ' + str(lineno)
+                    self.logger.logger.info('recv direction no rsp in line ' + str(lineno))
                     return
 
                 self.diagstr += "UE <- NETWORK [label = \"" + rspstr + " No." + str(lineno)+"\"];\n"
@@ -442,39 +459,39 @@ class flowParser():
         line = self.lemonlines[lineno]
         senddatalen = self.getSendLen(line)
         if not senddatalen:
-            print 'no send data len in line' + str(lineno)
+            self.logger.logger.info('no send data len in line' + str(lineno))
             return
         #start to search backward
         start = lineno - 1
         while start >= 0:
             waterline = self.lemonlines[start]
             if timeretags in waterline:
-                print start, "retransmit previous non-invite request"
+                self.logger.logger.info(start, "retransmit previous non-invite request")
                 self.diagstr += "UE -> NETWORK [label = \"retrans non-invite req" + " No." + str(lineno)+"\"];\n"
                 break;
             if timeratags in waterline:
-                print start, "retransmit previous invite request"
+                self.logger.logger.info(start, "retransmit previous invite request")
                 self.diagstr += "UE -> NETWORK [label = \"retrans invite req" + " No." + str(lineno)+"\"];\n"
                 break;
 
             if requesttags in waterline:
                 #is request
-                print start,waterline, ' send req'
+                self.logger.logger.info(start,waterline, ' send req')
                 #get request method
 
                 method = self.getReqMethod(waterline)
                 if not method:
-                    print 'send direction no request method in line ' + str(lineno)
+                    self.logger.logger.info('send direction no request method in line ' + str(lineno))
                     return
                 self.diagstr += "UE -> NETWORK [label = \"" + method + " No." + str(lineno)+"\"];\n"
                 break
             if responsetags in waterline:
                 #is response
-                print start,waterline, ' send rsp'
+                self.logger.logger.info(start,waterline, ' send rsp')
 
                 rspstr = self.getRspCode(waterline)
                 if not rspstr:
-                    print 'send direction no rsp in line ' + str(lineno)
+                    self.logger.logger.info('send direction no rsp in line ' + str(lineno))
                     return
 
                 self.diagstr += "UE -> NETWORK [label = \"" + rspstr + " No." + str(lineno)+"\"];\n"
@@ -517,9 +534,9 @@ class flowParser():
         :return:
         '''
         for sipindex, sip in enumerate(self.diagsips):
-            print 'request index is ' + str(sipindex)
+            self.logger.logger.debug('request index is ' + str(sipindex))
             for key,value in sip.iteritems():
-                print str(key) + ':' + str(value)
+                self.logger.logger.debug(str(key) + ':' + str(value))
 
     def assembleDiagStrOld(self,diaginfo):
         #sample UE -> NETWORK [label = "200 OK", note = "Cseq 1 REGISTER\n lineno: 888"];
@@ -528,7 +545,6 @@ class flowParser():
         else:
             direct = '<-'
 
-        #TODO: UE and NETWORK maybe need to change
         basedirect =  "UE " + direct + " NETWORK "
         label =  "[label = \"" + diaginfo['label'] + "\""
 
@@ -545,7 +561,6 @@ class flowParser():
 
     def findUE(self):
         for sipindex, sip in enumerate(self.diagsips):
-            print sipindex, sip['label'], sip['cseq']
             if 'REGISTER' in sip['cseq']:
 
                 # use cseq:.*REGISTER to tell
@@ -579,7 +594,7 @@ class flowParser():
 
 
         if self.uenum:
-            print 'ue name is '+ elements[self.uenum]
+            self.logger.logger.info('ue name is '+ elements[self.uenum])
 
 
         #1. element order
@@ -589,13 +604,12 @@ class flowParser():
         right = ''
         direct = ''
 
-        #TODO:change the order of the elements
 
         #add one more loop to fix REGISTER req/rsp's mo and mt
         for sipindex, sip in enumerate(self.diagsips):
             callid = sip['callid']
             if 'REGISTER' in sip['cseq'] and sip['pasonum']:
-                print 'use P-Associate-URI'+ str(sip['pasonum']) + ' for register ' + sip['fromnum']
+                self.logger.logger.info('use P-Associate-URI'+ str(sip['pasonum']) + ' for register ' + sip['fromnum'])
                 self.callidmapmomt[callid]['mo'] = sip['pasonum']
 
 
@@ -645,9 +659,9 @@ class flowParser():
 
     def dumpcallidmaping(self):
         for callid,momt in self.callidmapmomt.iteritems():
-            print 'callid is ' + callid
+            self.logger.logger.debug('callid is ' + callid)
             for key,value in momt.iteritems():
-                print 'key is '+ key + ', value is ' + value
+                self.logger.logger.debug('key is '+ key + ', value is ' + value)
 
 
     def analyzeSip(self):
@@ -699,7 +713,7 @@ class flowParser():
         #print 'callid num is ' + str(len(self.callids))
         #dump all the entities
         for index, entity in enumerate(self.entities):
-            print entity
+            self.logger.logger.debug('participant_' + str(index) + ' is ' + entity)
 
         self.dumpcallidmaping()
 
@@ -734,7 +748,7 @@ class flowParser():
 
                 method = sipparser.getMethod(header)
                 if method:
-                    print 'found method ' + method  + ' in ' + str(index) + ' sip msg'
+                    self.logger.logger.debug('found method ' + method  + ' in ' + str(index) + ' sip msg')
                     diaginfo['lineno'] = lineno
                     diaginfo['label'] =  method
                     diaginfo['timestamp'] = timestamp
@@ -754,7 +768,7 @@ class flowParser():
 
                 status = sipparser.getStatusLine(header)
                 if status:
-                    print 'found status ' + status + ' in ' +  str(index) + ' sip msg'
+                    self.logger.logger.debug('found status ' + status + ' in ' +  str(index) + ' sip msg')
                     diaginfo['lineno'] = lineno
                     diaginfo['label'] = status
                     diaginfo['timestamp'] = timestamp
@@ -789,10 +803,9 @@ class flowParser():
                         diaginfo['pasonum'] = pasonum
                         continue
 
-                print 'call getcseq'
                 cseq = sipparser.getCSeq(header)
                 if cseq:
-                    print 'found cseq ' + cseq  + ' in ' + str(index) + ' sip msg'
+                    self.logger.logger.debug('found cseq ' + cseq  + ' in ' + str(index) + ' sip msg')
                     diaginfo['cseq'] = cseq
                     continue
 
@@ -817,7 +830,7 @@ class flowParser():
         diagram_definition += self.diagstr
         diagram_definition += u""" }\n"""
         # generate the diag string and draw it
-        print diagram_definition
+        self.logger.logger.info('seqdiag is ' + diagram_definition)
         tree = parser.parse_string(diagram_definition)
         diagram = builder.ScreenNodeBuilder.build(tree)
         pngname = self.log.split('.')[0] + '.png'

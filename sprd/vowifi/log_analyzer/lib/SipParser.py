@@ -7,7 +7,9 @@ import re
 from configobj import ConfigObj,ConfigObjError
 
 path = os.path.dirname(os.path.realpath(__file__))
-
+sys.path.append('./')
+from logConf import logConf
+import logging
 
 class SipParser():
     def __init__(self, configpath='..'):
@@ -42,43 +44,45 @@ class SipParser():
             self.sipcompact['Allow-Events'] = 'u'
             self.sipcompact['Via'] = 'v'
 
+            #singleton logger
+            self.logger = logConf()
 
         except (ConfigObjError, IOError) as e:
-             print('Could not read "%s": %s' % (configfile, e))
+             self.logger.logger.error('Could not read "%s": %s' % (configfile, e))
 
     def getMethod(self, line):
         reqpattern = re.compile(self.reqline)
         match = reqpattern.search(line)
         if not match:
-            print 'no req in line ' + line
+            self.logger.logger.debug('no req in line ' + line)
             return None
         method = match.group(1).strip()
-        print method
+        self.logger.logger.info('method is ' + method)
         return method
 
     def getStatusLine(self, line):
         rsppattern = re.compile(self.rspline)
         match = rsppattern.search(line)
         if not match:
-            print 'no rsp in line ' + line
+            self.logger.logger.debug('no rsp in line ' + line)
             return None
         status = match.group(1).strip()
-        print status
+        self.logger.logger.info('status line is ' + status)
         return status
 
     def getCSeq(self, line):
         cseqpattern = re.compile(self.cseqline)
         match = cseqpattern.search(line)
         if not match:
-            print 'no cseq in line ' + line
+            self.logger.logger.debug('no cseq in line ' + line)
             return None
         cseq = match.group(1).strip()
-        print cseq
+        self.logger.logger.info('CSeq is ' + cseq)
         return cseq
 
     def checkCompact(self, source, target):
         if source == target or  (target in self.sipcompact and source == self.sipcompact[target]):
-            print 'found header ' + target
+            self.logger.logger.info('found header ' + target)
             return True
         else:
             return False
@@ -94,7 +98,7 @@ class SipParser():
         if self.checkCompact(header, headername):
             return content
         else:
-            print 'no ' + headername + ' in line ' + line
+            self.logger.logger.debug('no ' + headername + ' in line ' + line)
             return None
 
 
@@ -103,14 +107,14 @@ class SipParser():
         match = headerpattern.search(line)
         #print self.headerline, line
         if not match:
-            print 'no rsp in line ' + line
+            self.logger.logger.debug('no rsp in line ' + line)
             return None
         header = match.group(1)
         content = match.group(2)
         pair = dict()
         pair['header'] = header
         pair['content'] = content.strip()
-        print 'header is ' + pair['header'] + ', content is ' + pair['content']
+        self.logger.logger.info('header is ' + pair['header'] + ', content is ' + pair['content'])
         return pair
 
     def getPasoUri(self, line):
@@ -125,13 +129,14 @@ class SipParser():
         pasouris = match.group(1).strip()
         paso = pasouris.split(',')[0]
         pasonum = self.getNumber(paso)
+        self.logger.logger.info('P-Associate-URI is ' + str(pasonum))
         return pasonum
 
     def getNumber(self, string):
         numpattern = re.compile(self.numpattern)
         match = numpattern.search(string)
         if not match:
-            print 'no num in string ' + string
+            self.logger.logger.debug('no num in string ' + string)
             return None
 
         num = match.group(2).strip()
@@ -143,11 +148,11 @@ class SipParser():
         ippattern = re.compile(self.ippattern)
         match = ippattern.search(string)
         if not match:
-            print 'no ip in string ' + string
+            #self.logger.logger.debug('no ip in string ' + string)
             return False
         else:
             ip = match.group(0).strip()
-            print ip
+            #self.logger.logger.debug('find ip: ' + ip)
             return True
 
 if __name__ == '__main__':
