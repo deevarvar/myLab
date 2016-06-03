@@ -545,11 +545,14 @@ class flowParser():
 
     def findUE(self):
         for sipindex, sip in enumerate(self.diagsips):
-            if sip['isregister']:
-                #TODO/FIXME: identify REGISTER
+            print sipindex, sip['label'], sip['cseq']
+            if 'REGISTER' in sip['cseq']:
+
                 # use cseq:.*REGISTER to tell
-                print 'ignore REGISTER msg'
-                pass
+                #200 OK for REGISTER will include P-Associate-URI
+                if sip['pasonum']:
+                    self.uenum = sip['pasonum']
+                    break
 
             else:
                 #from the direction, can tell the ue's num
@@ -588,37 +591,32 @@ class flowParser():
 
         #TODO:change the order of the elements
 
+        #add one more loop to fix REGISTER req/rsp's mo and mt
+        for sipindex, sip in enumerate(self.diagsips):
+            callid = sip['callid']
+            if 'REGISTER' in sip['cseq'] and sip['pasonum']:
+                print 'use P-Associate-URI'+ str(sip['pasonum']) + ' for register ' + sip['fromnum']
+                self.callidmapmomt[callid]['mo'] = sip['pasonum']
+
 
         for sipindex, sip in enumerate(self.diagsips):
-            #TODO: add logic to check REGISTER
             callid = sip['callid']
-            if sip['isregister']:
-                #TODO/FIXME: identify REGISTER in right logic
-                # use cseq:.*REGISTER to tell
-                print 'need to probe the REGISTER msg'
-                #always is send
+
+            if sip['send']:
+                #NOTE: space is important
                 direct = ' -> '
+                #find left/right by callid
+
                 leftnum = self.callidmapmomt[callid]['mo']
                 rightnum = self.callidmapmomt[callid]['mt']
                 left = elements[leftnum]
                 right = elements[rightnum]
-
             else:
-                if sip['send']:
-                    #NOTE: space is important
-                    direct = ' -> '
-                    #find left/right by callid
-
-                    leftnum = self.callidmapmomt[callid]['mo']
-                    rightnum = self.callidmapmomt[callid]['mt']
-                    left = elements[leftnum]
-                    right = elements[rightnum]
-                else:
-                    direct = ' <- '
-                    leftnum = self.callidmapmomt[callid]['mo']
-                    rightnum = self.callidmapmomt[callid]['mt']
-                    left = elements[leftnum]
-                    right = elements[rightnum]
+                direct = ' <- '
+                leftnum = self.callidmapmomt[callid]['mo']
+                rightnum = self.callidmapmomt[callid]['mt']
+                left = elements[leftnum]
+                right = elements[rightnum]
 
             basedirect =  left + direct + right
             label =  " [label = \"" + sip['label'] + "\""
@@ -677,7 +675,7 @@ class flowParser():
             momt = dict()
             #IMPORTANT: record caller and callee via call-id
             if callid not in self.callidmapmomt:
-                #FIXME/TODO: identify REGISTER in right logic
+                #NOTE: here IMPU is set as mo
                 if sip['isregister']:
                     momt['mo'] =  self.getRealNum(fromnum)
                     momt['mt'] = 'NETWORK'
@@ -729,6 +727,7 @@ class flowParser():
             diaginfo['isinvite'] = False
             diaginfo['isregister'] = False
             diaginfo['issubs'] = False
+            diaginfo['pasonum'] = ''
             diaginfo['send'] = sipobj['send']
             for msgindex,header in enumerate(sip):
                 #get reqeust line/status line, other header
@@ -753,32 +752,6 @@ class flowParser():
                         diaginfo['issubs'] = True
                         continue
 
-                if 'callid' not in diaginfo:
-                    callid = sipparser.getHeaderContent(header, 'Call-ID')
-                    if callid:
-                        diaginfo['callid'] = callid
-
-                if 'from' not in diaginfo:
-                    fromtag = sipparser.getHeaderContent(header, 'From')
-                    if fromtag:
-                        diaginfo['from'] = fromtag
-                        num = sipparser.getNumber(fromtag)
-                        diaginfo['fromnum'] = num
-
-                if 'to' not in diaginfo:
-                    totag = sipparser.getHeaderContent(header, 'To')
-                    if totag:
-                        diaginfo['to'] = totag
-                        num = sipparser.getNumber(totag)
-                        diaginfo['tonum'] = num
-
-
-                cseq = sipparser.getCSeq(header)
-                if cseq:
-                    print 'found cseq ' + cseq  + ' in ' + str(index) + ' sip msg'
-                    diaginfo['cseq'] = cseq
-                    continue
-
                 status = sipparser.getStatusLine(header)
                 if status:
                     print 'found status ' + status + ' in ' +  str(index) + ' sip msg'
@@ -787,6 +760,43 @@ class flowParser():
                     diaginfo['timestamp'] = timestamp
                     #self.diagstr += "UE " + direct + " NETWORK [label = \"" + status + " No." + str(lineno)+"\"];\n"
                     continue
+
+                if 'callid' not in diaginfo:
+                    callid = sipparser.getHeaderContent(header, 'Call-ID')
+                    if callid:
+                        diaginfo['callid'] = callid
+                        continue
+
+                if 'from' not in diaginfo:
+                    fromtag = sipparser.getHeaderContent(header, 'From')
+                    if fromtag:
+                        diaginfo['from'] = fromtag
+                        num = sipparser.getNumber(fromtag)
+                        diaginfo['fromnum'] = num
+                        continue
+
+                if 'to' not in diaginfo:
+                    totag = sipparser.getHeaderContent(header, 'To')
+                    if totag:
+                        diaginfo['to'] = totag
+                        num = sipparser.getNumber(totag)
+                        diaginfo['tonum'] = num
+                        continue
+
+                if not diaginfo['pasonum']:
+                    pasonum = sipparser.getPasoUri(header)
+                    if pasonum:
+                        diaginfo['pasonum'] = pasonum
+                        continue
+
+                print 'call getcseq'
+                cseq = sipparser.getCSeq(header)
+                if cseq:
+                    print 'found cseq ' + cseq  + ' in ' + str(index) + ' sip msg'
+                    diaginfo['cseq'] = cseq
+                    continue
+
+
 
             #add function to construct the diagram string
             self.diagsips.append(diaginfo)

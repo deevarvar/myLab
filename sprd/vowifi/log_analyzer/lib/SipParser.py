@@ -21,6 +21,7 @@ class SipParser():
             self.cseqline = config['sipParser']['cseqline']
             self.numpattern = config['sipParser']['numpattern']
             self.ippattern = config['sipParser']['ippattern']
+            self.pasopattern = config['sipParser']['pasopattern']
 
             #define compact headers
             #http://www.cs.columbia.edu/sip/compact.html
@@ -50,7 +51,7 @@ class SipParser():
         match = reqpattern.search(line)
         if not match:
             print 'no req in line ' + line
-            return
+            return None
         method = match.group(1).strip()
         print method
         return method
@@ -60,7 +61,7 @@ class SipParser():
         match = rsppattern.search(line)
         if not match:
             print 'no rsp in line ' + line
-            return
+            return None
         status = match.group(1).strip()
         print status
         return status
@@ -70,7 +71,7 @@ class SipParser():
         match = cseqpattern.search(line)
         if not match:
             print 'no cseq in line ' + line
-            return
+            return None
         cseq = match.group(1).strip()
         print cseq
         return cseq
@@ -103,7 +104,7 @@ class SipParser():
         #print self.headerline, line
         if not match:
             print 'no rsp in line ' + line
-            return
+            return None
         header = match.group(1)
         content = match.group(2)
         pair = dict()
@@ -112,12 +113,26 @@ class SipParser():
         print 'header is ' + pair['header'] + ', content is ' + pair['content']
         return pair
 
+    def getPasoUri(self, line):
+        pasopattern = re.compile(self.pasopattern)
+        match = pasopattern.search(line)
+        if not match:
+            return None
+        #P-Associate-URI is comma seperated or a list of P-Associate-URI
+        #1.P-Associated-URI: <sip:+11234567890@TEST.3GPP.COM>,<tel:+11234567890>
+        #2. P-Associated-URI: <sip:+11234567890@TEST.3GPP.COM>
+        #   P-Associated-URI: <tel:+11234567890>
+        pasouris = match.group(1).strip()
+        paso = pasouris.split(',')[0]
+        pasonum = self.getNumber(paso)
+        return pasonum
+
     def getNumber(self, string):
         numpattern = re.compile(self.numpattern)
         match = numpattern.search(string)
         if not match:
             print 'no num in string ' + string
-            return
+            return None
 
         num = match.group(2).strip()
         num = num.split('@')[0]
@@ -169,3 +184,7 @@ if __name__ == '__main__':
 
     ip = sp.checkIp(smstotag)
     print ip
+
+    pasotag = "P-Associated-URI: <sip:+11234567890@TEST.3GPP.COM>,<tel:+11234567890>"
+    paso = sp.getPasoUri(pasotag)
+    print paso
