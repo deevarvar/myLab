@@ -968,7 +968,12 @@ class flowParser():
 
     def drawLemonDiag(self):
         diagram_definition = u"""seqdiag {\n"""
-
+        #Set fontsize.
+        diagram_definition += "default_fontsize = 16;\n"
+        #Do not show activity line
+        diagram_definition += "activation = none;\n"
+        #Numbering edges automaticaly
+        diagram_definition +="autonumber = True;\n"
         diagram_definition += self.diagstr
         diagram_definition += u""" }\n"""
         # generate the diag string and draw it
