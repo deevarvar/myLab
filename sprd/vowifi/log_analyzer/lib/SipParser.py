@@ -24,6 +24,9 @@ class SipParser():
             self.numpattern = config['sipParser']['numpattern']
             self.ippattern = config['sipParser']['ippattern']
             self.pasopattern = config['sipParser']['pasopattern']
+            self.sdppattern = config['sipParser']['sdppattern']
+            self.directpattern = config['sipParser']['directpattern']
+            self.mediapattern = config['sipParser']['mediapattern']
 
             #define compact headers
             #http://www.cs.columbia.edu/sip/compact.html
@@ -155,6 +158,48 @@ class SipParser():
             #self.logger.logger.debug('find ip: ' + ip)
             return True
 
+    def sdpParser(self, line):
+        sdppattern = re.compile(self.sdppattern)
+        match = sdppattern.search(line)
+        if not match:
+            return None
+        type = match.group(1).strip()
+        value = match.group(2).strip()
+        pair = dict()
+        pair['type'] = type
+        pair['value'] = value
+        self.logger.logger.info('header is ' + pair['type'] + ', content is ' + pair['value'])
+        return pair
+
+    def getmedia(self, value):
+        '''
+         m=audio 37042 RTP/AVP 104 0 8 116 103 9 101
+        :param value: the string after "m="
+        :return:
+        '''
+        mediapattern = re.compile(self.mediapattern)
+        match = mediapattern.search(value)
+        if not match:
+            return None
+        pair = dict()
+        pair['mtype'] = match.group(1).strip()
+        #<port>/<number of ports>
+        pair['mport'] = match.group(2).strip().split('/')[0]
+        pair['mproto'] = match.group(3).strip()
+        pair['mfmt'] = match.group(4).strip()
+        self.logger.logger.info('media type is ' + pair['mtype'] + ', port is ' + pair['mport'])
+        return pair
+
+
+    def checksdpDirect(self, line):
+        directpattern = re.compile(self.directpattern)
+        match = directpattern.search(line)
+        if not match:
+            return False
+        else:
+            return True
+
+
 if __name__ == '__main__':
     #TODO write own ut function
     reqline = "04-17 23:21:27.697  1681  2968 D LEMON   : REGISTER sip:ims.mnc872.mcc405.3gppnetwork.org SIP/2.0"
@@ -193,3 +238,13 @@ if __name__ == '__main__':
     pasotag = "P-Associated-URI: <sip:+11234567890@TEST.3GPP.COM>,<tel:+11234567890>"
     paso = sp.getPasoUri(pasotag)
     print paso
+
+    sdptag1 = "03-18 18:47:48.263  2617  3010 D LEMON   : m=audio 37042 RTP/AVP 104 0 8 116 103 9 101"
+    sdptag2 = "03-18 18:47:48.263  2617  3010 D LEMON   : v=0"
+    mtag = sp.sdpParser(sdptag1)
+    sp.getmedia(mtag['value'])
+    sp.sdpParser(sdptag2)
+
+
+    print sp.checksdpDirect('recvonl')
+    print sp.checksdpDirect('inactive')

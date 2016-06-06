@@ -22,6 +22,7 @@ TODO:
 #  2.3 prepare the field parser
 #  2.4 store all import field into array and then parse all UE.
 #     record INVITE's call-id
+#     FIXME: add more logic to check like CSeq and call-id
 
 
 #3. add a basic ui
@@ -199,7 +200,7 @@ class flowParser():
     def getSendSip(self,line,lineno):
         senddatalen =  self.getSendLen(line)
         if not senddatalen:
-            self.logger.logger.error('no recv data len in line ' + str(lineno))
+            self.logger.logger.error('no send data len in line ' + str(lineno))
             return
 
         #search backward
@@ -241,7 +242,7 @@ class flowParser():
             sendsip['lineno'] = lineno
             sendsip['timestamp'] = timestamp
             sendsip['msg'] = list()
-            for pindex in range(start+1,end):
+            for pindex in range(start,end+1):
                 sendsip['msg'].append(self.loglines[pindex])
                 llog.write(self.loglines[pindex])
         self.sipmsgs.append(sendsip)
@@ -295,7 +296,7 @@ class flowParser():
             recvsip['lineno'] = lineno
             recvsip['timestamp'] = timestamp
             #record req line and other fields here
-            for pindex in range(start+1,end):
+            for pindex in range(start,end+1):
                 recvsip['msg'].append(self.loglines[pindex])
                 llog.write(self.loglines[pindex])
         self.sipmsgs.append(recvsip)
@@ -534,9 +535,9 @@ class flowParser():
         :return:
         '''
         for sipindex, sip in enumerate(self.diagsips):
-            self.logger.logger.debug('request index is ' + str(sipindex))
+            self.logger.logger.error('request index is ' + str(sipindex))
             for key,value in sip.iteritems():
-                self.logger.logger.debug(str(key) + ':' + str(value))
+                self.logger.logger.error(str(key) + ':' + str(value))
 
     def assembleDiagStrOld(self,diaginfo):
         #sample UE -> NETWORK [label = "200 OK", note = "Cseq 1 REGISTER\n lineno: 888"];
@@ -632,19 +633,40 @@ class flowParser():
                 left = elements[leftnum]
                 right = elements[rightnum]
 
+
+            #some color or string decoration
+            #TODO: add seperator line
+            sdpstring = ""
+            labelcolor = ""
+            notecolor =  ""
+
+
+
             basedirect =  left + direct + right
             label =  " [label = \"" + sip['label'] + "\""
 
-            timestamp = "\"time: " + sip['timestamp'] + "\n"
-            cseq = " CSeq: " + sip['cseq'] + '\n'
+            timestamp = "\"Time: " + sip['timestamp'] + "\n"
+            if sip['issdp'] and sip['isinvite'] :
+                action = "Note: " +  sip['action'] + '\n'
+            else:
+                action = ''
+
+            if sip['issdp']:
+                sdpstring = " with sdp"
+            elif sip['isinvite']:
+                sdpstring = " without sdp"
+                labelcolor = ", color=red"
+
+            cseq = " CSeq: " + sip['cseq'] + sdpstring + '\n'
             #callid = " Call-ID: "+ sip['callid'] + '\n'
             fromtag = " From: " + sip['fromnum'] + '\n'
             totag = " To: " + sip['tonum'] + '\n'
+            callid = " Call-ID: " + sip['callid'] + '\n'
             lineno = " log lineno: " + str(sip['lineno']) + "\""
 
-            note = ", note = " + timestamp + cseq + fromtag + totag + lineno
+            note = ", note = " + timestamp + action + cseq + fromtag + totag + callid +lineno
 
-            label = label + note + "];\n"
+            label = label + note + labelcolor + "];\n"
             #print label
             self.diagstr +=  basedirect + label
 
@@ -664,6 +686,78 @@ class flowParser():
                 self.logger.logger.debug('key is '+ key + ', value is ' + value)
 
 
+    def analyzeSdp(self, sip):
+        #set default value
+        sip['isvideo'] = False
+        sip['adirect'] = 'sendrecv'
+        sip['vdirect'] = 'sendrecv'
+
+
+        #FIXME: 1. only should scan invite
+        #       2. record the same callerid's action flow.
+        if sip['sdp']:
+            sipparser = self.sipparser
+            for index, sdpline in enumerate(sip['sdp']):
+                #1. check media:          m=audio 37042 RTP/AVP 104 0 8 116 103 9 101
+                #2. check media redirect: a=sendrecv
+                sdppair = sipparser.sdpParser(sdpline)
+                if sdppair:
+                    type = sdppair['type']
+                    value = sdppair['value']
+                    if type == 'm':
+                        mediadict = sipparser.getmedia(value)
+                        if mediadict['mtype'] == 'video':
+                            self.logger.logger.debug('found video')
+                            sip['isvideo'] = True
+                            sip['vport'] = mediadict['mport']
+                        else:
+                            sip['isvideo'] =  False
+                            sip['aport'] = mediadict['mport']
+
+                    elif type == 'a':
+                        if sipparser.checksdpDirect(value):
+                            #assume that the voice attribute comes first and video later
+                            if sip['isvideo'] :
+                                self.logger.logger.debug('video direct is ' + value)
+                                sip['vdirect'] = value
+                            else:
+                                sip['adirect'] = value
+                                self.logger.logger.debug('audio direct is ' + value)
+                    else:
+                        #other value.
+                        pass
+
+            #now get the conclusion: voice/video/hold/resume
+
+            #FIXME/TODO: should have the sdp nego logic
+            if sip['isvideo'] and sip['vport'] != str(0):
+                '''
+                if sip['vdirect'] == 'sendonly':
+                    sip['action'] = 'Hold '
+                elif sip['vdirect'] == 'recvonly':
+                    sip['action'] = 'Resume '
+                elif sip['vdirect'] == 'sendrecv':
+                    sip['action'] = 'Start '
+                else:
+                    sip['action'] = 'Inactive '
+                '''
+                sip['action'] = 'Video Call'
+            else:
+                '''
+                if sip['adirect'] == 'sendonly':
+                    sip['action'] = 'Hold '
+                elif sip['adirect'] == 'recvonly':
+                    sip['action'] = 'Resume '
+                elif sip['adirect'] == 'sendrecv':
+                    sip['action'] = 'Start '
+                else:
+                    sip['action'] = 'Inactive '
+                '''
+                sip['action'] = 'Voice Call'
+
+
+
+
     def analyzeSip(self):
         #get all UE's phone number,
         #check if reinivte does not have sdp
@@ -674,12 +768,17 @@ class flowParser():
         # 3. TODO: MESSAGE should be parsed
         # 4: SUBSCRIBE/NOTIFY
         # 5: REGISTER
+        # 6: sdp should be parsed
+        # 7: tell B2BUA
+
         for sipindex, sip in enumerate(self.diagsips):
 
             fromnum = sip['fromnum']
             tonum = sip['tonum']
             callid = sip['callid']
 
+            #f:<sip:10.56.4.9>;tag=6cV1ACafY7ic..fA
+            #from can be ip
             if self.sipparser.checkIp(fromnum) == False:
                 if fromnum not in self.entities:
                     self.entities.append(fromnum)
@@ -694,12 +793,17 @@ class flowParser():
                     momt['mo'] =  self.getRealNum(fromnum)
                     momt['mt'] = 'NETWORK'
                 elif sip['issubs']:
+                    #NOTIFY, SUBSCRIBE
                     momt['mo'] = self.getRealNum(fromnum)
                     momt['mt'] = 'NETWORK'
+                #FIXME: B2BUA's logic not work here, callid is the same
+                #elif sip['isinvite'] and sip['issdp'] == False:
+                #add special handling for B2BUA's reinvite without sdp
+                #   momt['mo'] = 'NETWORK'
+                #  momt['mt'] = self.getRealNum(tonum)
                 else:
 
                     if sip['send']:
-                        #FIXME: need to add register logic
                         momt['mo'] = self.getRealNum(fromnum)
                         momt['mt'] = self.getRealNum(tonum)
                     else:
@@ -707,6 +811,9 @@ class flowParser():
                         momt['mt'] = self.getRealNum(fromnum)
 
                 self.callidmapmomt[callid] = momt
+
+            #add logic to parser sdp
+            self.analyzeSdp(sip)
 
 
         #print 'entities num is ' + str(len(self.entities))
@@ -740,9 +847,17 @@ class flowParser():
             diaginfo = dict()
             diaginfo['isinvite'] = False
             diaginfo['isregister'] = False
+            diaginfo['issdp'] = False
             diaginfo['issubs'] = False
+            diaginfo['issdp'] = False
             diaginfo['pasonum'] = ''
             diaginfo['send'] = sipobj['send']
+            diaginfo['sdp'] = list()
+
+
+            #sdp record
+            sdpstartindex = 0
+
             for msgindex,header in enumerate(sip):
                 #get reqeust line/status line, other header
 
@@ -752,9 +867,9 @@ class flowParser():
                     diaginfo['lineno'] = lineno
                     diaginfo['label'] =  method
                     diaginfo['timestamp'] = timestamp
-                    #if method is INVITE/OPTIONS/UPDATE/INFO/REFER/MESSAGE, check Call-ID and From, to
-                    if method == 'INVITE' or method == 'OPTIONS' or method == 'UPDATE' \
-                            or method == 'INFO' or method == 'REFER' or method == 'MESSAGE':
+                    #if method is INVITE, check Call-ID and From, to
+                    #OPTIONS/UPDATE/INFO/REFER/MESSAGE behaviour follow Invite's From/To
+                    if method == 'INVITE':
                         diaginfo['isinvite'] = True
                         continue
 
@@ -809,17 +924,35 @@ class flowParser():
                     diaginfo['cseq'] = cseq
                     continue
 
+                contenttype = sipparser.getHeaderContent(header, 'Content-Type')
+                if contenttype:
+                    #sdp's Content-Type is application/sdp
+                    if 'application/sdp' in header:
+                        diaginfo['issdp'] = True
+                        self.logger.logger.debug('found sdp ' + ' in ' + str(index) +  ' sip msg')
 
+                #add logic to record sdp body
+
+                sdppair = sipparser.sdpParser(header)
+                if sdppair:
+                    if sdppair['type'] == 'v':
+                        #record start line
+                        sdpstartindex = msgindex
+
+            if diaginfo['issdp']:
+                diaginfo['sdp'] = sip[sdpstartindex:]
+                #self.logger.logger.debug(diaginfo['sdp']);
 
             #add function to construct the diagram string
             self.diagsips.append(diaginfo)
             #oboselete logic
             #if diaginfo:
                 #self.assembleDiagStrOld(diaginfo)
-        #dump the trim sip
-        self.dumpDiagsip()
+
         #analyze the trim sip
         self.analyzeSip()
+        #dump the trim sip
+        self.dumpDiagsip()
         if self.diagsips:
             self.assembleDiagStr()
 
