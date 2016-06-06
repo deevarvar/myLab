@@ -635,8 +635,11 @@ class flowParser():
 
 
             #some color or string decoration
-            #TODO: add seperator line
+            # session modificaiton should be marked.
+            #TODO: add seperator line for each call process
             sdpstring = ""
+            action = ''
+            mediadirection = ''
             labelcolor = ""
             notecolor =  ""
 
@@ -648,13 +651,18 @@ class flowParser():
             timestamp = "\"Time: " + sip['timestamp'] + "\n"
             if sip['issdp'] and sip['isinvite'] :
                 action = "Note: " +  sip['action'] + '\n'
-            else:
-                action = ''
 
             if sip['issdp']:
                 sdpstring = " with sdp"
+                if sip['vdirect']:
+                    mediadirection += "video: " + sip['vdirect'] + ','
+
+                if sip['adirect']:
+                    mediadirection += 'audio: ' + sip['adirect'] + '\n'
+
             elif sip['isinvite']:
                 sdpstring = " without sdp"
+                #B2BUA's request will be marked
                 labelcolor = ", color=red"
 
             cseq = " CSeq: " + sip['cseq'] + sdpstring + '\n'
@@ -664,7 +672,7 @@ class flowParser():
             callid = " Call-ID: " + sip['callid'] + '\n'
             lineno = " log lineno: " + str(sip['lineno']) + "\""
 
-            note = ", note = " + timestamp + action + cseq + fromtag + totag + callid +lineno
+            note = ", note = " + timestamp + cseq + action + mediadirection + fromtag + totag + callid +lineno
 
             label = label + note + labelcolor + "];\n"
             #print label
@@ -688,14 +696,15 @@ class flowParser():
 
     def analyzeSdp(self, sip):
         #set default value
-        sip['isvideo'] = False
-        sip['adirect'] = 'sendrecv'
-        sip['vdirect'] = 'sendrecv'
+
 
 
         #FIXME: 1. only should scan invite
         #       2. record the same callerid's action flow.
         if sip['sdp']:
+            sip['isvideo'] = False
+            sip['adirect'] = 'sendrecv'
+            sip['vdirect'] = 'sendrecv'
             sipparser = self.sipparser
             for index, sdpline in enumerate(sip['sdp']):
                 #1. check media:          m=audio 37042 RTP/AVP 104 0 8 116 103 9 101
