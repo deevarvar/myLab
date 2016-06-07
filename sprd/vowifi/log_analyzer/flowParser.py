@@ -23,6 +23,10 @@ TODO:
 #  2.4 store all import field into array and then parse all UE.
 #     record INVITE's call-id
 #     FIXME: add more logic to check like CSeq and call-id
+#  2.5 add sdp nego logic
+#  2.6 retransmit/ color
+#  2.7 add text summary log, running time estimate(sip msg)
+#  2.8 add diag for service,adapter, imscm, lemon's fsm
 
 
 #3. add a basic ui
