@@ -27,6 +27,7 @@ class SipParser():
             self.sdppattern = config['sipParser']['sdppattern']
             self.directpattern = config['sipParser']['directpattern']
             self.mediapattern = config['sipParser']['mediapattern']
+            self.b2buapattern = config['sipParser']['b2buapattern']
 
             #define compact headers
             #http://www.cs.columbia.edu/sip/compact.html
@@ -199,6 +200,13 @@ class SipParser():
         else:
             return True
 
+    def checkB2BUA(self, line):
+        b2buapattern = re.compile(self.b2buapattern)
+        match = b2buapattern.search(line)
+        if not match:
+            return False
+        else:
+            return True
 
 if __name__ == '__main__':
     #TODO write own ut function
@@ -245,6 +253,8 @@ if __name__ == '__main__':
     sp.getmedia(mtag['value'])
     sp.sdpParser(sdptag2)
 
-
     print sp.checksdpDirect('recvonl')
     print sp.checksdpDirect('inactive')
+
+    b2btag = "06-07 12:21:20.705  1948  3081 D LEMON   : P-Com.Nokia.B2BUA-Involved:no"
+    print sp.checkB2BUA(b2btag)

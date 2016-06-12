@@ -23,6 +23,8 @@ TODO:
 #  2.4 store all import field into array and then parse all UE.
 #     record INVITE's call-id
 #     FIXME: add more logic to check like CSeq and call-id
+#     for B2BUA, there is a segment : P-Com.Nokia.B2BUA-Involved:no
+#     for following 100 Trying and 200OK , we consider it as B2BUA
 #  2.5 add sdp nego logic
 #  2.6 retransmit/ color
 #  2.7 add text summary log, running time estimate(sip msg)
@@ -613,27 +615,36 @@ class flowParser():
         #add one more loop to fix REGISTER req/rsp's mo and mt
         for sipindex, sip in enumerate(self.diagsips):
             callid = sip['callid']
+            momtlist = self.callidmapmomt[callid]
             if 'REGISTER' in sip['cseq'] and sip['pasonum']:
                 self.logger.logger.info('use P-Associate-URI'+ str(sip['pasonum']) + ' for register ' + sip['fromnum'])
-                self.callidmapmomt[callid]['mo'] = sip['pasonum']
+                momtlist[0]['mo'] = sip['pasonum']
 
 
         for sipindex, sip in enumerate(self.diagsips):
             callid = sip['callid']
+            momt = ''
+            self.logger.logger.error('index is '+str(sipindex)+ ', callid is ' + callid)
+            momtlist = self.callidmapmomt[callid]
+            if sip['b2bua']:
+                momt = momtlist[1]
+            else:
+                momt = momtlist[0]
+
 
             if sip['send']:
                 #NOTE: space is important
                 direct = ' -> '
                 #find left/right by callid
 
-                leftnum = self.callidmapmomt[callid]['mo']
-                rightnum = self.callidmapmomt[callid]['mt']
+                leftnum = momt['mo']
+                rightnum = momt['mt']
                 left = elements[leftnum]
                 right = elements[rightnum]
             else:
                 direct = ' <- '
-                leftnum = self.callidmapmomt[callid]['mo']
-                rightnum = self.callidmapmomt[callid]['mt']
+                leftnum = momt['mo']
+                rightnum = momt['mt']
                 left = elements[leftnum]
                 right = elements[rightnum]
 
@@ -692,10 +703,12 @@ class flowParser():
 
 
     def dumpcallidmaping(self):
-        for callid,momt in self.callidmapmomt.iteritems():
-            self.logger.logger.debug('callid is ' + callid)
-            for key,value in momt.iteritems():
-                self.logger.logger.debug('key is '+ key + ', value is ' + value)
+        for callid, momtlist in self.callidmapmomt.iteritems():
+            self.logger.logger.error('callid is ' + str(callid))
+            for i,val in enumerate(momtlist):
+                self.logger.logger.error('index is '+ str(i))
+                for  field, momtvalue in val.iteritems():
+                   self.logger.logger.error('pair is ' + field + ':'+ momtvalue)
 
 
     def analyzeSdp(self, sip):
@@ -784,6 +797,13 @@ class flowParser():
         # 6: sdp should be parsed
         # 7: tell B2BUA
 
+        #NOTE: add logic to check B2BUA's msg
+        # 1. once found b2bua, record/update Cseq and callid
+        # 2. compare following signaling
+        b2buarecord = dict()
+        b2buarecord['cseq'] = ''
+        b2buarecord['callid'] = ''
+
         for sipindex, sip in enumerate(self.diagsips):
 
             fromnum = sip['fromnum']
@@ -799,32 +819,69 @@ class flowParser():
                 if tonum not in self.entities:
                     self.entities.append(tonum)
             momt = dict()
-            #IMPORTANT: record caller and callee via call-id
-            if callid not in self.callidmapmomt:
+            #store list of two
+            momtlist = [dict()] * 2
+
+            #IMPORTANT: record ]caller and callee via call-id
+
+            #we will do the merge in momtlist
+            if callid in self.callidmapmomt:
+                momtlist = self.callidmapmomt[callid]
+
+
+            #all 100 Trying/200OK/ACK about B2BUA, change its b2bua flag
+            if callid == b2buarecord['callid'] and sip['cseq'] == b2buarecord['cseq']:
+                sip['b2bua'] = True
+
+
+            #FIXME: add logic to fix following b2buarecord
+            if callid not in self.callidmapmomt or sip['b2bua']:
                 #NOTE: here IMPU is set as mo
                 if sip['isregister']:
                     momt['mo'] =  self.getRealNum(fromnum)
                     momt['mt'] = 'NETWORK'
+
                 elif sip['issubs']:
                     #NOTIFY, SUBSCRIBE
                     momt['mo'] = self.getRealNum(fromnum)
                     momt['mt'] = 'NETWORK'
-                #FIXME: B2BUA's logic not work here, callid is the same
-                #elif sip['isinvite'] and sip['issdp'] == False:
-                #add special handling for B2BUA's reinvite without sdp
-                #   momt['mo'] = 'NETWORK'
-                #  momt['mt'] = self.getRealNum(tonum)
-                else:
+                #NOTE: B2BUA's callid is the same
+                elif sip['b2bua']:
+                    b2buarecord['callid'] = sip['callid']
+                    b2buarecord['cseq'] = sip['cseq']
+                    #mo always means left side, mt always means right side
+                    momt['mo'] = self.getRealNum(tonum)
+                    momt['mt'] = 'NETWORK'
 
+                elif callid == b2buarecord['callid'] and sip['cseq'] == b2buarecord['cseq']:
+                    if sip['send']:
+                        momt['mo'] = self.getRealNum(fromnum)
+                        momt['mt'] = 'NETWORK'
+                    else:
+                        momt['mo'] = self.getRealNum(tonum)
+                        momt['mt'] = 'NETWORK'
+
+                else:
                     if sip['send']:
                         momt['mo'] = self.getRealNum(fromnum)
                         momt['mt'] = self.getRealNum(tonum)
+
                     else:
                         momt['mo'] = self.getRealNum(tonum)
                         momt['mt'] = self.getRealNum(fromnum)
 
-                self.callidmapmomt[callid] = momt
+                if sip['b2bua']:
+                    momtlist[1] = momt
+                else:
+                    momtlist[0] = momt
 
+                #add dump here
+                for i,val in enumerate(momtlist):
+                    self.logger.logger.error('index is ' + str(sipindex) +' callid is '+ str(callid))
+                    for  field, momtvalue in val.iteritems():
+                        self.logger.logger.error('pair is ' + field + ':'+ momtvalue)
+
+                self.callidmapmomt[callid] = momtlist
             #add logic to parser sdp
             self.analyzeSdp(sip)
 
@@ -835,7 +892,7 @@ class flowParser():
         for index, entity in enumerate(self.entities):
             self.logger.logger.debug('participant_' + str(index) + ' is ' + entity)
 
-        self.dumpcallidmaping()
+        #self.dumpcallidmaping()
 
 
 
@@ -864,6 +921,7 @@ class flowParser():
             diaginfo['issubs'] = False
             diaginfo['issdp'] = False
             diaginfo['pasonum'] = ''
+            diaginfo['b2bua'] = False
             diaginfo['send'] = sipobj['send']
             diaginfo['sdp'] = list()
 
@@ -944,8 +1002,12 @@ class flowParser():
                         diaginfo['issdp'] = True
                         self.logger.logger.debug('found sdp ' + ' in ' + str(index) +  ' sip msg')
 
-                #add logic to record sdp body
+                #check if is B2BUA
+                b2buaflag = sipparser.checkB2BUA(header)
+                if b2buaflag:
+                    diaginfo['b2bua'] = True
 
+                #add logic to record sdp body
                 sdppair = sipparser.sdpParser(header)
                 if sdppair:
                     if sdppair['type'] == 'v':
