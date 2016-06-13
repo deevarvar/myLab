@@ -26,7 +26,8 @@ TODO:
 #     for B2BUA, there is a segment : P-Com.Nokia.B2BUA-Involved:no
 #     for following 100 Trying and 200OK , we consider it as B2BUA
 #  2.5 add sdp nego logic
-#  2.6 retransmit/ color
+#       use cseq and callid, record sdp offer answer, previous action
+#  2.6 retransmit/ color:  do retransmit analysis, add record
 #  2.7 add text summary log, running time estimate(sip msg)
 #  2.8 add diag for service,adapter, imscm, lemon's fsm
 
@@ -160,8 +161,13 @@ class flowParser():
             self.entities = list()
 
             #record all caller/calee using call-id to map
+            #key is callid
             #NOTE: assume mo means left, mt means right...
             self.callidmapmomt = dict()
+
+            #record each call-id's session flow: hold/resume/upgrade/downgrade... etc
+            #key is callid
+            self.callflow = dict()
 
             #record ue's num
             self.uenum = ''
@@ -651,7 +657,7 @@ class flowParser():
 
             #some color or string decoration
             # session modificaiton should be marked.
-            #TODO: add seperator line for each call process
+            #TODO: add seperator line for each call process: not needed here, call can be complex.
             sdpstring = ""
             action = ''
             mediadirection = ''
@@ -665,29 +671,32 @@ class flowParser():
 
             timestamp = "\"Time: " + sip['timestamp'] + "\n"
             if sip['issdp'] and sip['isinvite'] :
-                action = "Note: " +  sip['action'] + '\n'
+                action = "Action: " +  sip['action'] + '\n'
+
+            if sip['b2bua']:
+                labelcolor = ", color=red"
 
             if sip['issdp']:
                 sdpstring = " with sdp"
-                if sip['vdirect']:
+                if sip['isvideo'] and sip['vdirect']:
                     mediadirection += "video: " + sip['vdirect'] + ','
 
                 if sip['adirect']:
                     mediadirection += 'audio: ' + sip['adirect'] + '\n'
 
-            elif sip['isinvite']:
+            elif sip['b2bua'] and sip['isinvite']:
                 sdpstring = " without sdp"
                 #B2BUA's request will be marked
-                labelcolor = ", color=red"
 
-            cseq = " CSeq: " + sip['cseq'] + sdpstring + '\n'
+            note = " Note: " + sdpstring + '\n'
+            cseq = " CSeq: " + sip['cseq'] + '\n'
             #callid = " Call-ID: "+ sip['callid'] + '\n'
             fromtag = " From: " + sip['fromnum'] + '\n'
             totag = " To: " + sip['tonum'] + '\n'
             callid = " Call-ID: " + sip['callid'] + '\n'
             lineno = " log lineno: " + str(sip['lineno']) + "\""
 
-            note = ", note = " + timestamp + cseq + action + mediadirection + fromtag + totag + callid +lineno
+            note = ", note = " + timestamp + cseq + action + note + mediadirection + fromtag + totag + callid +lineno
 
             label = label + note + labelcolor + "];\n"
             #print label
@@ -711,17 +720,91 @@ class flowParser():
                    self.logger.logger.error('pair is ' + field + ':'+ momtvalue)
 
 
-    def analyzeSdp(self, sip):
-        #set default value
+    def judgeSessionModify(self,sip):
+        #for voice, next state can be upgrade video or hold/held(send/recv sendonly)
+        #for video, next state can be downgrade voice or hold/held(send/recv sendonly)
+        #for hold, can send 'sendrecv'(resume) or recv 'inactive'(held again...)
+        '''
+        LEMON sdp nego logic: seems magic
+        ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+        pstAsPu->ucNegoDir = EN_SDP_DIRECT_TYPE_NONE;
+        if (pstAsPu->ucPeerDir & EN_SDP_DIRECT_TYPE_RECV)
+            pstAsPu->ucNegoDir |= EN_SDP_DIRECT_TYPE_SEND;
+        if (pstAsPu->ucPeerDir & EN_SDP_DIRECT_TYPE_SEND)
+            pstAsPu->ucNegoDir |= EN_SDP_DIRECT_TYPE_RECV;
+        ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+        '''
+
+        callid = sip['callid']
+        flowdata = self.callflow[callid]
+
+        lastcnt = 0
+        lastaction = ''
+        #last action
+        if int(flowdata['cnt']) > 0:
+            lastcnt = int(flowdata['cnt']) - 1
+            lastaction = flowdata['flow'][lastcnt]
+            self.logger.logger.error('last action is ' + lastaction)
 
 
+        if sip['isvideo'] and sip['vport'] != str(0):
+         # if video
+            if not lastaction:
+                sip['action'] = 'Video Call'
+                return
 
-        #FIXME: 1. only should scan invite
+            if sip['vdirect'] == 'sendonly':
+                sip['action'] = 'Hold'
+            elif sip['vdirect'] == 'inactive':
+                #already held, but to hold remote
+                sip['action'] = 'Hold'
+            elif sip['vdirect'] == 'recvonly':
+                sip['action'] = 'Resume'
+            elif sip['vdirect'] == 'sendrecv' and lastaction == 'Hold':
+                sip['action'] = 'Resume'
+            else:
+                sip['action'] = 'Video Call'
+
+        else:
+         # if voice
+            if not lastaction:
+                sip['action'] = 'Voice Call'
+                return
+
+            if sip['adirect'] == 'sendonly':
+                sip['action'] = 'Hold'
+            elif sip['adirect'] == 'inactive':
+                #already held, but to hold r
+                sip['action'] == 'Hold'
+            elif sip['adirect'] == 'recvonly':
+                sip['action'] = 'Resume'
+            elif sip['adirect'] == 'sendrecv' and lastaction == 'Hold':
+                sip['action'] = 'Resume'
+            else:
+                sip['action'] = 'Voice Call'
+
+
+    def analyzeSdp(self, sip, index):
+
+        callid = sip['callid']
+        #init the callflow
+        if callid not in self.callflow:
+
+            self.callflow[callid] = dict()
+            #session modificatin count
+            self.callflow[callid]['cnt'] = 0
+            #record last sip to avoid retransmit
+            self.callflow[callid]['lastinvite'] = dict()
+            #list with each session modification
+            self.callflow[callid]['flow'] = list()
+
+        lastinvite = self.callflow[callid]['lastinvite']
+        #       1. only should scan invite
         #       2. record the same callerid's action flow.
-        if sip['sdp']:
+        if sip['sdp'] :
             sip['isvideo'] = False
             sip['adirect'] = 'sendrecv'
-            sip['vdirect'] = 'sendrecv'
+
             sipparser = self.sipparser
             for index, sdpline in enumerate(sip['sdp']):
                 #1. check media:          m=audio 37042 RTP/AVP 104 0 8 116 103 9 101
@@ -737,7 +820,7 @@ class flowParser():
                             sip['isvideo'] = True
                             sip['vport'] = mediadict['mport']
                         else:
-                            sip['isvideo'] =  False
+                            sip['isvideo'] = False
                             sip['aport'] = mediadict['mport']
 
                     elif type == 'a':
@@ -755,32 +838,14 @@ class flowParser():
 
             #now get the conclusion: voice/video/hold/resume
 
-            #FIXME/TODO: should have the sdp nego logic
-            if sip['isvideo'] and sip['vport'] != str(0):
-                '''
-                if sip['vdirect'] == 'sendonly':
-                    sip['action'] = 'Hold '
-                elif sip['vdirect'] == 'recvonly':
-                    sip['action'] = 'Resume '
-                elif sip['vdirect'] == 'sendrecv':
-                    sip['action'] = 'Start '
-                else:
-                    sip['action'] = 'Inactive '
-                '''
-                sip['action'] = 'Video Call'
-            else:
-                '''
-                if sip['adirect'] == 'sendonly':
-                    sip['action'] = 'Hold '
-                elif sip['adirect'] == 'recvonly':
-                    sip['action'] = 'Resume '
-                elif sip['adirect'] == 'sendrecv':
-                    sip['action'] = 'Start '
-                else:
-                    sip['action'] = 'Inactive '
-                '''
-                sip['action'] = 'Voice Call'
 
+            if  sip['isinvite']:
+                self.logger.logger.info('start to judge session modification for index ' + str(index))
+                self.judgeSessionModify(sip)
+                #increase the count
+                self.callflow[callid]['cnt'] += 1
+                self.callflow[callid]['lastinvite'] = sip
+                self.callflow[callid]['flow'].append(sip['action'])
 
 
 
@@ -830,8 +895,17 @@ class flowParser():
 
 
             #all 100 Trying/200OK/ACK about B2BUA, change its b2bua flag
-            if callid == b2buarecord['callid'] and sip['cseq'] == b2buarecord['cseq']:
-                sip['b2bua'] = True
+            if callid == b2buarecord['callid']:
+                if sip['cseq'] == b2buarecord['cseq']:
+                    sip['b2bua'] = True
+                else:
+                    #NOTE: sometimes B2BUA's ACK not including "P-Com.Nokia.B2BUA-Involved"
+                    cseqnum = b2buarecord['cseq'].split(' ')[0]
+                    cseqack = cseqnum + ' ACK'
+
+                    if sip['cseq'] == cseqack:
+                        self.logger.logger.error('weird B2BUA\'s ACK not including P-Com.Nokia.B2BUA-Involved')
+                        sip['b2bua'] = True
 
 
             #FIXME: add logic to fix following b2buarecord
@@ -883,7 +957,7 @@ class flowParser():
 
                 self.callidmapmomt[callid] = momtlist
             #add logic to parser sdp
-            self.analyzeSdp(sip)
+            self.analyzeSdp(sip, sipindex)
 
 
         #print 'entities num is ' + str(len(self.entities))
@@ -892,7 +966,7 @@ class flowParser():
         for index, entity in enumerate(self.entities):
             self.logger.logger.debug('participant_' + str(index) + ' is ' + entity)
 
-        #self.dumpcallidmaping()
+        self.dumpcallidmaping()
 
 
 
