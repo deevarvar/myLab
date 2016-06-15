@@ -52,7 +52,7 @@ class SipParser():
             self.logger = logConf()
 
         except (ConfigObjError, IOError) as e:
-             self.logger.logger.error('Could not read "%s": %s' % (configfile, e))
+             print 'Could not read "%s": %s' % (configfile, e)
 
     def getMethod(self, line):
         reqpattern = re.compile(self.reqline)

@@ -28,6 +28,9 @@ TODO:
 #  2.5 add sdp nego logic
 #       use cseq and callid, record sdp offer answer, previous action
 #  2.6 retransmit/ color:  do retransmit analysis, add record
+    # TODO: two dimension:  direct: send/recv;   method: register, invite, ack, 200
+    #just loop to find retransmit:  direct, method, cseq
+    # show retransmit request no.
 #  2.7 add text summary log, running time estimate(sip msg)
 #  2.8 add diag for service,adapter, imscm, lemon's fsm
 
@@ -106,6 +109,7 @@ class flowParser():
     def __init__(self):
 
         try:
+
             self.timestamp = strftime("%Y_%m_%d_%H_%M_%S", gmtime())
             self.logpath = './' + str(self.timestamp) + '.log'
             configfile = path + '/config.ini'
@@ -123,7 +127,6 @@ class flowParser():
             #have to set loglevel to interger...
             self.logger = logConf(logpath=self.logpath, debuglevel=logging.getLevelName(self.loglevel))
             self.sipparser = SipParser(configpath='./')
-
 
             self.files = dict()
             self.files['log'] = config['files']['log']
@@ -1128,9 +1131,12 @@ class flowParser():
 
 if __name__ == '__main__':
     fp = flowParser()
-    fp.getFlow()
+
+
+    #fp.getFlow()
+    #fp.parseFlow()
+    #fp.drawLemonDiag()
+
     #fp.drawDemoDiag()
     #fp.parseFlowOld()
-    fp.parseFlow()
-    fp.drawLemonDiag()
     #print len(fp.sipmsgs)
