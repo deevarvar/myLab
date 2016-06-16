@@ -5,7 +5,7 @@
 import logging
 import os
 import sys
-
+from time import gmtime, strftime
 
 import logging.config
 
@@ -23,12 +23,14 @@ class Singleton(type):
 class logConf(object):
     __metaclass__ = Singleton
     def __init__(self, loggername='logparser', logpath='./test.log', debuglevel='DEBUG'):
+        self.timestamp = strftime("%Y_%m_%d_%H_%M_%S", gmtime())
+        self.logpath = './' + str(self.timestamp) + '.log'
         logFormatter = logging.Formatter('%(asctime)s - [%(levelname)s] - %(filename)s - <%(funcName)s> - %(lineno)d - %(message)s')
         rootLogger = logging.getLogger(loggername)
         debuglevel = logging.getLevelName(debuglevel)
         rootLogger.setLevel(debuglevel)
         #truncate before new writing
-        fileHandler = logging.FileHandler(logpath,mode='w')
+        fileHandler = logging.FileHandler(self.logpath,mode='w')
         fileHandler.setFormatter(logFormatter)
 
         rootLogger.addHandler(fileHandler)

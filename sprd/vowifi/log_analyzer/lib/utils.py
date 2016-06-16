@@ -21,6 +21,13 @@ class utils():
             self.config = config
             self.logpattern = config['files']['log']
 
+            #all the dirs
+            self.dirlist = list()
+            dirnames = config['utils']['dirnames']
+            dirlist = dirnames.split(' ')
+            for index ,dir in enumerate(dirlist):
+                self.dirlist.append(dir)
+
             #singleton logger
             self.logger = logConf()
 
@@ -42,7 +49,8 @@ class utils():
                 matches.append(os.path.join(root, filename))
         return matches
 
-    def mkdir_p(path):
+    #similar to "mkdir -p"
+    def mkdirp(self, path):
         try:
             os.makedirs(path)
         except OSError as exc:  # Python >2.5
@@ -51,6 +59,10 @@ class utils():
             else:
                 raise
 
+    def createdirs(self, prefix):
+        for index, dir in enumerate(self.dirlist):
+            fdir = prefix + '/' + dir
+            self.mkdirp(fdir)
 
 
 if __name__ == '__main__':

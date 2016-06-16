@@ -101,17 +101,19 @@ import logging
 sys.path.append('./lib')
 from SipParser import SipParser
 from logConf import logConf
+from utils import utils
 path = os.path.dirname(os.path.realpath(__file__))
 
 
 
 class flowParser():
-    def __init__(self):
+    def __init__(self, logname):
 
         try:
 
-            self.timestamp = strftime("%Y_%m_%d_%H_%M_%S", gmtime())
-            self.logpath = './' + str(self.timestamp) + '.log'
+            #self.timestamp = strftime("%Y_%m_%d_%H_%M_%S", gmtime())
+            #self.logpath = './' + str(self.timestamp) + '.log'
+
             configfile = path + '/config.ini'
             config = ConfigObj(configfile, file_error=True)
             self.config = config
@@ -125,23 +127,41 @@ class flowParser():
             self.loglevel =  config['logging']['loglevel']
 
             #have to set loglevel to interger...
-            self.logger = logConf(logpath=self.logpath, debuglevel=logging.getLevelName(self.loglevel))
+            self.logger = logConf(debuglevel=logging.getLevelName(self.loglevel))
             self.sipparser = SipParser(configpath='./')
 
             self.files = dict()
-            self.files['log'] = config['files']['log']
-            self.logger.logger.debug('log file pattern is ' +  self.files['log'])
-            logList = glob.glob(self.files['log'])
-            if not logList:
-                self.logger.logger.error('no log file found.')
-                return
-            self.log = logList[0]
+            #despreated logic
+           # self.files['log'] = config['files']['log']
+            #self.logger.logger.debug('log file pattern is ' +  self.files['log'])
+
+
+
+            helper = utils(configpath='./')
+            realpath = os.path.realpath(logname)
+            self.log = realpath
+            #/mnt/hgfs/code/github/myLab/sprd/vowifi/log_analyzer/lib/src/3/0-main-3.log, get prefix as dir
+            prefix = realpath.split('.')[0]
+            helper.createdirs(prefix)
+            self.logger.logger.info('start to parse log file: ' + realpath)
+
+            #FIXME: hard coded result log dir
+            #defined in config.ini's [utils]->dirnames
+            self.logdir = prefix + '/logs/'
+            self.diagdir = prefix + '/diagrams/'
+            self.htmldir = prefix + '/html/'
+            self.miscdir = prefix + '/misc/'
+
+
+
+            basename = os.path.basename(realpath)
+            lemonbasename = 'lemon_' + basename
+            self.lemonlog = self.logdir + lemonbasename
 
             #first we just cache all lines
             with open(self.log) as logfile:
                 self.loglines = logfile.readlines()
 
-            self.lemonlog = 'lemon_' +  self.log
             with open(self.lemonlog, 'w') as tlog:
                 tlog.truncate()
 
@@ -1123,19 +1143,22 @@ class flowParser():
         self.logger.logger.info('seqdiag is ' + diagram_definition)
         tree = parser.parse_string(diagram_definition)
         diagram = builder.ScreenNodeBuilder.build(tree)
-        pngname = self.log.split('.')[0] + '.png'
+        basename = os.path.basename(self.log)
+        pngname = basename.split('.')[0] + '.png'
+        pngname = self.diagdir + pngname
+        self.logger.logger.info('diagram file is ' + pngname)
         draw = drawer.DiagramDraw('PNG', diagram, filename=pngname)
         draw.draw()
         draw.save()
-        pass
+        #mv the png to right dir
+        #os.rename(pngname, self.diagdir)
+
 
 if __name__ == '__main__':
-    fp = flowParser()
-
-
-    #fp.getFlow()
-    #fp.parseFlow()
-    #fp.drawLemonDiag()
+    fp = flowParser(logname='./0-main-06-07-12-09-45.log')
+    fp.getFlow()
+    fp.parseFlow()
+    fp.drawLemonDiag()
 
     #fp.drawDemoDiag()
     #fp.parseFlowOld()
