@@ -96,13 +96,16 @@ from configobj import ConfigObj,ConfigObjError
 from seqdiag import parser, builder, drawer
 from time import gmtime, strftime
 import logging
+from datetime import datetime
+import subprocess
+import platform
 
 #add user defined lib
-sys.path.append('./lib')
-from SipParser import SipParser
-from logConf import logConf
-from utils import utils
-from datetime import datetime
+#sys.path.append('./lib')
+from lib.SipParser import SipParser
+from lib.logConf import logConf
+from lib.utils import utils
+
 path = os.path.dirname(os.path.realpath(__file__))
 
 
@@ -1144,15 +1147,37 @@ class flowParser():
         diagram_definition += u""" }\n"""
         # generate the diag string and draw it
         self.logger.logger.info('seqdiag is ' + diagram_definition)
-        tree = parser.parse_string(diagram_definition)
-        diagram = builder.ScreenNodeBuilder.build(tree)
+        #write the diagram string to file
         basename = os.path.basename(self.log)
         pngname = basename.split('.')[0] + '.png'
+        diagname = basename.split('.')[0] + '.diag'
         pngname = self.diagdir + pngname
+        diagname = self.diagdir + diagname
+        with open(diagname, 'w') as diagfile:
+            diagfile.write(diagram_definition)
+        #generate the diagram using exe/binary
+        plat = platform.system()
+        self.logger.logger.info('os type is ' + plat)
+        if plat == 'Windows':
+            subprocess.call(['./seqdiag.exe', '--debug',diagname])
+        elif plat == 'Linux':
+            subprocess.call(['./seqdiag', '--debug', diagname])
+        else:
+            self.logger.logger.error('do not support ' + plat)
+
+
+
+        '''
+        FIXME: pyinstaller DONOT support pkg_resources, so call binary directory
+        tree = parser.parse_string(diagram_definition)
+        diagram = builder.ScreenNodeBuilder.build(tree)
+
         self.logger.logger.info('diagram file is ' + pngname)
-        draw = drawer.DiagramDraw('PNG', diagram, filename=pngname)
+        draw = drawer.DiagramDraw('PNG', diagram, filename=pngname, debug=True)
         draw.draw()
         draw.save()
+        '''
+
         #mv the png to right dir
         #os.rename(pngname, self.diagdir)
         self.endtime = datetime.now()

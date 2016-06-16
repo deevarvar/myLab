@@ -7,9 +7,9 @@ import sys
 from configobj import ConfigObj,ConfigObjError
 import logging
 from flowParser import flowParser
-sys.path.append('./lib')
-from logConf import logConf
-from utils import utils
+#sys.path.append('./lib')
+from lib.logConf import logConf
+from lib.utils import utils
 
 path = os.path.dirname(os.path.realpath(__file__))
 
