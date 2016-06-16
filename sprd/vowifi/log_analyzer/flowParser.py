@@ -102,6 +102,7 @@ sys.path.append('./lib')
 from SipParser import SipParser
 from logConf import logConf
 from utils import utils
+from datetime import datetime
 path = os.path.dirname(os.path.realpath(__file__))
 
 
@@ -195,7 +196,7 @@ class flowParser():
             #record ue's num
             self.uenum = ''
 
-
+            self.starttime = datetime.now()
 
         except (ConfigObjError, IOError) as e:
              print 'Could not read "%s": %s' % (configfile, e)
@@ -367,6 +368,8 @@ class flowParser():
                     self.getSendSip(line, lineno)
                     with open(self.lemonlog, 'a+') as llog:
                         llog.write(line)
+
+        return len(self.sipmsgs)
 
     def drawDemoDiag(self):
         #http://blockdiag.com/en/seqdiag/examples.html
@@ -1152,7 +1155,9 @@ class flowParser():
         draw.save()
         #mv the png to right dir
         #os.rename(pngname, self.diagdir)
-
+        self.endtime = datetime.now()
+        self.duration = self.endtime - self.starttime
+        self.logger.logger.info('length of sip msgs is ' + str(len(self.sipmsgs)) + '  takes ' + str(self.duration) + ' seconds')
 
 if __name__ == '__main__':
     fp = flowParser(logname='./0-main-06-07-12-09-45.log')
