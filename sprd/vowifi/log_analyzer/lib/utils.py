@@ -7,6 +7,12 @@ import sys
 import re
 import fnmatch
 import errno
+import blockdiag
+import blockdiag.imagedraw
+from blockdiag.noderenderer import box,actor,beginpoint,circle,cloud,diamond,dots
+import blockdiag.plugins
+from blockdiag.imagedraw import png
+
 
 sys.path.append('./')
 from logConf import logConf
@@ -63,6 +69,24 @@ class utils():
         for index, dir in enumerate(self.dirlist):
             fdir = prefix + '/' + dir
             self.mkdirp(fdir)
+
+
+    '''
+        have to init every need ones
+    '''
+    def setup_imagedraw(self):
+        png.setup(png)
+
+
+
+    def setup_noderenderers(self):
+        box.setup(box)
+        actor.setup(actor)
+        beginpoint.setup(beginpoint)
+        circle.setup(circle)
+        cloud.setup(cloud)
+        diamond.setup(diamond)
+        dots.setup(dots)
 
 
 if __name__ == '__main__':

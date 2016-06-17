@@ -141,12 +141,12 @@ class flowParser():
 
 
 
-            helper = utils(configpath='./')
+            self.utils = utils(configpath='./')
             realpath = os.path.realpath(logname)
             self.log = realpath
             #/mnt/hgfs/code/github/myLab/sprd/vowifi/log_analyzer/lib/src/3/0-main-3.log, get prefix as dir
             prefix = realpath.split('.')[0]
-            helper.createdirs(prefix)
+            self.utils.createdirs(prefix)
             self.logger.logger.info('start to parse log file: ' + realpath)
 
             #FIXME: hard coded result log dir
@@ -1155,6 +1155,12 @@ class flowParser():
         diagname = self.diagdir + diagname
         with open(diagname, 'w') as diagfile:
             diagfile.write(diagram_definition)
+
+        '''
+        FIXME: can not workaround this bug
+        https://groups.google.com/forum/embed/#!topic/blockdiag-discuss/9rUQwZXay0k
+        pkg_resources is not supported in pyinstaller.
+
         #generate the diagram using exe/binary
         plat = platform.system()
         self.logger.logger.info('os type is ' + plat)
@@ -1164,11 +1170,16 @@ class flowParser():
             subprocess.call(['./seqdiag', '--debug', diagname])
         else:
             self.logger.logger.error('do not support ' + plat)
-
-
-
         '''
-        FIXME: pyinstaller DONOT support pkg_resources, so call binary directory
+        #
+        #self.utils.setup_imagedraw()
+        #self.utils.setup_plugins()
+        self.utils.setup_imagedraw()
+        self.utils.setup_noderenderers()
+
+
+
+
         tree = parser.parse_string(diagram_definition)
         diagram = builder.ScreenNodeBuilder.build(tree)
 
@@ -1176,7 +1187,7 @@ class flowParser():
         draw = drawer.DiagramDraw('PNG', diagram, filename=pngname, debug=True)
         draw.draw()
         draw.save()
-        '''
+
 
         #mv the png to right dir
         #os.rename(pngname, self.diagdir)

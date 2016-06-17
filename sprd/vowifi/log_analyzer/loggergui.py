@@ -60,6 +60,7 @@ class loggergui():
                     self.logger.logger.info('sip msgs len is ' + str(len))
                     #pop up a msg box
                     msg = 'log file is ' + file + '\n'
+                    msg += 'totally sip msgs are ' + str(len) + '\n'
                     esttime = float(self.estimatetime)*int(len)
                     timelog = 'estimate time  is ' + str(esttime) + ' seconds'
                     msg = msg + timelog
