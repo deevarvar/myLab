@@ -13,7 +13,8 @@ from lib.utils import utils
 
 path = os.path.dirname(os.path.realpath(__file__))
 
-
+#TODO:
+#   1. add package scripts
 
 
 class loggergui():

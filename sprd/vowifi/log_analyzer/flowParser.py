@@ -31,9 +31,10 @@ TODO:
     # TODO: two dimension:  direct: send/recv;   method: register, invite, ack, 200
     #just loop to find retransmit:  direct, method, cseq
     # show retransmit request no.
+#  2.6.1 add reason parsing.
 #  2.7 add text summary log, running time estimate(sip msg)
 #  2.8 add diag for service,adapter, imscm, lemon's fsm
-
+#
 
 #3. add a basic ui
 #4. add a html page file
