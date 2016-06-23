@@ -107,6 +107,8 @@ from lib.SipParser import SipParser
 from lib.logConf import logConf
 from lib.utils import utils
 
+from logParser import logParser
+
 path = os.path.dirname(os.path.realpath(__file__))
 
 
@@ -342,6 +344,11 @@ class flowParser():
         self.sipmsgs.append(recvsip)
 
     def getFlow(self):
+        #first of all we get the whole important logs
+        lp = logParser(logname=self.log, filterlevel='high', outputdir=self.logdir)
+        lp.getflow(has_ps=False)
+
+
         #rePattern = r'' + 'fsm(.*)' + ' | \[TIMER.*\]' + '|recv.*data' + '| process request' + '|process response'
         lemonpattern = self.getPattern(self.lemontags)
         self.logger.logger.info('lemon pattern is ' + lemonpattern)

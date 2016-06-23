@@ -17,6 +17,10 @@ import sys
 import glob
 from configobj import ConfigObj,ConfigObjError
 
+from lib.logConf import logConf
+from lib.utils import utils
+import logging
+
 '''
 two ways to track logs:
 1. by pid, but process may stop, so pid changes
@@ -26,13 +30,13 @@ two ways to track logs:
 
 class logParser():
 
-    def __init__(self, filterlevel='low'):
+    def __init__(self, logname, filterlevel='low', outputdir= './'):
         try:
             configfile = 'config.ini'
             config = ConfigObj(configfile, file_error=True)
             self.config = config
             self.files = dict()
-            self.files['log'] = config['files']['log']
+            #self.files['log'] = config['files']['log']
             self.files['process'] = config['files']['process']
 
             filterinfo = config['filterlevels'][filterlevel]
@@ -50,21 +54,31 @@ class logParser():
             self.piddb = dict()
 
             self.tags = dict()
+            self.words = dict()
 
             #keywords may be in wrong place, each
             self.priority = dict()
 
             #prepare the log file handle
+            '''
             logList = glob.glob(self.files['log'])[0]
             if not logList:
                 print 'no log file found.'
                 return
-            self.log = logList[0]
-            timestamp = self.log[7:].split('.')[0]
-            self.trimlog = timestamp + '_' + filterlevel + '.log'
+            '''
+            self.loglevel =  config['logging']['loglevel']
+
+            #have to set loglevel to interger...
+            self.logger = logConf(debuglevel=logging.getLevelName(self.loglevel))
+
+            self.utils = utils(configpath='./')
+            realpath = os.path.realpath(logname)
+            self.log = realpath
+            self.trimlog = outputdir + filterlevel + '_' + os.path.basename(realpath)
+
             with open(self.trimlog, 'w') as tlog:
                 tlog.truncate()#index = 0
-            self.processout = 'processout.log'
+            self.processout = outputdir + 'processout.log'
 
             self.tagfile = "processtags"
 
@@ -80,7 +94,7 @@ class logParser():
     def getpid(self):
         pfileList = glob.glob(self.files['process'])[0]
         if not pfileList:
-            print 'no process log file found.'
+            self.logger.logger.error('no process log file found.')
             return
         pfile = pfileList[0]
         #note: use native ps, not busybox ps, sample is listed below
@@ -105,7 +119,7 @@ class logParser():
         if has_ps:
             self.getpid()
         else:
-            self.getPidsByTags()
+            self.getPidsByTagsAndWords()
         if self.log:
             #get main log's date, 0-main-04-17-23-20-45.log
             matchindex = 0
@@ -115,15 +129,15 @@ class logParser():
                         lineinfo = line.split()
                         #error check
                         if len(lineinfo) < 6:
-                            print(line)
-                            print("line " + str(lineno) + " is incorrect")
+                            self.logger.logger.info(line)
+                            self.logger.logger.info("line " + str(lineno) + " is incorrect")
                             break
 
                         lpid = lineinfo[2]
                         ltag = lineinfo[5].replace(":", "")
 
                         if (lpid is None) or (ltag is None):
-                            print("lpid or ltag is none")
+                            self.logger.logger.error("lpid or ltag is none")
                             continue
 
                         if pid == lpid:
@@ -136,12 +150,13 @@ class logParser():
                             #the two tags make no sense
                             if ltag == "System.out" or ltag == "System":
                                 continue
-                            if ltag not in self.piddb[pid]['tags']:
-                                self.piddb[pid]['tags'][ltag] = 1
-                            else:
-                                self.piddb[pid]['tags'][ltag] += 1
+                            if self.piddb[pid]['istags']:
+                                if ltag not in self.piddb[pid]['tags']:
+                                    self.piddb[pid]['tags'][ltag] = 1
+                                else:
+                                    self.piddb[pid]['tags'][ltag] += 1
 
-        print("total " + str(matchindex) + " lines.")
+        self.logger.logger.info("total " + str(matchindex) + " lines.")
 
     def gettags(self):
         #just parse the high level's log
@@ -186,13 +201,19 @@ class logParser():
         self.config.write()
 
     def dumptags(self):
-        print('dump tagsinfo')
+        self.logger.logger.info('dump tagsinfo')
         for process, tag in self.tags.iteritems():
-            print(process)
-            print(tag)
+            self.logger.logger.info(process)
+            self.logger.logger.info(tag)
 
-    def getPidsByTags(self):
+
+    def getPidsByTagsAndWords(self):
         #lemon log is not so good
+        wordssection = self.config['words']
+        for process in wordssection:
+            self.words[process] = dict()
+            self.words[process]['words'] = wordssection[process]
+            self.words[process]['found'] = 0
 
         tagsection = self.config['tags']
         for process in tagsection:
@@ -212,7 +233,7 @@ class logParser():
                 tagstr = taginfo[tagindex].split(':')
                 #error check
                 if len(tagstr) < 2:
-                    print('taginfo is invalid :' + str(tagstr))
+                    self.logger.logger.error('taginfo is invalid :' + str(tagstr))
                     continue
                 ltagelement = dict()
                 ltagelement['name'] = tagstr[0]
@@ -235,7 +256,7 @@ class logParser():
 
                     #error check
                     if len(lineinfo) < 6:
-                        print("line " + str(lineno) + " is incorrect")
+                        self.logger.logger.error("line " + str(lineno) + " is incorrect")
                         continue
 
                     ltag = lineinfo[5].replace(":", "")
@@ -250,7 +271,7 @@ class logParser():
                             if taginfo['name'] == ltag: #find tag
                                 # if already found and check if occurnum ok
                                 if  foundflag != 1 and (taginfo['foundnum'] != taginfo['level']):
-                                    print('lineno is ' + str(lineno)+' foundnum pid for ' + process)
+                                    self.logger.logger.info('lineno is ' + str(lineno)+' foundnum pid for ' + process)
                                     taginfo['foundnum'] += 1
                                     if taginfo['foundnum'] == taginfo['level']: # ok add pid
                                         self.tags[process]['pid'] = lpid
@@ -259,26 +280,47 @@ class logParser():
                                         self.pids.append(lpid)
                                         self.piddb[lpid] = dict()
                                         self.piddb[lpid]['process'] = process
+                                        self.piddb[lpid]['istags'] = 1
                                         self.piddb[lpid]['tags'] = dict()
-                                        print('pid ' + str(lpid) + ' is for ' +  process)
+                                        self.logger.logger.info('pid ' + str(lpid) + ' is for ' +  process)
                                     break # break from  for i, taginfo in enumerate(tagdes):
                         else:
                             continue # executed if the loop ended normally (no break)
                         break    # executed if 'continue' was skipped (break)
 
+                    #add logic to track service and security
+                    for process in wordssection:
+                       if int(self.words[process]['found']) == 0 and self.words[process]['words'] in line:
+                           self.words[process]['found'] = 1
+                           self.words[process]['pid'] = lpid
+                           self.pids.append(lpid)
+                           self.piddb[lpid] = dict()
+                           self.piddb[lpid]['process'] = process
+                           self.piddb[lpid]['istags'] = 0
+
+
         with open(self.processout, 'w') as processout:
             processout.truncate()
         for process, content in self.tags.iteritems():
-            print(process)
-            print(content)
+            self.logger.logger.info(process)
+            self.logger.logger.info(content)
 
             if 'pid' in content:
                 lpid = content['pid']
-                print(process + ' pid is '+ str(lpid))
+                self.logger.logger.info(process + ' pid is '+ str(lpid))
                 with open(self.processout, 'a+') as processout:
                     linfo = process + ':' + str(lpid) + '\n'
                     processout.write(linfo)
 
+        for process, content in self.words.iteritems():
+            self.logger.logger.info(process)
+            self.logger.logger.info(content)
+            if 'pid' in content:
+                lpid = content['pid']
+                self.logger.logger.info(process + ' pid is '+ str(lpid))
+                with open(self.processout, 'a+') as processout:
+                    linfo = process + ':' + str(lpid) + '\n'
+                    processout.write(linfo)
 
     def getTagsNum(self):
         """
@@ -289,7 +331,7 @@ class logParser():
 
 
 if __name__ == '__main__':
-    lp = logParser(filterlevel='high')
+    lp = logParser(logname='./0-main-06-07-12-09-45.log', filterlevel='high', outputdir='./')
 
     lp.getflow(has_ps=False)
     print('done')
