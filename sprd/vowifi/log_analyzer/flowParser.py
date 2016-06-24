@@ -168,7 +168,8 @@ class flowParser():
             basename = os.path.basename(realpath)
             lemonbasename = 'lemon_' + basename
             self.lemonlog = self.logdir + lemonbasename
-            self.keylog = ''
+            self.keylogall = ''
+            self.keylogdaps = ''
 
             #first we just cache all lines
             with open(self.log) as logfile:
@@ -362,9 +363,10 @@ class flowParser():
 
     def getFlow(self):
         #first of all we get the whole important logs
-        lp = logParser(logname=self.log, filterlevel='high', outputdir=self.logdir)
-        self.keylog = lp.getflow(has_ps=False)
-
+        lpall = logParser(logname=self.log, filterlevel='high', outputdir=self.logdir)
+        self.keylogall = lpall.getflow(has_ps=False)
+        lpdaps = logParser(logname=self.log, filterlevel='low', outputdir=self.logdir)
+        self.keylogdaps= lpdaps.getflow(has_ps=False)
 
         #rePattern = r'' + 'fsm(.*)' + ' | \[TIMER.*\]' + '|recv.*data' + '| process request' + '|process response'
         lemonpattern = self.getPattern(self.lemontags)

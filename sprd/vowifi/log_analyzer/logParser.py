@@ -265,6 +265,9 @@ class logParser():
                     #print ltag + ' '+ str(lpid)
                     #need to add priority to check if foundnumnum
                     for process in tagsection:
+                        #in case that do not track some process
+                        if process not in self.process:
+                            continue
                         #print process
                         tagdes = self.tags[process]['tags']  #list tag1:num1 tag2:num2
                         foundflag = self.tags[process]['found']
