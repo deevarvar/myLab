@@ -16,7 +16,7 @@ import os
 import sys
 import glob
 from configobj import ConfigObj,ConfigObjError
-
+import re
 from lib.logConf import logConf
 from lib.utils import utils
 import logging
@@ -58,6 +58,9 @@ class logParser():
 
             #keywords may be in wrong place, each
             self.priority = dict()
+
+            self.keywords = config['keywords']['keywords']
+            self.utils = utils(configpath='./')
 
             #prepare the log file handle
             '''
@@ -123,8 +126,20 @@ class logParser():
         if self.log:
             #get main log's date, 0-main-04-17-23-20-45.log
             matchindex = 0
+
             with open(self.log) as logfile:
                 for lineno,line in enumerate(logfile):
+                    #TODO: just add some keywords
+                    allkeywords= self.utils.getPattern(self.keywords)
+                    self.logger.logger.info('allkeywords is ' + allkeywords)
+                    if not allkeywords:
+                        self.logger.logger.error('allkeywords is none!')
+                    else:
+                        keyspattern = re.compile(allkeywords)
+                        if keyspattern.search(line):
+                           with open(self.trimlog, 'a+') as tlog:
+                                tlog.write(line)
+
                     for i,pid in enumerate(self.pids):
                         lineinfo = line.split()
                         #error check

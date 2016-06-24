@@ -15,7 +15,7 @@ import re
 '''
 
 class samsungParser():
-    def __init__(self):
+    def __init__(self,logname):
         try:
             configfile = 'config.ini'
             config = ConfigObj(configfile, file_error=True)
@@ -23,25 +23,35 @@ class samsungParser():
             self.files = dict()
             self.files['log'] =  config['samsung']['log']
             self.keywords = dict()
-            self.keywords['recv'] = config['samsung']['recv']
-            self.keywords['sendreq'] = config['samsung']['sendreq']
-            self.keywords['sendrsp'] = config['samsung']['sendrsp']
+            self.keywords['recv'] = config['samsung']['keywords']['recv']
+            self.keywords['sendreq'] = config['samsung']['keywords']['sendreq']
+            self.keywords['sendrsp'] = config['samsung']['keywords']['sendrsp']
+            self.keywords['ikemsg'] = config['samsung']['keywords']['ikemsg']
+
+            realpath = os.path.realpath(logname)
+            self.file = realpath
 
         except (ConfigObjError, IOError) as e:
              print('Could not read "%s": %s' % (configfile, e))
 
     def getflow(self):
         #hard code here
+        '''
         samsungfileList = glob.glob(self.files['log'])
         if not samsungfileList:
             print 'no samsung log file found.'
             return
-        samsungfile = samsungfileList[0]
-        self.trimlog = 'trim_' + samsungfile
+        '''
+
+        samsungfile = self.file
+        basename = os.path.basename(samsungfile)
+        trimname = 'trim_' + basename
+        self.trimlog = os.path.dirname(samsungfile) + '/'+ trimname
         with open(self.trimlog, 'w') as tlog:
             tlog.truncate()
-
-        rePattern = r'' + self.keywords['recv'] + '|' + self.keywords['sendreq'] + '|' + self.keywords['sendrsp']
+        print self.keywords['ikemsg']
+        rePattern = r'' + self.keywords['recv'] + '|' + self.keywords['sendreq'] + '|' + self.keywords['sendrsp'] \
+                    + '|' + self.keywords['ikemsg']
         samsungPattern = re.compile(rePattern)
         print "all output will be redirected to " + self.trimlog
         with open(samsungfile) as sfile:
@@ -53,5 +63,5 @@ class samsungParser():
 
 if __name__ == '__main__':
     print 'start to parse samsung'
-    sp = samsungParser()
+    sp = samsungParser(logname='./samsung.log')
     sp.getflow()

@@ -219,20 +219,6 @@ class flowParser():
     def findmainlog(self, path):
         pass
 
-    def getPattern(self, taglist):
-        if taglist :
-            pattern = r''
-            tagtype = type(taglist)
-            if tagtype is list:
-                for i,tag in enumerate(taglist):
-                    pattern += str(tag) + '|'
-                pattern = pattern[:len(pattern)-1]
-            else:
-                pattern += taglist
-            return pattern
-        else:
-            self.logger.logger.error('tags is empty')
-            return None
 
     def getRegType(self, line):
         regpattern = re.compile(r'.*get register tpt type\<(.*)\>.*')
@@ -369,7 +355,7 @@ class flowParser():
         self.keylogdaps= lpdaps.getflow(has_ps=False)
 
         #rePattern = r'' + 'fsm(.*)' + ' | \[TIMER.*\]' + '|recv.*data' + '| process request' + '|process response'
-        lemonpattern = self.getPattern(self.lemontags)
+        lemonpattern = self.utils.getPattern(self.lemontags)
         self.logger.logger.info('lemon pattern is ' + lemonpattern)
         if not lemonpattern:
             self.logger.logger.error('lemonpattern is none!')

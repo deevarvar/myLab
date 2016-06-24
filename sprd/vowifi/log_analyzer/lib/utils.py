@@ -89,6 +89,26 @@ class utils():
         dots.setup(dots)
 
 
+    def getPattern(self, taglist):
+        '''
+        used to get comma delimetered value config.ini
+        :param taglist:
+        :return: pattern
+        '''
+        if taglist :
+            pattern = r''
+            tagtype = type(taglist)
+            if tagtype is list:
+                for i,tag in enumerate(taglist):
+                    pattern += str(tag) + '|'
+                pattern = pattern[:len(pattern)-1]
+            else:
+                pattern += taglist
+            return pattern
+        else:
+            self.logger.logger.error('tags is empty')
+            return None
+
 if __name__ == '__main__':
     utils = utils()
     matches = utils.findlogs('./src')
