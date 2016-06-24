@@ -260,13 +260,16 @@ class flowParser():
         #log may delay
         #NOTE: need to find pattern 'data length: 400' first
         datalenanchor = self.datalentags + str(senddatalen)
-        self.logger.logger.info('data anchor is ' + datalenanchor)
+        self.logger.logger.error('data anchor is ' + datalenanchor)
         while dataindex >= 0:
             if datalenanchor not in self.loglines[dataindex]:
                 dataindex = dataindex - 1
             else:
                 break
 
+        if dataindex < 0:
+            self.logger.logger.error('no sip msg for line ' + line + ', lineno is '+ str(lineno))
+            return
 
         while searchstart >= dataindex:
             if self.siptags in self.loglines[searchstart]:
@@ -313,12 +316,17 @@ class flowParser():
         #log may delay
         #NOTE: need to find pattern 'data length: 400' first
         datalenanchor = self.datalentags + str(recvdatalen)
-        self.logger.logger.info('data anchor is ' + datalenanchor)
-        while dataindex >= 0:
+        self.logger.logger.error('data anchor is ' + datalenanchor)
+        while dataindex >= 0 and dataindex < len(self.loglines):
             if datalenanchor not in self.loglines[dataindex]:
                 dataindex = dataindex + 1
             else:
                 break
+
+        if dataindex == len(self.loglines):
+            self.logger.logger.error("not sip msg for line " + line + ' , lineno  is '+ str(lineno))
+            return;
+
 
         searchstart = dataindex
         while searchstart <=  len(self.loglines):
@@ -435,6 +443,7 @@ class flowParser():
         recvdatalen = self.getDataLen(recvpattern, line)
 
         #FIXME: the 250 is some kind of exp value
+        #IKE msg can be longer than 250
         if recvdatalen < 250:
             self.logger.logger.warn('receiving non-SIP msg, len is ' + str(recvdatalen))
             return None
@@ -638,6 +647,12 @@ class flowParser():
         for sipindex, sip in enumerate(self.diagsips):
             if sip['issip']:
                 if 'REGISTER' in sip['cseq']:
+                    #add this special logic, there may be no 200 OK for Reg
+                    cseqnum = sip['cseq'].split(' ')[0]
+                    #self.logger.logger.error('cseqnum is ' + str(cseqnum) + ', fromnum is ' + str(sip['fromnum'])
+                    if int(cseqnum) == 1:
+                        self.uenum = sip['fromnum']
+
 
                     # use cseq:.*REGISTER to tell
                     #200 OK for REGISTER will include P-Associate-URI
@@ -652,6 +667,7 @@ class flowParser():
                     else:
                         self.uenum = sip['tonum']
                     break
+
 
     def assembleSipStr(self, sip, elements):
         callid = sip['callid']
@@ -1245,7 +1261,7 @@ class flowParser():
         #analyze the trim sip
         self.analyzeSip()
         #dump the trim sip
-        self.dumpDiagsip()
+        #self.dumpDiagsip()
         if self.diagsips:
             self.assembleDiagStr()
 
