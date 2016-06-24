@@ -14,7 +14,20 @@ from lib.utils import utils
 path = os.path.dirname(os.path.realpath(__file__))
 
 #TODO:
+#   packaging
 #   1. add package scripts
+#   ui
+#   1. add silent mode
+#   flowparser
+#   1. add ike parsing
+#   2. add service, adapter, imscm logic
+#   2.1 start from imscm
+#   3. error msg indication:
+#   4.1 parse reason,cause
+#   web page
+#   1. how to display
+#   2. overall results
+
 
 
 class loggergui():
@@ -23,8 +36,9 @@ class loggergui():
             configfile = path + '/config.ini'
             config = ConfigObj(configfile, file_error=True)
             self.config = config
-            self.logger = logConf()
             self.loglevel =  config['logging']['loglevel']
+            print self.loglevel
+            print logging.getLevelName(self.loglevel)
             self.logger = logConf(debuglevel=logging.getLevelName(self.loglevel))
 
             #one sip msg to render diagram's time

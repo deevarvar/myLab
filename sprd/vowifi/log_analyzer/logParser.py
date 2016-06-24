@@ -155,8 +155,9 @@ class logParser():
                                     self.piddb[pid]['tags'][ltag] = 1
                                 else:
                                     self.piddb[pid]['tags'][ltag] += 1
-
         self.logger.logger.info("total " + str(matchindex) + " lines.")
+        return self.log
+
 
     def gettags(self):
         #just parse the high level's log
