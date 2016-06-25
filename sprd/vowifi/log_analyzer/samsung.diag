@@ -3,32 +3,32 @@ seqdiag {
   // default value is 192default_fontsize = 16;
 activation = none;
 autonumber = True;
-Samsung -> NETWORK [label = "IKEv2 Msg: (retransmit count=3)" , note = " MsgId: 1
+Samsung -> NETWORK [label = "IKEv2 Msg: (retransmit count=3)" , note = " MsgId: 1
  Content:  (retransmit count=3)
 Time: 05-02 18:55:17.161
  LineNo: 621
 "];
-Samsung <- NETWORK [label = "IKEv2 Msg: HDR, IDr, EAP" , note = " MsgId: 1
+Samsung <- NETWORK [label = "IKEv2 Msg: HDR, IDr, EAP" , note = " MsgId: 1
  Content: , HDR, IDr, EAP
 Time: 05-02 18:55:17.721
  LineNo: 778
 "];
-Samsung -> NETWORK [label = "IKEv2 Msg: HDR, EAP" , note = " MsgId: 2
+Samsung -> NETWORK [label = "IKEv2 Msg: HDR, EAP" , note = " MsgId: 2
  Content: , HDR, EAP
 Time: 05-02 18:55:17.821
  LineNo: 801
 "];
-Samsung <- NETWORK [label = "IKEv2 Msg: HDR, EAP" , note = " MsgId: 2
+Samsung <- NETWORK [label = "IKEv2 Msg: HDR, EAP" , note = " MsgId: 2
  Content: , HDR, EAP
 Time: 05-02 18:55:18.441
  LineNo: 862
 "];
-Samsung -> NETWORK [label = "IKEv2 Msg: HDR, AUTH" , note = " MsgId: 3
+Samsung -> NETWORK [label = "IKEv2 Msg: HDR, AUTH" , note = " MsgId: 3
  Content: , HDR, AUTH
 Time: 05-02 18:55:18.441
  LineNo: 864
 "];
-Samsung <- NETWORK [label = "IKEv2 Msg: HDR, AUTH, CP, SA, TSi, TSr" , note = " MsgId: 3
+Samsung <- NETWORK [label = "IKEv2 Msg: HDR, AUTH, CP, SA, TSi, TSr" , note = " MsgId: 3
  Content: , HDR, AUTH, CP, SA, TSi, TSr
 Time: 05-02 18:55:18.911
  LineNo: 912
@@ -383,7 +383,7 @@ Samsung <- NETWORK [label = "Recv SIP Rsp: 200", note = " RspCode: 200
 Time: 05-02 18:57:19.329
  LineNo: 53657
 "];
-Samsung -> NETWORK [label = "IKEv2 Msg: HDR" , note = " MsgId: 4
+Samsung -> NETWORK [label = "IKEv2 Msg: HDR" , note = " MsgId: 4
  Content: , HDR
 Time: 05-02 18:57:19.469
  LineNo: 53893
@@ -393,7 +393,7 @@ Samsung -> NETWORK [label = "Send SIP Rsp: 200", note = " RspCode: 200
 Time: 05-02 18:57:19.739
  LineNo: 54060
 "];
-Samsung <- NETWORK [label = "IKEv2 Msg: HDR" , note = " MsgId: 4
+Samsung <- NETWORK [label = "IKEv2 Msg: HDR" , note = " MsgId: 4
  Content: , HDR
 Time: 05-02 18:57:19.799
  LineNo: 54155

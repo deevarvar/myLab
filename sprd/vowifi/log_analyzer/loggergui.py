@@ -7,6 +7,8 @@ import sys
 from configobj import ConfigObj,ConfigObjError
 import logging
 from flowParser import flowParser
+from samsungParser import samsungParser
+
 #sys.path.append('./lib')
 from lib.logConf import logConf
 from lib.utils import utils
@@ -55,34 +57,46 @@ class loggergui():
         # flowParser only parse one file
         title = 'VoWifi logger parser tool'
         buttonboxmsg = 'Please open a directory which contains slog.'
-        choices = ['Open the slog dir', 'Exit']
+        slogstring = 'Open the slog dir'
+        samsungfile = "Open Samsung log file"
+
+        choices = [slogstring, samsungfile , 'Exit']
         choice = buttonbox(buttonboxmsg, title = title, choices = choices)
         if choice != 'Exit':
 
+            if choice == slogstring:
 
 
-            folder = diropenbox()
+                folder = diropenbox()
 
-            if not folder:
-                msgbox('please relaunch and open a directory.')
-                exit
-            else:
-                helper = utils(configpath='./')
-                matches = helper.findlogs(folder)
-                for index,file in enumerate(matches):
-                    #call the real parser
-                    fp = flowParser(file)
-                    len = fp.getFlow()
-                    self.logger.logger.info('sip msgs len is ' + str(len))
-                    #pop up a msg box
-                    msg = 'log file is ' + file + '\n'
-                    msg += 'totally sip msgs are ' + str(len) + '\n'
-                    esttime = float(self.estimatetime)*int(len)
-                    timelog = 'estimate time  is ' + str(esttime) + ' seconds'
-                    msg = msg + timelog
-                    msgbox(msg)
-                    fp.parseFlow()
-                    fp.drawLemonDiag()
+                if not folder:
+                    msgbox('please relaunch and open a directory.')
+                    exit
+                else:
+                    helper = utils(configpath='./')
+                    matches = helper.findlogs(folder)
+                    for index,file in enumerate(matches):
+                        #call the real parser
+                        fp = flowParser(file)
+                        len = fp.getFlow()
+                        self.logger.logger.info('sip msgs len is ' + str(len))
+                        #pop up a msg box
+                        msg = 'log file is ' + file + '\n'
+                        msg += 'totally sip msgs are ' + str(len) + '\n'
+                        esttime = float(self.estimatetime)*int(len)
+                        timelog = 'estimate time  is ' + str(esttime) + ' seconds'
+                        msg = msg + timelog
+                        msgbox(msg)
+                        fp.parseFlow()
+                        fp.drawLemonDiag()
+            elif choice == samsungfile:
+                file = fileopenbox()
+                if not file:
+                    msgbox('please relaunch and open a valid samsung log.')
+                    exit
+                else:
+                    sp = samsungParser(logname=file)
+                    sp.getflow()
         else:
             return
 
