@@ -1,0 +1,411 @@
+seqdiag {
+ edge_length = 300;
+  // default value is 192default_fontsize = 16;
+activation = none;
+autonumber = True;
+Samsung -> NETWORK [label = "IKEv2 Msg: (retransmit count=3)" , note = " MsgId: 1
+ Content:  (retransmit count=3)
+Time: 05-02 18:55:17.161
+ LineNo: 621
+"];
+Samsung <- NETWORK [label = "IKEv2 Msg: HDR, IDr, EAP" , note = " MsgId: 1
+ Content: , HDR, IDr, EAP
+Time: 05-02 18:55:17.721
+ LineNo: 778
+"];
+Samsung -> NETWORK [label = "IKEv2 Msg: HDR, EAP" , note = " MsgId: 2
+ Content: , HDR, EAP
+Time: 05-02 18:55:17.821
+ LineNo: 801
+"];
+Samsung <- NETWORK [label = "IKEv2 Msg: HDR, EAP" , note = " MsgId: 2
+ Content: , HDR, EAP
+Time: 05-02 18:55:18.441
+ LineNo: 862
+"];
+Samsung -> NETWORK [label = "IKEv2 Msg: HDR, AUTH" , note = " MsgId: 3
+ Content: , HDR, AUTH
+Time: 05-02 18:55:18.441
+ LineNo: 864
+"];
+Samsung <- NETWORK [label = "IKEv2 Msg: HDR, AUTH, CP, SA, TSi, TSr" , note = " MsgId: 3
+ Content: , HDR, AUTH, CP, SA, TSi, TSr
+Time: 05-02 18:55:18.911
+ LineNo: 912
+"];
+Samsung -> NETWORK [label = "Send SIP Request: REGISTER", note = " Method: REGISTER
+ Cseq: 1 REGISTER
+Time: 05-02 18:55:20.409
+ LineNo: 2853
+"];
+Samsung <- NETWORK [label = "Recv SIP Rsp: 401", note = " RspCode: 401
+ Cseq:  1 REGISTER 
+Time: 05-02 18:55:21.849
+ LineNo: 4175
+"];
+Samsung -> NETWORK [label = "Send SIP Request: REGISTER", note = " Method: REGISTER
+ Cseq: 2 REGISTER
+Time: 05-02 18:55:22.209
+ LineNo: 4699
+"];
+Samsung <- NETWORK [label = "Recv SIP Rsp: 100", note = " RspCode: 100
+ Cseq:  2 REGISTER 
+Time: 05-02 18:55:37.039
+ LineNo: 8410
+"];
+Samsung <- NETWORK [label = "Recv SIP Rsp: 200", note = " RspCode: 200
+ Cseq:  2 REGISTER 
+Time: 05-02 18:55:43.189
+ LineNo: 9596
+"];
+Samsung -> NETWORK [label = "Send SIP Request: SUBSCRIBE", note = " Method: SUBSCRIBE
+ Cseq: 1 SUBSCRIBE
+Time: 05-02 18:55:43.339
+ LineNo: 10264
+"];
+Samsung <- NETWORK [label = "Recv SIP Rsp: 200", note = " RspCode: 200
+ Cseq:  1 SUBSCRIBE 
+Time: 05-02 18:55:43.809
+ LineNo: 11282
+"];
+Samsung -> NETWORK [label = "Send SIP Rsp: 200", note = " RspCode: 200
+ Cseq: 1 NOTIFY
+Time: 05-02 18:55:44.859
+ LineNo: 11771
+"];
+Samsung -> NETWORK [label = "Send SIP Request: INVITE", note = " Method: INVITE
+ Cseq: 1 INVITE
+Time: 05-02 18:56:28.689
+ LineNo: 18923
+"];
+Samsung <- NETWORK [label = "Recv SIP Rsp: 100", note = " RspCode: 100
+ Cseq:  1 INVITE 
+Time: 05-02 18:56:29.059
+ LineNo: 20032
+"];
+Samsung <- NETWORK [label = "Recv SIP Rsp: 183", note = " RspCode: 183
+ Cseq:  1 INVITE 
+Time: 05-02 18:56:30.399
+ LineNo: 20770
+"];
+Samsung -> NETWORK [label = "Send SIP Request: PRACK", note = " Method: PRACK
+ Cseq: 2 PRACK
+Time: 05-02 18:56:30.439
+ LineNo: 21205
+"];
+Samsung <- NETWORK [label = "Recv SIP Rsp: 183", note = " RspCode: 183
+ Cseq:  1 INVITE 
+Time: 05-02 18:56:30.899
+ LineNo: 21671
+"];
+Samsung <- NETWORK [label = "Recv SIP Rsp: 200", note = " RspCode: 200
+ Cseq:  2 PRACK 
+Time: 05-02 18:56:31.369
+ LineNo: 21861
+"];
+Samsung -> NETWORK [label = "Send SIP Rsp: 200", note = " RspCode: 200
+ Cseq: 1 UPDATE
+Time: 05-02 18:56:31.449
+ LineNo: 22584
+"];
+Samsung <- NETWORK [label = "Recv SIP Rsp: 180", note = " RspCode: 180
+ Cseq:  1 INVITE 
+Time: 05-02 18:56:31.739
+ LineNo: 22691
+"];
+Samsung <- NETWORK [label = "Recv SIP Rsp: 183", note = " RspCode: 183
+ Cseq:  1 INVITE 
+Time: 05-02 18:56:32.079
+ LineNo: 23673
+"];
+Samsung -> NETWORK [label = "Send SIP Rsp: 200", note = " RspCode: 200
+ Cseq: 2 UPDATE
+Time: 05-02 18:56:32.929
+ LineNo: 25402
+"];
+Samsung <- NETWORK [label = "Recv SIP Rsp: 200", note = " RspCode: 200
+ Cseq:  1 INVITE 
+Time: 05-02 18:56:33.799
+ LineNo: 25549
+"];
+Samsung -> NETWORK [label = "Send SIP Request: ACK", note = " Method: ACK
+ Cseq: 1 ACK
+Time: 05-02 18:56:33.859
+ LineNo: 25829
+"];
+Samsung -> NETWORK [label = "Send SIP Request: INVITE", note = " Method: INVITE
+ Cseq: 3 INVITE
+Time: 05-02 18:56:40.499
+ LineNo: 27154
+"];
+Samsung <- NETWORK [label = "Recv SIP Rsp: 100", note = " RspCode: 100
+ Cseq:  3 INVITE 
+Time: 05-02 18:56:40.859
+ LineNo: 27251
+"];
+Samsung <- NETWORK [label = "Recv SIP Rsp: 200", note = " RspCode: 200
+ Cseq:  3 INVITE 
+Time: 05-02 18:56:41.939
+ LineNo: 27412
+"];
+Samsung -> NETWORK [label = "Send SIP Request: ACK", note = " Method: ACK
+ Cseq: 3 ACK
+Time: 05-02 18:56:42.029
+ LineNo: 27885
+"];
+Samsung <- NETWORK [label = "Recv SIP Rsp: 200", note = " RspCode: 200
+ Cseq:  3 INVITE 
+Time: 05-02 18:56:42.389
+ LineNo: 28450
+"];
+Samsung -> NETWORK [label = "Send SIP Request: ACK", note = " Method: ACK
+ Cseq: 3 ACK
+Time: 05-02 18:56:42.399
+ LineNo: 28550
+"];
+Samsung -> NETWORK [label = "Send SIP Rsp: 100", note = " RspCode: 100
+ Cseq: 3 INVITE
+Time: 05-02 18:56:42.969
+ LineNo: 28685
+"];
+Samsung -> NETWORK [label = "Send SIP Rsp: 200", note = " RspCode: 200
+ Cseq: 3 INVITE
+Time: 05-02 18:56:43.029
+ LineNo: 29644
+"];
+Samsung -> NETWORK [label = "Send SIP Request: INVITE", note = " Method: INVITE
+ Cseq: 4 INVITE
+Time: 05-02 18:56:46.759
+ LineNo: 31095
+"];
+Samsung <- NETWORK [label = "Recv SIP Rsp: 100", note = " RspCode: 100
+ Cseq:  4 INVITE 
+Time: 05-02 18:56:47.119
+ LineNo: 31363
+"];
+Samsung <- NETWORK [label = "Recv SIP Rsp: 200", note = " RspCode: 200
+ Cseq:  4 INVITE 
+Time: 05-02 18:56:47.489
+ LineNo: 31526
+"];
+Samsung -> NETWORK [label = "Send SIP Request: ACK", note = " Method: ACK
+ Cseq: 4 ACK
+Time: 05-02 18:56:47.569
+ LineNo: 32015
+"];
+Samsung <- NETWORK [label = "Recv SIP Rsp: 200", note = " RspCode: 200
+ Cseq:  4 INVITE 
+Time: 05-02 18:56:47.889
+ LineNo: 32675
+"];
+Samsung -> NETWORK [label = "Send SIP Request: ACK", note = " Method: ACK
+ Cseq: 4 ACK
+Time: 05-02 18:56:47.889
+ LineNo: 32783
+"];
+Samsung -> NETWORK [label = "Send SIP Rsp: 100", note = " RspCode: 100
+ Cseq: 4 INVITE
+Time: 05-02 18:56:48.629
+ LineNo: 33116
+"];
+Samsung -> NETWORK [label = "Send SIP Rsp: 200", note = " RspCode: 200
+ Cseq: 4 INVITE
+Time: 05-02 18:56:48.689
+ LineNo: 34003
+"];
+Samsung -> NETWORK [label = "Send SIP Request: INVITE", note = " Method: INVITE
+ Cseq: 5 INVITE
+Time: 05-02 18:56:51.449
+ LineNo: 35425
+"];
+Samsung <- NETWORK [label = "Recv SIP Rsp: 100", note = " RspCode: 100
+ Cseq:  5 INVITE 
+Time: 05-02 18:56:51.799
+ LineNo: 35525
+"];
+Samsung <- NETWORK [label = "Recv SIP Rsp: 200", note = " RspCode: 200
+ Cseq:  5 INVITE 
+Time: 05-02 18:56:52.779
+ LineNo: 35685
+"];
+Samsung -> NETWORK [label = "Send SIP Request: ACK", note = " Method: ACK
+ Cseq: 5 ACK
+Time: 05-02 18:56:52.859
+ LineNo: 36159
+"];
+Samsung <- NETWORK [label = "Recv SIP Rsp: 200", note = " RspCode: 200
+ Cseq:  5 INVITE 
+Time: 05-02 18:56:53.219
+ LineNo: 36653
+"];
+Samsung -> NETWORK [label = "Send SIP Request: ACK", note = " Method: ACK
+ Cseq: 5 ACK
+Time: 05-02 18:56:53.219
+ LineNo: 36761
+"];
+Samsung -> NETWORK [label = "Send SIP Rsp: 100", note = " RspCode: 100
+ Cseq: 5 INVITE
+Time: 05-02 18:56:53.819
+ LineNo: 36955
+"];
+Samsung -> NETWORK [label = "Send SIP Rsp: 200", note = " RspCode: 200
+ Cseq: 5 INVITE
+Time: 05-02 18:56:53.889
+ LineNo: 37854
+"];
+Samsung -> NETWORK [label = "Send SIP Request: INVITE", note = " Method: INVITE
+ Cseq: 6 INVITE
+Time: 05-02 18:56:56.999
+ LineNo: 39256
+"];
+Samsung <- NETWORK [label = "Recv SIP Rsp: 100", note = " RspCode: 100
+ Cseq:  6 INVITE 
+Time: 05-02 18:56:57.359
+ LineNo: 39353
+"];
+Samsung <- NETWORK [label = "Recv SIP Rsp: 200", note = " RspCode: 200
+ Cseq:  6 INVITE 
+Time: 05-02 18:56:57.739
+ LineNo: 39542
+"];
+Samsung -> NETWORK [label = "Send SIP Request: ACK", note = " Method: ACK
+ Cseq: 6 ACK
+Time: 05-02 18:56:57.819
+ LineNo: 40103
+"];
+Samsung <- NETWORK [label = "Recv SIP Rsp: 200", note = " RspCode: 200
+ Cseq:  6 INVITE 
+Time: 05-02 18:56:58.079
+ LineNo: 40679
+"];
+Samsung -> NETWORK [label = "Send SIP Request: ACK", note = " Method: ACK
+ Cseq: 6 ACK
+Time: 05-02 18:56:58.079
+ LineNo: 40813
+"];
+Samsung -> NETWORK [label = "Send SIP Rsp: 100", note = " RspCode: 100
+ Cseq: 6 INVITE
+Time: 05-02 18:56:58.849
+ LineNo: 41109
+"];
+Samsung -> NETWORK [label = "Send SIP Rsp: 200", note = " RspCode: 200
+ Cseq: 6 INVITE
+Time: 05-02 18:56:58.919
+ LineNo: 42048
+"];
+Samsung -> NETWORK [label = "Send SIP Request: INVITE", note = " Method: INVITE
+ Cseq: 7 INVITE
+Time: 05-02 18:57:03.329
+ LineNo: 43658
+"];
+Samsung <- NETWORK [label = "Recv SIP Rsp: 100", note = " RspCode: 100
+ Cseq:  7 INVITE 
+Time: 05-02 18:57:03.689
+ LineNo: 43759
+"];
+Samsung <- NETWORK [label = "Recv SIP Rsp: 200", note = " RspCode: 200
+ Cseq:  7 INVITE 
+Time: 05-02 18:57:04.919
+ LineNo: 43920
+"];
+Samsung -> NETWORK [label = "Send SIP Request: ACK", note = " Method: ACK
+ Cseq: 7 ACK
+Time: 05-02 18:57:04.999
+ LineNo: 44326
+"];
+Samsung <- NETWORK [label = "Recv SIP Rsp: 200", note = " RspCode: 200
+ Cseq:  7 INVITE 
+Time: 05-02 18:57:05.249
+ LineNo: 44894
+"];
+Samsung -> NETWORK [label = "Send SIP Request: ACK", note = " Method: ACK
+ Cseq: 7 ACK
+Time: 05-02 18:57:05.259
+ LineNo: 45002
+"];
+Samsung -> NETWORK [label = "Send SIP Rsp: 100", note = " RspCode: 100
+ Cseq: 7 INVITE
+Time: 05-02 18:57:06.019
+ LineNo: 45232
+"];
+Samsung -> NETWORK [label = "Send SIP Rsp: 200", note = " RspCode: 200
+ Cseq: 7 INVITE
+Time: 05-02 18:57:06.079
+ LineNo: 46131
+"];
+Samsung -> NETWORK [label = "Send SIP Request: INVITE", note = " Method: INVITE
+ Cseq: 8 INVITE
+Time: 05-02 18:57:10.739
+ LineNo: 48023
+"];
+Samsung <- NETWORK [label = "Recv SIP Rsp: 100", note = " RspCode: 100
+ Cseq:  8 INVITE 
+Time: 05-02 18:57:11.099
+ LineNo: 48118
+"];
+Samsung <- NETWORK [label = "Recv SIP Rsp: 200", note = " RspCode: 200
+ Cseq:  8 INVITE 
+Time: 05-02 18:57:11.449
+ LineNo: 48420
+"];
+Samsung -> NETWORK [label = "Send SIP Request: ACK", note = " Method: ACK
+ Cseq: 8 ACK
+Time: 05-02 18:57:11.519
+ LineNo: 48912
+"];
+Samsung <- NETWORK [label = "Recv SIP Rsp: 200", note = " RspCode: 200
+ Cseq:  8 INVITE 
+Time: 05-02 18:57:11.799
+ LineNo: 49565
+"];
+Samsung -> NETWORK [label = "Send SIP Request: ACK", note = " Method: ACK
+ Cseq: 8 ACK
+Time: 05-02 18:57:11.809
+ LineNo: 49673
+"];
+Samsung -> NETWORK [label = "Send SIP Rsp: 100", note = " RspCode: 100
+ Cseq: 8 INVITE
+Time: 05-02 18:57:14.239
+ LineNo: 50274
+"];
+Samsung -> NETWORK [label = "Send SIP Rsp: 200", note = " RspCode: 200
+ Cseq: 8 INVITE
+Time: 05-02 18:57:14.279
+ LineNo: 51100
+"];
+Samsung -> NETWORK [label = "Send SIP Request: BYE", note = " Method: BYE
+ Cseq: 9 BYE
+Time: 05-02 18:57:18.199
+ LineNo: 53213
+"];
+Samsung <- NETWORK [label = "Recv SIP Rsp: 200", note = " RspCode: 200
+ Cseq:  9 BYE 
+Time: 05-02 18:57:19.329
+ LineNo: 53657
+"];
+Samsung -> NETWORK [label = "IKEv2 Msg: HDR" , note = " MsgId: 4
+ Content: , HDR
+Time: 05-02 18:57:19.469
+ LineNo: 53893
+"];
+Samsung -> NETWORK [label = "Send SIP Rsp: 200", note = " RspCode: 200
+ Cseq: 1 MESSAGE
+Time: 05-02 18:57:19.739
+ LineNo: 54060
+"];
+Samsung <- NETWORK [label = "IKEv2 Msg: HDR" , note = " MsgId: 4
+ Content: , HDR
+Time: 05-02 18:57:19.799
+ LineNo: 54155
+"];
+Samsung -> NETWORK [label = "Send SIP Request: MESSAGE", note = " Method: MESSAGE
+ Cseq: 1 MESSAGE
+Time: 05-02 18:57:19.839
+ LineNo: 54392
+"];
+Samsung <- NETWORK [label = "Recv SIP Rsp: 202", note = " RspCode: 202
+ Cseq:  1 MESSAGE 
+Time: 05-02 18:57:20.189
+ LineNo: 54586
+"];
+ }

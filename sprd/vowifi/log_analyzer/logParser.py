@@ -138,7 +138,7 @@ class logParser():
                         keyspattern = re.compile(allkeywords)
                         if keyspattern.search(line):
                            with open(self.trimlog, 'a+') as tlog:
-                                tlog.write(line)
+                                tlog.write(str(lineno) + ' ' + line)
 
                     for i,pid in enumerate(self.pids):
                         lineinfo = line.split()
@@ -159,7 +159,7 @@ class logParser():
                             matchindex += 1
                             #get the line
                             with open(self.trimlog, 'a+') as tlog:
-                                tlog.write(line)
+                                tlog.write(str(lineno) + ' ' + line)
                             #get tags
 
                             #the two tags make no sense

@@ -27,6 +27,7 @@ path = os.path.dirname(os.path.realpath(__file__))
 #   web page
 #   1. how to display
 #   2. overall results
+#   3. possible error msg defined in config.ini
 
 
 
