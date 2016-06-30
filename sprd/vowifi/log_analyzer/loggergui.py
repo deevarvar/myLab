@@ -28,7 +28,7 @@ path = os.path.dirname(os.path.realpath(__file__))
 #   4.1 parse reason,cause
 #   web page
 #   1. how to display
-#   2. overall results
+#   2. overall results, use actdiag
 #   3. possible error msg defined in config.ini
 
 

@@ -172,7 +172,7 @@ class flowParser():
             self.keylogdaps = ''
 
             #first we just cache all lines
-            with open(self.log) as logfile:
+            with open(self.log, 'rb') as logfile:
                 self.loglines = logfile.readlines()
 
             with open(self.lemonlog, 'w') as tlog:
@@ -349,10 +349,12 @@ class flowParser():
 
     def getFlow(self):
         #first of all we get the whole important logs
-        lpall = logParser(logname=self.log, filterlevel='high', outputdir=self.logdir)
-        self.keylogall = lpall.getflow(has_ps=False)
         lpdaps = logParser(logname=self.log, filterlevel='low', outputdir=self.logdir)
         self.keylogdaps= lpdaps.getflow(has_ps=False)
+
+        lpall = logParser(logname=self.log, filterlevel='high', outputdir=self.logdir)
+        self.keylogall = lpall.getflow(has_ps=False)
+
 
         #rePattern = r'' + 'fsm(.*)' + ' | \[TIMER.*\]' + '|recv.*data' + '| process request' + '|process response'
         lemonpattern = self.utils.getPattern(self.lemontags)
@@ -368,7 +370,7 @@ class flowParser():
 
 
         self.logger.logger.info("all output will be redirected to " + self.lemonlog)
-        with open(self.log) as logfile:
+        with open(self.log, 'rb') as logfile:
             for lineno, line in enumerate(logfile):
                 self.getRegType(line)
                 if sprdPattern.search(line):
@@ -1249,7 +1251,7 @@ class flowParser():
         #analyze the trim sip
         self.analyzeSip()
         #dump the trim sip
-        #self.dumpDiagsip()
+        self.dumpDiagsip()
         if self.diagsips:
             self.assembleDiagStr()
 

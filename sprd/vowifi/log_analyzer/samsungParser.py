@@ -12,6 +12,8 @@ from lib.utils import utils
 import logging
 
 from seqdiag import parser, builder, drawer
+from blockdiag.utils.bootstrap import create_fontmap
+
 
 '''
 1. recv : SipStackTransportCallback.*Cseq
@@ -49,6 +51,8 @@ class samsungParser():
 
             #all msgs will be included
             self.msgs = list()
+
+            self.lines = list()
 
             with open(self.log) as samsungfile:
                 self.lines = samsungfile.readlines()
@@ -289,7 +293,7 @@ class samsungParser():
         diagram_definition = u"""seqdiag {\n"""
         #Set fontsize.
         diagram_definition += " edge_length = 300;\n  // default value is 192"
-        diagram_definition += "default_fontsize = 16;\n"
+        diagram_definition += "default_fontsize = 30;\n"
         #Do not show activity line
         diagram_definition += "activation = none;\n"
         #Numbering edges automaticaly
@@ -316,6 +320,14 @@ class samsungParser():
         diagram = builder.ScreenNodeBuilder.build(tree)
 
         self.logger.logger.info('diagram file is ' + pngname)
+        options = {
+            'fontmap': './arial.ttf'
+        }
+        '''
+        options = self.utils.dotdict(options)
+        print options.fontmap
+        create_fontmap(options)
+        '''
         draw = drawer.DiagramDraw('PNG', diagram, filename=pngname, debug=True)
         draw.draw()
         draw.save()
@@ -343,10 +355,11 @@ class samsungParser():
         samsungPattern = re.compile(rePattern)
         '''
         print "all output will be redirected to " + self.trimlog
-        with open(samsungfile) as sfile:
-            for lineno, line in enumerate(sfile):
+        with open(samsungfile, 'rb') as sfile:
+            self.lines = sfile.readlines()
+            for lineno, line  in enumerate(self.lines):
 
-
+                #self.logger.logger.info('lineno is ' + str(lineno) + line)
                 self.getIke(lineno, line)
                 self.getSendSipreq(lineno, line)
                 self.getSendSipRsp(lineno,line)
