@@ -23,6 +23,9 @@ from configobj import ConfigObj,ConfigObjError
 import re
 from lib.logConf import logConf
 from lib.utils import utils
+
+from lib.errormsg import imscmmsg,s2bmsg,servicemsg,adaptermsg,lemonmsg
+
 import logging
 
 '''
@@ -94,27 +97,36 @@ class logParser():
             self.processout = outputdir + 'processout.log'
 
             self.keylog = outputdir + 'key_' + os.path.basename(realpath)
-
+            self.elog = outputdir + 'error_' + os.path.basename(realpath)
 
             #read errorpattern and keys
             self.errorpattern = dict()
             self.keys = dict()
-            self.errorpattern['lemon'] = config['errormsg']['lemon']['errorpattern']
-            self.errorpattern['imscm'] = config['errormsg']['imscm']['errorpattern']
-            self.errorpattern['adapter'] = config['errormsg']['adapter']['errorpattern']
-            self.errorpattern['service'] = config['errormsg']['service']['errorpattern']
+            self.errorpattern['lemon'] = lemonmsg.errorpattern
+            self.errorpattern['imscm'] = imscmmsg.errorpattern
+            self.errorpattern['adapter'] = adaptermsg.errorpattern
+            self.errorpattern['service'] = servicemsg.errorpattern
 
+            self.keys = dict()
+            self.keys['imscmkey'] = self.utils.getPattern(imscmmsg.keys)
+            self.logger.logger.error('imscmkey is ' + self.keys['imscmkey'])
+            self.keys['adapterkey'] = self.utils.getPattern(adaptermsg.keys)
+            self.logger.logger.error('adapterkey is ' + self.keys['adapterkey'] )
+            self.keys['lemonkey'] = self.utils.getPattern(lemonmsg.keys)
+            self.logger.logger.error('lemonkey is ' + self.keys['lemonkey'])
+            self.keys['servicekey'] = self.utils.getPattern(servicemsg.keys)
+            self.logger.logger.error('servicekey is ' + self.keys['servicekey'])
+            self.keys['s2bkey'] = self.utils.getPattern(s2bmsg.keys)
+            self.logger.logger.error('s2bkey is ' + self.keys['s2bkey'])
 
-            self.keys['s2b'] = config['errormsg']['s2b']['keys']
-            self.keys['lemon'] = config['errormsg']['lemon']['keys']
-            self.keys['imscm'] = config['errormsg']['imscm']['keys']
-            self.keys['adapter'] = config['errormsg']['adapter']['keys']
-            self.keys['service'] = config['errormsg']['service']['keys']
 
 
 
             with open(self.keylog, 'w') as klog:
                 klog.truncate()#index = 0
+
+            with open(self.elog, 'w') as elog:
+                elog.truncate()#index = 0
 
             self.tagfile = "processtags"
 
@@ -151,7 +163,7 @@ class logParser():
                             self.piddb[lpid]['tags'] = dict()
 
 
-    def getkeylog(self, lineno, line):
+    def geterrorlog(self, lineno, line):
         '''
         analyze the line, if meets below:
         1. error msg of all components
@@ -167,6 +179,20 @@ class logParser():
         #self.logger.logger.error('allerrorpattern is ' + allerrorpattern);
         repattern = re.compile(allerrorpattern)
         if repattern.search(line):
+            with open(self.elog, 'a+') as elog:
+                elog.write(str(lineno) + ' ' + line)
+            #just copy log to
+            with open(self.keylog, 'a+') as klog:
+                klog.write(str(lineno) + ' ' + line)
+
+
+    #get key words log
+
+    def getkeylog(self, lineno, line):
+
+        allkey = self.keys['imscmkey'] + '|' + self.keys['adapterkey'] + '|' + self.keys['lemonkey'] + '|' + self.keys['servicekey'] +'|' + self.keys['s2bkey']
+        allkeypattern = re.compile(allkey)
+        if allkeypattern.search(line):
             with open(self.keylog, 'a+') as klog:
                 klog.write(str(lineno) + ' ' + line)
 
@@ -183,8 +209,8 @@ class logParser():
             with open(self.log, 'rb') as logfile:
                 for lineno,line in enumerate(logfile):
                     #try to get key log
-                    self.getkeylog(lineno, line)
-
+                    self.geterrorlog(lineno, line)
+                    self.getkeylog(lineno,line)
 
                     allkeywords= self.utils.getPattern(self.keywords)
                     #self.logger.logger.info('allkeywords is ' + allkeywords)

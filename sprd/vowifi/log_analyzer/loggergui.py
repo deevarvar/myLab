@@ -26,6 +26,7 @@ path = os.path.dirname(os.path.realpath(__file__))
 #   2.1 start from imscm
 #   3. error msg indication:
 #   4.1 parse reason,cause
+#   4.2 b2bua recode
 #   web page
 #   1. how to display
 #   2. overall results, use actdiag
