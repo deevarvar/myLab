@@ -705,8 +705,9 @@ class flowParser():
         if sip['issdp'] and sip['isinvite'] :
             action = "Action: " +  sip['action'] + '\n'
 
-        if sip['b2bua']:
+        if sip['b2bua'] or sip['hascause']:
             labelcolor = ", color=red"
+
 
         if sip['issdp']:
             sdpstring = " with sdp"
@@ -720,7 +721,12 @@ class flowParser():
             sdpstring = " without sdp"
             #B2BUA's request will be marked
 
-        note = " Note: " + sdpstring + '\n'
+        if sip['cause']:
+            cause = ',' + str(sip['cause']['code']) + '/' + sip['cause']['isdn']
+        else:
+            cause = ''
+
+        note = " Note: " + sdpstring + cause + '\n'
         cseq = " CSeq: " + sip['cseq'] + '\n'
         #callid = " Call-ID: "+ sip['callid'] + '\n'
         fromtag = " From: " + sip['fromnum'] + '\n'
@@ -1107,6 +1113,9 @@ class flowParser():
         diaginfo['sdp'] = list()
         diaginfo['issip'] = 1
 
+        diaginfo['hascause'] = False
+        diaginfo['cause'] = dict()
+
         #sdp record
         sdpstartindex = 0
 
@@ -1134,6 +1143,7 @@ class flowParser():
                     continue
 
             status = sipparser.getStatusLine(header)
+
             if status:
                 self.logger.logger.debug('found status ' + status + ' in ' +  str(index) + ' sip msg')
                 diaginfo['lineno'] = lineno
@@ -1188,6 +1198,11 @@ class flowParser():
             if b2buaflag:
                 diaginfo['b2bua'] = True
 
+            cause = sipparser.getCause(header)
+            if cause:
+                diaginfo['hascause'] = True
+                diaginfo['cause'] = cause #Two member: code ,isdn
+                self.logger.logger.error('cause code is ' + str(cause['code']) + ', string is ' + cause['isdn'] )
             #add logic to record sdp body
             sdppair = sipparser.sdpParser(header)
             if sdppair:

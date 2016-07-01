@@ -5,7 +5,7 @@ import os
 import sys
 import re
 from configobj import ConfigObj,ConfigObjError
-
+from constants import Q850map
 path = os.path.dirname(os.path.realpath(__file__))
 sys.path.append('./')
 from logConf import logConf
@@ -28,6 +28,7 @@ class SipParser():
             self.directpattern = config['sipParser']['directpattern']
             self.mediapattern = config['sipParser']['mediapattern']
             self.b2buapattern = config['sipParser']['b2buapattern']
+            self.causepattern =  config['sipParser']['causepattern']
 
             #define compact headers
             #http://www.cs.columbia.edu/sip/compact.html
@@ -208,6 +209,21 @@ class SipParser():
         else:
             return True
 
+    def getCause(self, line):
+        causepattern = re.compile(self.causepattern)
+
+        match = causepattern.search(line)
+        if match:
+            cause = dict()
+            cause['code'] = match.group(1).strip()
+            cause['isdn'] = ''
+            if str(cause['code']) in Q850map:
+                cause['isdn'] = Q850map[cause['code']]['isdn']
+            self.logger.logger.info('cause code is ' + str(cause['code']) + ', string is ' + cause['isdn'] )
+            return cause
+        else:
+            return False
+
 if __name__ == '__main__':
     #TODO write own ut function
     reqline = "04-17 23:21:27.697  1681  2968 D LEMON   : REGISTER sip:ims.mnc872.mcc405.3gppnetwork.org SIP/2.0"
@@ -258,3 +274,7 @@ if __name__ == '__main__':
 
     b2btag = "06-07 12:21:20.705  1948  3081 D LEMON   : P-Com.Nokia.B2BUA-Involved:no"
     print sp.checkB2BUA(b2btag)
+
+    causetag ="06-23 13:31:18.635  2140  6550 D LEMON   : Reason:Q.850;cause=16"
+    cause = sp.getCause(causetag)
+    print cause['code']
