@@ -359,7 +359,7 @@ class samsungParser():
             self.lines = sfile.readlines()
             for lineno, line  in enumerate(self.lines):
 
-                #self.logger.logger.info('lineno is ' + str(lineno) + line)
+                #self.logger.logger.info('lineno is ' + str(lineno) + '  '+line)
                 self.getIke(lineno, line)
                 self.getSendSipreq(lineno, line)
                 self.getSendSipRsp(lineno,line)

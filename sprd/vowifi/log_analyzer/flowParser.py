@@ -129,9 +129,8 @@ class flowParser():
             self.adaptertags = config['sprd']['adaptertags']
             self.sendertags = config['sprd']['sendertags']
             self.receivertags =  config['sprd']['receivertags']
-            self.iketags = config['sprd']['iketags']
+            self.iketags = config['sprd']['iketags'] + '|' + config['sprd']['ikenewtags']
             self.siptags = config['sprd']['siptags']
-
 
 
             self.datalentags = config['sprd']['datalentags']
@@ -333,6 +332,7 @@ class flowParser():
                     break
             else:
                 searchstart += 1
+
         with open(self.lemonlog, 'a+') as llog:
             self.logger.logger.info('dump line from ' + str(start) + ' to ' + str(end))
             recvsip = dict()
@@ -346,6 +346,59 @@ class flowParser():
                 recvsip['msg'].append(self.loglines[pindex])
                 llog.write(self.loglines[pindex])
         self.sipmsgs.append(recvsip)
+
+    def getikemsg(self, line, lineno):
+        ikemsg = dict()
+        ikemsg['issip'] = 0
+        ikemsg['lineno'] = lineno
+        fields = line.split(' ')
+        #04-17 23:21:24.420
+        timestamp = fields[0] + ' ' + fields[1]
+        ikemsg['timestamp'] = timestamp
+
+        ikemsg['msg'] = line
+        ikemsg['verbosemsg'] = list()
+        ikeparser = self.ikeParser
+        msgheader = ikeparser.getIkeHeader(line)
+
+        if msgheader:
+           ikemsg['action'] = msgheader['action']
+           ikemsg['content'] = msgheader['content']
+           ikemsg['msgid'] = msgheader['msgid']
+        else:
+            self.logger.logger.error('not valid ike included in ' + line)
+
+
+        #there is Encode/Decode end tag, copy start lineno to end tag lineno
+
+
+
+        #the matching line
+        endtag = ''
+        if ikemsg['action'] == 'Decode':
+            endtag = self.config['sprd']['ikedecodeendtags']
+        else:
+            endtag = self.config['sprd']['ikeencodeendtags']
+
+        searchstart = lineno + 1
+        endlineno = lineno + 1
+        self.logger.logger.info('searchstart is ' + str(searchstart) + ', endtag is ' + endtag)
+        while searchstart <= len(self.loglines):
+            #just search forward
+            #self.logger.logger.error('searchstart is ' + str(searchstart))
+            if endtag in self.loglines[searchstart]:
+                endlineno = searchstart
+                break
+            else:
+                searchstart += 1
+        with open(self.lemonlog, 'a+') as llog:
+            self.logger.logger.error('dump line from ' + str(lineno) + ' to ' + str(endlineno))
+
+            for pindex in range(lineno-1,endlineno+1):
+                ikemsg['verbosemsg'].append(self.loglines[pindex])
+                llog.write(self.loglines[pindex])
+
+        self.sipmsgs.append(ikemsg)
 
     def getFlow(self):
         #first of all we get the whole important logs
@@ -391,16 +444,7 @@ class flowParser():
                         llog.write(line)
 
                 if ikepattern.search(line):
-                    ikemsg = dict()
-                    ikemsg['issip'] = 0
-                    ikemsg['lineno'] = lineno
-                    fields = line.split(' ')
-                    #04-17 23:21:24.420
-                    timestamp = fields[0] + ' ' + fields[1]
-                    ikemsg['timestamp'] = timestamp
-                    ikemsg['msg'] = line
-                    self.sipmsgs.append(ikemsg)
-
+                    self.getikemsg(line, lineno)
 
 
         return len(self.sipmsgs)
@@ -1231,21 +1275,14 @@ class flowParser():
         diaginfo['issip'] = 0
         diaginfo['timestamp'] = ikeobj['timestamp']
         diaginfo['lineno'] = ikeobj['lineno']
+        diaginfo['action'] = ikeobj['action']
+        diaginfo['content'] = ikeobj['content']
+        diaginfo['msgid'] = ikeobj['msgid']
 
-        msgheader = ikeparser.getIkeHeader(msg)
-
-        if msgheader:
-           diaginfo['action'] = msgheader['action']
-           diaginfo['content'] = msgheader['content']
-           diaginfo['msgid'] = msgheader['msgid']
-
-           if diaginfo['action'] == 'Decode':
-               diaginfo['send'] = False
-           else:
-               diaginfo['send'] = True
-
+        if diaginfo['action'] == 'Decode':
+            diaginfo['send'] = False
         else:
-            self.logger.logger.error('not valid ike included in ' + msg)
+            diaginfo['send'] = True
 
         self.diagsips.append(diaginfo)
 
