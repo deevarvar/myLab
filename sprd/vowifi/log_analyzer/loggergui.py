@@ -8,10 +8,14 @@ from configobj import ConfigObj,ConfigObjError
 import logging
 from flowParser import flowParser
 from samsungParser import samsungParser
-
+from threading import Thread,Event
+import multiprocessing
+from lib.newthread import ThreadWithExc, StoppableThread
 #sys.path.append('./lib')
+from lib.displaywindow import Application
 from lib.logConf import logConf
 from lib.utils import utils
+from time import gmtime, strftime
 
 path = os.path.dirname(os.path.realpath(__file__))
 
@@ -33,7 +37,6 @@ path = os.path.dirname(os.path.realpath(__file__))
 #   3. possible error msg defined in config.ini
 
 
-
 class loggergui():
     def __init__(self):
         try:
@@ -41,16 +44,37 @@ class loggergui():
             config = ConfigObj(configfile, file_error=True)
             self.config = config
             self.loglevel =  config['logging']['loglevel']
+            self.msglen = 0
             print self.loglevel
             print logging.getLevelName(self.loglevel)
             self.logger = logConf(debuglevel=logging.getLevelName(self.loglevel))
 
             #one sip msg to render diagram's time
             self.estimatetime = config['utils']['estimate']
+            self.threadlist = list()
 
         except (ConfigObjError, IOError) as e:
              print 'Could not read "%s": %s' % (configfile, e)
 
+
+
+    def popupmsg(self, file):
+        len = self.msglen
+        self.logger.logger.info('msg len is ' + str(len))
+        msg = 'log file is ' + file + '\n'
+        msg += 'totally sip/ike msgs are ' + str(len) + '\n'
+        esttime = float(self.estimatetime)*int(len)
+        timelog = 'estimate time  is ' + str(esttime) + ' seconds'
+        msg = msg + timelog
+        msgbox(msg)
+
+    def popupthread(self, file):
+        app = Application(filename=file)
+        app.mainloop()
+
+
+    def workerthread(self, fileparser):
+        pass
 
     def run(self):
         # util will do the search
@@ -78,18 +102,37 @@ class loggergui():
                     matches = helper.findlogs(folder)
                     for index,file in enumerate(matches):
                         #call the real parser
+
+                        self.curtimestamp = strftime("%Y_%m_%d_%H_%M_%S", gmtime())
+                        currentfile = os.path.realpath(self.curtimestamp + '_popup.log')
+
+                        #pop up a msg box
+                        #self.popupmsg(file)
+
                         fp = flowParser(file)
                         len = fp.getFlow()
+                        self.msglen =  len
                         self.logger.logger.info('sip msgs len is ' + str(len))
-                        #pop up a msg box
-                        msg = 'log file is ' + file + '\n'
-                        msg += 'totally sip msgs are ' + str(len) + '\n'
-                        esttime = float(self.estimatetime)*int(len)
-                        timelog = 'estimate time  is ' + str(esttime) + ' seconds'
-                        msg = msg + timelog
-                        msgbox(msg)
+
+                        with open(currentfile, 'w') as cf:
+
+                            msg = 'log file is ' + file + '\n'
+                            msg += 'totally sip/ike msgs are ' + str(len) + '\n'
+                            esttime = float(self.estimatetime)*int(len)
+                            timelog = 'estimate time  is ' + str(esttime) + ' seconds'
+                            msg = msg + timelog
+                            cf.write(msg)
+                            #msgbox(msg)
+                        #t = ThreadWithExc(target=self.popupthread,args=(currentfile,))
+                        #t.start()
                         fp.parseFlow()
                         fp.drawLemonDiag()
+
+                        #t.raiseExc(SystemExit)
+
+                msgbox('Finished!')
+
+
             elif choice == samsungfile:
                 file = fileopenbox()
                 if not file:

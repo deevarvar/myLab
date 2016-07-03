@@ -804,13 +804,60 @@ class flowParser():
         else:
             direct = ' <- '
 
+        #simply parse spi/payload
+        spi = ike['configpayload']['spi']
+        payload = ike['configpayload']['config']
+
         basedirect =  left + direct + right
         label =  " [label = \"" + ike['content']  + "\""
         timestamp = "Time: " + ike['timestamp'] + "\n"
         msgid = "Message ID: " + ike['msgid'] + "\n"
+        spii = "init spi: " + spi['spii'] + "\n"
+        spir = "rsp spi: " + spi['spir'] + '\n'
         lineno = " log lineno: " + str(ike['lineno'])
 
-        note = ", note = \"" + timestamp + msgid + lineno + "\""
+        if payload['ipv4']:
+            ipv4 = "IPv4: " + payload['ipv4'] + "\n"
+        else:
+            ipv4 = ''
+
+        if payload['ipv6']:
+            ipv6 = "IPv6: " + payload['ipv6'] + "\n"
+        else:
+            ipv6 = ''
+
+        if payload['dnsv4']:
+            dnsv4 = "DNS v4: " + payload['dnsv4'] + "\n"
+        else:
+            dnsv4 = ''
+
+        if payload['dnsv6']:
+            dnsv6 = "DNS v6: " + payload['dnsv6'] + "\n"
+        else:
+            dnsv6 = ''
+
+        if payload['pcscfipv4_1']:
+            pcscfv4_1 = "PCSCF v4(1) : " + payload['pcscfipv4_1'] + '\n'
+        else:
+            pcscfv4_1 = ''
+
+        if payload['pcscfipv4_2']:
+            pcscfv4_2 = "PCSCF v4(2) : " + payload['pcscfipv4_2'] + '\n'
+        else:
+            pcscfv4_2 = ''
+
+        if payload['pcscfipv6_1']:
+            pcscfv6_1 = "PCSCF v6(1) : " + payload['pcscfipv6_1'] + '\n'
+        else:
+            pcscfv6_1 = ''
+
+        if payload['pcscfipv6_2']:
+            pcscfv6_2 = "PCSCF v6(2) : " + payload['pcscfipv6_2'] + '\n'
+        else:
+            pcscfv6_2 = ''
+
+        note = ", note = \"" + timestamp + msgid + spii + spir + ipv4 + ipv6 + \
+               dnsv4 + dnsv6 + pcscfv4_1 + pcscfv4_2 + pcscfv6_1 + pcscfv6_2 + lineno + "\""
         label = label + note + "];\n"
         self.diagstr += basedirect + label
 
@@ -1264,6 +1311,10 @@ class flowParser():
         #if diaginfo:
             #self.assembleDiagStrOld(diaginfo)
 
+
+
+
+
     def diagIke(self,ikeobj, index):
         #FIXME: IKE msg may still change
         ikeparser = self.ikeParser
@@ -1271,6 +1322,11 @@ class flowParser():
         timestamp = ikeobj['timestamp']
 
         msg = ikeobj['msg']
+        #detailed msg of ike
+        vmsg = ikeobj['verbosemsg']
+
+        #ike log is not well organized, just parse the final payload config.
+
         diaginfo = dict()
         diaginfo['issip'] = 0
         diaginfo['timestamp'] = ikeobj['timestamp']
@@ -1278,6 +1334,10 @@ class flowParser():
         diaginfo['action'] = ikeobj['action']
         diaginfo['content'] = ikeobj['content']
         diaginfo['msgid'] = ikeobj['msgid']
+
+        diaginfo['configpayload'] = dict()
+
+        diaginfo['configpayload'] = ikeparser.getikepayload(vmsg)
 
         if diaginfo['action'] == 'Decode':
             diaginfo['send'] = False
