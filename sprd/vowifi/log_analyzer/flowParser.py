@@ -151,7 +151,11 @@ class flowParser():
             realpath = os.path.realpath(logname)
             self.log = realpath
             #/mnt/hgfs/code/github/myLab/sprd/vowifi/log_analyzer/lib/src/3/0-main-3.log, get prefix as dir
-            prefix = realpath.split('.')[0]
+            shortname = os.path.basename(realpath)
+            dirname = os.path.dirname(realpath)
+
+            prefix = dirname + '/' + shortname.split('.')[0]
+
             self.utils.createdirs(prefix)
             self.logger.logger.info('start to parse log file: ' + realpath)
 
