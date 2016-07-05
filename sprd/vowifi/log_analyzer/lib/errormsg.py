@@ -1,6 +1,13 @@
 #-*- coding=utf-8 -*-
 #author: zhihua.ye@spreadtrum.com
 
+#TODO:
+# 1. define different event type: 1. user action 2. msg deliver 3. self fsm 4. error indication
+
+
+#adapter interact with service, imscm, lemon, security
+#imscm interact with adapter, user, cp
+#service interact with lemon, adapter
 
 class errorbase():
     def __init__(self):
@@ -24,6 +31,7 @@ lemonmsg.addkey("gui notify")
 
 imscmmsg = errorbase()
 imscmmsg.setepattern('')
+
 
 imscmmsg.addkey("database has changed, mIsWfcEnabled")
 imscmmsg.addkey("wifi is connected")
@@ -130,6 +138,7 @@ adaptermsg.addkey("Handle the call do not received the rtp in 5s")
 
 servicemsg = errorbase()
 
+
 servicemsg.setepattern(" [E|W] \[VoWifiService\]")
 servicemsg.addkey("RegisterService: Get the register state changed callback")
 servicemsg.addkey("Establishing call with video or audio")
@@ -154,3 +163,4 @@ s2bmsg = errorbase()
 s2bmsg.setepattern('')
 s2bmsg.addkey("LEMON.*notifyCallbacks")
 s2bmsg.addkey("LEMON.*ping.*result")
+s2bmsg.addkey("SECURITY IKE_KEY")

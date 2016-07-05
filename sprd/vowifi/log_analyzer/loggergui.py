@@ -12,7 +12,8 @@ from threading import Thread,Event
 import multiprocessing
 from lib.newthread import ThreadWithExc, StoppableThread
 #sys.path.append('./lib')
-from lib.displaywindow import Application
+
+
 from lib.logConf import logConf
 from lib.utils import utils
 from time import gmtime, strftime
@@ -35,6 +36,9 @@ path = os.path.dirname(os.path.realpath(__file__))
 #   1. how to display
 #   2. overall results, use actdiag
 #   3. possible error msg defined in config.ini
+#   logparser:
+#   1. add ike keys and esp keys parsing
+#   2. type payload parsing; delete, notify
 
 
 class loggergui():
@@ -68,10 +72,6 @@ class loggergui():
         msg = msg + timelog
         msgbox(msg)
 
-    def popupthread(self, file):
-        app = Application(filename=file)
-        app.mainloop()
-
 
     def workerthread(self, fileparser):
         pass
@@ -104,8 +104,6 @@ class loggergui():
                         #call the real parser
 
                         self.curtimestamp = strftime("%Y_%m_%d_%H_%M_%S", gmtime())
-                        currentfile = os.path.realpath(self.curtimestamp + '_popup.log')
-
                         #pop up a msg box
                         #self.popupmsg(file)
 
@@ -114,14 +112,7 @@ class loggergui():
                         self.msglen =  len
                         self.logger.logger.info('sip msgs len is ' + str(len))
 
-                        with open(currentfile, 'w') as cf:
-
-                            msg = 'log file is ' + file + '\n'
-                            msg += 'totally sip/ike msgs are ' + str(len) + '\n'
-                            esttime = float(self.estimatetime)*int(len)
-                            timelog = 'estimate time  is ' + str(esttime) + ' seconds'
-                            msg = msg + timelog
-                            cf.write(msg)
+                        #self.popupmsg(file)
                             #msgbox(msg)
                         #t = ThreadWithExc(target=self.popupthread,args=(currentfile,))
                         #t.start()
@@ -130,7 +121,7 @@ class loggergui():
 
                         #t.raiseExc(SystemExit)
 
-                msgbox('Finished!')
+                msgbox('Finish parsing sprd log file' )
 
 
             elif choice == samsungfile:
@@ -141,6 +132,7 @@ class loggergui():
                 else:
                     sp = samsungParser(logname=file)
                     sp.getflow()
+                    msgbox('Finish parsing file ' + file)
         else:
             return
 

@@ -31,7 +31,7 @@ TODO:
     # TODO: two dimension:  direct: send/recv;   method: register, invite, ack, 200
     #just loop to find retransmit:  direct, method, cseq
     # show retransmit request no.
-#  2.6.1 add reason parsing.
+#  2.6.1 add reason parsing. - done
 #  2.7 add text summary log, running time estimate(sip msg)
 #  2.8 add diag for service,adapter, imscm, lemon's fsm
 #  2.9 add nortpreceived indication
@@ -246,7 +246,7 @@ class flowParser():
         #log may delay
         #NOTE: need to find pattern 'data length: 400' first
         datalenanchor = self.datalentags + str(senddatalen)
-        self.logger.logger.error('data anchor is ' + datalenanchor)
+        self.logger.logger.debug('data anchor is ' + datalenanchor)
         while dataindex >= 0:
             if datalenanchor not in self.loglines[dataindex]:
                 dataindex = dataindex - 1
@@ -392,7 +392,7 @@ class flowParser():
             else:
                 searchstart += 1
         with open(self.lemonlog, 'a+') as llog:
-            self.logger.logger.error('dump line from ' + str(lineno) + ' to ' + str(endlineno))
+            self.logger.logger.info('dump line from ' + str(lineno) + ' to ' + str(endlineno))
 
             for pindex in range(lineno-1,endlineno+1):
                 ikemsg['verbosemsg'].append(self.loglines[pindex])
@@ -795,7 +795,11 @@ class flowParser():
         self.diagstr +=  basedirect + label
 
     def assembleIkeStr(self,ike, elements):
-        left = elements[self.uenum]
+
+        if not self.uenum:
+            left = 'UE'
+        else:
+            left = elements[self.uenum]
         right = elements['NETWORK']
 
         if ike['send']:
@@ -814,6 +818,24 @@ class flowParser():
         msgid = "Message ID: " + ike['msgid'] + "\n"
         spii = "init spi: " + spi['spii'] + "\n"
         spir = "rsp spi: " + spi['spir'] + '\n'
+
+        #add labelcolor
+        labelcolor = ''
+        if payload['isnotifyerror'] or payload['isdelete']:
+            labelcolor = ", color=red"
+
+
+        #add payload type
+        payloadstr = ''
+        if payload['payloadtype']:
+            for index, payloadtype in enumerate(payload['payloadtype']):
+                payloadstr += 'Type Payload: ' + payloadtype + '\n'
+        #add notify msg which may contain error msg
+        notifystr= ''
+        if payload['notify']:
+            for index, notifymsg in enumerate(payload['notify']):
+                notifystr += "Notify Message Type: "+ notifymsg + '\n'
+
         lineno = " log lineno: " + str(ike['lineno'])
 
         if payload['ipv4']:
@@ -856,9 +878,12 @@ class flowParser():
         else:
             pcscfv6_2 = ''
 
-        note = ", note = \"" + timestamp + msgid + spii + spir + ipv4 + ipv6 + \
-               dnsv4 + dnsv6 + pcscfv4_1 + pcscfv4_2 + pcscfv6_1 + pcscfv6_2 + lineno + "\""
-        label = label + note + "];\n"
+        configuration = ipv4 + ipv6 + \
+               dnsv4 + dnsv6 + pcscfv4_1 + pcscfv4_2 + pcscfv6_1 + pcscfv6_2
+
+        note = ", note = \"" + timestamp + msgid + spii + spir + payloadstr+ notifystr+ configuration + lineno + "\""
+
+        label = label + note + labelcolor + "];\n"
         self.diagstr += basedirect + label
 
     def assembleDiagStr(self):

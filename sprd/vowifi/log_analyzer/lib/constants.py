@@ -272,3 +272,59 @@ Q850map['607']['sip'] = ""
 Q850map['609'] = dict()
 Q850map['609']['isdn'] = "GATEWAY_DOWN"
 Q850map['609']['sip'] = ""
+
+#ike notify error type
+ikenotifyerror = [
+"UNSUPPORTED_CRITICAL_PAYLOAD",
+"INVALID_IKE_SPI",
+"INVALID_MAJOR_VERSION",
+"INVALID_SYNTAX",
+"INVALID_MESSAGE_ID",
+"INVALID_SPI",
+"NO_PROPOSAL_CHOSEN",
+"INVALID_KE_PAYLOAD",
+"AUTHENTICATION_FAILED",
+"SINGLE_PAIR_REQUIRED",
+"NO_ADDITIONAL_SAS",
+"INTERNAL_ADDRESS_FAILURE",
+"FAILED_CP_REQUIRED",
+"TS_UNACCEPTABLE",
+"INVALID_SELECTORS",
+"UNACCEPTABLE_ADDRESSES",
+"TEMPORARY_FAILURE",
+"CHILD_SA_NOT_FOUND",
+#"INITIAL_CONTACT",
+#"SET_WINDOW_SIZE",
+#"ADDITIONAL_TS_POSSIBLE",
+#"IPCOMP_SUPPORTED",
+#"NAT_DETECTION_SOURCE_IP",
+#"NAT_DETECTION_DESTINATION_IP",
+#"COOKIE",
+#"USE_TRANSPORT_MODE",
+#"HTTP_CERT_LOOKUP_SUPPORTED",
+#"REKEY_SA",
+#"ESP_TFC_PADDING_NOT_SUPPORTED",
+#"NON_FIRST_FRAGMENTS_ALSO",
+#"MOBIKE_SUPPORT",
+#"NO_ADDITIONAL_ADDRESSES",
+#"UPDATE_SA_ADDRESSES",
+#"COOKIE2",
+#"AUTH_LIFETIME",
+#"MULTIPLE_AUTH_SUPPORTED",
+#"EAP_ONLY_AUTHENTICATION"
+]
+
+mypayloadtype = [
+    "Security Assocoation (33)",
+    "Key Exchange (34)",
+    "Traffic Selector - Initiator (44)",
+    "Traffic Selector - Responder (45)",
+    "Extensible Authentication (48)",
+    "Encrypted and Authenticated (46)",
+    "Authentication (39)",
+    "Notify (41)",
+    "Nonce (40)",
+    "Nonce",
+    "Configuration",
+    "Delete (42)"
+]
