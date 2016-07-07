@@ -32,6 +32,8 @@ path = os.path.dirname(os.path.realpath(__file__))
 #   3. error msg indication:
 #   4.1 parse reason,cause
 #   4.2 b2bua recode
+#   4.3. update analysis
+#   4.4 precondition
 #   web page
 #   1. how to display
 #   2. overall results, use actdiag
@@ -40,6 +42,8 @@ path = os.path.dirname(os.path.realpath(__file__))
 #   1. add ike keys and esp keys parsing
 #   2. type payload parsing; delete, notify
 
+# BUG:
+# 1. if the first msg is missing , the momt will be wrong.
 
 class loggergui():
     def __init__(self):
@@ -48,6 +52,7 @@ class loggergui():
             config = ConfigObj(configfile, file_error=True)
             self.config = config
             self.loglevel =  config['logging']['loglevel']
+            self.version =  config['utils']['version']
             self.msglen = 0
             print self.loglevel
             print logging.getLevelName(self.loglevel)
@@ -80,7 +85,7 @@ class loggergui():
         # util will do the search
         # util will create result dir
         # flowParser only parse one file
-        title = 'VoWifi logger parser tool'
+        title = 'VoWifi log tool by zhihuay.ye, version: ' + str(self.version)
         buttonboxmsg = 'Please open a directory which contains slog.'
         slogstring = 'Open the slog dir'
         samsungfile = "Open Samsung log file"
@@ -121,7 +126,7 @@ class loggergui():
 
                         #t.raiseExc(SystemExit)
 
-                msgbox('Finish parsing sprd log file' )
+                msgbox('Finish parsing sprd log file')
 
 
             elif choice == samsungfile:

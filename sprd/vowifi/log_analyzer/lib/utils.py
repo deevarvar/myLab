@@ -27,6 +27,7 @@ class utils():
             configfile = configpath + '/config.ini'
             config = ConfigObj(configfile, file_error=True)
             self.config = config
+            #NOTE: logpatten is a list
             self.logpattern = config['files']['log']
 
             #all the dirs
@@ -53,8 +54,9 @@ class utils():
             #print root
             #print dirnames
             #print filenames
-            for filename in fnmatch.filter(filenames, self.logpattern):
-                matches.append(os.path.join(root, filename))
+            for index, logname in enumerate(self.logpattern):
+                for filename in fnmatch.filter(filenames, logname):
+                    matches.append(os.path.join(root, filename))
         return matches
 
     #similar to "mkdir -p"

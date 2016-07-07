@@ -161,6 +161,7 @@ class flowParser():
 
             #FIXME: hard coded result log dir
             #defined in config.ini's [utils]->dirnames
+            self.resultdir = prefix + '/'
             self.logdir = prefix + '/logs/'
             self.diagdir = prefix + '/diagrams/'
             self.htmldir = prefix + '/html/'
@@ -250,12 +251,13 @@ class flowParser():
         #log may delay
         #NOTE: need to find pattern 'data length: 400' first
         datalenanchor = self.datalentags + str(senddatalen)
-        self.logger.logger.debug('data anchor is ' + datalenanchor)
+
         while dataindex >= 0:
             if datalenanchor not in self.loglines[dataindex]:
                 dataindex = dataindex - 1
             else:
                 break
+        self.logger.logger.debug('data anchor is ' + datalenanchor + ' , lineno is ' + str(dataindex))
 
         if dataindex < 0:
             self.logger.logger.error('no sip msg for line ' + line + ', lineno is '+ str(lineno))
@@ -288,6 +290,7 @@ class flowParser():
             for pindex in range(start,end+1):
                 sendsip['msg'].append(self.loglines[pindex])
                 llog.write(self.loglines[pindex])
+        self.logger.logger.error('current sipmsgs index is ' + str(len(self.sipmsgs)))
         self.sipmsgs.append(sendsip)
 
 
@@ -406,10 +409,10 @@ class flowParser():
 
     def getFlow(self):
         #first of all we get the whole important logs
-        lpdaps = logParser(logname=self.log, filterlevel='low', outputdir=self.logdir)
+        lpdaps = logParser(logname=self.log, filterlevel='low', outputdir=self.resultdir)
         self.keylogdaps= lpdaps.getflow(has_ps=False)
 
-        lpall = logParser(logname=self.log, filterlevel='high', outputdir=self.logdir)
+        lpall = logParser(logname=self.log, filterlevel='high', outputdir=self.resultdir)
         self.keylogall = lpall.getflow(has_ps=False)
 
 
@@ -429,6 +432,7 @@ class flowParser():
         self.logger.logger.info("all output will be redirected to " + self.lemonlog)
         with open(self.log, 'rb') as logfile:
             for lineno, line in enumerate(logfile):
+                line = line.strip(' \t')
                 self.getRegType(line)
                 if sprdPattern.search(line):
                     with open(self.lemonlog, 'a+') as llog:

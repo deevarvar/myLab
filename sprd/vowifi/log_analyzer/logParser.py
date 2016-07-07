@@ -23,8 +23,8 @@ from configobj import ConfigObj,ConfigObjError
 import re
 from lib.logConf import logConf
 from lib.utils import utils
-
-from lib.errormsg import imscmmsg,s2bmsg,servicemsg,adaptermsg,lemonmsg
+from seqdiag import parser, builder, drawer
+from lib.errormsg import *
 
 import logging
 
@@ -89,15 +89,16 @@ class logParser():
             self.utils = utils(configpath='./')
             realpath = os.path.realpath(logname)
             self.log = realpath
-            self.trimlog = outputdir + filterlevel + '_' + os.path.basename(realpath)
+            self.trimlog = outputdir + '/logs/'+filterlevel + '_' + os.path.basename(realpath)
 
             with open(self.trimlog, 'w') as tlog:
                 tlog.truncate()#index = 0
 
             self.processout = outputdir + 'processout.log'
 
-            self.keylog = outputdir + 'key_' + os.path.basename(realpath)
-            self.elog = outputdir + 'error_' + os.path.basename(realpath)
+            self.keylog = outputdir + '/logs/' + 'key_' + os.path.basename(realpath)
+            self.elog = outputdir + '/logs/' + 'error_' + os.path.basename(realpath)
+            self.diagdir = outputdir + '/diagrams/'
 
             #read errorpattern and keys
             self.errorpattern = dict()
@@ -120,7 +121,7 @@ class logParser():
             self.logger.logger.error('s2bkey is ' + self.keys['s2bkey'])
 
 
-
+            self.diagdir = ''
 
             with open(self.keylog, 'w') as klog:
                 klog.truncate()#index = 0
@@ -191,10 +192,58 @@ class logParser():
     def getkeylog(self, lineno, line):
 
         allkey = self.keys['imscmkey'] + '|' + self.keys['adapterkey'] + '|' + self.keys['lemonkey'] + '|' + self.keys['servicekey'] +'|' + self.keys['s2bkey']
+
         allkeypattern = re.compile(allkey)
         if allkeypattern.search(line):
             with open(self.keylog, 'a+') as klog:
                 klog.write(str(lineno) + ' ' + line)
+
+    def genflowdiag(self):
+        #generate the flow diag from the key log
+        with open(self.keylog, 'r') as klog:
+            for lineno, line in enumerate(klog):
+                #iterate the diagkeys
+                for index, imsdiagkey in enumerate(imscmmsg.diagkeys):
+                    key = imsdiagkey['key']
+                    role = imsdiagkey['role']
+                    action = imsdiagkey['action']
+                    keypattern = re.compile(key)
+                    if keypattern.search(line):
+                        #check role and action:
+                        pass
+
+    #FIXME: should put this function into utils.py..., the third function
+    def drawDiag(self):
+        diagram_definition = u"""seqdiag {\n"""
+        #Set fontsize.
+        diagram_definition += "default_fontsize = 16;\n"
+        #Do not show activity line
+        diagram_definition += "activation = none;\n"
+        #Numbering edges automaticaly
+        diagram_definition +="autonumber = True;\n"
+        diagram_definition += self.diagstr
+        diagram_definition += u""" }\n"""
+        # generate the diag string and draw it
+        self.logger.logger.info('seqdiag is ' + diagram_definition)
+        #write the diagram string to file
+        basename = os.path.basename(self.keylog)
+        pngname = basename.split('.')[0] + '.png'
+        diagname = basename.split('.')[0] + '.diag'
+        pngname = self.diagdir + pngname
+        diagname = self.diagdir + diagname
+        with open(diagname, 'w') as diagfile:
+            diagfile.write(diagram_definition)
+
+        self.utils.setup_imagedraw()
+        self.utils.setup_noderenderers()
+        tree = parser.parse_string(diagram_definition)
+        diagram = builder.ScreenNodeBuilder.build(tree)
+
+        self.logger.logger.info('diagram file is ' + pngname)
+        draw = drawer.DiagramDraw('PNG', diagram, filename=pngname, debug=True)
+        draw.draw()
+        draw.save()
+
 
 
     def getflow(self, has_ps=True):
@@ -208,6 +257,7 @@ class logParser():
 
             with open(self.log, 'rb') as logfile:
                 for lineno,line in enumerate(logfile):
+                    line = line.strip(' \t')
                     #try to get key log
                     self.geterrorlog(lineno, line)
                     self.getkeylog(lineno,line)
@@ -252,6 +302,9 @@ class logParser():
                                     self.piddb[pid]['tags'][ltag] = 1
                                 else:
                                     self.piddb[pid]['tags'][ltag] += 1
+
+                self.genflowdiag()
+
         self.logger.logger.info("total " + str(matchindex) + " lines.")
         return self.log
 
@@ -345,6 +398,7 @@ class logParser():
         if self.log:
             with open(self.log, 'rb') as logfile:
                 for lineno,line in enumerate(logfile):
+                    line = line.strip(' \t')
                     lineinfo = line.split()
 
                     #for debug to scan only range
