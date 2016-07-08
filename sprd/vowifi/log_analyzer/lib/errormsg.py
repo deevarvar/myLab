@@ -13,7 +13,7 @@
 #define role name
 element_UE="UE"
 element_ImsCM="ImsCM"
-element_Phone="Phone/Adapter"
+element_Phone="Phone_Adapter"
 element_Service="Service"
 element_Security="Security"
 element_Lemon="Sip Stack"

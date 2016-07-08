@@ -32,8 +32,8 @@ path = os.path.dirname(os.path.realpath(__file__))
 #   3. error msg indication:
 #   4.1 parse reason,cause
 #   4.2 b2bua recode
-#   4.3. update analysis
-#   4.4 precondition
+#  todo tag: 4.3. update analysis
+#  todo tag: 4.4  precondition
 #   web page
 #   1. how to display
 #   2. overall results, use actdiag

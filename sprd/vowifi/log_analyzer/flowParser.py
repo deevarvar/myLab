@@ -763,7 +763,8 @@ class flowParser():
 
         if sip['issdp']:
             sdpstring = " with sdp"
-            if sip['isvideo'] and sip['vdirect']:
+            self.logger.logger.error('error lineno is ' + str(sip['lineno']))
+            if sip['isvideo'] and 'vdirect' in sip:
                 mediadirection += "video: " + sip['vdirect'] + ','
 
             if sip['adirect']:
@@ -1181,13 +1182,36 @@ class flowParser():
                         momt['mt'] = 'NETWORK'
 
                 else:
+
+                    #there is one bug in main log,
+                    #UTPT.*send data may be missing, and mo, mt can be confused.
+                    #because current rule assumes that the first occurence of the call-id's from to
+                    #see logic in analyzeSip
+                    #to work around this, add logci to check if this request is the first request of the call-id
+                    # if not , missing log happens!!!
+                    cseq = sip['cseq']
+                    method = cseq.split(' ')[1]
+                    logmissing = False
+                    if method != sip['label']:
+                        #check if it is the first request
+                        self.logger.logger.error('there is log missing for callid ' + str(callid))
+                        logmissing = True
+
                     if sip['send']:
-                        momt['mo'] = self.getRealNum(fromnum)
-                        momt['mt'] = self.getRealNum(tonum)
+                        if logmissing:
+                            momt['mo'] = self.getRealNum(tonum)
+                            momt['mt'] = self.getRealNum(fromnum)
+                        else:
+                            momt['mo'] = self.getRealNum(fromnum)
+                            momt['mt'] = self.getRealNum(tonum)
 
                     else:
-                        momt['mo'] = self.getRealNum(tonum)
-                        momt['mt'] = self.getRealNum(fromnum)
+                        if logmissing:
+                            momt['mo'] = self.getRealNum(fromnum)
+                            momt['mt'] = self.getRealNum(tonum)
+                        else:
+                            momt['mo'] = self.getRealNum(tonum)
+                            momt['mt'] = self.getRealNum(fromnum)
 
                 if sip['b2bua']:
                     momtlist[1] = momt
@@ -1236,6 +1260,10 @@ class flowParser():
         diaginfo['send'] = sipobj['send']
         diaginfo['sdp'] = list()
         diaginfo['issip'] = 1
+
+
+
+
 
         diaginfo['hascause'] = False
         diaginfo['cause'] = dict()

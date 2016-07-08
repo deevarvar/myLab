@@ -94,11 +94,13 @@ class logParser():
             with open(self.trimlog, 'w') as tlog:
                 tlog.truncate()#index = 0
 
-            self.processout = outputdir + 'processout.log'
+            self.processout = outputdir + '/logs/' + 'processout.log'
 
             self.keylog = outputdir + '/logs/' + 'key_' + os.path.basename(realpath)
             self.elog = outputdir + '/logs/' + 'error_' + os.path.basename(realpath)
             self.diagdir = outputdir + '/diagrams/'
+
+            self.diagstr = ''
 
             #read errorpattern and keys
             self.errorpattern = dict()
@@ -121,7 +123,7 @@ class logParser():
             self.logger.logger.error('s2bkey is ' + self.keys['s2bkey'])
 
 
-            self.diagdir = ''
+
 
             with open(self.keylog, 'w') as klog:
                 klog.truncate()#index = 0
@@ -203,6 +205,7 @@ class logParser():
         with open(self.keylog, 'r') as klog:
             for lineno, line in enumerate(klog):
                 #iterate the diagkeys
+                owner = imscmmsg.owner
                 for index, imsdiagkey in enumerate(imscmmsg.diagkeys):
                     key = imsdiagkey['key']
                     role = imsdiagkey['role']
@@ -210,7 +213,13 @@ class logParser():
                     keypattern = re.compile(key)
                     if keypattern.search(line):
                         #check role and action:
-                        pass
+                        if action == direct_send:
+                            direct = ' -> '
+                        else:
+                            direct = ' <- '
+                        chartoremove = ['\"', '\'', '[', ']']
+                        line = line.translate(None, ''.join(chartoremove))
+                        self.diagstr += role + direct + owner + ' [ label = \"' + line + '\"];\n'
 
     #FIXME: should put this function into utils.py..., the third function
     def drawDiag(self):
@@ -304,7 +313,7 @@ class logParser():
                                     self.piddb[pid]['tags'][ltag] += 1
 
                 self.genflowdiag()
-
+                self.drawDiag()
         self.logger.logger.info("total " + str(matchindex) + " lines.")
         return self.log
 

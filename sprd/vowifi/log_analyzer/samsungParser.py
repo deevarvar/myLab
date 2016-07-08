@@ -35,7 +35,13 @@ class samsungParser():
             self.keywords['sendreq'] = config['samsung']['keywords']['sendreq']
             self.keywords['sendrsp'] = config['samsung']['keywords']['sendrsp']
             self.keywords['ikemsg'] = config['samsung']['keywords']['ikemsg']
+            self.logtags = config['samsung']['pattern']['logtags']
 
+
+            #TODO: add a state machine
+            self.keywords['statechange'] = config['samsung']['keywords']['statechange']
+            self.keywords['wifichange'] = config['samsung']['keywords']['wifichange']
+            self.keywords['wfcchange'] = config['samsung']['keywords']['wfcchange']
 
             self.loglevel =  config['logging']['loglevel']
 
@@ -76,6 +82,7 @@ class samsungParser():
             msg['isrecvrsp'] = False
             msg['issendreq'] = False
             msg['issendrsp'] = False
+            msg['isevent'] = False
             msg['isike'] = False
             msg['direct'] = '<-'
             fields = line.split(' ')
@@ -86,7 +93,11 @@ class samsungParser():
             self.msgs.append(msg)
 
             with open(self.trimlog, 'a+') as tlog:
+                line = line.replace('\r', '')
                 tlog.write(str(lineno) + ' ' + line)
+            return True
+        else:
+            return False
 
 
     def getRecvSipRsp(self, lineno, line):
@@ -105,6 +116,7 @@ class samsungParser():
             msg['issendreq'] = False
             msg['issendrsp'] = False
             msg['isike'] = False
+            msg['isevent'] = False
             msg['direct'] = '<-'
             fields = line.split(' ')
             timestamp = fields[0] + ' ' + fields[1]
@@ -114,7 +126,11 @@ class samsungParser():
             self.msgs.append(msg)
 
             with open(self.trimlog, 'a+') as tlog:
+                line = line.replace('\r', '')
                 tlog.write(str(lineno) + ' ' + line)
+            return True
+        else:
+            return False
 
     def getSendSipreq(self, lineno, line):
         sendsippattern = re.compile(self.keywords['sendreq'])
@@ -133,6 +149,7 @@ class samsungParser():
             msg['issendreq'] = True
             msg['issendrsp'] = False
             msg['isike'] = False
+            msg['isevent'] = False
             msg['direct'] = '->'
             fields = line.split(' ')
             timestamp = fields[0] + ' ' + fields[1]
@@ -142,7 +159,11 @@ class samsungParser():
             self.msgs.append(msg)
 
             with open(self.trimlog, 'a+') as tlog:
+                line = line.replace('\r', '')
                 tlog.write(str(lineno) + ' ' + line)
+            return True
+        else:
+            return False
 
     def getSendSipRsp(self, lineno, line):
         sendsiprsppattern =  re.compile(self.keywords['sendrsp'])
@@ -158,6 +179,7 @@ class samsungParser():
             msg['issendreq'] = False
             msg['issendrsp'] = True
             msg['isike'] = False
+            msg['isevent'] = False
             msg['rspcode'] = rspcode
             msg['cseq'] = cseq
             msg['direct'] = '->'
@@ -168,7 +190,11 @@ class samsungParser():
             self.msgs.append(msg)
 
             with open(self.trimlog, 'a+') as tlog:
+                line = line.replace('\r', '')
                 tlog.write(str(lineno) + ' ' + line)
+            return True
+        else:
+            return False
 
     def getIke(self, lineno, line):
         ikepattern = re.compile(self.keywords['ikemsg'])
@@ -203,7 +229,11 @@ class samsungParser():
             self.msgs.append(msg)
 
             with open(self.trimlog, 'a+') as tlog:
+                line = line.replace('\r', '')
                 tlog.write(str(lineno) + ' ' + line)
+            return True
+        else:
+            return False
 
 
     def assembleDiagStr(self):
@@ -286,6 +316,10 @@ class samsungParser():
                 note = ", note = \"" + rspcode + cseq + timestamp + lineno + "\""
                 label = label + note + "];\n"
                 self.diagstr += basedirect + label
+            elif msg['isevent']:
+                #wifi, wfc, handover event comes here.
+                self.diagstr += msg['content']
+                pass
             else:
                 self.logger.logger.info('impossible to come here.')
 
@@ -332,6 +366,76 @@ class samsungParser():
         draw.draw()
         draw.save()
 
+    def checkwifi(self, lineno, line):
+
+        wifipattern = re.compile(self.keywords['wifichange'])
+        match = wifipattern.search(line)
+        if match:
+            string = match.group(1).strip()
+            fields = line.split(' ')
+            timestamp = fields[0] + ' ' + fields[1]
+            self.logger.logger.error('string is ' +  string)
+            seperateline = ' === ' + string + ' time: ' + str(timestamp) + '=== \n'
+            msg = dict()
+            msg['isevent'] = True
+            msg['isrecvreq'] = False
+            msg['isrecvrsp'] = False
+            msg['issendreq'] = False
+            msg['issendrsp'] = False
+            msg['isike'] = False
+            msg['content'] = seperateline
+            self.msgs.append(msg)
+            return True
+        else:
+            return False
+
+
+    def checkwfc(self, lineno, line):
+        wfcpattern = re.compile(self.keywords['wfcchange'])
+        match = wfcpattern.search(line)
+        if match:
+            string = match.group(1).strip()
+            self.logger.logger.error('string is ' +  string)
+            fields = line.split(' ')
+            timestamp = fields[0] + ' ' + fields[1]
+            seperateline = ' === ' + string + ' time: ' + str(timestamp) + '=== \n'
+            msg = dict()
+            msg['isevent'] = True
+            msg['isrecvreq'] = False
+            msg['isrecvrsp'] = False
+            msg['issendreq'] = False
+            msg['issendrsp'] = False
+            msg['isike'] = False
+            msg['content'] = seperateline
+            self.msgs.append(msg)
+            return True
+        else:
+            return False
+
+    def checkhostate(self, lineno, line):
+        hostatepattern = re.compile(self.keywords['statechange'])
+        match = hostatepattern.search(line)
+        if match:
+            fromstate = match.group(1)
+            tostate = match.group(2)
+            string = "From " + fromstate + ' handover to ' + tostate
+            self.logger.logger.error('string is ' +  string)
+            fields = line.split(' ')
+            timestamp = fields[0] + ' ' + fields[1]
+            seperateline = ' === ' + string + ' time: ' + str(timestamp) + '=== \n'
+            msg = dict()
+            msg['isevent'] = True
+            msg['isrecvreq'] = False
+            msg['isrecvrsp'] = False
+            msg['issendreq'] = False
+            msg['issendrsp'] = False
+            msg['isike'] = False
+            msg['content'] = seperateline
+            self.msgs.append(msg)
+            return True
+        else:
+            return False
+
     def getflow(self):
         #hard code here
         '''
@@ -354,16 +458,51 @@ class samsungParser():
                     + '|' + self.keywords['ikemsg']
         samsungPattern = re.compile(rePattern)
         '''
+
+        alllogtags = self.utils.getPattern(self.logtags)
+        alllogpattern = re.compile(alllogtags)
+
         print "all output will be redirected to " + self.trimlog
         with open(samsungfile, 'rb') as sfile:
             self.lines = sfile.readlines()
             for lineno, line  in enumerate(self.lines):
 
+                handled = False
                 #self.logger.logger.info('lineno is ' + str(lineno) + '  '+line)
-                self.getIke(lineno, line)
-                self.getSendSipreq(lineno, line)
-                self.getSendSipRsp(lineno,line)
-                self.getRecvSipRsp(lineno, line)
+                handled = self.checkwifi(lineno, line)
+
+                if not handled:
+                    handled = self.checkwfc(lineno, line)
+                else:
+                    continue
+                if not handled:
+                    handled = self.checkhostate(lineno, line)
+                else:
+                    continue
+
+                if not handled:
+                    handled = self.getIke(lineno, line)
+                else:
+                    continue
+
+                if not handled:
+                    handled = self.getSendSipreq(lineno, line)
+                else:
+                    continue
+                if not handled:
+                    handled = self.getSendSipRsp(lineno,line)
+                else:
+                    continue
+                if not handled:
+                    handled = self.getRecvSipRsp(lineno, line)
+                else:
+                    continue
+
+                if not handled:
+                    if alllogpattern.search(line):
+                        with open(self.trimlog, 'a+') as tlog:
+                            line = line.replace('\r', '')
+                            tlog.write(str(lineno) + ' ' + line)
                 '''
                 if samsungPattern.search(line):
                     with open(self.trimlog, 'a+') as tlog:
@@ -378,3 +517,5 @@ if __name__ == '__main__':
     print 'start to parse samsung'
     sp = samsungParser(logname='./samsung.log')
     sp.getflow()
+    #wifistring = "EPDG -- [EPDGService](  986): Wifi is disconnected"
+    #sp.checkwifi(12,wifistring)
