@@ -732,11 +732,16 @@ class flowParser():
             left = elements[leftnum]
             right = elements[rightnum]
         else:
+            #FIXME: if the msg has cause, only if the network send it to UE
             direct = ' <- '
-            leftnum = momt['mo']
-            rightnum = momt['mt']
-            left = elements[leftnum]
-            right = elements[rightnum]
+            if sip['hascause']:
+                left = elements[self.uenum]
+                right = 'NETWORK'
+            else:
+                leftnum = momt['mo']
+                rightnum = momt['mt']
+                left = elements[leftnum]
+                right = elements[rightnum]
 
 
         #some color or string decoration
@@ -1145,14 +1150,18 @@ class flowParser():
                 if sip['cseq'] == b2buarecord['cseq']:
                     sip['b2bua'] = True
                 else:
+
+                    #FIXME: this logic is not correct here, there can be later ACK which is not about b2bua
+                    '''
                     #NOTE: sometimes B2BUA's ACK not including "P-Com.Nokia.B2BUA-Involved"
                     cseqnum = b2buarecord['cseq'].split(' ')[0]
                     cseqack = cseqnum + ' ACK'
 
+
                     if sip['cseq'] == cseqack:
                         self.logger.logger.error('weird B2BUA\'s ACK not including P-Com.Nokia.B2BUA-Involved')
                         sip['b2bua'] = True
-
+                    '''
 
             #FIXME: add logic to fix following b2buarecord
             if callid not in self.callidmapmomt or sip['b2bua']:
@@ -1433,6 +1442,7 @@ class flowParser():
         diagram_definition = u"""seqdiag {\n"""
         #Set fontsize.
         diagram_definition += "default_fontsize = 16;\n"
+        diagram_definition += " edge_length = 300;\n"
         #Do not show activity line
         diagram_definition += "activation = none;\n"
         #Numbering edges automaticaly
