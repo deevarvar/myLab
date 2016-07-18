@@ -14,6 +14,7 @@ import logging
 from seqdiag import parser, builder, drawer
 from blockdiag.utils.bootstrap import create_fontmap
 
+path = os.path.dirname(os.path.realpath(__file__))
 
 '''
 1. recv : SipStackTransportCallback.*Cseq
@@ -343,6 +344,7 @@ class samsungParser():
 
         pngname = self.diagdir + pngname
         diagname = self.diagdir + diagname
+        pdfname = self.diagdir + basename.split('.')[0] + '.pdf'
         with open(diagname, 'w') as diagfile:
             diagfile.write(diagram_definition)
         #self.utils.setup_imagedraw()
@@ -354,14 +356,16 @@ class samsungParser():
         diagram = builder.ScreenNodeBuilder.build(tree)
 
         self.logger.logger.info('diagram file is ' + pngname)
-        options = {
-            'fontmap': './arial.ttf'
-        }
-        '''
-        options = self.utils.dotdict(options)
-        print options.fontmap
-        create_fontmap(options)
-        '''
+        options = dict()
+        options['fontmap'] = ''
+        options['font'] = list()
+        options['font'].append(path + '/font/DejaVuSerif.ttf:1')
+        options = utils.dotdict(options)
+        fm = create_fontmap(options)
+        pdfdraw = drawer.DiagramDraw('PDF', diagram, filename=pdfname, debug=True, fontmap=fm)
+        pdfdraw.draw()
+        pdfdraw.save()
+
         draw = drawer.DiagramDraw('PNG', diagram, filename=pngname, debug=True)
         draw.draw()
         draw.save()

@@ -10,8 +10,9 @@ import errno
 import blockdiag
 import blockdiag.imagedraw
 from blockdiag.noderenderer import box,actor,beginpoint,circle,cloud,diamond,dots
+
 import blockdiag.plugins
-from blockdiag.imagedraw import png
+from blockdiag.imagedraw import png,pdf,svg
 
 
 sys.path.append('./')
@@ -80,7 +81,8 @@ class utils():
     '''
     def setup_imagedraw(self):
         png.setup(png)
-
+        pdf.setup(pdf)
+        svg.setup(svg)
 
 
     def setup_noderenderers(self):
@@ -91,7 +93,6 @@ class utils():
         cloud.setup(cloud)
         diamond.setup(diamond)
         dots.setup(dots)
-
 
     def getPattern(self, taglist):
         '''

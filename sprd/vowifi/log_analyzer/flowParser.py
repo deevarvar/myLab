@@ -94,6 +94,7 @@ import glob
 import re
 from configobj import ConfigObj,ConfigObjError
 from seqdiag import parser, builder, drawer
+from blockdiag.utils.bootstrap import create_fontmap
 from time import gmtime, strftime
 import logging
 from datetime import datetime
@@ -412,8 +413,9 @@ class flowParser():
         lpdaps = logParser(logname=self.log, filterlevel='low', outputdir=self.resultdir)
         self.keylogdaps= lpdaps.getflow(has_ps=False)
 
-        lpall = logParser(logname=self.log, filterlevel='high', outputdir=self.resultdir)
-        self.keylogall = lpall.getflow(has_ps=False)
+
+        # lpall = logParser(logname=self.log, filterlevel='high', outputdir=self.resultdir)
+        #self.keylogall = lpall.getflow(has_ps=False)
 
 
         #rePattern = r'' + 'fsm(.*)' + ' | \[TIMER.*\]' + '|recv.*data' + '| process request' + '|process response'
@@ -1456,6 +1458,8 @@ class flowParser():
         pngname = basename.split('.')[0] + '.png'
         diagname = basename.split('.')[0] + '.diag'
         pngname = self.diagdir + pngname
+        pdfname = self.diagdir+ basename.split('.')[0] + '.pdf'
+        svgname = self.diagdir +  basename.split('.')[0] + '.svg'
         diagname = self.diagdir + diagname
         with open(diagname, 'w') as diagfile:
             diagfile.write(diagram_definition)
@@ -1482,22 +1486,39 @@ class flowParser():
         self.utils.setup_noderenderers()
 
 
-
-
         tree = parser.parse_string(diagram_definition)
         diagram = builder.ScreenNodeBuilder.build(tree)
 
         self.logger.logger.info('diagram file is ' + pngname)
+        self.logger.logger.info('length of all msgs is ' + str(len(self.sipmsgs)))
+        #set the font info
+        options = dict()
+        options['fontmap'] = ''
+        options['font'] = list()
+        options['font'].append(path + '/font/DejaVuSerif.ttf:1')
+        options = utils.dotdict(options)
+        fm = create_fontmap(options)
+
         draw = drawer.DiagramDraw('PNG', diagram, filename=pngname, debug=True)
         draw.draw()
         draw.save()
 
+        '''
+        do not use svg
+        svgdraw = drawer.DiagramDraw('SVG', diagram, filename=svgname, debug=True, fontmap=fm)
+        svgdraw.draw()
+        svgdraw.save()
+        '''
+
+        pdfdraw = drawer.DiagramDraw('PDF', diagram, filename=pdfname, debug=True, fontmap=fm)
+        pdfdraw.draw()
+        pdfdraw.save()
 
         #mv the png to right dir
         #os.rename(pngname, self.diagdir)
         self.endtime = datetime.now()
         self.duration = self.endtime - self.starttime
-        self.logger.logger.info('length of sip msgs is ' + str(len(self.sipmsgs)) + '  takes ' + str(self.duration) + ' seconds')
+        self.logger.logger.info('length of all msgs is ' + str(len(self.sipmsgs)) + '  takes ' + str(self.duration) + ' seconds')
 
 if __name__ == '__main__':
     fp = flowParser(logname='./0-main-06-07-12-09-45.log')

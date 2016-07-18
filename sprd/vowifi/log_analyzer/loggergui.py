@@ -34,9 +34,13 @@ path = os.path.dirname(os.path.realpath(__file__))
 #   4.2 b2bua recode
 #  todo tag: 4.3. update analysis
 #  todo tag: 4.4  precondition
+#  todo tag: 4.5 add UE tag, User agent, ue identify
+#  todo tag: 4.6 split png by call-id
+#  todo tag: 4.7 add wifi calling msg, airplane mode, wifi calling, wifi connect
 #   web page
 #   1. how to display
 #   2. overall results, use actdiag
+
 #   3. possible error msg defined in config.ini
 #   logparser:
 #   1. add ike keys and esp keys parsing
