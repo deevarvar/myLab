@@ -415,7 +415,8 @@ addEvent("(onProcessUnsolicitedEpdgStopError:.*)", module_ImsCM)
 ###onVoWiFiError
 addEvent("(onVoWiFiError:.*)", module_ImsCM)
 ###ServiceStateChanged
-addEvent("(ServiceStateChanged:.*)", module_ImsCM)
+#seems too verbose
+#addEvent("(ServiceStateChanged:.*)", module_ImsCM)
 ###onCallStateChanged
 addEvent("(onCallStateChanged:.*)", module_ImsCM)
 
@@ -468,3 +469,9 @@ addEvent("(Try to logout from the ims, current register state:.*)", module_Phone
 addEvent("(Re-register, with the type:.*)", module_Phone)
 ###force stop
 addEvent("(Stop current register process. registerState:.*)", module_Phone)
+
+
+#Service part
+##RegisterService
+#"Try to reset the sip stack."
+addEvent("(Try to reset the sip stack.)", module_Service)

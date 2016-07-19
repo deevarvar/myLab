@@ -135,6 +135,8 @@ class flowParser():
             self.iketags = config['sprd']['iketags'] + '|' + config['sprd']['ikenewtags']
             self.siptags = config['sprd']['siptags']
 
+            #we will split the msg into different pdfs
+            self.splitgate = config['utils']['splitgate']
 
             self.datalentags = config['sprd']['datalentags']
             self.loglevel =  config['logging']['loglevel']
@@ -1516,7 +1518,6 @@ class flowParser():
         diagname = basename.split('.')[0] + '.diag'
         pngname = self.diagdir + pngname
         pdfname = self.diagdir+ basename.split('.')[0] + '.pdf'
-        svgname = self.diagdir +  basename.split('.')[0] + '.svg'
         diagname = self.diagdir + diagname
         with open(diagname, 'w') as diagfile:
             diagfile.write(diagram_definition)
