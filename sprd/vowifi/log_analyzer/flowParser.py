@@ -416,7 +416,7 @@ class flowParser():
             key = event['key']
             #later we may add pattern
             pattern = re.compile(key)
-            match =  pattern.search(line)
+            match = pattern.search(line)
             if match:
                 #now parse the line
                 eventmsg = dict()
@@ -431,6 +431,7 @@ class flowParser():
                 eventmsg['issip'] = 0
                 eventmsg['isevent'] = 1
                 self.sipmsgs.append(eventmsg)
+                break
 
 
     def getFlow(self):
@@ -933,7 +934,8 @@ class flowParser():
         #quite simple
         timestamp = event['timestamp']
         string = event['event']
-        self.diagstr += ' === ' + string + ', time: ' + str(timestamp) + '=== \n'
+        lineno = event['lineno']
+        self.diagstr += ' === ' + string + ', time: ' + str(timestamp) + ', lineno: '+ str(lineno)  + '=== \n'
 
     def assembleDiagStr(self):
         #first define all UE and network name
@@ -952,7 +954,9 @@ class flowParser():
 
         if self.uenum:
             self.logger.logger.info('ue name is '+ elements[self.uenum])
-
+        else:
+            #if no UE num, we add tag:
+            self.diagstr += 'UE; NETWORK;\n'
 
         #1. element order
         #2. get the UE's number
@@ -1543,7 +1547,7 @@ class flowParser():
         diagram = builder.ScreenNodeBuilder.build(tree)
 
         self.logger.logger.info('diagram file is ' + pngname)
-        estimatetime = 0.7 * len(self.sipmsgs)
+        estimatetime = 0.4 * len(self.sipmsgs)
         self.logger.logger.info('length of all msgs is ' + str(len(self.sipmsgs)) + ', may take ' + str(estimatetime) + ' s')
         #set the font info
         options = dict()

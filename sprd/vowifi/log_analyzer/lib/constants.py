@@ -330,30 +330,141 @@ mypayloadtype = [
 ]
 
 
+#bug 580143, MT_Call_Deattach can be a good example
 EventArray = list()
 
+module_UE="UE"
+module_ImsCM="ImsCM"
+module_Phone="Phone_Adapter"
+module_Service="Service"
+module_Security="Security"
+module_Lemon="Sip Stack"
+module_CP="CP"
+
 #later should add more msg, adapter
+def addEvent(key, module):
+    event = dict()
+    event['key'] = key
+    event['module'] = module
+    EventArray.append(event)
 
-airplaneopen = dict()
-airplaneopen['key'] = '(open airplane mode)'
-EventArray.append(airplaneopen)
+#ImsCM part
+##ImsConnectionManagerMonitor
+###start up wfc status
+addEvent("(Wifi-calling is.*)", module_ImsCM)
+###bind service
+addEvent("(\[bind.*)", module_ImsCM)
+##Utils
+###switch to wifi
+addEvent("\[(Switch to Vowifi)\]", module_ImsCM)
+###switch to volte
+addEvent("\[(Switch to Volte)\]", module_ImsCM)
+###Handover to Vowifi
+addEvent("\[(Handover to Vowifi)\]", module_ImsCM)
+###Handover to Volte
+addEvent("\[(Handover to Volte)\]", module_ImsCM)
+###Release Vowifi resource
+addEvent("\[(Release Vowifi resource)\]", module_ImsCM)
+###Set Vowifi unavailable
+addEvent("\[(Set Vowifi unavailable)\]", module_ImsCM)
+###[Cancel current request]
+addEvent("\[(Cancel current request)\]", module_ImsCM)
+###[hung up Vowifi call]
+addEvent("\[(hung up Vowifi call)\]", module_ImsCM)
+###[popup Vowifi unavailable notification]
+addEvent("\[(popup Vowifi unavailable notification)\]", module_ImsCM)
 
-airplaneclose = dict()
-airplaneclose['key'] = '(open airplane mode)'
-EventArray.append(airplaneclose)
+##TODO:ImsConnectionManagerRelianceService
 
-wificonn = dict()
-wificonn['key'] = '(wifi is connected)'
-EventArray.append(wificonn)
+##ImsConnectionManagerService
+###release vowifi resource
+addEvent("(releaseVoWifiResource:.*)", module_ImsCM)
+###vowifi unavailable
+addEvent("(vowifiUnavailable:.*)", module_ImsCM)
+###cancel request
+addEvent("(cancelCurrentRequest:.*)", module_ImsCM)
+###switchOrHandoverVowifi:
+addEvent("(switchOrHandoverVowifi:.*)", module_ImsCM)
+###handoverToVolte
+addEvent("(handoverToVolte:.*)", module_ImsCM)
+###hungUpVowifiCall
+addEvent("(hungUpVowifiCall:.*)", module_ImsCM)
+###operation success
+addEvent("(operationSuccessed:.*)", module_ImsCM)
+###operation failed
+addEvent("(operationFailed:.*)", module_ImsCM)
+###imsCallEnd
+addEvent("(imsCallEnd:.*)", module_ImsCM)
 
-wifidisconn = dict()
-wifidisconn['key'] = '(wifi is disconnected)'
-EventArray.append(wifidisconn)
+###CP module
+addEvent("(CP module.*)", module_ImsCM)
+###onNoRtpReceived
+addEvent("(onNoRtpReceived:.*)", module_ImsCM)
+###onRtpReceived
+addEvent("(onRtpReceived:.*)", module_ImsCM)
+###onProcessDpdDisconnectedError
+addEvent("(onProcessDpdDisconnectedError.*)", module_ImsCM)
+###onProcessSipTimeoutError
+addEvent("(onProcessSipTimeoutError:.*)", module_ImsCM)
+###onProcessUnsolicitedSipLogoutError
+addEvent("(onProcessUnsolicitedSipLogoutError:.*)", module_ImsCM)
+###onProcessSecurityRekeyError
+addEvent("(onProcessSecurityRekeyError:.*)", module_ImsCM)
+###onProcessUnsolicitedEpdgStopError
+addEvent("(onProcessUnsolicitedEpdgStopError:.*)", module_ImsCM)
+###onVoWiFiError
+addEvent("(onVoWiFiError:.*)", module_ImsCM)
+###ServiceStateChanged
+addEvent("(ServiceStateChanged:.*)", module_ImsCM)
+###onCallStateChanged
+addEvent("(onCallStateChanged:.*)", module_ImsCM)
 
-wfcchanged = dict()
-wfcchanged['key'] = '(database has changed, mIsWifiCallingEnabled.*)'
-EventArray.append(wfcchanged)
+##airplane open
+addEvent('(open airplane mode)', module_ImsCM)
+##airplaneclose
+addEvent('(open airplane mode)', module_ImsCM)
+##wifi connected
+addEvent('(wifi is connected)', module_ImsCM)
+##wifi disconnected
+addEvent('(wifi is disconnected)', module_ImsCM)
+##wifi calling
+addEvent('(database has changed, mIsWifiCallingEnabled.*)', module_ImsCM)
 
-nortp = dict()
-nortp['key'] = "ImsConnectionManagerService:(.*mNoRtpTimes.*)"
-EventArray.append(nortp)
+
+
+##no rtp
+addEvent("ImsConnectionManagerService:(.*mNoRtpTimes.*)", module_ImsCM)
+
+
+
+
+#Adapter Part
+##VoWifiSecurityManager
+###s2b start
+addEvent("(Start the s2b attach.)",module_Phone)
+###deattach
+addEvent("(Try to de-attach, is handover:.*)", module_Phone)
+###force stop
+addEvent("(Force stop the s2b.)", module_Phone)
+###s2b success
+addEvent("(S2b attach success.)", module_Phone)
+###s2b failed
+addEvent("(S2b attach failed, errorCode:.*)", module_Phone)
+###s2b state change
+addEvent("(S2b attach progress state changed to.*)", module_Phone)
+###s2b stop
+addEvent("(S2b attach stopped, errorCode: .*)", module_Phone)
+
+##VoWifiRegisterManager
+###prepare login
+addEvent("(Prepare the info before login, subId is:.*)", module_Phone)
+###try to login
+addEvent("(Try to login to the ims, current register state: .*)", module_Phone)
+###Login info: ip, p-cscf
+addEvent("(Login with the local ip: .*)", module_Phone)
+###logout
+addEvent("(Try to logout from the ims, current register state:.*)", module_Phone)
+###Re-register
+addEvent("(Re-register, with the type:.*)", module_Phone)
+###force stop
+addEvent("(Stop current register process. registerState:.*)", module_Phone)
