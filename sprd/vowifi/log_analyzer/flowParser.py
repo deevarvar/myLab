@@ -1557,11 +1557,12 @@ class flowParser():
         options = utils.dotdict(options)
         fm = create_fontmap(options)
 
-
+        '''
+        png takes much memory ,disable now.
         draw = drawer.DiagramDraw('PNG', diagram, filename=pngname, debug=True)
         draw.draw()
         draw.save()
-
+        '''
         '''
         do not use svg
         svgdraw = drawer.DiagramDraw('SVG', diagram, filename=svgname, debug=True, fontmap=fm)
