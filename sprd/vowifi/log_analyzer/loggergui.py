@@ -37,6 +37,7 @@ path = os.path.dirname(os.path.realpath(__file__))
 #  todo tag: 4.5 add UE tag, User agent, ue identify
 #  todo tag: 4.6 split png by call-id
 #  todo tag: 4.7 add wifi calling msg, airplane mode, wifi calling, wifi connect
+#  todo tag: 4.8 msg init, there should be class to init the msg
 #   web page
 #   1. how to display
 #   2. overall results, use actdiag

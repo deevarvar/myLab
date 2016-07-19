@@ -328,3 +328,32 @@ mypayloadtype = [
     "Configuration",
     "Delete (42)"
 ]
+
+
+EventArray = list()
+
+#later should add more msg, adapter
+
+airplaneopen = dict()
+airplaneopen['key'] = '(open airplane mode)'
+EventArray.append(airplaneopen)
+
+airplaneclose = dict()
+airplaneclose['key'] = '(open airplane mode)'
+EventArray.append(airplaneclose)
+
+wificonn = dict()
+wificonn['key'] = '(wifi is connected)'
+EventArray.append(wificonn)
+
+wifidisconn = dict()
+wifidisconn['key'] = '(wifi is disconnected)'
+EventArray.append(wifidisconn)
+
+wfcchanged = dict()
+wfcchanged['key'] = '(database has changed, mIsWifiCallingEnabled.*)'
+EventArray.append(wfcchanged)
+
+nortp = dict()
+nortp['key'] = "ImsConnectionManagerService:(.*mNoRtpTimes.*)"
+EventArray.append(nortp)

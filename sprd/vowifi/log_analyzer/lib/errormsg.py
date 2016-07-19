@@ -57,8 +57,8 @@ imscmmsg = errorbase(owner=element_ImsCM)
 imscmmsg.setepattern('')
 
 
-imscmmsg.addkey("database has changed, mIsWfcEnabled")
-imscmmsg.addDiagKey("database has changed, mIsWfcEnabled", element_UE, direct_send)
+imscmmsg.addkey("database has changed, mIsWifiCallingEnabled")
+imscmmsg.addDiagKey("database has changed, mIsWifiCallingEnabled", element_UE, direct_send)
 imscmmsg.addkey("wifi is connected")
 imscmmsg.addDiagKey("wifi is connected", element_UE, direct_send)
 imscmmsg.addkey("wifi is disconnected")
@@ -131,7 +131,9 @@ imscmmsg.addkey("CP module successfully active PDN, mCallingMode")
 
 imscmmsg.addDiagKey("CP module successfully active PDN, mCallingMode", element_Phone, direct_send)
 
-
+imscmmsg.addkey("ImsConnectionManagerService.*mNoRtpTimes")
+#FIXME, logic need to refactor
+#imscmmsg.addDiagKey("ImsConnectionManagerService.*mNoRtpTimes", )
 #imscmmsg.addkey("set rtp no data monitor timer")
 
 #imscmmsg.addkey("vowifiUnavailable: mNoRtpTimes")

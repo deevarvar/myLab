@@ -108,6 +108,8 @@ from lib.IkeParser import IkeParser
 from lib.logConf import logConf
 from lib.utils import utils
 
+from lib.constants import *
+
 from logParser import logParser
 
 path = os.path.dirname(os.path.realpath(__file__))
@@ -408,6 +410,29 @@ class flowParser():
 
         self.sipmsgs.append(ikemsg)
 
+    #TODO: later may add event parser file?
+    def searchEvent(self, line, lineno):
+        for index, event in enumerate(EventArray):
+            key = event['key']
+            #later we may add pattern
+            pattern = re.compile(key)
+            match =  pattern.search(line)
+            if match:
+                #now parse the line
+                eventmsg = dict()
+                fields = line.strip(' \t').split(' ')
+                #04-17 23:21:24.420
+                timestamp = fields[0] + ' ' + fields[1]
+                eventmsg['timestamp'] = timestamp
+                eventmsg['msg'] = line.strip(' \t')
+                eventmsg['event'] = match.group(1)
+                self.logger.logger.error('the target event is ' + eventmsg['event'])
+                eventmsg['lineno'] = lineno
+                eventmsg['issip'] = 0
+                eventmsg['isevent'] = 1
+                self.sipmsgs.append(eventmsg)
+
+
     def getFlow(self):
         #first of all we get the whole important logs
         lpdaps = logParser(logname=self.log, filterlevel='low', outputdir=self.resultdir)
@@ -456,6 +481,8 @@ class flowParser():
                 if ikepattern.search(line):
                     self.getikemsg(line, lineno)
 
+                #add function to detect event msg
+                self.searchEvent(line, lineno)
 
         return len(self.sipmsgs)
 
@@ -902,6 +929,12 @@ class flowParser():
         label = label + note + labelcolor + "];\n"
         self.diagstr += basedirect + label
 
+    def assembleEventStr(self, event):
+        #quite simple
+        timestamp = event['timestamp']
+        string = event['event']
+        self.diagstr += ' === ' + string + ', time: ' + str(timestamp) + '=== \n'
+
     def assembleDiagStr(self):
         #first define all UE and network name
         elements = dict()
@@ -944,8 +977,11 @@ class flowParser():
                 self.logger.logger.info('index is '+str(sipindex)+ ', callid is ' + callid)
                 self.assembleSipStr(sip, elements)
             else:
-                #parse ike msg
-                self.assembleIkeStr(sip, elements)
+                if 'isevent' in sip:
+                    self.assembleEventStr(sip)
+                else:
+                    #parse ike msg
+                    self.assembleIkeStr(sip, elements)
 
 
     def getRealNum(self,string):
@@ -1418,6 +1454,18 @@ class flowParser():
 
         self.diagsips.append(diaginfo)
 
+    def diagEvent(self, eventobj, index):
+        line = eventobj['msg']
+        diaginfo = dict()
+        diaginfo['issip'] = 0
+        diaginfo['isevent'] = 1
+        diaginfo['timestamp'] = eventobj['timestamp']
+        diaginfo['lineno'] = eventobj['lineno']
+        #TODO: may add more parsing logic here
+        diaginfo['event'] = eventobj['event']
+
+        self.diagsips.append(diaginfo)
+
     def parseFlow(self):
         '''
             generate the diag from self.sipmsgs
@@ -1428,7 +1476,10 @@ class flowParser():
             if sipobj['issip']:
                 self.diagSip(sipobj, index)
             else:
-                self.diagIke(sipobj, index)
+                if 'isevent' in sipobj:
+                    self.diagEvent(sipobj,index)
+                else:
+                    self.diagIke(sipobj, index)
 
 
 
@@ -1443,12 +1494,14 @@ class flowParser():
     def drawLemonDiag(self):
         diagram_definition = u"""seqdiag {\n"""
         #Set fontsize.
-        diagram_definition += "default_fontsize = 16;\n"
+        #http://blockdiag.com/en/blockdiag/attributes/diagram.attributes.html
+        diagram_definition += " default_fontsize = 16;\n"
+        diagram_definition += " node_width = 145;\n"
         diagram_definition += " edge_length = 300;\n"
         #Do not show activity line
-        diagram_definition += "activation = none;\n"
+        diagram_definition += " activation = none;\n"
         #Numbering edges automaticaly
-        diagram_definition +="autonumber = True;\n"
+        diagram_definition += " autonumber = True;\n"
         diagram_definition += self.diagstr
         diagram_definition += u""" }\n"""
         # generate the diag string and draw it
@@ -1490,7 +1543,8 @@ class flowParser():
         diagram = builder.ScreenNodeBuilder.build(tree)
 
         self.logger.logger.info('diagram file is ' + pngname)
-        self.logger.logger.info('length of all msgs is ' + str(len(self.sipmsgs)))
+        estimatetime = 0.7 * len(self.sipmsgs)
+        self.logger.logger.info('length of all msgs is ' + str(len(self.sipmsgs)) + ', may take ' + str(estimatetime) + ' s')
         #set the font info
         options = dict()
         options['fontmap'] = ''
@@ -1498,6 +1552,7 @@ class flowParser():
         options['font'].append(path + '/font/DejaVuSerif.ttf:1')
         options = utils.dotdict(options)
         fm = create_fontmap(options)
+
 
         draw = drawer.DiagramDraw('PNG', diagram, filename=pngname, debug=True)
         draw.draw()
