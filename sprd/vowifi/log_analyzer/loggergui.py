@@ -129,7 +129,8 @@ class loggergui():
                         #t = ThreadWithExc(target=self.popupthread,args=(currentfile,))
                         #t.start()
                         fp.parseFlow()
-                        fp.drawLemonDiag()
+                        fp.drawAllDiag()
+                        #fp.drawLemonDiag()
 
                         #t.raiseExc(SystemExit)
 

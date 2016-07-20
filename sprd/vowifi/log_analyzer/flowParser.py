@@ -100,6 +100,7 @@ import logging
 from datetime import datetime
 import subprocess
 import platform
+from PyPDF2 import PdfFileMerger, PdfFileReader
 
 #add user defined lib
 #sys.path.append('./lib')
@@ -141,6 +142,13 @@ class flowParser():
             self.datalentags = config['sprd']['datalentags']
             self.loglevel =  config['logging']['loglevel']
 
+
+            #list all elements in the scenario
+            self.elements = list()
+
+            #a list to split the diagstr
+            self.diagstrList = None
+            self.pdfList = list()
             #have to set loglevel to interger...
             self.logger = logConf(debuglevel=logging.getLevelName(self.loglevel))
             self.sipparser = SipParser(configpath='./')
@@ -161,6 +169,7 @@ class flowParser():
 
             prefix = dirname + '/' + shortname.split('.')[0]
 
+            #create the dir tree
             self.utils.createdirs(prefix)
             self.logger.logger.info('start to parse log file: ' + realpath)
 
@@ -168,7 +177,12 @@ class flowParser():
             #defined in config.ini's [utils]->dirnames
             self.resultdir = prefix + '/'
             self.logdir = prefix + '/logs/'
+
             self.diagdir = prefix + '/diagrams/'
+            #for diagrams , we have subdirs diag, pdf
+            self.diagdirdiag = prefix + '/diagrams/diag/'
+            self.diagdirpdf = prefix + '/diagrams/pdf/'
+
             self.htmldir = prefix + '/html/'
             self.miscdir = prefix + '/misc/'
 
@@ -742,6 +756,9 @@ class flowParser():
                         self.uenum = sip['tonum']
                     break
 
+    def addElement(self, element):
+        if element not in self.elements:
+            self.elements.append(element)
 
     def assembleSipStr(self, sip, elements):
         callid = sip['callid']
@@ -775,6 +792,11 @@ class flowParser():
                 left = elements[leftnum]
                 right = elements[rightnum]
 
+        '''
+        when we get new left, right, we check and added it in the self.elements
+        '''
+        self.addElement(left)
+        self.addElement(right)
 
         #some color or string decoration
         # session modificaiton should be marked.
@@ -784,8 +806,6 @@ class flowParser():
         mediadirection = ''
         labelcolor = ""
         notecolor =  ""
-
-
 
         basedirect =  left + direct + right
         label =  " [label = \"" + sip['label'] + "\""
@@ -838,7 +858,8 @@ class flowParser():
 
         label = label + note + labelcolor + "];\n"
         #print label
-        self.diagstr +=  basedirect + label
+        onestr =  basedirect + label
+        return onestr
 
     def assembleIkeStr(self,ike, elements):
 
@@ -847,6 +868,12 @@ class flowParser():
         else:
             left = elements[self.uenum]
         right = elements['NETWORK']
+
+        '''
+        when we get new left, right, we check and added it in the self.elements
+        '''
+        self.addElement(left)
+        self.addElement(right)
 
         if ike['send']:
             #CAUTION: the two spaces are important
@@ -930,14 +957,17 @@ class flowParser():
         note = ", note = \"" + timestamp + msgid + spii + spir + payloadstr+ notifystr+ configuration + lineno + "\""
 
         label = label + note + labelcolor + "];\n"
-        self.diagstr += basedirect + label
+        onestr = basedirect + label
+        return onestr
+
 
     def assembleEventStr(self, event):
         #quite simple
         timestamp = event['timestamp']
         string = event['event']
         lineno = event['lineno']
-        self.diagstr += ' === ' + string + ', time: ' + str(timestamp) + ', lineno: '+ str(lineno)  + '=== \n'
+        onestr = ' === ' + string + ', time: ' + str(timestamp) + ', lineno: '+ str(lineno)  + '=== \n'
+        return onestr
 
     def assembleDiagStr(self):
         #first define all UE and network name
@@ -949,16 +979,14 @@ class flowParser():
         for index, entity in enumerate(self.entities):
             if entity == self.uenum:
                 #seqdial's title do not support + char??!!
-                elements[self.uenum] = 'x_' + entity.strip('+')
+                elements[self.uenum] = entity.strip('+')
             else:
-                elements[entity] = 'y_' + entity.strip('+')
+                elements[entity] = entity.strip('+')
 
 
         if self.uenum:
             self.logger.logger.info('ue name is '+ elements[self.uenum])
-        else:
-            #if no UE num, we add tag:
-            self.diagstr += 'UE; NETWORK;\n'
+
 
         #1. element order
         #2. get the UE's number
@@ -977,18 +1005,26 @@ class flowParser():
                     self.logger.logger.info('use P-Associate-URI'+ str(sip['pasonum']) + ' for register ' + sip['fromnum'])
                     momtlist[0]['mo'] = sip['pasonum']
 
+        splitnum = (len(self.diagsips) + 1) / int(self.splitgate) + 1
+        self.logger.logger.info('the diagsips will be divided into %d ' % splitnum)
+        self.diagstrList = [''] * splitnum
+
 
         for sipindex, sip in enumerate(self.diagsips):
+
+            sector = (sipindex + 1) / int(self.splitgate)
             if sip['issip']:
                 self.logger.logger.info('index is '+str(sipindex)+ ', callid is ' + callid)
-                self.assembleSipStr(sip, elements)
+                onestr = self.assembleSipStr(sip, elements)
             else:
                 if 'isevent' in sip:
-                    self.assembleEventStr(sip)
+                    onestr = self.assembleEventStr(sip)
                 else:
                     #parse ike msg
-                    self.assembleIkeStr(sip, elements)
+                    onestr = self.assembleIkeStr(sip, elements)
 
+            self.diagstr += onestr
+            self.diagstrList[sector] += onestr
 
     def getRealNum(self,string):
         #FIXME: special handling for MESSAGE's deliver report
@@ -1496,18 +1532,113 @@ class flowParser():
         if self.diagsips:
             self.assembleDiagStr()
 
+    def drawAllDiag(self):
+        for index, diagstr in enumerate(self.diagstrList):
+            self.drawOneDiag(diagstr, index)
 
-    def drawLemonDiag(self):
+        #do the merge.
+        merger = PdfFileMerger()
+        for filename in self.pdfList:
+            merger.append(PdfFileReader(file(filename, 'rb')))
+
+        basename = os.path.basename(self.log)
+        finalpdfname = self.diagdir + basename.split('.')[0] + '.pdf'
+        merger.write(finalpdfname)
+
+        self.drawOneDiag(self.diagstr,'whole')
+
+    def drawOneDiag(self, diagstr, postfix):
+        '''
+        used to draw only one piece of pdf
+        :param diagstr:
+        :return:
+        '''
         diagram_definition = u"""seqdiag {\n"""
         #Set fontsize.
         #http://blockdiag.com/en/blockdiag/attributes/diagram.attributes.html
         diagram_definition += " default_fontsize = 16;\n"
-        diagram_definition += " node_width = 145;\n"
+        diagram_definition += " node_width = 155;\n"
         diagram_definition += " edge_length = 300;\n"
         #Do not show activity line
         diagram_definition += " activation = none;\n"
         #Numbering edges automaticaly
         diagram_definition += " autonumber = True;\n"
+
+
+        #add elements
+        # UE; NETWORK; UE1;
+        for index, element in enumerate(self.elements):
+            diagram_definition += element + ';'
+
+        diagram_definition += '\n'
+
+        diagram_definition += diagstr
+        diagram_definition += u""" }\n"""
+        # generate the diag string and draw it
+        self.logger.logger.info('seqdiag is ' + diagram_definition)
+        #write the diagram string to file
+        basename = os.path.basename(self.log)
+        diagname = self.diagdirdiag + basename.split('.')[0] + '_' + str(postfix) + '.diag'
+        pdfname = self.diagdirpdf + basename.split('.')[0] + '_' + str(postfix) + '.pdf'
+
+        self.pdfList.append(pdfname)
+
+        with open(diagname, 'w') as diagfile:
+            diagfile.write(diagram_definition)
+        #
+        #self.utils.setup_imagedraw()
+        #self.utils.setup_plugins()
+        self.utils.setup_imagedraw()
+        self.utils.setup_noderenderers()
+        tree = parser.parse_string(diagram_definition)
+        diagram = builder.ScreenNodeBuilder.build(tree)
+
+        estimatetime = 0.2 * len(self.sipmsgs)
+        self.logger.logger.info('length of all msgs is ' + str(len(self.sipmsgs)) + ', may take ' + str(estimatetime) + ' s')
+        #set the font info
+        options = dict()
+        options['fontmap'] = ''
+        options['font'] = list()
+        options['font'].append(path + '/font/DejaVuSerif.ttf:1')
+        options = utils.dotdict(options)
+        fm = create_fontmap(options)
+        pdfdraw = drawer.DiagramDraw('PDF', diagram, filename=pdfname, debug=True, fontmap=fm)
+        pdfdraw.draw()
+        pdfdraw.save()
+
+        #mv the png to right dir
+        #os.rename(pngname, self.diagdir)
+        self.endtime = datetime.now()
+        self.duration = self.endtime - self.starttime
+        self.logger.logger.info('length of all msgs is ' + str(len(self.sipmsgs)) + '  takes ' + str(self.duration) + ' seconds')
+
+
+    ##FIXME: actually we use drawOneDiag now..., we do not use it now
+    def drawLemonDiag(self):
+        diagram_definition = u"""seqdiag {\n"""
+        #Set fontsize.
+        #http://blockdiag.com/en/blockdiag/attributes/diagram.attributes.html
+        diagram_definition += " default_fontsize = 16;\n"
+        diagram_definition += " node_width = 155;\n"
+        diagram_definition += " edge_length = 300;\n"
+        #Do not show activity line
+        diagram_definition += " activation = none;\n"
+        #Numbering edges automaticaly
+        diagram_definition += " autonumber = True;\n"
+
+
+        #add elements
+        # UE; NETWORK; UE1;
+        elementstr = ''
+        for index, element in enumerate(self.elements):
+            elementstr += element + ';'
+
+        if not elementstr:
+            elementstr = "UE; NETWORK;"
+        diagram_definition +=elementstr + '\n'
+
+
+
         diagram_definition += self.diagstr
         diagram_definition += u""" }\n"""
         # generate the diag string and draw it
@@ -1585,6 +1716,7 @@ if __name__ == '__main__':
     fp = flowParser(logname='./0-main-06-07-12-09-45.log')
     fp.getFlow()
     fp.parseFlow()
+    #later will use other drawDiag
     fp.drawLemonDiag()
 
     #fp.drawDemoDiag()
