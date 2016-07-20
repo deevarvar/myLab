@@ -397,7 +397,7 @@ addEvent("(operationFailed:.*)", module_ImsCM)
 addEvent("(imsCallEnd:.*)", module_ImsCM)
 
 ###CP module
-addEvent("(CP module.*)", module_ImsCM)
+addEvent("ImsConnectionManagerService:(.*CP module.*)", module_ImsCM)
 ###onNoRtpReceived
 addEvent("(onNoRtpReceived:.*)", module_ImsCM)
 ###onRtpReceived

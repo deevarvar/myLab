@@ -1545,7 +1545,8 @@ class flowParser():
         finalpdfname = self.diagdir + basename.split('.')[0] + '.pdf'
         merger.write(finalpdfname)
 
-        self.drawOneDiag(self.diagstr,'whole')
+        #now need to do this
+        #self.drawOneDiag(self.diagstr,'whole')
 
     def drawOneDiag(self, diagstr, postfix):
         '''
@@ -1575,7 +1576,7 @@ class flowParser():
         diagram_definition += diagstr
         diagram_definition += u""" }\n"""
         # generate the diag string and draw it
-        self.logger.logger.info('seqdiag is ' + diagram_definition)
+        #self.logger.logger.info('seqdiag is ' + diagram_definition)
         #write the diagram string to file
         basename = os.path.basename(self.log)
         diagname = self.diagdirdiag + basename.split('.')[0] + '_' + str(postfix) + '.diag'
@@ -1594,7 +1595,7 @@ class flowParser():
         diagram = builder.ScreenNodeBuilder.build(tree)
 
         estimatetime = 0.2 * len(self.sipmsgs)
-        self.logger.logger.info('length of all msgs is ' + str(len(self.sipmsgs)) + ', may take ' + str(estimatetime) + ' s')
+        self.logger.logger.info('length of sector '+ str(postfix) + 'msgs is ' + str(len(self.sipmsgs)) + ', may take ' + str(estimatetime) + ' s')
         #set the font info
         options = dict()
         options['fontmap'] = ''
