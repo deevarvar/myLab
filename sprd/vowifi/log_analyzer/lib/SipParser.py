@@ -71,8 +71,10 @@ class SipParser():
         if not match:
             self.logger.logger.debug('no rsp in line ' + line)
             return None
-        status = match.group(1).strip()
-        self.logger.logger.info('status line is ' + status)
+        status = dict()
+        status['code'] = match.group(1).strip()
+        status['phrase'] = match.group(2).strip()
+        self.logger.logger.info('status code is ' + status['code'] + ', status phrase is ' + status['phrase'])
         return status
 
     def getCSeq(self, line):
@@ -224,6 +226,7 @@ class SipParser():
         else:
             return False
 
+
 if __name__ == '__main__':
     #TODO write own ut function
     reqline = "04-17 23:21:27.697  1681  2968 D LEMON   : REGISTER sip:ims.mnc872.mcc405.3gppnetwork.org SIP/2.0"
@@ -278,3 +281,9 @@ if __name__ == '__main__':
     causetag ="06-23 13:31:18.635  2140  6550 D LEMON   : Reason:Q.850;cause=16"
     cause = sp.getCause(causetag)
     print cause['code']
+
+    #try User-Agent, Retry-After
+    raline = "07-12 16:37:36.774  2083  2709 D LEMON   : Retry-After:6"
+    ualine = "07-12 16:35:29.027  2103  2732 D LEMON   : User-Agent: VoWIFI/WFC UA"
+    sp.getHeaderContent(raline, 'Retry-After')
+    sp.getHeaderContent(ualine, 'User-Agent')

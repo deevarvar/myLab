@@ -814,7 +814,8 @@ class flowParser():
         if sip['issdp'] and sip['isinvite'] :
             action = "Action: " +  sip['action'] + '\n'
 
-        if sip['b2bua'] or sip['hascause']:
+        #some critical msg should be marked as red
+        if sip['b2bua'] or sip['hascause'] or sip['iserrorrsp']:
             labelcolor = ", color=red"
 
 
@@ -836,6 +837,16 @@ class flowParser():
         else:
             cause = ''
 
+        if sip['ua']:
+            ua = " User-Agent: " + sip['ua'] + '\n'
+        else:
+            ua = ''
+
+        if sip['retryafter']:
+            retryafter = " Retry-After: " + sip['retryafter'] + '\n'
+        else:
+            retryafter = ''
+
         note = " Note: " + sdpstring + cause + '\n'
         cseq = " CSeq: " + sip['cseq'] + '\n'
         #callid = " Call-ID: "+ sip['callid'] + '\n'
@@ -854,7 +865,7 @@ class flowParser():
         #Call-ID: Ic08Qn.CU6xke*qifx321ICCxI@[2405:204:3807:2ade::262e:28a0]
         #log lineno: 5249"];
 
-        note = ", note = \"" + timestamp + cseq + action + note + mediadirection + fromtag + totag + callid +lineno + "\""
+        note = ", note = \"" + timestamp + cseq + action + note + mediadirection + ua + retryafter+fromtag + totag + callid +lineno + "\""
 
         label = label + note + labelcolor + "];\n"
         #print label
@@ -1350,6 +1361,12 @@ class flowParser():
         diaginfo['sdp'] = list()
         diaginfo['issip'] = 1
 
+        #add flag if is error rsp
+        diaginfo['iserrorrsp'] = False
+        #add ua
+        diaginfo['ua'] = ''
+        #add retry-after
+        diaginfo['retryafter'] = ''
 
 
 
@@ -1386,11 +1403,13 @@ class flowParser():
             status = sipparser.getStatusLine(header)
 
             if status:
-                self.logger.logger.debug('found status ' + status + ' in ' +  str(index) + ' sip msg')
                 diaginfo['lineno'] = lineno
-                diaginfo['label'] = status
+                diaginfo['label'] = status['code'] + ' ' + status['phrase']
+                self.logger.logger.debug('found status ' + diaginfo['label'] + ' in ' +  str(index) + ' sip msg')
                 diaginfo['timestamp'] = timestamp
-                #self.diagstr += "UE " + direct + " NETWORK [label = \"" + status + " No." + str(lineno)+"\"];\n"
+                #check if bad request
+                if int(status['code']) >= 400:
+                    diaginfo['iserrorrsp'] = True
                 continue
 
             if 'callid' not in diaginfo:
@@ -1444,6 +1463,16 @@ class flowParser():
                 diaginfo['hascause'] = True
                 diaginfo['cause'] = cause #Two member: code ,isdn
                 self.logger.logger.error('cause code is ' + str(cause['code']) + ', string is ' + cause['isdn'] )
+
+            #add logic to record User-Agent
+            ua = sipparser.getHeaderContent(header, 'User-Agent')
+            if ua:
+                diaginfo['ua'] = ua
+            #add logci to record Retry-After
+            retryafter = sipparser.getHeaderContent(header, 'Retry-After')
+            if retryafter:
+                diaginfo['retryafter'] = retryafter
+
             #add logic to record sdp body
             sdppair = sipparser.sdpParser(header)
             if sdppair:
@@ -1460,10 +1489,6 @@ class flowParser():
         #oboselete logic
         #if diaginfo:
             #self.assembleDiagStrOld(diaginfo)
-
-
-
-
 
     def diagIke(self,ikeobj, index):
         #FIXME: IKE msg may still change
@@ -1595,7 +1620,7 @@ class flowParser():
         diagram = builder.ScreenNodeBuilder.build(tree)
 
         estimatetime = 0.2 * len(self.sipmsgs)
-        self.logger.logger.info('length of sector '+ str(postfix) + 'msgs is ' + str(len(self.sipmsgs)) + ', may take ' + str(estimatetime) + ' s')
+        self.logger.logger.info('length of sector '+ str(postfix) + ' ,msgs is ' + str(len(self.sipmsgs)) + ', may take ' + str(estimatetime) + ' s')
         #set the font info
         options = dict()
         options['fontmap'] = ''

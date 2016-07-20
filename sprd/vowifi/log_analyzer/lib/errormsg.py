@@ -45,7 +45,8 @@ class errorbase():
 
 
 lemonmsg = errorbase(owner=element_Lemon)
-lemonmsg.setepattern("LEMON.*: ERROR")
+#add mme error log
+lemonmsg.setepattern("LEMON.*: ERROR | E MME")
 lemonmsg.addkey("fsm\(.*\)")
 lemonmsg.addkey("\[TIMER.*\]")
 lemonmsg.addkey("process request")

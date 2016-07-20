@@ -314,7 +314,7 @@ class logParser():
                                 else:
                                     self.piddb[pid]['tags'][ltag] += 1
 
-                self.genflowdiag()
+                #self.genflowdiag()
                 #self.drawDiag()
         self.logger.logger.info("total " + str(matchindex) + " lines.")
         return self.log
