@@ -13,6 +13,7 @@ import logging
 
 from seqdiag import parser, builder, drawer
 from blockdiag.utils.bootstrap import create_fontmap
+from PyPDF2 import PdfFileMerger, PdfFileReader
 
 path = os.path.dirname(os.path.realpath(__file__))
 
@@ -55,11 +56,19 @@ class samsungParser():
             realpath = os.path.realpath(logname)
             self.log = realpath
             self.diagdir = os.path.realpath(os.path.dirname(logname)) + '/'
+            self.diagtempdir = self.diagdir + 'temp/'
+            #first of all, create the tempdir
+            self.utils.mkdirp(self.diagtempdir)
 
             #all msgs will be included
             self.msgs = list()
 
             self.lines = list()
+
+            #will split the msg into list
+            self.diagstrList = None
+            self.pdfList = list()
+            self.splitgate = 40
 
             with open(self.log) as samsungfile:
                 self.lines = samsungfile.readlines()
@@ -238,7 +247,14 @@ class samsungParser():
 
 
     def assembleDiagStr(self):
+
+        splitnum = len(self.msgs) / int(self.splitgate) + 1
+        self.logger.logger.info('the diagsips will be divided into %d ' % splitnum)
+        self.diagstrList = [''] * splitnum
         for index, msg in enumerate(self.msgs):
+
+            sector = (index + 1) / int(self.splitgate)
+
             if msg['isike']:
                 #NOTE: two space is important, ' -> ', ' <- '
                 basedirect = 'Samsung' + ' ' + msg['direct'] + ' ' + 'NETWORK'
@@ -253,7 +269,9 @@ class samsungParser():
                 lineno = ' LineNo: ' + str(msg['lineno']) + '\n'
                 note = ", note = \"" + msgid + content + timestamp + lineno + "\""
                 label = label + note + "];\n"
-                self.diagstr += basedirect + label
+                onestr = basedirect + label
+                self.diagstr += onestr
+                self.diagstrList[sector] += onestr
                 '''
                 Samsung <- NETWORK [label = "IKEv2 Msg: HDR, IDr, EAP
                 " , note = " MsgId: 1
@@ -271,7 +289,9 @@ class samsungParser():
                 lineno = ' LineNo: ' + str(msg['lineno']) + '\n'
                 note = ", note = \"" + method + cseq + timestamp + lineno + "\""
                 label = label + note + "];\n"
-                self.diagstr += basedirect + label
+                onestr = basedirect + label
+                self.diagstr += onestr
+                self.diagstrList[sector] += onestr
                 '''
                 Samsung -> NETWORK [label = "Send SIP Request: REGISTER", note = " Method: REGISTER
                 Cseq: 1 REGISTER
@@ -288,7 +308,9 @@ class samsungParser():
                 lineno = ' LineNo: ' + str(msg['lineno']) + '\n'
                 note = ", note = \"" + rspcode + cseq + timestamp + lineno + "\""
                 label = label + note + "];\n"
-                self.diagstr += basedirect + label
+                onestr = basedirect + label
+                self.diagstr += onestr
+                self.diagstrList[sector] += onestr
                 '''
                 Samsung <- NETWORK [label = "Recv SIP Rsp: 401", note = " RspCode: 401
                 Cseq:  1 REGISTER
@@ -305,7 +327,9 @@ class samsungParser():
                 lineno = ' LineNo: ' + str(msg['lineno']) + '\n'
                 note = ", note = \"" + rspcode + cseq + timestamp + lineno + "\""
                 label = label + note + "];\n"
-                self.diagstr += basedirect + label
+                onestr = basedirect + label
+                self.diagstr += onestr
+                self.diagstrList[sector] += onestr
             elif msg['isrecvrsp']:
                 basedirect = 'Samsung' + ' ' + msg['direct'] + ' ' + 'NETWORK'
 
@@ -316,15 +340,34 @@ class samsungParser():
                 lineno = ' LineNo: ' + str(msg['lineno']) + '\n'
                 note = ", note = \"" + rspcode + cseq + timestamp + lineno + "\""
                 label = label + note + "];\n"
-                self.diagstr += basedirect + label
+                onestr = basedirect + label
+                self.diagstr += onestr
+                self.diagstrList[sector] += onestr
             elif msg['isevent']:
                 #wifi, wfc, handover event comes here.
-                self.diagstr += msg['content']
-                pass
+                onestr = msg['content']
+                self.diagstr += onestr
+                self.diagstrList[sector] += onestr
             else:
                 self.logger.logger.info('impossible to come here.')
+    def drawAllDiag(self):
+        estimatetime = 0.1 * int(len(self.msgs))
+        self.logger.logger.info('length of all msgs is ' + str(len(self.msgs)) + ' may take ' + str(estimatetime) + ' seconds')
 
-    def drawDiag(self):
+
+        for index, diagstr in enumerate(self.diagstrList):
+            self.drawOneDiag(diagstr, index)
+
+        #do the merge.
+        merger = PdfFileMerger()
+        for index, filename in enumerate(self.pdfList):
+            merger.append(PdfFileReader(file(filename, 'rb')))
+
+        basename = os.path.basename(self.log)
+        finalpdfname = self.diagdir + basename.split('.')[0] + '.pdf'
+        merger.write(finalpdfname)
+
+    def drawOneDiag(self, diagstr, postfix):
         diagram_definition = u"""seqdiag {\n"""
         #Set fontsize.
         diagram_definition += " edge_length = 300;\n  // default value is 192"
@@ -333,18 +376,19 @@ class samsungParser():
         diagram_definition += "activation = none;\n"
         #Numbering edges automaticaly
         diagram_definition +="autonumber = True;\n"
-        diagram_definition += self.diagstr
+        diagram_definition += diagstr
         diagram_definition += u""" }\n"""
         # generate the diag string and draw it
-        self.logger.logger.info('seqdiag is ' + diagram_definition)
+        #self.logger.logger.info('seqdiag is ' + diagram_definition)
         #write the diagram string to file
         basename = os.path.basename(self.log)
-        pngname = basename.split('.')[0] + '.png'
-        diagname = basename.split('.')[0] + '.diag'
+        pngname = basename.split('.')[0] + '_' + str(postfix) + '.png'
+        diagname = basename.split('.')[0] + '_' + str(postfix) +'.diag'
 
-        pngname = self.diagdir + pngname
-        diagname = self.diagdir + diagname
-        pdfname = self.diagdir + basename.split('.')[0] + '.pdf'
+        pngname = self.diagtempdir + pngname
+        diagname = self.diagtempdir + diagname
+        pdfname = self.diagtempdir + basename.split('.')[0]+ '_' + str(postfix) + '.pdf'
+        self.pdfList.append(pdfname)
         with open(diagname, 'w') as diagfile:
             diagfile.write(diagram_definition)
         #self.utils.setup_imagedraw()
@@ -365,10 +409,12 @@ class samsungParser():
         pdfdraw = drawer.DiagramDraw('PDF', diagram, filename=pdfname, debug=True, fontmap=fm)
         pdfdraw.draw()
         pdfdraw.save()
-
+        '''
+        png is not used here
         draw = drawer.DiagramDraw('PNG', diagram, filename=pngname, debug=True)
         draw.draw()
         draw.save()
+        '''
 
     def checkwifi(self, lineno, line):
 
@@ -513,7 +559,7 @@ class samsungParser():
                         tlog.write(str(lineno) + ' ' + line)
                 '''
         self.assembleDiagStr()
-        self.drawDiag()
+        self.drawAllDiag()
 
 
 
