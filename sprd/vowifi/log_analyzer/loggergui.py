@@ -25,6 +25,7 @@ path = os.path.dirname(os.path.realpath(__file__))
 #   1. add package scripts
 #   ui
 #   1. add silent mode
+#   todo tag: add error exception
 #   flowparser
 #   1. add ike parsing
 #   2. add service, adapter, imscm logic
@@ -37,7 +38,8 @@ path = os.path.dirname(os.path.realpath(__file__))
 #  todo tag/done: 4.5 add UE tag, User agent, ue identify
 #  todo tag/not_to_do: 4.6 split png by call-id
 #  todo tag/done: 4.7 add wifi calling msg, airplane mode, wifi calling, wifi connect
-#  todo tag: 4.9 msg init, there should be class to init the msg
+#  todo tag/postpone: 4.9 msg init, there should be class to init the msg
+#  todo tag:  4.10 refactor samsung's code
 #   web page
 #   1. how to display
 #   2. overall results, use actdiag

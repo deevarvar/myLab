@@ -1016,7 +1016,7 @@ class flowParser():
                     self.logger.logger.info('use P-Associate-URI'+ str(sip['pasonum']) + ' for register ' + sip['fromnum'])
                     momtlist[0]['mo'] = sip['pasonum']
 
-        splitnum = (len(self.diagsips) + 1) / int(self.splitgate) + 1
+        splitnum = len(self.diagsips) / int(self.splitgate) + 1
         self.logger.logger.info('the diagsips will be divided into %d ' % splitnum)
         self.diagstrList = [''] * splitnum
 
@@ -1558,6 +1558,9 @@ class flowParser():
             self.assembleDiagStr()
 
     def drawAllDiag(self):
+        estimatetime = 0.2 * int(len(self.sipmsgs))
+        self.logger.logger.info('length of all msgs is ' + str(len(self.sipmsgs)) + ' may take ' + str(estimatetime) + ' seconds')
+
         for index, diagstr in enumerate(self.diagstrList):
             self.drawOneDiag(diagstr, index)
 
@@ -1569,7 +1572,9 @@ class flowParser():
         basename = os.path.basename(self.log)
         finalpdfname = self.diagdir + basename.split('.')[0] + '.pdf'
         merger.write(finalpdfname)
-
+        self.endtime = datetime.now()
+        self.duration = self.endtime - self.starttime
+        self.logger.logger.info('length of all msgs is ' + str(len(self.sipmsgs)) + '  takes ' + str(self.duration) + ' seconds')
         #now need to do this
         #self.drawOneDiag(self.diagstr,'whole')
 
@@ -1619,8 +1624,8 @@ class flowParser():
         tree = parser.parse_string(diagram_definition)
         diagram = builder.ScreenNodeBuilder.build(tree)
 
-        estimatetime = 0.2 * len(self.sipmsgs)
-        self.logger.logger.info('length of sector '+ str(postfix) + ' ,msgs is ' + str(len(self.sipmsgs)) + ', may take ' + str(estimatetime) + ' s')
+        estimatetime = 0.2 * int(self.splitgate)
+        self.logger.logger.info('generation sector '+ str(postfix) + ', may take ' + str(estimatetime) + ' s')
         #set the font info
         options = dict()
         options['fontmap'] = ''
@@ -1634,9 +1639,7 @@ class flowParser():
 
         #mv the png to right dir
         #os.rename(pngname, self.diagdir)
-        self.endtime = datetime.now()
-        self.duration = self.endtime - self.starttime
-        self.logger.logger.info('length of all msgs is ' + str(len(self.sipmsgs)) + '  takes ' + str(self.duration) + ' seconds')
+
 
 
     ##FIXME: actually we use drawOneDiag now..., we do not use it now

@@ -340,6 +340,7 @@ module_Service="Service"
 module_Security="Security"
 module_Lemon="Sip Stack"
 module_CP="CP"
+module_dialer="Dialer"
 
 #later should add more msg, adapter
 def addEvent(key, module):
@@ -348,6 +349,15 @@ def addEvent(key, module):
     event['module'] = module
     EventArray.append(event)
 
+
+#dialer part
+### hold
+#FIXME: later should add more phrase to indicate
+addEvent("(Putting the call on hold)", module_dialer)
+
+### resume
+addEvent("(Removing the call from hold)", module_dialer)
+#------------------------------------------------------------------------------------
 #ImsCM part
 ##ImsConnectionManagerMonitor
 ###start up wfc status
@@ -375,7 +385,7 @@ addEvent("\[(hung up Vowifi call)\]", module_ImsCM)
 addEvent("\[(popup Vowifi unavailable notification)\]", module_ImsCM)
 
 ##TODO:ImsConnectionManagerRelianceService
-
+#------------------------------------------------------------------------------------
 ##ImsConnectionManagerService
 ###release vowifi resource
 addEvent("(releaseVoWifiResource:.*)", module_ImsCM)
@@ -438,7 +448,7 @@ addEvent("ImsConnectionManagerService:(.*mNoRtpTimes.*)", module_ImsCM)
 
 
 
-
+#------------------------------------------------------------------------------------
 #Adapter Part
 ##VoWifiSecurityManager
 ###s2b start
@@ -455,7 +465,7 @@ addEvent("(S2b attach failed, errorCode:.*)", module_Phone)
 addEvent("(S2b attach progress state changed to.*)", module_Phone)
 ###s2b stop
 addEvent("(S2b attach stopped, errorCode: .*)", module_Phone)
-
+#------------------------------------------------------------------------------------
 ##VoWifiRegisterManager
 ###prepare login
 addEvent("(Prepare the info before login, subId is:.*)", module_Phone)
@@ -470,8 +480,12 @@ addEvent("(Re-register, with the type:.*)", module_Phone)
 ###force stop
 addEvent("(Stop current register process. registerState:.*)", module_Phone)
 
-
+#------------------------------------------------------------------------------------
 #Service part
 ##RegisterService
 #"Try to reset the sip stack."
 addEvent("(Try to reset the sip stack.)", module_Service)
+#------------------------------------------------------------------------------------
+#lemon part
+##reinvite ack not received
+addEvent("(ACK to reinvite with no offer does not received when call.*)", module_Lemon)
