@@ -226,6 +226,35 @@ class SipParser():
         else:
             return False
 
+    def getExpires(self, line):
+        #two kind of expires:
+        #Contact: expires=600000;
+        #Expires: 7260
+
+        expires = None
+        contact = self.getHeaderContent(line, "Contact")
+        if contact:
+            #non-greedy
+            mexpirepattern = "expires=(\d+)"
+            mexppattern = re.compile(mexpirepattern)
+            expmatch = mexppattern.search(contact)
+            if expmatch:
+                expires = expmatch.group(1).strip()
+                self.logger.logger.info('expires in contact is ' + str(expires))
+        else:
+            evalue = self.getHeaderContent(line, "Expires")
+            if evalue:
+                expires = evalue.strip()
+                self.logger.logger.info('expires in expire header is ' + str(expires))
+
+        return expires
+
+    def getSupported(self, line):
+        pass
+
+    def getRequire(self, line):
+        pass
+
 
 if __name__ == '__main__':
     #TODO write own ut function
@@ -287,3 +316,9 @@ if __name__ == '__main__':
     ualine = "07-12 16:35:29.027  2103  2732 D LEMON   : User-Agent: VoWIFI/WFC UA"
     sp.getHeaderContent(raline, 'Retry-After')
     sp.getHeaderContent(ualine, 'User-Agent')
+    expline = " 16:51:30.372  2128  3871 D LEMON   : Expires: 7260"
+    sp.getExpires(expline)
+    expline2 = " LEMON   : m:<sip:405872000816089@[2405:204:1980:af7c::2923:a8ad]:5066;transport=tcp>;+sip.instance=\"<urn:gsma:imei:86740002-050287-0>\";reg-id=4;+g.3gpp.icsi-ref=\"urn%%3Aurn-7%%3A3gpp-service.ims.icsi.mmtel\";video;+g.3gpp.smsip;expires=7200"
+    sp.getExpires(expline2)
+    expline3 = " LEMON   : Contact: <sip:405872000816089@[2405:204:1980:af7c::2923:a8ad]:5066;transport=tcp>;+sip.instance=\"<urn:gsma:imei:86740002-050287-0>\";reg-id=4;expires=600000;+g.3gpp.icsi-ref=\"urn%%3Aurn-7%%3A3gpp-service.ims.icsi.mmtel\";video;+g.3gpp.smsip"
+    sp.getExpires(expline3)

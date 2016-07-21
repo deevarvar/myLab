@@ -430,6 +430,7 @@ class flowParser():
     def searchEvent(self, line, lineno):
         for index, event in enumerate(EventArray):
             key = event['key']
+            modulename = event['module']
             #later we may add pattern
             pattern = re.compile(key)
             match = pattern.search(line)
@@ -441,7 +442,8 @@ class flowParser():
                 timestamp = fields[0] + ' ' + fields[1]
                 eventmsg['timestamp'] = timestamp
                 eventmsg['msg'] = line.strip(' \t')
-                eventmsg['event'] = match.group(1)
+                #event content is modulename + matchlog
+                eventmsg['event'] = modulename + ' : ' + match.group(1)
                 self.logger.logger.error('the target event is ' + eventmsg['event'])
                 eventmsg['lineno'] = lineno
                 eventmsg['issip'] = 0
@@ -847,6 +849,24 @@ class flowParser():
         else:
             retryafter = ''
 
+        if sip['expires']:
+            expires = " Expires: " + sip['expires'] + '\n'
+        else:
+            expires = ''
+
+
+        if sip['supported']:
+            supported = " Supported: " + sip['supported'] + '\n'
+        else:
+            supported = ''
+
+
+        if sip['require']:
+            require = " Require: " + sip['require'] + '\n'
+        else:
+            require = ''
+
+
         note = " Note: " + sdpstring + cause + '\n'
         cseq = " CSeq: " + sip['cseq'] + '\n'
         #callid = " Call-ID: "+ sip['callid'] + '\n'
@@ -865,7 +885,7 @@ class flowParser():
         #Call-ID: Ic08Qn.CU6xke*qifx321ICCxI@[2405:204:3807:2ade::262e:28a0]
         #log lineno: 5249"];
 
-        note = ", note = \"" + timestamp + cseq + action + note + mediadirection + ua + retryafter+fromtag + totag + callid +lineno + "\""
+        note = ", note = \"" + timestamp + cseq + action + note + mediadirection + expires + supported + require + ua + retryafter+ fromtag + totag + callid +lineno + "\""
 
         label = label + note + labelcolor + "];\n"
         #print label
@@ -1368,7 +1388,10 @@ class flowParser():
         #add retry-after
         diaginfo['retryafter'] = ''
 
-
+        #add expires, supported, require
+        diaginfo['expires'] = None
+        diaginfo['supported'] = None
+        diaginfo['require'] = None
 
 
         diaginfo['hascause'] = False
@@ -1472,6 +1495,25 @@ class flowParser():
             retryafter = sipparser.getHeaderContent(header, 'Retry-After')
             if retryafter:
                 diaginfo['retryafter'] = retryafter
+
+            expires =  sipparser.getExpires(header)
+            if expires:
+                diaginfo['expires'] = expires
+
+            #Supported/Require can be one line or multiple line...
+            supported = sipparser.getHeaderContent(header, "Supported")
+            if supported:
+                if not diaginfo['supported']:
+                    diaginfo['supported'] = supported
+                else:
+                    diaginfo['supported'] += ',' + supported
+
+            require = sipparser.getHeaderContent(header, "Require")
+            if require:
+                if not diaginfo['require']:
+                    diaginfo['require'] = require
+                else:
+                    diaginfo['require'] += ',' + require
 
             #add logic to record sdp body
             sdppair = sipparser.sdpParser(header)

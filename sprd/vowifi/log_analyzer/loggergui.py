@@ -36,10 +36,12 @@ path = os.path.dirname(os.path.realpath(__file__))
 #  todo tag: 4.3. update analysis
 #  todo tag: 4.4  precondition
 #  todo tag/done: 4.5 add UE tag, User agent, ue identify
+#  todo tag/done:  4.10 refactor samsung's code
+#  todo: tag:     4.10 add supported/require, expires identification
 #  todo tag/not_to_do: 4.6 split png by call-id
 #  todo tag/done: 4.7 add wifi calling msg, airplane mode, wifi calling, wifi connect
 #  todo tag/postpone: 4.9 msg init, there should be class to init the msg
-#  todo tag:  4.10 refactor samsung's code
+
 #   web page
 #   1. how to display
 #   2. overall results, use actdiag
