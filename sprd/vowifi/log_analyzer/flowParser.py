@@ -409,9 +409,10 @@ class flowParser():
         searchstart = lineno + 1
         endlineno = lineno + 1
         self.logger.logger.info('searchstart is ' + str(searchstart) + ', endtag is ' + endtag)
-        while searchstart <= len(self.loglines):
+        while searchstart < len(self.loglines):
             #just search forward
             #self.logger.logger.error('searchstart is ' + str(searchstart))
+
             if endtag in self.loglines[searchstart]:
                 endlineno = searchstart
                 break
