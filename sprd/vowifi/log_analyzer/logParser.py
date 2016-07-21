@@ -177,8 +177,10 @@ class logParser():
         :param line:
         :return:
         '''
+        #hard code for MME error
         allerrorpattern = r'' + self.errorpattern['lemon']  + '|' + \
-                          self.errorpattern['adapter'] + '|' + self.errorpattern['service']
+                          self.errorpattern['adapter'] + '|' + self.errorpattern['service'] + '|' + "E MME"
+
         if self.errorpattern['imscm']:
             allerrorpattern += '|' + self.errorpattern['imscm']
         #self.logger.logger.error('allerrorpattern is ' + allerrorpattern);
