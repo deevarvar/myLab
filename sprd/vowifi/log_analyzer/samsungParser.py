@@ -545,6 +545,8 @@ class samsungParser():
                     continue
                 if not handled:
                     handled = self.getRecvSipRsp(lineno, line)
+                if not handled:
+                    handled =  self.getRecvSipReq(lineno, line)
                 else:
                     continue
 
