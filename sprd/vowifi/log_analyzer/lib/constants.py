@@ -480,6 +480,76 @@ addEvent("(Re-register, with the type:.*)", module_Phone)
 ###force stop
 addEvent("(Stop current register process. registerState:.*)", module_Phone)
 
+
+###call related event
+addEvent("(Handle the event.*for the call.*)", module_Phone)
+###mute
+addEvent("(Mutes.*the mic for the active call)", module_Phone)
+###start call
+addEvent("(Initiates an ims call with.*)", module_Phone)
+###start conf call
+addEvent("(Initiates an ims conference call with.*)", module_Phone)
+###accept
+addEvent("(Accept an incoming call with call type is.*)", module_Phone)
+###reject
+addEvent("(Reject an incoming call as the reason is.*)", module_Phone)
+###terminate
+addEvent("(Terminate a call as the reason is.*)", module_Phone)
+###hold
+addEvent("(Hold a call with the media profile:.*)", module_Phone)
+###resume
+addEvent("(Continues a call with the media profile.*)", module_Phone)
+###merge
+addEvent("(Merge the active & hold call)", module_Phone)
+###update
+addEvent("(Update the current call's type to .*)", module_Phone)
+###invite conf participants
+addEvent("(Request server to invite participants:.*)", module_Phone)
+###remove conf participants
+addEvent("(Remove the participants:.*)", module_Phone)
+###send dtmf
+addEvent("(sendDtmf.*)", module_Phone)
+###start dtmf
+addEvent("(startDtmf.*)", module_Phone)
+###send ussd
+addEvent("(Send an USSD message:.*)", module_Phone)
+
+###start camera
+addEvent("(Try to start the camera:.*)", module_Phone)
+
+###stop camera
+addEvent("(Try to stop the camera for the call:.*)", module_Phone)
+###modify request
+addEvent("(Try to send the modify request, isVideo:.*)", module_Phone)
+
+###start local render
+addEvent("(Try to start the local render for the call:.*)", module_Phone)
+###stop local render
+addEvent("(Try to stop the local render for the call:.*)", module_Phone)
+###start remote render
+addEvent("(Try to start the remote render for the call:.*)", module_Phone)
+### stop remote render
+addEvent("(Try to stop the remote render for the call:.*)", module_Phone)
+### start capture
+addEvent("(try to start capture for the call:.*)", module_Phone)
+### stop capture
+addEvent("(Try to stop capture for the call:.*)", module_Phone)
+###start video trans
+addEvent("(Try to start the video transmission for the call:.*)", module_Phone)
+### stop video trans
+addEvent("(Try to stop the video transmission for the call:.*)", module_Phone)
+###local rotate
+addEvent("(Try to rotate local render for the call:.*)", module_Phone)
+### remote rotate
+addEvent("(Try to rotate remote render for the call:.*)", module_Phone)
+
+
+###set pause image
+addEvent("(Set the pause image to.*)", module_Phone)
+###invite conf call
+addEvent("(Try to invite this call.*to the conference call.*)", module_Phone)
+
+
 #------------------------------------------------------------------------------------
 #Service part
 ##RegisterService

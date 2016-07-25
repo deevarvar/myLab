@@ -1212,7 +1212,7 @@ class flowParser():
          #now get the conclusion: voice/video/hold/resume
 
 
-            if  sip['isinvite']:
+            if sip['isinvite']:
                 self.logger.logger.info('start to judge session modification for index ' + str(index))
                 self.judgeSessionModify(sip)
                 #increase the count

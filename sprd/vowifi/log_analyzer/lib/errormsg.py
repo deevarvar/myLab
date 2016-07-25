@@ -298,6 +298,9 @@ adaptermsg.addkey("Get the invite accept result for the user")
 adaptermsg.addkey("Get the invite failed result for the user")
 adaptermsg.addkey("Handle the call do not received the rtp in 5s")
 
+
+
+
 servicemsg = errorbase(owner=element_Service)
 
 
