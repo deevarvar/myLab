@@ -29,6 +29,8 @@ class SipParser():
             self.mediapattern = config['sipParser']['mediapattern']
             self.b2buapattern = config['sipParser']['b2buapattern']
             self.causepattern =  config['sipParser']['causepattern']
+            self.rtpmappattern = config['sipParser']['rtpmappattern']
+            self.fmtppattern = config['sipParser']['fmtppattern']
 
             #define compact headers
             #http://www.cs.columbia.edu/sip/compact.html
@@ -175,14 +177,14 @@ class SipParser():
         self.logger.logger.info('header is ' + pair['type'] + ', content is ' + pair['value'])
         return pair
 
-    def getmedia(self, value):
+    def getmedia(self, line):
         '''
          m=audio 37042 RTP/AVP 104 0 8 116 103 9 101
         :param value: the string after "m="
         :return:
         '''
         mediapattern = re.compile(self.mediapattern)
-        match = mediapattern.search(value)
+        match = mediapattern.search(line)
         if not match:
             return None
         pair = dict()
@@ -202,6 +204,34 @@ class SipParser():
             direct = match.group(1)
             self.logger.logger.info('direct is ' + direct)
             return direct
+        else:
+            return False
+
+    def getrtpmap(self, line):
+        rtpmappattern = re.compile(self.rtpmappattern)
+        match = rtpmappattern.search(line)
+        if match:
+            payload = int(match.group(1))
+            value = match.group(2)
+            rtpmapdict = dict()
+            rtpmapdict['payload'] = payload
+            rtpmapdict['rtpmap'] = value
+            self.logger.logger.info('codec is %d, rtpmap is %s' % (payload,value))
+            return rtpmapdict
+        else:
+            return False
+
+    def getfmtp(self, line):
+        fmtppattern =  re.compile(self.fmtppattern)
+        match = fmtppattern.search(line)
+        if match:
+            payload = int(match.group(1))
+            value = match.group(2)
+            fmtpdict = dict()
+            fmtpdict['payload'] = payload
+            fmtpdict['fmtp'] = value
+            self.logger.logger.info('codec is %d ,fmtp is %s' % (payload, value))
+            return fmtpdict
         else:
             return False
 
@@ -300,7 +330,7 @@ if __name__ == '__main__':
     sdptag1 = "03-18 18:47:48.263  2617  3010 D LEMON   : m=audio 37042 RTP/AVP 104 0 8 116 103 9 101"
     sdptag2 = "03-18 18:47:48.263  2617  3010 D LEMON   : v=0"
     mtag = sp.sdpParser(sdptag1)
-    sp.getmedia(mtag['value'])
+    sp.getmedia(sdptag1)
     sp.sdpParser(sdptag2)
 
     sp.getsdpDirect('a=recvonly')
@@ -324,3 +354,8 @@ if __name__ == '__main__':
     sp.getExpires(expline2)
     expline3 = " LEMON   : Contact: <sip:405872000816089@[2405:204:1980:af7c::2923:a8ad]:5066;transport=tcp>;+sip.instance=\"<urn:gsma:imei:86740002-050287-0>\";reg-id=4;expires=600000;+g.3gpp.icsi-ref=\"urn%%3Aurn-7%%3A3gpp-service.ims.icsi.mmtel\";video;+g.3gpp.smsip"
     sp.getExpires(expline3)
+
+    rtpmap = "07-22 17:17:39.610  1999  3317 D LEMON   : a=rtpmap:104 AMR-WB/16000"
+    sp.getrtpmap(rtpmap)
+    fmtp = '07-22 17:20:10.491  1999  3317 D LEMON   : a=fmtp:121 profile-level-id=42C00C; packetization-mode=1; sprop-parameter-sets=Z0LAKekHhSQCwiEagA==,aM48gA=="'
+    sp.getfmtp(fmtp)

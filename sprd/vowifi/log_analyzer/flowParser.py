@@ -821,15 +821,22 @@ class flowParser():
         if sip['b2bua'] or sip['hascause'] or sip['iserrorrsp']:
             labelcolor = ", color=red"
 
-
+        sdpinfo = ''
         if sip['issdp']:
             sdpstring = " with sdp"
             self.logger.logger.error('error lineno is ' + str(sip['lineno']))
             if sip['isvideo'] and 'vdirect' in sip:
-                mediadirection += "video: " + sip['vdirect'] + ','
+                mediadirection += "video: " + sip['vdirect'] + ', port: '+ str(sip['vport']) +';'
 
             if sip['adirect']:
-                mediadirection += 'audio: ' + sip['adirect'] + '\n'
+                mediadirection += 'audio: ' + sip['adirect'] + ', port: '+ str(sip['aport']) +'\n'
+
+            if sip['codec']:
+                for codec, codecvalue in sip['codec'].iteritems():
+                    for sdpparam, value in codecvalue.iteritems():
+                        sdpinfo += 'Codec ' + str(codec) + ': ' + sdpparam + ' ' + value  + '\n'
+
+
 
         elif sip['b2bua'] and sip['isinvite']:
             sdpstring = " without sdp"
@@ -886,7 +893,7 @@ class flowParser():
         #Call-ID: Ic08Qn.CU6xke*qifx321ICCxI@[2405:204:3807:2ade::262e:28a0]
         #log lineno: 5249"];
 
-        note = ", note = \"" + timestamp + cseq + action + note + mediadirection + expires + supported + require + ua + retryafter+ fromtag + totag + callid +lineno + "\""
+        note = ", note = \"" + timestamp + cseq + action + note + mediadirection + sdpinfo + expires + supported + require + ua + retryafter+ fromtag + totag + callid +lineno + "\""
 
         label = label + note + labelcolor + "];\n"
         #print label
@@ -1165,34 +1172,44 @@ class flowParser():
             for index, sdpline in enumerate(sip['sdp']):
                 #1. check media:          m=audio 37042 RTP/AVP 104 0 8 116 103 9 101
                 #2. check media redirect: a=sendrecv
-                sdppair = sipparser.sdpParser(sdpline)
-                if sdppair:
-                    type = sdppair['type']
-                    value = sdppair['value']
-                    if type == 'm':
-                        mediadict = sipparser.getmedia(value)
-                        if mediadict['mtype'] == 'video':
-                            self.logger.logger.debug('found video')
-                            sip['isvideo'] = True
-                            sip['vport'] = mediadict['mport']
-                        else:
-                            sip['isvideo'] = False
-                            sip['aport'] = mediadict['mport']
+                #3. add rtpmap, fmtp
 
-                    elif type == 'a':
-                        if sipparser.getsdpDirect(value):
-                            #assume that the voice attribute comes first and video later
-                            if sip['isvideo'] :
-                                self.logger.logger.debug('video direct is ' + value)
-                                sip['vdirect'] = value
-                            else:
-                                sip['adirect'] = value
-                                self.logger.logger.debug('audio direct is ' + value)
+                mediadict = sipparser.getmedia(sdpline)
+                direct = sipparser.getsdpDirect(sdpline)
+                rtpmap = sipparser.getrtpmap(sdpline)
+                fmtp = sipparser.getfmtp(sdpline)
+
+                if mediadict:
+                    if mediadict['mtype'] == 'video':
+                        self.logger.logger.debug('found video')
+                        sip['isvideo'] = True
+                        sip['vport'] = mediadict['mport']
                     else:
-                        #other value.
-                        pass
+                        sip['isvideo'] = False
+                        sip['aport'] = mediadict['mport']
+                elif direct:
+                    #assume that the voice attribute comes first and video later
+                    if sip['isvideo'] :
+                        self.logger.logger.debug('video direct is ' + direct)
+                        sip['vdirect'] = direct
+                    else:
+                        sip['adirect'] = direct
+                        self.logger.logger.debug('audio direct is ' + direct)
+                elif rtpmap:
+                    payload = rtpmap['payload']
+                    value = rtpmap['rtpmap']
+                    if payload not in sip['codec']:
+                        sip['codec'][payload] = dict()
 
-            #now get the conclusion: voice/video/hold/resume
+                    sip['codec'][payload]['rtpmap'] = value
+                elif fmtp:
+                    payload = fmtp['payload']
+                    value = fmtp['fmtp']
+                    if payload not in sip['codec']:
+                        sip['codec'][payload] = dict()
+                    sip['codec'][payload]['fmtp'] = value
+
+         #now get the conclusion: voice/video/hold/resume
 
 
             if  sip['isinvite']:
@@ -1381,6 +1398,9 @@ class flowParser():
         diaginfo['send'] = sipobj['send']
         diaginfo['sdp'] = list()
         diaginfo['issip'] = 1
+
+        #add codec info
+        diaginfo['codec'] = dict()
 
         #add flag if is error rsp
         diaginfo['iserrorrsp'] = False
