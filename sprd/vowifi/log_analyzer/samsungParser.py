@@ -364,7 +364,10 @@ class samsungParser():
             merger.append(PdfFileReader(file(filename, 'rb')))
 
         basename = os.path.basename(self.log)
-        finalpdfname = self.diagdir + basename.split('.')[0] + '.pdf'
+        #samsung's main log name there will be more than one dot
+        dotlength = basename.split('.')
+
+        finalpdfname = self.diagdir + ''.join(dotlength) + '.pdf'
         merger.write(finalpdfname)
 
     def drawOneDiag(self, diagstr, postfix):

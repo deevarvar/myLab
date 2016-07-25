@@ -195,13 +195,15 @@ class SipParser():
         return pair
 
 
-    def checksdpDirect(self, line):
+    def getsdpDirect(self, line):
         directpattern = re.compile(self.directpattern)
         match = directpattern.search(line)
-        if not match:
-            return False
+        if match:
+            direct = match.group(1)
+            self.logger.logger.info('direct is ' + direct)
+            return direct
         else:
-            return True
+            return False
 
     def checkB2BUA(self, line):
         b2buapattern = re.compile(self.b2buapattern)
@@ -301,8 +303,8 @@ if __name__ == '__main__':
     sp.getmedia(mtag['value'])
     sp.sdpParser(sdptag2)
 
-    print sp.checksdpDirect('recvonl')
-    print sp.checksdpDirect('inactive')
+    sp.getsdpDirect('a=recvonly')
+    sp.getsdpDirect('a=curr: inactive')
 
     b2btag = "06-07 12:21:20.705  1948  3081 D LEMON   : P-Com.Nokia.B2BUA-Involved:no"
     print sp.checkB2BUA(b2btag)

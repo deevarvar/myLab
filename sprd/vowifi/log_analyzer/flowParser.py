@@ -1180,7 +1180,7 @@ class flowParser():
                             sip['aport'] = mediadict['mport']
 
                     elif type == 'a':
-                        if sipparser.checksdpDirect(value):
+                        if sipparser.getsdpDirect(value):
                             #assume that the voice attribute comes first and video later
                             if sip['isvideo'] :
                                 self.logger.logger.debug('video direct is ' + value)
