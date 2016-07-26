@@ -325,7 +325,7 @@ class samsungParser():
                 method = ' Method: ' + msg['method'] + '\n'
                 timestamp = "Time: " + msg['timestamp'] + "\n"
                 lineno = ' LineNo: ' + str(msg['lineno']) + '\n'
-                note = ", note = \"" + rspcode + cseq + timestamp + lineno + "\""
+                note = ", note = \"" + cseq + timestamp + lineno + "\""
                 label = label + note + "];\n"
                 onestr = basedirect + label
                 self.diagstr += onestr

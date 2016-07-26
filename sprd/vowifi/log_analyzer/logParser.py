@@ -91,16 +91,16 @@ class logParser():
             self.utils = utils(configpath='./')
             realpath = os.path.realpath(logname)
             self.log = realpath
-            self.trimlog = outputdir + '/logs/'+filterlevel + '_' + os.path.basename(realpath)
+            self.trimlog = outputdir + 'logs/'+filterlevel + '_' + os.path.basename(realpath)
 
             with open(self.trimlog, 'w') as tlog:
                 tlog.truncate()#index = 0
 
-            self.processout = outputdir + '/logs/' + 'processout.log'
+            self.processout = outputdir + 'logs/' + 'processout.log'
 
-            self.keylog = outputdir + '/logs/' + 'key_' + os.path.basename(realpath)
-            self.elog = outputdir + '/logs/' + 'error_' + os.path.basename(realpath)
-            self.diagdir = outputdir + '/diagrams/'
+            self.keylog = outputdir + 'logs/' + 'key_' + os.path.basename(realpath)
+            self.elog = outputdir + 'logs/' + 'error_' + os.path.basename(realpath)
+            self.diagdir = outputdir + 'diagrams/'
 
             self.diagstr = ''
 
@@ -244,6 +244,8 @@ class logParser():
         diagname = basename.split('.')[0] + '.diag'
         pngname = self.diagdir + pngname
         diagname = self.diagdir + diagname
+        print self.diagdir + '\n'
+        print diagname + '\n'
         with open(diagname, 'w') as diagfile:
             diagfile.write(diagram_definition)
 

@@ -825,7 +825,7 @@ class flowParser():
         if sip['issdp']:
             sdpstring = " with sdp"
             self.logger.logger.error('error lineno is ' + str(sip['lineno']))
-            if sip['isvideo'] and 'vdirect' in sip:
+            if sip['isvideo'] and not sip['vdirect']:
                 mediadirection += "video: " + sip['vdirect'] + ', port: '+ str(sip['vport']) +';'
 
             if sip['adirect']:
@@ -862,6 +862,10 @@ class flowParser():
         else:
             expires = ''
 
+        if sip['pasouri']:
+            pasouri = " P-Associate-Uri: " + sip['pasouri'] + '\n'
+        else:
+            pasouri = ''
 
         if sip['supported']:
             supported = " Supported: " + sip['supported'] + '\n'
@@ -873,6 +877,12 @@ class flowParser():
             require = " Require: " + sip['require'] + '\n'
         else:
             require = ''
+
+
+        if sip['paccess']:
+            paccess = "P-Access-Network-Info: " + sip['paccess'] + '\n'
+        else:
+            paccess = ''
 
 
         note = " Note: " + sdpstring + cause + '\n'
@@ -893,7 +903,7 @@ class flowParser():
         #Call-ID: Ic08Qn.CU6xke*qifx321ICCxI@[2405:204:3807:2ade::262e:28a0]
         #log lineno: 5249"];
 
-        note = ", note = \"" + timestamp + cseq + action + note + mediadirection + sdpinfo + expires + supported + require + ua + retryafter+ fromtag + totag + callid +lineno + "\""
+        note = ", note = \"" + timestamp + cseq + action + note + mediadirection + sdpinfo + expires + pasouri + supported + require + ua + paccess + retryafter+ fromtag + totag + callid +lineno + "\""
 
         label = label + note + labelcolor + "];\n"
         #print label
@@ -1167,7 +1177,7 @@ class flowParser():
         if sip['sdp'] :
             sip['isvideo'] = False
             sip['adirect'] = 'sendrecv'
-
+            sip['vdirect'] = ''
             sipparser = self.sipparser
             for index, sdpline in enumerate(sip['sdp']):
                 #1. check media:          m=audio 37042 RTP/AVP 104 0 8 116 103 9 101
@@ -1409,11 +1419,12 @@ class flowParser():
         #add retry-after
         diaginfo['retryafter'] = ''
 
-        #add expires, supported, require
+        #add expires, supported, require, p-access-network-info, P-Associated-URI
         diaginfo['expires'] = None
         diaginfo['supported'] = None
         diaginfo['require'] = None
-
+        diaginfo['paccess'] = None
+        diaginfo['pasouri'] = None #is different from pasonum
 
         diaginfo['hascause'] = False
         diaginfo['cause'] = dict()
@@ -1478,11 +1489,19 @@ class flowParser():
                     diaginfo['tonum'] = num
                     continue
 
-            if not diaginfo['pasonum']:
-                pasonum = sipparser.getPasoUri(header)
-                if pasonum:
-                    diaginfo['pasonum'] = pasonum
-                    continue
+
+            #some kind of hack code here, pasonum and pasouri come into the same loop.
+            pasouri = sipparser.getHeaderContent(header, "P-Associated-URI")
+            if pasouri:
+                if not diaginfo['pasouri']:
+                    diaginfo['pasouri'] = pasouri
+                    #only get the first one split by comma
+                    firstone = pasouri.split(',')[0]
+                    diaginfo['pasonum'] = sipparser.getNumber(firstone)
+                else:
+                    diaginfo['pasouri'] += ',' + pasouri
+                continue
+
 
             cseq = sipparser.getCSeq(header)
             if cseq:
@@ -1507,6 +1526,7 @@ class flowParser():
                 diaginfo['hascause'] = True
                 diaginfo['cause'] = cause #Two member: code ,isdn
                 self.logger.logger.error('cause code is ' + str(cause['code']) + ', string is ' + cause['isdn'] )
+                continue
 
             #add logic to record User-Agent
             ua = sipparser.getHeaderContent(header, 'User-Agent')
@@ -1516,10 +1536,12 @@ class flowParser():
             retryafter = sipparser.getHeaderContent(header, 'Retry-After')
             if retryafter:
                 diaginfo['retryafter'] = retryafter
+                continue
 
             expires =  sipparser.getExpires(header)
             if expires:
                 diaginfo['expires'] = expires
+                continue
 
             #Supported/Require can be one line or multiple line...
             supported = sipparser.getHeaderContent(header, "Supported")
@@ -1528,6 +1550,7 @@ class flowParser():
                     diaginfo['supported'] = supported
                 else:
                     diaginfo['supported'] += ',' + supported
+                continue
 
             require = sipparser.getHeaderContent(header, "Require")
             if require:
@@ -1535,6 +1558,13 @@ class flowParser():
                     diaginfo['require'] = require
                 else:
                     diaginfo['require'] += ',' + require
+                continue
+
+            paccess = sipparser.getHeaderContent(header, "P-Access-Network-Info")
+            if paccess:
+                diaginfo['paccess'] = paccess
+                continue
+
 
             #add logic to record sdp body
             sdppair = sipparser.sdpParser(header)
@@ -1672,7 +1702,9 @@ class flowParser():
         #self.logger.logger.info('seqdiag is ' + diagram_definition)
         #write the diagram string to file
         basename = os.path.basename(self.log)
+        #print self.diagdirdiag + '\n'
         diagname = self.diagdirdiag + basename.split('.')[0] + '_' + str(postfix) + '.diag'
+        #print diagname + '\n'
         pdfname = self.diagdirpdf + basename.split('.')[0] + '_' + str(postfix) + '.pdf'
 
         self.pdfList.append(pdfname)

@@ -41,8 +41,12 @@ path = os.path.dirname(os.path.realpath(__file__))
 #  todo tag/not_to_do: 4.6 split png by call-id
 #  todo tag/done: 4.7 add wifi calling msg, airplane mode, wifi calling, wifi connect
 #  todo tag/postpone: 4.9 msg init, there should be class to init the msg
-#  todo tag: 4.12 add sdp parsing: a=rtpmap , a=fmtp
-
+#  todo tag/done: 4.12 add sdp parsing: a=rtpmap , a=fmtp
+#  todo tag:   4.13 adapter call id record, flow display
+#  fixme tag: if file name is too long, open file may fail
+#  todo tag: 5.1 handover
+#          tag/done:  5.1.1 add p-access-network-type, P-associate-uri
+#       todo:   tag:  5.1.2 procedure overview
 #   web page
 #   1. how to display
 #   2. overall results, use actdiag
