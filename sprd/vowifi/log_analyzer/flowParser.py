@@ -118,7 +118,7 @@ path = os.path.dirname(os.path.realpath(__file__))
 
 
 class flowParser():
-    def __init__(self, logname):
+    def __init__(self, logname, atmsgs = None, kernelmsgs = None):
 
         try:
 
@@ -206,8 +206,8 @@ class flowParser():
 
             self.sipmsgs = list()
 
-
-
+            self.atmsgs = atmsgs
+            self.kernelmsgs = kernelmsgs
 
 
             #reg type

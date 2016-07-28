@@ -97,7 +97,7 @@ class logParser():
                 tlog.truncate()#index = 0
 
             self.processout = outputdir + 'logs/' + 'processout.log'
-
+            print self.processout
             self.keylog = outputdir + 'logs/' + 'key_' + os.path.basename(realpath)
             self.elog = outputdir + 'logs/' + 'error_' + os.path.basename(realpath)
             self.diagdir = outputdir + 'diagrams/'

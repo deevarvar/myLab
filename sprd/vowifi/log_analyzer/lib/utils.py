@@ -29,7 +29,10 @@ class utils():
             config = ConfigObj(configfile, file_error=True)
             self.config = config
             #NOTE: logpatten is a list
-            self.logpattern = config['files']['log']
+            self.mlogpattern = config['files']['log']
+
+            self.rlogpattern = config['files']['radiolog']
+            self.klogpattern = config['files']['kernellog']
 
             #all the dirs
             self.dirlist = list()
@@ -48,16 +51,60 @@ class utils():
     def findlogs(self, dirname):
         '''
         find all log files recursively in one given dir
-        :return:
+        :return: a list of logs including main, kernel,
         '''
-        matches = []
+        #NOTE: main, kernel, radio have the same format
+        #0-main-07-27-12-36-30.log
+        #0-radio-07-27-12-36-30.log
+        #0-kernel-07-27-12-36-30.log
+        matches = list()
+
+        mainmatches = list()
         for root, dirnames, filenames in os.walk(dirname):
             #print root
             #print dirnames
             #print filenames
-            for index, logname in enumerate(self.logpattern):
-                for filename in fnmatch.filter(filenames, logname):
-                    matches.append(os.path.join(root, filename))
+
+            for filename in fnmatch.filter(filenames, self.mlogpattern):
+                mainmatches.append(os.path.join(root, filename))
+
+        radiomatches = list()
+        for root, dirnames, filenames in os.walk(dirname):
+            #print root
+            #print dirnames
+            #print filenames
+
+            for filename in fnmatch.filter(filenames, self.rlogpattern):
+                radiomatches.append(os.path.join(root, filename))
+
+        kernelmatches = list()
+        for root, dirnames, filenames in os.walk(dirname):
+            #print root
+            #print dirnames
+            #print filenames
+            for filename in fnmatch.filter(filenames, self.klogpattern):
+                kernelmatches.append(os.path.join(root, filename))
+
+        for mindex, mname in enumerate(mainmatches):
+            #get pattern
+            mpattern = "0-main-(.*).log"
+            mcpattern = re.compile(mpattern)
+            datematch = mcpattern.search(mname)
+            if datematch:
+                datepattern = datematch.group(1)
+                onematch = dict()
+                onematch['mainlog'] = mname
+
+                self.logger.logger.info('date pattern is ' + datepattern)
+                #try to do the loop to find the radio
+                for rindex, rname in enumerate(radiomatches):
+                    if datepattern in rname:
+                        onematch['radiolog'] = rname
+                        break
+                #TODO: do the loop to find the kernel log
+
+                matches.append(onematch)
+
         return matches
 
     #similar to "mkdir -p"
@@ -124,5 +171,6 @@ class utils():
 if __name__ == '__main__':
     utils = utils()
     matches = utils.findlogs('./src')
-    for index,file in enumerate(matches):
-        print file
+    for index, match in enumerate(matches):
+        for key,value in match.iteritems():
+            print 'key is ' + key + ', value is ' + value

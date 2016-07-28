@@ -51,12 +51,19 @@ class radioParser():
 
             self.utils = utils(configpath='./')
             prefix = outputdir
+
+            self.utils.createdirs(outputdir)
             self.diagdir = prefix + '/diagrams/'
             self.diagdirdiag = prefix + '/diagrams/diag/'
             self.diagdirpdf = prefix + '/diagrams/pdf/'
+            self.logdir = prefix + '/logs/'
 
-            self.utils.mkdirp(self.diagdirdiag)
-            self.utils.mkdirp(self.diagdirpdf)
+            realpath = os.path.realpath(logname)
+            basename = os.path.basename(realpath)
+            self.trimlog = self.logdir + 'trim_' + basename
+            with open(self.trimlog, 'w') as tlog:
+                tlog.truncate()
+
             self.starttime = datetime.now()
 
         except (ConfigObjError, IOError) as e:
@@ -229,7 +236,10 @@ class radioParser():
         direct = keypattern['direct']
         match = pattern.search(line)
         if match:
-            self.logger.logger.debug(line)
+            #self.logger.logger.debug(line)
+            with open(self.trimlog, 'a+') as tlog:
+                tlog.write(line)
+
             atmsg = self.initAtmsg(line)
             #replace double quote, or seqdiag will fail!
             atmsg['atcmd'] = match.group(0).strip().replace('"', '')

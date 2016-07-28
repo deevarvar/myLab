@@ -7,6 +7,7 @@ import sys
 from configobj import ConfigObj,ConfigObjError
 import logging
 from flowParser import flowParser
+from radioParser import radioParser
 from samsungParser import samsungParser
 from threading import Thread,Event
 import multiprocessing
@@ -46,9 +47,11 @@ path = os.path.dirname(os.path.realpath(__file__))
 #  fixme tag: if file name is too long, open file may fail
 #  todo tag: 4.14: add reg/s2b status code mapping.
 #  todo tag: 5.1 handover
-#          tag/done:  5.1.1 add p-access-network-type, P-associate-uri
+#  todo tag/done:  5.1.1 add p-access-network-type, P-associate-uri
 #       todo:   tag:  5.1.2 procedure overview
-#       todo:   tag:  5.1.3 ho's vowifi at command
+#       todo:   tag/done:  5.1.3 ho's vowifi at command
+#       todo:   tag/todo:  trim at log
+#       todo:   tag: add main/radio/kernel interface to record all log pairs,
 #   web page
 #   1. how to display
 #   2. overall results, use actdiag
@@ -77,6 +80,7 @@ class loggergui():
             #one sip msg to render diagram's time
             self.estimatetime = config['utils']['estimate']
             self.threadlist = list()
+            self.utils = utils(configpath='./')
 
         except (ConfigObjError, IOError) as e:
              print 'Could not read "%s": %s' % (configfile, e)
@@ -121,20 +125,40 @@ class loggergui():
                 else:
                     helper = utils(configpath='./')
                     matches = helper.findlogs(folder)
-                    for index,file in enumerate(matches):
+                    for index,filedict in enumerate(matches):
                         #call the real parser
 
                         self.curtimestamp = strftime("%Y_%m_%d_%H_%M_%S", gmtime())
-                        #pop up a msg box
-                        #self.popupmsg(file)
+                        mainlog = filedict['mainlog']
+                        radiolog = filedict['radiolog']
+                        #kernellog = filedict['kernellog']
+                        #actually mainlog will always exist
 
-                        fp = flowParser(file)
+                        #first of all , get radio log , if exist
+                        if not mainlog:
+                            continue
+
+                        mainlogrealpath = os.path.realpath(mainlog)
+                        shortname = os.path.basename(mainlogrealpath)
+                        dirname = os.path.dirname(mainlogrealpath)
+                        outputdir = dirname + '/' + shortname.split('.')[0]
+                        self.utils.mkdirp(outputdir)
+
+                        if radiolog:
+                            rp = radioParser(logname = radiolog, outputdir = outputdir)
+                            rp.getflow()
+                            rp.assembleStr()
+                            rp.drawAllDiag()
+
+                        #TODO: need to handle main/radio/kernel
+
+                        fp = flowParser(logname = mainlog)
                         len = fp.getFlow()
                         self.msglen =  len
                         self.logger.logger.info('sip msgs len is ' + str(len))
 
                         #self.popupmsg(file)
-                            #msgbox(msg)
+                        #msgbox(msg)
                         #t = ThreadWithExc(target=self.popupthread,args=(currentfile,))
                         #t.start()
                         fp.parseFlow()

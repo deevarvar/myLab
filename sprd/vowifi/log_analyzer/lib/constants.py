@@ -446,7 +446,8 @@ addEvent('(database has changed, mIsWifiCallingEnabled.*)', module_ImsCM)
 ##no rtp
 addEvent("ImsConnectionManagerService:(.*mNoRtpTimes.*)", module_ImsCM)
 
-
+## more log about rssi
+##D:\code\log\otherlog\stephen\1236_in_voice_call_auto_handover_to_volte
 
 #------------------------------------------------------------------------------------
 #Adapter Part
