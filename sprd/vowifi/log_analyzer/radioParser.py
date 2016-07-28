@@ -79,7 +79,7 @@ class radioParser():
 
         qryregpattern = dict()
         qryregpattern['pattern'] = re.compile(self.pattern['qryregpattern'])
-        qryregpattern['func'] = None
+        qryregpattern['func'] = self.getqrystring
         qryregpattern['direct'] = '->'
         self.keypattern.append(qryregpattern)
 
@@ -115,7 +115,7 @@ class radioParser():
 
         callendpattern = dict()
         callendpattern['pattern'] = re.compile(self.pattern['callendpattern'])
-        callendpattern['func'] = None
+        callendpattern['func'] = self.getcallendstring
         callendpattern['direct'] = '->'
         self.keypattern.append(callendpattern)
 
@@ -188,6 +188,11 @@ class radioParser():
             return "EPDG attach succussfully"
         else:
             state = "Unknown attach status"
+    def getqrystring(self):
+        return "Query CP Regsiter state"
+
+    def getcallendstring(self):
+        return "Vowifi Call End"
 
     def getwifireg(self, state):
         if state == '0':
@@ -230,13 +235,22 @@ class radioParser():
             atmsg['atcmd'] = match.group(0).strip().replace('"', '')
             atmsg['direct'] = direct
             atmsg['lineno'] = 'radio log:' + str(lineno)
+
+            groupnum = pattern.groups
             if not actionfunc:
                 atmsg['action'] = ''
             else:
-                state = match.group(1).strip()
-                atmsg['action'] = actionfunc(state)
+                if groupnum >= 1:
+                    state = match.group(1).strip()
+                else:
+                    state = ''
+
+                if not state:
+                    atmsg['action'] = actionfunc()
+                else:
+                    atmsg['action'] = actionfunc(state)
                 self.logger.logger.debug('state is %s, action is %s' % (state, atmsg['action']))
-                self.atmsgs.append(atmsg)
+            self.atmsgs.append(atmsg)
             return True
         else:
             return False
@@ -362,8 +376,12 @@ class radioParser():
 
 
 if __name__ == '__main__':
-    #rp = radioParser(logname='./0-radio-07-27-11-29-56.log')
-    rp = radioParser(logname='./0-radio-07-27-11-13-22.log')
+    rp = radioParser(logname='./0-radio-07-27-11-29-56.log')
+    #rp = radioParser(logname='./0-radio-07-27-11-13-22.log')
+
+    #rp = radioParser(logname='./0-radio-07-14-11-19-19.log')
+
+    #rp = radioParser(logname='./0-radio-07-14-12-11-19.log')
     rp.getflow()
     rp.assembleStr()
     rp.drawAllDiag()
