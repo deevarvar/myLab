@@ -302,7 +302,7 @@ class flowParser():
             self.logger.logger.info('dump line from ' + str(start) + ' to ' + str(end))
             sendsip = dict()
             sendsip['send'] = True
-            sendsip['lineno'] = lineno
+            sendsip['lineno'] = 'main log:' + str(lineno)
             sendsip['timestamp'] = timestamp
             sendsip['msg'] = list()
             sendsip['issip'] = 1
@@ -364,7 +364,7 @@ class flowParser():
             recvsip = dict()
             recvsip['send'] = False
             recvsip['msg'] = list()
-            recvsip['lineno'] = lineno
+            recvsip['lineno'] = 'main log:' + str(lineno)
             recvsip['timestamp'] = timestamp
             recvsip['issip'] = 1
             #record req line and other fields here
@@ -445,7 +445,7 @@ class flowParser():
                 eventmsg['msg'] = line.strip(' \t')
                 #event content is modulename + matchlog
                 eventmsg['event'] = modulename + ' : ' + match.group(1)
-                self.logger.logger.error('the target event is ' + eventmsg['event'])
+                #self.logger.logger.error('the target event is ' + eventmsg['event'])
                 eventmsg['lineno'] = lineno
                 eventmsg['issip'] = 0
                 eventmsg['isevent'] = 1
@@ -825,8 +825,13 @@ class flowParser():
         if sip['issdp']:
             sdpstring = " with sdp"
             self.logger.logger.error('error lineno is ' + str(sip['lineno']))
-            if sip['isvideo'] and not sip['vdirect']:
+            if sip['isvideo'] and sip['vport'] != 0:
+                if not sip['vdirect']:
+                    sip['vdirect'] = 'sendrecv'
                 mediadirection += "video: " + sip['vdirect'] + ', port: '+ str(sip['vport']) +';'
+
+            if sip['aport'] and not sip['adirect']:
+                sip['adirect'] = 'sendrecv'
 
             if sip['adirect']:
                 mediadirection += 'audio: ' + sip['adirect'] + ', port: '+ str(sip['aport']) +'\n'
@@ -1113,6 +1118,7 @@ class flowParser():
 
         lastcnt = 0
         lastaction = ''
+        sip['action'] = ''
         #last action
         if int(flowdata['cnt']) > 0:
             lastcnt = int(flowdata['cnt']) - 1
@@ -1689,11 +1695,13 @@ class flowParser():
         diagram_definition += " autonumber = True;\n"
 
 
-        #add elements
-        # UE; NETWORK; UE1;
+        elementstr = ''
         for index, element in enumerate(self.elements):
-            diagram_definition += element + ';'
+            elementstr += element + ';'
 
+        if not elementstr:
+            elementstr = "UE; NETWORK;"
+        diagram_definition +=elementstr + '\n'
         diagram_definition += '\n'
 
         diagram_definition += diagstr

@@ -343,7 +343,7 @@ module_CP="CP"
 module_dialer="Dialer"
 
 #later should add more msg, adapter
-def addEvent(key, module):
+def addEvent(key, module, handler = None):
     event = dict()
     event['key'] = key
     event['module'] = module
@@ -480,6 +480,8 @@ addEvent("(Re-register, with the type:.*)", module_Phone)
 ###force stop
 addEvent("(Stop current register process. registerState:.*)", module_Phone)
 
+### security callback
+addEvent("(Get the security callback:.*)", module_Phone)
 
 ###call related event
 addEvent("(Handle the event.*for the call.*)", module_Phone)
@@ -555,6 +557,14 @@ addEvent("(Try to invite this call.*to the conference call.*)", module_Phone)
 ##RegisterService
 #"Try to reset the sip stack."
 addEvent("(Try to reset the sip stack.)", module_Service)
+
+
+addEvent("(Notify the event:.*)", module_Service)
+
+#reg status code comes here
+addEvent("(RegisterService.*Get the register state changed callback.*)", module_Service)
+
+
 #------------------------------------------------------------------------------------
 #lemon part
 ##reinvite ack not received
@@ -562,4 +572,7 @@ addEvent("(ACK to reinvite with no offer does not received when call.*)", module
 
 
 
-###Ike_SessReportIkeFailed
+### MTC_EBASE_S2B , MTC_EBASE_REG
+
+#security part
+addEvent("LEMON.*(imsi is.*)", module_Security)

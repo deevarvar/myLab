@@ -44,9 +44,11 @@ path = os.path.dirname(os.path.realpath(__file__))
 #  todo tag/done: 4.12 add sdp parsing: a=rtpmap , a=fmtp
 #  todo tag:   4.13 adapter call id record, flow display
 #  fixme tag: if file name is too long, open file may fail
+#  todo tag: 4.14: add reg/s2b status code mapping.
 #  todo tag: 5.1 handover
 #          tag/done:  5.1.1 add p-access-network-type, P-associate-uri
 #       todo:   tag:  5.1.2 procedure overview
+#       todo:   tag:  5.1.3 ho's vowifi at command
 #   web page
 #   1. how to display
 #   2. overall results, use actdiag
