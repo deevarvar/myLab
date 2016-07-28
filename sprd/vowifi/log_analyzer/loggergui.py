@@ -50,8 +50,9 @@ path = os.path.dirname(os.path.realpath(__file__))
 #  todo tag/done:  5.1.1 add p-access-network-type, P-associate-uri
 #       todo:   tag:  5.1.2 procedure overview
 #       todo:   tag/done:  5.1.3 ho's vowifi at command
-#       todo:   tag/todo:  trim at log
-#       todo:   tag: add main/radio/kernel interface to record all log pairs,
+#       todo:   tag/done:  trim at log
+#       todo:   tag/done: add main/radio/kernel interface to record all log pairs,
+#       todo:   tag: 5.1.4 merge radio/main logs
 #   web page
 #   1. how to display
 #   2. overall results, use actdiag

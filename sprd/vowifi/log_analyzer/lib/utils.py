@@ -18,7 +18,7 @@ from blockdiag.imagedraw import png,pdf,svg
 sys.path.append('./')
 from logConf import logConf
 from configobj import ConfigObj,ConfigObjError
-
+from operator import itemgetter
 
 class utils():
     def __init__(self, configpath='..'):
@@ -161,12 +161,22 @@ class utils():
             self.logger.logger.error('tags is empty')
             return None
 
-    class dotdict(dict):
-        """dot.notation access to dictionary attributes"""
-        def __getattr__(self, attr):
-            return self.get(attr)
-        __setattr__= dict.__setitem__
-        __delattr__= dict.__delitem__
+    def mergelistbykey(self, oldlist, keyname):
+        #timestamp looks like 07-27 18:11:04.359
+        #algorithm is sort month-day then sort by seconds
+        newlist = sorted(oldlist, key=itemgetter(keyname))
+
+
+        return newlist
+
+class dotdict(dict):
+    """dot.notation access to dictionary attributes"""
+    def __getattr__(self, attr):
+        return self.get(attr)
+    __setattr__= dict.__setitem__
+    __delattr__= dict.__delitem__
+
+
 
 if __name__ == '__main__':
     utils = utils()
@@ -174,3 +184,26 @@ if __name__ == '__main__':
     for index, match in enumerate(matches):
         for key,value in match.iteritems():
             print 'key is ' + key + ', value is ' + value
+    a = list()
+    a1 = dict()
+    a2 = dict()
+    a3 = dict()
+    a1['timestamp'] = "07-27 18:11:04.359"
+    a1['value'] = 'a1'
+    a2['timestamp'] = "07-26 18:11:04.35"
+    a2['value'] = 'a2'
+    a3['timestamp'] = "07-28 18:11:04.35"
+    a3['value'] = 'a3'
+    a.append(a1)
+    a.append(a2)
+    a.append(a3)
+    b = utils.mergelistbykey(a, 'timestamp')
+    print 'before sort is '
+    for index, element in enumerate(a):
+        for key,value in element.iteritems():
+            print 'key is ' + key + ', value is ' + value
+    print 'after sort is '
+    for index, element in enumerate(b):
+        for key,value in element.iteritems():
+            print 'key is ' + key + ', value is ' + value
+

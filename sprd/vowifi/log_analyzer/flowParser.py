@@ -376,6 +376,7 @@ class flowParser():
     def getikemsg(self, line, lineno):
         ikemsg = dict()
         ikemsg['issip'] = 0
+        ikemsg['isike'] = 1
         ikemsg['lineno'] = lineno
         fields = line.split(' ')
         #04-17 23:21:24.420

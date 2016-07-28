@@ -141,6 +141,8 @@ class radioParser():
         #04-17 23:21:24.420
         timestamp = fields[0] + ' ' + fields[1]
         atmsg['timestamp'] = timestamp
+        atmsg['issip'] = 0
+        atmsg['isat'] = 1
         return atmsg
 
     def getPdnstate(self, state):
