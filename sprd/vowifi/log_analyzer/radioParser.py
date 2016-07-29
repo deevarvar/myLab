@@ -271,7 +271,7 @@ class radioParser():
         for index, atmsg in enumerate(self.atmsgs):
             self.logger.logger.info('atmsg index is ' + str(index) )
             for key, value in atmsg.iteritems():
-                self.logger.logger.info('key is ' + key  + ', value is ' + value)
+                self.logger.logger.info('key is ' + key  + ', value is ' + str(value))
 
     def drawAllDiag(self):
         estimatetime = 0.1 * int(len(self.atmsgs))
@@ -365,6 +365,7 @@ class radioParser():
                 for index, keypattern in enumerate(self.keypattern):
                     self.getAtmsg(keypattern,line, lineno)
         self.dumpatmsgs()
+        return self.atmsgs
 
     #assemblestr only used in this file
     #for other module, only asseble is used in other module.

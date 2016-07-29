@@ -45,14 +45,16 @@ path = os.path.dirname(os.path.realpath(__file__))
 #  todo tag/done: 4.12 add sdp parsing: a=rtpmap , a=fmtp
 #  todo tag:   4.13 adapter call id record, flow display
 #  fixme tag: if file name is too long, open file may fail
-#  todo tag: 4.14: add reg/s2b status code mapping.
+
 #  todo tag: 5.1 handover
 #  todo tag/done:  5.1.1 add p-access-network-type, P-associate-uri
 #       todo:   tag:  5.1.2 procedure overview
 #       todo:   tag/done:  5.1.3 ho's vowifi at command
+#       todo:   tag:   at command like atd, etc(too much, just add some)
 #       todo:   tag/done:  trim at log
 #       todo:   tag/done: add main/radio/kernel interface to record all log pairs,
 #       todo:   tag: 5.1.4 merge radio/main logs
+#       todo tag: 4.14: add reg/s2b status code mapping.
 #   web page
 #   1. how to display
 #   2. overall results, use actdiag
@@ -82,6 +84,8 @@ class loggergui():
             self.estimatetime = config['utils']['estimate']
             self.threadlist = list()
             self.utils = utils(configpath='./')
+
+            self.atmsgs = ''
 
         except (ConfigObjError, IOError) as e:
              print 'Could not read "%s": %s' % (configfile, e)
@@ -147,13 +151,13 @@ class loggergui():
 
                         if radiolog:
                             rp = radioParser(logname = radiolog, outputdir = outputdir)
-                            rp.getflow()
+                            self.atmsgs = rp.getflow()
                             rp.assembleStr()
                             rp.drawAllDiag()
 
                         #TODO: need to handle main/radio/kernel
 
-                        fp = flowParser(logname = mainlog)
+                        fp = flowParser(logname = mainlog, atmsgs=self.atmsgs)
                         len = fp.getFlow()
                         self.msglen =  len
                         self.logger.logger.info('sip msgs len is ' + str(len))

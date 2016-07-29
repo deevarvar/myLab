@@ -1015,6 +1015,22 @@ class flowParser():
         onestr = basedirect + label
         return onestr
 
+    def assembleAtstr(self, atmsg,elements):
+        if not self.uenum:
+            left = 'UE'
+        else:
+            left = elements[self.uenum]
+        right = 'CP'
+        basedirect = left + ' ' + atmsg['direct'] + ' '+ right
+        #only need label, note
+        label =  " [label = \"" + atmsg['action']  + "\" "
+        atcmd = " AtCmd: " + atmsg['atcmd'] + '\n'
+        timestamp = " time: " + atmsg['timestamp'] + '\n'
+        lineno = "Lineno: " + atmsg['lineno'] + '\n'
+        note = ", note = \"" + atcmd + timestamp + lineno+ "\""
+        label = label + note + "];\n"
+        onestr = basedirect + label
+        return onestr
 
     def assembleEventStr(self, event):
         #quite simple
@@ -1074,9 +1090,11 @@ class flowParser():
             else:
                 if 'isevent' in sip:
                     onestr = self.assembleEventStr(sip)
-                else:
+                elif 'isike' in sip:
                     #parse ike msg
                     onestr = self.assembleIkeStr(sip, elements)
+                elif 'isat' in sip:
+                    onestr = self.assembleAtstr(sip, elements)
 
             self.diagstr += onestr
             self.diagstrList[sector] += onestr
@@ -1604,6 +1622,7 @@ class flowParser():
 
         diaginfo = dict()
         diaginfo['issip'] = 0
+        diaginfo['isike'] = 1
         diaginfo['timestamp'] = ikeobj['timestamp']
         diaginfo['lineno'] = ikeobj['lineno']
         diaginfo['action'] = ikeobj['action']
@@ -1652,8 +1671,16 @@ class flowParser():
 
         #analyze the trim sip
         self.analyzeSip()
+
+
+        ## merge atmsgs and kernelmsgs.
+        #atmsgs are already diaged.
+        self.diagsips = self.diagsips + self.atmsgs
+        self.diagsips = self.utils.mergelistbykey(self.diagsips, 'timestamp')
+
         #dump the trim sip
         self.dumpDiagsip()
+
         if self.diagsips:
             self.assembleDiagStr()
 
