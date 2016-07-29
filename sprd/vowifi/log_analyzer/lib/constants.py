@@ -449,6 +449,51 @@ addEvent("ImsConnectionManagerService:(.*mNoRtpTimes.*)", module_ImsCM)
 ## more log about rssi
 ##D:\code\log\otherlog\stephen\1236_in_voice_call_auto_handover_to_volte
 
+
+addEvent("(getPhoneStateListenerEx: Both new Volte and new Vowifi are not registered, releaseAllTimer.*)", module_ImsCM)
+addEvent("(createTimerTask: Wifi or Lte conditions are not satisfied, don't create timer task.*)", module_ImsCM)
+
+#volte threshold
+addEvent("(createTimerTask: create.*threshold timer task during .* idle.*)", module_ImsCM)
+addEvent("(loopProcess.*Threshold: .* maybe switch to.*)", module_ImsCM)
+addEvent("(loopProcess.*Threshold: .* switch to.*)", module_ImsCM)
+addEvent("(loopProcess.*Threshold: .* maybe handover to .*)", module_ImsCM)
+addEvent("(loopProcess.*Threshold: .* handover to .*)", module_ImsCM)
+addEvent("(create.*ThresholdTimerTask Wifi or Lte conditions are not satisfied, release.*)", module_ImsCM)
+'''
+###wifi threshold
+addEvent("(createTimerTask: create \[Idle\] threshold timer task during Vowifi idle.*)", module_ImsCM)
+addEvent("(loopProcessIdleThreshold: Vowifi maybe switch to Volte.*)", module_ImsCM)
+addEvent("(loopProcessIdleThreshold: Vowifi switch to Volte.*)", module_ImsCM)
+
+### audio volte
+addEvent("(createTimerTask: create \[Audio\] threshold timer task during Volte call.*)", module_ImsCM)
+addEvent("(loopProcessAudioThreshold: Volte maybe handover to Vowifi.*)", module_ImsCM)
+addEvent("(loopProcessAudioThreshold: Volte handover to Vowifi.*)", module_ImsCM)
+
+### video volte
+addEvent("(createTimerTask: create \[Video\] threshold timer task during Volte call)", module_ImsCM)
+addEvent("(loopProcessVideoThreshold: Volte maybe handover to Vowifi.*)", module_ImsCM)
+addEvent("(loopProcessVideoThreshold: Volte handover to Vowifi.*)", module_ImsCM)
+### audio vowifi
+addEvent("(createTimerTask: create \[Audio\] threshold timer task during Vowifi call)", module_ImsCM)
+addEvent("(loopProcessAudioThreshold: Vowifi maybe handover to Volte.*)", module_ImsCM)
+addEvent("(loopProcessAudioThreshold: Vowifi handover to Volte.*)", module_ImsCM)
+
+### video vowifi
+addEvent("(createTimerTask: create \[Video\] threshold timer task during Vowifi call)", module_ImsCM)
+addEvent("(loopProcessVideoThreshold: Vowifi maybe handover to Volte.*)", module_ImsCM)
+addEvent("(loopProcessVideoThreshold: Vowifi handover to Volte.*)", module_ImsCM)
+'''
+###misc
+addEvent("(createQosWifiRssiTimerTask: Wifi rssi isn't better, release.*)", module_ImsCM)
+addEvent("(createQosWifiRssiTimerTask: Conditions are not satisfied, release.*)", module_ImsCM)
+### audio/video qos
+addEvent("(loopProcess.*Qos: Vowifi maybe handover to Volte.*)", module_ImsCM)
+addEvent("(loopProcess.*Qos: Vowifi maybe handover to Volte.*)", module_ImsCM)
+addEvent("(loopProcess.*Qos: Vowifi handover to Volte.*)", module_ImsCM)
+
+
 #------------------------------------------------------------------------------------
 #Adapter Part
 ##VoWifiSecurityManager

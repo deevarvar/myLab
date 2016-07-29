@@ -494,16 +494,17 @@ class flowParser():
                         llog.write(line)
                     self.getRecvSip(line, lineno)
                 #if it is sendertags, search backward
-                if senderpattern.search(line):
+                elif senderpattern.search(line):
                     self.getSendSip(line, lineno)
                     with open(self.lemonlog, 'a+') as llog:
                         llog.write(line)
 
-                if ikepattern.search(line):
+                elif ikepattern.search(line):
                     self.getikemsg(line, lineno)
 
                 #add function to detect event msg
-                self.searchEvent(line, lineno)
+                else:
+                    self.searchEvent(line, lineno)
 
         return len(self.sipmsgs)
 
@@ -1021,6 +1022,10 @@ class flowParser():
         else:
             left = elements[self.uenum]
         right = 'CP'
+
+        self.addElement(left)
+        self.addElement(right)
+
         basedirect = left + ' ' + atmsg['direct'] + ' '+ right
         #only need label, note
         label =  " [label = \"" + atmsg['action']  + "\" "
