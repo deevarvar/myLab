@@ -233,6 +233,9 @@ class flowParser():
             #record ue's num
             self.uenum = ''
 
+            #used in searchEvent
+            self.pidpair =  dict()
+
             self.starttime = datetime.now()
 
         except (ConfigObjError, IOError) as e:
@@ -428,9 +431,24 @@ class flowParser():
 
         self.sipmsgs.append(ikemsg)
 
-    #TODO: later may add event parser file?
+    #FIXME: need to optimize the speed!!
     def searchEvent(self, line, lineno):
-        for index, event in enumerate(EventArray):
+        #get pid first
+        line = line.strip(' \t')
+        lineinfo = line.split()
+        if len(lineinfo) < 6:
+            self.logger.logger.error(line + ' is not valid log line')
+            return
+        lpid = lineinfo[2]
+
+        if lpid not in self.pidpair:
+            return
+
+        process = self.pidpair[lpid]
+
+        eventarray = processmap[process]
+
+        for index, event in enumerate(eventarray):
             key = event['key']
             modulename = event['module']
             #later we may add pattern
@@ -457,6 +475,7 @@ class flowParser():
     def getFlow(self):
         #first of all we get the whole important logs
         lpdaps = logParser(logname=self.log, filterlevel='low', outputdir=self.resultdir)
+        self.pidpair =  lpdaps.pidpair
         self.keylogdaps= lpdaps.getflow(has_ps=False)
 
 

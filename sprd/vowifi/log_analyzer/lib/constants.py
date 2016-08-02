@@ -331,139 +331,163 @@ mypayloadtype = [
 
 
 #bug 580143, MT_Call_Deattach can be a good example
-EventArray = list()
 
 module_UE="UE"
 module_ImsCM="ImsCM"
 module_Phone="Phone_Adapter"
 module_Service="Service"
 module_Security="Security"
-module_Lemon="Sip Stack"
+#module_Lemon="Sip Stack"
 module_CP="CP"
 module_dialer="Dialer"
 
-#later should add more msg, adapter
-def addEvent(key, module, handler = None):
-    event = dict()
-    event['key'] = key
-    event['module'] = module
-    EventArray.append(event)
+
+
+
+class eventArray():
+    def __init__(self):
+        self.array = list()
+
+    def addEvent(self, key, module, handler = None):
+        event = dict()
+        event['key'] = key
+        event['module'] = module
+        self.array.append(event)
+
+    def getarray(self):
+        return self.array
+
+dialerEvent = eventArray()
+imscmEvent = eventArray()
+phoneEvent = eventArray()
+securityEvent = eventArray()
+serviceEvent = eventArray()
+
+processmap = dict()
+processmap['com.sprd.ImsConnectionManager'] = imscmEvent.getarray()
+processmap['com.android.phone'] = phoneEvent.getarray()
+processmap['com.android.dialer'] = dialerEvent.getarray()
+processmap['com.sprd.vowifi.security'] = securityEvent.getarray()
+processmap['com.spreadtrum.vowifi'] = serviceEvent.getarray()
 
 
 #dialer part
 ### hold
 #FIXME: later should add more phrase to indicate
-addEvent("(Putting the call on hold)", module_dialer)
+
+
+
+dialerEvent.addEvent("(Putting the call on hold)", module_dialer)
 
 ### resume
-addEvent("(Removing the call from hold)", module_dialer)
+dialerEvent.addEvent("(Removing the call from hold)", module_dialer)
 #------------------------------------------------------------------------------------
 #ImsCM part
 ##ImsConnectionManagerMonitor
 ###start up wfc status
-addEvent("(Wifi-calling is.*)", module_ImsCM)
+imscmEvent.addEvent("(Wifi-calling is.*)", module_ImsCM)
 ###bind service
-addEvent("(\[bind.*)", module_ImsCM)
+imscmEvent.addEvent("(\[bind.*)", module_ImsCM)
 ##Utils
 ###switch to wifi
-addEvent("\[(Switch to Vowifi)\]", module_ImsCM)
+imscmEvent.addEvent("\[(Switch to Vowifi)\]", module_ImsCM)
 ###switch to volte
-addEvent("\[(Switch to Volte)\]", module_ImsCM)
+imscmEvent.addEvent("\[(Switch to Volte)\]", module_ImsCM)
 ###Handover to Vowifi
-addEvent("\[(Handover to Vowifi)\]", module_ImsCM)
+imscmEvent.addEvent("\[(Handover to Vowifi)\]", module_ImsCM)
 ###Handover to Volte
-addEvent("\[(Handover to Volte)\]", module_ImsCM)
+imscmEvent.addEvent("\[(Handover to Volte)\]", module_ImsCM)
 ###Release Vowifi resource
-addEvent("\[(Release Vowifi resource)\]", module_ImsCM)
+imscmEvent.addEvent("\[(Release Vowifi resource)\]", module_ImsCM)
 ###Set Vowifi unavailable
-addEvent("\[(Set Vowifi unavailable)\]", module_ImsCM)
+imscmEvent.addEvent("\[(Set Vowifi unavailable)\]", module_ImsCM)
 ###[Cancel current request]
-addEvent("\[(Cancel current request)\]", module_ImsCM)
+imscmEvent.addEvent("\[(Cancel current request)\]", module_ImsCM)
 ###[hung up Vowifi call]
-addEvent("\[(hung up Vowifi call)\]", module_ImsCM)
+imscmEvent.addEvent("\[(hung up Vowifi call)\]", module_ImsCM)
 ###[popup Vowifi unavailable notification]
-addEvent("\[(popup Vowifi unavailable notification)\]", module_ImsCM)
+imscmEvent.addEvent("\[(popup Vowifi unavailable notification)\]", module_ImsCM)
 
 ##TODO:ImsConnectionManagerRelianceService
 #------------------------------------------------------------------------------------
 ##ImsConnectionManagerService
 ###release vowifi resource
-addEvent("(releaseVoWifiResource:.*)", module_ImsCM)
+imscmEvent.addEvent("(releaseVoWifiResource:.*)", module_ImsCM)
 ###vowifi unavailable
-addEvent("(vowifiUnavailable:.*)", module_ImsCM)
+imscmEvent.addEvent("(vowifiUnavailable:.*)", module_ImsCM)
 ###cancel request
-addEvent("(cancelCurrentRequest:.*)", module_ImsCM)
+imscmEvent.addEvent("(cancelCurrentRequest:.*)", module_ImsCM)
 ###switchOrHandoverVowifi:
-addEvent("(switchOrHandoverVowifi:.*)", module_ImsCM)
+imscmEvent.addEvent("(switchOrHandoverVowifi:.*)", module_ImsCM)
 ###handoverToVolte
-addEvent("(handoverToVolte:.*)", module_ImsCM)
+imscmEvent.addEvent("(handoverToVolte:.*)", module_ImsCM)
 ###hungUpVowifiCall
-addEvent("(hungUpVowifiCall:.*)", module_ImsCM)
+imscmEvent.addEvent("(hungUpVowifiCall:.*)", module_ImsCM)
 ###operation success
-addEvent("(operationSuccessed:.*)", module_ImsCM)
+imscmEvent.addEvent("(operationSuccessed:.*)", module_ImsCM)
 ###operation failed
-addEvent("(operationFailed:.*)", module_ImsCM)
+imscmEvent.addEvent("(operationFailed:.*)", module_ImsCM)
 ###imsCallEnd
-addEvent("(imsCallEnd:.*)", module_ImsCM)
+imscmEvent.addEvent("(imsCallEnd:.*)", module_ImsCM)
 
 ###CP module
-addEvent("ImsConnectionManagerService:(.*CP module.*)", module_ImsCM)
+imscmEvent.addEvent("ImsConnectionManagerService:(.*CP module.*)", module_ImsCM)
 ###onNoRtpReceived
-addEvent("(onNoRtpReceived:.*)", module_ImsCM)
+imscmEvent.addEvent("(onNoRtpReceived:.*)", module_ImsCM)
 ###onRtpReceived
-addEvent("(onRtpReceived:.*)", module_ImsCM)
+imscmEvent.addEvent("(onRtpReceived:.*)", module_ImsCM)
 ###onProcessDpdDisconnectedError
-addEvent("(onProcessDpdDisconnectedError.*)", module_ImsCM)
+imscmEvent.addEvent("(onProcessDpdDisconnectedError.*)", module_ImsCM)
 ###onProcessSipTimeoutError
-addEvent("(onProcessSipTimeoutError:.*)", module_ImsCM)
+imscmEvent.addEvent("(onProcessSipTimeoutError:.*)", module_ImsCM)
 ###onProcessUnsolicitedSipLogoutError
-addEvent("(onProcessUnsolicitedSipLogoutError:.*)", module_ImsCM)
+imscmEvent.addEvent("(onProcessUnsolicitedSipLogoutError:.*)", module_ImsCM)
 ###onProcessSecurityRekeyError
-addEvent("(onProcessSecurityRekeyError:.*)", module_ImsCM)
+imscmEvent.addEvent("(onProcessSecurityRekeyError:.*)", module_ImsCM)
 ###onProcessUnsolicitedEpdgStopError
-addEvent("(onProcessUnsolicitedEpdgStopError:.*)", module_ImsCM)
+imscmEvent.addEvent("(onProcessUnsolicitedEpdgStopError:.*)", module_ImsCM)
 ###onVoWiFiError
-addEvent("(onVoWiFiError:.*)", module_ImsCM)
+imscmEvent.addEvent("(onVoWiFiError:.*)", module_ImsCM)
 ###ServiceStateChanged
 #seems too verbose
 #addEvent("(ServiceStateChanged:.*)", module_ImsCM)
 ###onCallStateChanged
-addEvent("(onCallStateChanged:.*)", module_ImsCM)
+imscmEvent.addEvent("(onCallStateChanged:.*)", module_ImsCM)
 
 ##post-ping
-addEvent("NetworkUtils:(Local IP address is:.*)", module_ImsCM)
+imscmEvent.addEvent("NetworkUtils: (Local IP address is:.*)", module_ImsCM)
 
 
 ##airplane open
-addEvent('(open airplane mode)', module_ImsCM)
+imscmEvent.addEvent('(open airplane mode)', module_ImsCM)
 ##airplaneclose
-addEvent('(open airplane mode)', module_ImsCM)
+imscmEvent.addEvent('(open airplane mode)', module_ImsCM)
 ##wifi connected
-addEvent('(wifi is connected)', module_ImsCM)
+imscmEvent.addEvent('(wifi is connected)', module_ImsCM)
 ##wifi disconnected
-addEvent('(wifi is disconnected)', module_ImsCM)
+imscmEvent.addEvent('(wifi is disconnected)', module_ImsCM)
 ##wifi calling
-addEvent('(database has changed, mIsWifiCallingEnabled.*)', module_ImsCM)
+imscmEvent.addEvent('(database has changed, mIsWifiCallingEnabled.*)', module_ImsCM)
 
 
 
 ##no rtp
-addEvent("ImsConnectionManagerService:(.*mNoRtpTimes.*)", module_ImsCM)
+imscmEvent.addEvent("ImsConnectionManagerService:(.*mNoRtpTimes.*)", module_ImsCM)
 
 ## more log about rssi
 ##D:\code\log\otherlog\stephen\1236_in_voice_call_auto_handover_to_volte
 
 
-addEvent("(getPhoneStateListenerEx: Both new Volte and new Vowifi are not registered, releaseAllTimer.*)", module_ImsCM)
-addEvent("(createTimerTask: Wifi or Lte conditions are not satisfied, don't create timer task.*)", module_ImsCM)
+imscmEvent.addEvent("(getPhoneStateListenerEx: Both new Volte and new Vowifi are not registered, releaseAllTimer.*)", module_ImsCM)
+imscmEvent.addEvent("(createTimerTask: Wifi or Lte conditions are not satisfied, don't create timer task.*)", module_ImsCM)
 
 #volte threshold
-addEvent("(createTimerTask: create.*threshold timer task during .* idle.*)", module_ImsCM)
-addEvent("(loopProcess.*Threshold: .* maybe switch to.*)", module_ImsCM)
-addEvent("(loopProcess.*Threshold: .* switch to.*)", module_ImsCM)
-addEvent("(loopProcess.*Threshold: .* maybe handover to .*)", module_ImsCM)
-addEvent("(loopProcess.*Threshold: .* handover to .*)", module_ImsCM)
-addEvent("(create.*ThresholdTimerTask Wifi or Lte conditions are not satisfied, release.*)", module_ImsCM)
+imscmEvent.addEvent("(createTimerTask: create.*threshold timer task during .* idle.*)", module_ImsCM)
+imscmEvent.addEvent("(loopProcess.*Threshold: .* maybe switch to.*)", module_ImsCM)
+imscmEvent.addEvent("(loopProcess.*Threshold: .* switch to.*)", module_ImsCM)
+imscmEvent.addEvent("(loopProcess.*Threshold: .* maybe handover to .*)", module_ImsCM)
+imscmEvent.addEvent("(loopProcess.*Threshold: .* handover to .*)", module_ImsCM)
+imscmEvent.addEvent("(create.*ThresholdTimerTask Wifi or Lte conditions are not satisfied, release.*)", module_ImsCM)
 '''
 ###wifi threshold
 addEvent("(createTimerTask: create \[Idle\] threshold timer task during Vowifi idle.*)", module_ImsCM)
@@ -490,140 +514,141 @@ addEvent("(loopProcessVideoThreshold: Vowifi maybe handover to Volte.*)", module
 addEvent("(loopProcessVideoThreshold: Vowifi handover to Volte.*)", module_ImsCM)
 '''
 ###misc
-addEvent("(createQosWifiRssiTimerTask: Wifi rssi isn't better, release.*)", module_ImsCM)
-addEvent("(createQosWifiRssiTimerTask: Conditions are not satisfied, release.*)", module_ImsCM)
+imscmEvent.addEvent("(createQosWifiRssiTimerTask: Wifi rssi isn't better, release.*)", module_ImsCM)
+imscmEvent.addEvent("(createQosWifiRssiTimerTask: Conditions are not satisfied, release.*)", module_ImsCM)
 ### audio/video qos
-addEvent("(loopProcess.*Qos: Vowifi maybe handover to Volte.*)", module_ImsCM)
-addEvent("(loopProcess.*Qos: Vowifi maybe handover to Volte.*)", module_ImsCM)
-addEvent("(loopProcess.*Qos: Vowifi handover to Volte.*)", module_ImsCM)
+imscmEvent.addEvent("(loopProcess.*Qos: Vowifi maybe handover to Volte.*)", module_ImsCM)
+imscmEvent.addEvent("(loopProcess.*Qos: Vowifi maybe handover to Volte.*)", module_ImsCM)
+imscmEvent.addEvent("(loopProcess.*Qos: Vowifi handover to Volte.*)", module_ImsCM)
 
 
 #------------------------------------------------------------------------------------
 #Adapter Part
 ##VoWifiSecurityManager
 ###s2b start
-addEvent("(Start the s2b attach.)",module_Phone)
+phoneEvent.addEvent("(Start the s2b attach.)",module_Phone)
 ###deattach
-addEvent("(Try to de-attach, is handover:.*)", module_Phone)
+phoneEvent.addEvent("(Try to de-attach, is handover:.*)", module_Phone)
 ###force stop
-addEvent("(Force stop the s2b.)", module_Phone)
+phoneEvent.addEvent("(Force stop the s2b.)", module_Phone)
 ###s2b success
-addEvent("(S2b attach success.)", module_Phone)
+phoneEvent.addEvent("(S2b attach success.)", module_Phone)
 ###s2b failed
-addEvent("(S2b attach failed, errorCode:.*)", module_Phone)
+phoneEvent.addEvent("(S2b attach failed, errorCode:.*)", module_Phone)
 ###s2b state change
-addEvent("(S2b attach progress state changed to.*)", module_Phone)
+phoneEvent.addEvent("(S2b attach progress state changed to.*)", module_Phone)
 ###s2b stop
-addEvent("(S2b attach stopped, errorCode: .*)", module_Phone)
+phoneEvent.addEvent("(S2b attach stopped, errorCode: .*)", module_Phone)
 #------------------------------------------------------------------------------------
 ##VoWifiRegisterManager
 ###prepare login
-addEvent("(Prepare the info before login, subId is:.*)", module_Phone)
+phoneEvent.addEvent("(Prepare the info before login, subId is:.*)", module_Phone)
 ###try to login
-addEvent("(Try to login to the ims, current register state: .*)", module_Phone)
+phoneEvent.addEvent("(Try to login to the ims, current register state: .*)", module_Phone)
 ###Login info: ip, p-cscf
-addEvent("(Login with the local ip: .*)", module_Phone)
+phoneEvent.addEvent("(Login with the local ip: .*)", module_Phone)
 ###logout
-addEvent("(Try to logout from the ims, current register state:.*)", module_Phone)
+phoneEvent.addEvent("(Try to logout from the ims, current register state:.*)", module_Phone)
 ###Re-register
-addEvent("(Re-register, with the type:.*)", module_Phone)
+phoneEvent.addEvent("(Re-register, with the type:.*)", module_Phone)
 ###force stop
-addEvent("(Stop current register process. registerState:.*)", module_Phone)
+phoneEvent.addEvent("(Stop current register process. registerState:.*)", module_Phone)
 
 ### security callback
-addEvent("(Get the security callback:.*)", module_Phone)
+phoneEvent.addEvent("(Get the security callback:.*)", module_Phone)
 
 ###call related event
-addEvent("(Handle the event.*for the call.*)", module_Phone)
+phoneEvent.addEvent("(Handle the event.*for the call.*)", module_Phone)
 ###mute
-addEvent("(Mutes.*the mic for the active call)", module_Phone)
+phoneEvent.addEvent("(Mutes.*the mic for the active call)", module_Phone)
 ###start call
-addEvent("(Initiates an ims call with.*)", module_Phone)
+phoneEvent.addEvent("(Initiates an ims call with.*)", module_Phone)
 ###start conf call
-addEvent("(Initiates an ims conference call with.*)", module_Phone)
+phoneEvent.addEvent("(Initiates an ims conference call with.*)", module_Phone)
 ###accept
-addEvent("(Accept an incoming call with call type is.*)", module_Phone)
+phoneEvent.addEvent("(Accept an incoming call with call type is.*)", module_Phone)
 ###reject
-addEvent("(Reject an incoming call as the reason is.*)", module_Phone)
+phoneEvent.addEvent("(Reject an incoming call as the reason is.*)", module_Phone)
 ###terminate
-addEvent("(Terminate a call as the reason is.*)", module_Phone)
+phoneEvent.addEvent("(Terminate a call as the reason is.*)", module_Phone)
 ###hold
-addEvent("(Hold a call with the media profile:.*)", module_Phone)
+phoneEvent.addEvent("(Hold a call with the media profile:.*)", module_Phone)
 ###resume
-addEvent("(Continues a call with the media profile.*)", module_Phone)
+phoneEvent.addEvent("(Continues a call with the media profile.*)", module_Phone)
 ###merge
-addEvent("(Merge the active & hold call)", module_Phone)
+phoneEvent.addEvent("(Merge the active & hold call)", module_Phone)
 ###update
-addEvent("(Update the current call's type to .*)", module_Phone)
+phoneEvent.addEvent("(Update the current call's type to .*)", module_Phone)
 ###invite conf participants
-addEvent("(Request server to invite participants:.*)", module_Phone)
+phoneEvent.addEvent("(Request server to invite participants:.*)", module_Phone)
 ###remove conf participants
-addEvent("(Remove the participants:.*)", module_Phone)
+phoneEvent.addEvent("(Remove the participants:.*)", module_Phone)
 ###send dtmf
-addEvent("(sendDtmf.*)", module_Phone)
+phoneEvent.addEvent("(sendDtmf.*)", module_Phone)
 ###start dtmf
-addEvent("(startDtmf.*)", module_Phone)
+phoneEvent.addEvent("(startDtmf.*)", module_Phone)
 ###send ussd
-addEvent("(Send an USSD message:.*)", module_Phone)
+phoneEvent.addEvent("(Send an USSD message:.*)", module_Phone)
 
 ###start camera
-addEvent("(Try to start the camera:.*)", module_Phone)
+phoneEvent.addEvent("(Try to start the camera:.*)", module_Phone)
 
 ###stop camera
-addEvent("(Try to stop the camera for the call:.*)", module_Phone)
+phoneEvent.addEvent("(Try to stop the camera for the call:.*)", module_Phone)
 ###modify request
-addEvent("(Try to send the modify request, isVideo:.*)", module_Phone)
+phoneEvent.addEvent("(Try to send the modify request, isVideo:.*)", module_Phone)
 
 ###start local render
-addEvent("(Try to start the local render for the call:.*)", module_Phone)
+phoneEvent.addEvent("(Try to start the local render for the call:.*)", module_Phone)
 ###stop local render
-addEvent("(Try to stop the local render for the call:.*)", module_Phone)
+phoneEvent.addEvent("(Try to stop the local render for the call:.*)", module_Phone)
 ###start remote render
-addEvent("(Try to start the remote render for the call:.*)", module_Phone)
+phoneEvent.addEvent("(Try to start the remote render for the call:.*)", module_Phone)
 ### stop remote render
-addEvent("(Try to stop the remote render for the call:.*)", module_Phone)
+phoneEvent.addEvent("(Try to stop the remote render for the call:.*)", module_Phone)
 ### start capture
-addEvent("(try to start capture for the call:.*)", module_Phone)
+phoneEvent.addEvent("(try to start capture for the call:.*)", module_Phone)
 ### stop capture
-addEvent("(Try to stop capture for the call:.*)", module_Phone)
+phoneEvent.addEvent("(Try to stop capture for the call:.*)", module_Phone)
 ###start video trans
-addEvent("(Try to start the video transmission for the call:.*)", module_Phone)
+phoneEvent.addEvent("(Try to start the video transmission for the call:.*)", module_Phone)
 ### stop video trans
-addEvent("(Try to stop the video transmission for the call:.*)", module_Phone)
+phoneEvent.addEvent("(Try to stop the video transmission for the call:.*)", module_Phone)
 ###local rotate
-addEvent("(Try to rotate local render for the call:.*)", module_Phone)
+phoneEvent.addEvent("(Try to rotate local render for the call:.*)", module_Phone)
 ### remote rotate
-addEvent("(Try to rotate remote render for the call:.*)", module_Phone)
+phoneEvent.addEvent("(Try to rotate remote render for the call:.*)", module_Phone)
 
 
 ###set pause image
-addEvent("(Set the pause image to.*)", module_Phone)
+phoneEvent.addEvent("(Set the pause image to.*)", module_Phone)
 ###invite conf call
-addEvent("(Try to invite this call.*to the conference call.*)", module_Phone)
+phoneEvent.addEvent("(Try to invite this call.*to the conference call.*)", module_Phone)
 
 
 #------------------------------------------------------------------------------------
 #Service part
 ##RegisterService
 #"Try to reset the sip stack."
-addEvent("(Try to reset the sip stack.)", module_Service)
+serviceEvent.addEvent("(Try to reset the sip stack.)", module_Service)
 
 
-addEvent("(Notify the event:.*)", module_Service)
+serviceEvent.addEvent("(Notify the event:.*)", module_Service)
 
 #reg status code comes here
-addEvent("(RegisterService.*Get the register state changed callback.*)", module_Service)
+serviceEvent.addEvent("(RegisterService.*Get the register state changed callback.*)", module_Service)
 
 
 #------------------------------------------------------------------------------------
 #lemon part
 ##reinvite ack not received
-addEvent("(ACK to reinvite with no offer does not received when call.*)", module_Lemon)
+serviceEvent.addEvent("(ACK to reinvite with no offer does not received when call.*)", module_Service)
 
 
 
 ### MTC_EBASE_S2B , MTC_EBASE_REG
 
 #security part
-addEvent("LEMON.*(imsi is.*)", module_Security)
-addEvent("SecurityS2bBinder: INFO: (ping.*)", module_Security)
+securityEvent.addEvent("LEMON.*(imsi is.*)", module_Security)
+securityEvent.addEvent("SecurityS2bBinder: INFO: (ping.*)", module_Security)
+

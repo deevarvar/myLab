@@ -57,7 +57,8 @@ path = os.path.dirname(os.path.realpath(__file__))
 #       todo:
 #   4.14: add reg/s2b status code mapping.
 #       todo:   tag: 5.1.5 add imsbr
-#       todo:   tag: add security ping printing
+#       todo:   tag: 5.1.6 add optimization about log tool: search event should only be called , when pid is correct.
+#       todo:   tag/done: add security ping printing
 #           SecurityS2bBinder: INFO: ping www.bing.com result true
 #           ImsCM NetworkUtils: Local IP address is: 2405:204:1a86:7601::1150:a8b0, P-CSCF IP address is: 2405:200:330:1581::21, Ping IP address is reachable
 #       todo:   tag: add ims flow

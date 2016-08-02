@@ -61,11 +61,17 @@ class logParser():
                 filterinfo['android'] = filterinfo['android'].split()
 
             self.process = filterinfo['juphoon'] + filterinfo['android']
-            #pid array
+
+
+            #pid array, it will be used to grep pid logs
             self.pids = list()
 
             #struct to contain 'process'(str), 'tags'(list)
             self.piddb = dict()
+
+
+            #FIXME: ugly code for searchEvent in flowParser.py
+            self.pidpair = dict()
 
             self.tags = dict()
             self.words = dict()
@@ -447,7 +453,12 @@ class logParser():
                                         self.tags[process]['pid'] = lpid
                                         self.tags[process]['found'] = 1
 
-                                        self.pids.append(lpid)
+
+                                        #some kind of hard code, self.pids is used to grep pid log
+                                        # we only need imscm log.
+                                        if process == 'com.sprd.ImsConnectionManager':
+                                            self.pids.append(lpid)
+
                                         self.piddb[lpid] = dict()
                                         self.piddb[lpid]['process'] = process
                                         self.piddb[lpid]['istags'] = 1
@@ -458,7 +469,7 @@ class logParser():
                             continue # executed if the loop ended normally (no break)
                         break    # executed if 'continue' was skipped (break)
 
-                    #add logic to track service and security
+                    #FIXME: add logic to track service and security
                     for process in wordssection:
                        if int(self.words[process]['found']) == 0 and self.words[process]['words'] in line:
                            self.words[process]['found'] = 1
@@ -471,6 +482,8 @@ class logParser():
 
         with open(self.processout, 'w') as processout:
             processout.truncate()
+
+        #write the tags pid output
         for process, content in self.tags.iteritems():
             self.logger.logger.info(process)
             self.logger.logger.info(content)
@@ -482,15 +495,18 @@ class logParser():
                 if process == 'com.sprd.ImsConnectionManager' and not lpid:
                     self.errorpattern['imscm'] = str(lpid) + ' .* E '
 
+                self.pidpair[lpid] = process
                 with open(self.processout, 'a+') as processout:
                     linfo = process + ':' + str(lpid) + '\n'
                     processout.write(linfo)
 
+        #write the words pid
         for process, content in self.words.iteritems():
             self.logger.logger.info(process)
             self.logger.logger.info(content)
             if 'pid' in content:
                 lpid = content['pid']
+                self.pidpair[lpid] = process
                 self.logger.logger.info(process + ' pid is '+ str(lpid))
                 with open(self.processout, 'a+') as processout:
                     linfo = process + ':' + str(lpid) + '\n'
