@@ -94,7 +94,7 @@ class utils():
                 datepattern = datematch.group(1)
                 onematch = dict()
                 onematch['mainlog'] = mname
-
+                onematch['radiolog'] = ''
                 self.logger.logger.info('date pattern is ' + datepattern)
                 #try to do the loop to find the radio
                 for rindex, rname in enumerate(radiomatches):

@@ -37,6 +37,7 @@ class radioParser():
             self.pattern['lteinfopattern'] = config['radioParser']['lteinfopattern']
             self.pattern['callendpattern'] = config['radioParser']['callendpattern']
             self.pattern['errorpattern'] = config['radioParser']['errorpattern']
+            self.pattern['updatedrpattern'] = config['radioParser']['updatedrpattern']
             self.initkeypattern()
             self.atmsgs = list()
             self.logger = logConf()
@@ -132,6 +133,12 @@ class radioParser():
         errorpattern['direct'] = '<-'
         self.keypattern.append(errorpattern)
 
+        updatedrpattern = dict()
+        updatedrpattern['pattern'] = re.compile(self.pattern['updatedrpattern'])
+        updatedrpattern['func'] = self.getupdatedr
+        updatedrpattern['direct'] = '->'
+        self.keypattern.append(updatedrpattern)
+
     def initAtmsg(self, line):
         #common steps
         #add timestamp and atcmd
@@ -194,7 +201,7 @@ class radioParser():
         if state == '0':
             return "EPDG failed to attach"
         elif state == '1':
-            return "EPDG attach succussfully"
+            return "EPDG attach successfully"
         else:
             state = "Unknown attach status"
     def getqrystring(self):
@@ -202,6 +209,9 @@ class radioParser():
 
     def getcallendstring(self):
         return "Vowifi Call End"
+
+    def getupdatedr(self):
+        return "Update Data Router"
 
     def getwifireg(self, state):
         if state == '0':

@@ -1680,7 +1680,8 @@ class flowParser():
 
         ## merge atmsgs and kernelmsgs.
         #atmsgs are already diaged.
-        self.diagsips = self.diagsips + self.atmsgs
+        if self.atmsgs:
+            self.diagsips = self.diagsips + self.atmsgs
         self.diagsips = self.utils.mergelistbykey(self.diagsips, 'timestamp')
 
         #dump the trim sip

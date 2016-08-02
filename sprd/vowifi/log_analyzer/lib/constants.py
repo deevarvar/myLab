@@ -430,6 +430,10 @@ addEvent("(onVoWiFiError:.*)", module_ImsCM)
 ###onCallStateChanged
 addEvent("(onCallStateChanged:.*)", module_ImsCM)
 
+##post-ping
+addEvent("NetworkUtils:(Local IP address is:.*)", module_ImsCM)
+
+
 ##airplane open
 addEvent('(open airplane mode)', module_ImsCM)
 ##airplaneclose
@@ -622,3 +626,4 @@ addEvent("(ACK to reinvite with no offer does not received when call.*)", module
 
 #security part
 addEvent("LEMON.*(imsi is.*)", module_Security)
+addEvent("SecurityS2bBinder: INFO: (ping.*)", module_Security)
