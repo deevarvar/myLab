@@ -66,8 +66,12 @@ class utils():
             #print filenames
 
             for filename in fnmatch.filter(filenames, self.mlogpattern):
-                mainmatches.append(os.path.join(root, filename))
+                onematch = dict()
+                onematch['log'] = os.path.realpath(os.path.join(root, filename))
+                onematch['dir'] = root
+                mainmatches.append(onematch)
 
+        '''
         radiomatches = list()
         for root, dirnames, filenames in os.walk(dirname):
             #print root
@@ -84,26 +88,28 @@ class utils():
             #print filenames
             for filename in fnmatch.filter(filenames, self.klogpattern):
                 kernelmatches.append(os.path.join(root, filename))
+        '''
+        #use this logic: radio is the same dir, kernel is in the ../kernel/, so just search
 
         for mindex, mname in enumerate(mainmatches):
-            #get pattern
-            mpattern = "0-main-(.*).log"
-            mcpattern = re.compile(mpattern)
-            datematch = mcpattern.search(mname)
-            if datematch:
-                datepattern = datematch.group(1)
-                onematch = dict()
-                onematch['mainlog'] = mname
-                onematch['radiolog'] = ''
-                self.logger.logger.info('date pattern is ' + datepattern)
-                #try to do the loop to find the radio
-                for rindex, rname in enumerate(radiomatches):
-                    if datepattern in rname:
-                        onematch['radiolog'] = rname
-                        break
-                #TODO: do the loop to find the kernel log
+            mainlog = mname['log']
+            radiodir = mname['dir']
+            kerneldir = mname['dir'] + '/../kernel/'
+            onematch = dict()
+            onematch['mainlog'] = mainlog
+            onematch['radiolog'] = ''
+            onematch['kernellog'] = ''
+            for rfile in os.listdir(radiodir):
+                if os.path.isfile(os.path.join(radiodir, rfile)):
+                    if fnmatch.fnmatch(rfile, self.rlogpattern):
+                        onematch['radiolog'] = os.path.realpath(os.path.join(radiodir, rfile))
+            if os.path.exists(kerneldir):
+                for kfile in os.listdir(kerneldir):
+                    if os.path.isfile(os.path.join(kerneldir, kfile)):
+                        if fnmatch.fnmatch(kfile, self.klogpattern):
+                            onematch['kernellog'] = os.path.realpath(os.path.join(kerneldir, kfile))
 
-                matches.append(onematch)
+            matches.append(onematch)
 
         return matches
 
@@ -184,6 +190,8 @@ if __name__ == '__main__':
     for index, match in enumerate(matches):
         for key,value in match.iteritems():
             print 'key is ' + key + ', value is ' + value
+
+'''
     a = list()
     a1 = dict()
     a2 = dict()
@@ -206,4 +214,4 @@ if __name__ == '__main__':
     for index, element in enumerate(b):
         for key,value in element.iteritems():
             print 'key is ' + key + ', value is ' + value
-
+'''

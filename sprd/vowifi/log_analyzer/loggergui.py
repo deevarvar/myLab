@@ -61,8 +61,9 @@ path = os.path.dirname(os.path.realpath(__file__))
 #       todo:   tag/done: add security ping printing
 #           SecurityS2bBinder: INFO: ping www.bing.com result true
 #           ImsCM NetworkUtils: Local IP address is: 2405:204:1a86:7601::1150:a8b0, P-CSCF IP address is: 2405:200:330:1581::21, Ping IP address is reachable
-#       todo:   tag: add ims flow
+#       todo:   tag/low prio: add ims flow
 #       todo:   tag: overview flow
+#       todo:   tag: find the log correctly
 #web page tag:
 #   1. how to display
 #   2. overall results, use actdiag
