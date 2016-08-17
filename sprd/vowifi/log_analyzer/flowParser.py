@@ -756,6 +756,7 @@ class flowParser():
         self.diagstr +=  basedirect + label
 
     def findUE(self):
+        #first find the 200 OK for REGISTER
         for sipindex, sip in enumerate(self.diagsips):
             if sip['issip']:
                 if 'REGISTER' in sip['cseq']:
@@ -770,15 +771,17 @@ class flowParser():
                     #200 OK for REGISTER will include P-Associate-URI
                     if sip['pasonum']:
                         self.uenum = sip['pasonum']
-                        break
+                        return
 
-                else:
+        #if not found, then get the from/to
+        for sipindex, sip in enumerate(self.diagsips):
+            if sip['issip']:
                     #from the direction, can tell the ue's num
                     if sip['send']:
                         self.uenum = sip['fromnum']
                     else:
                         self.uenum = sip['tonum']
-                    break
+                    return
 
     def addElement(self, element):
         if element not in self.elements:
