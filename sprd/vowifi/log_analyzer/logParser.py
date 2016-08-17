@@ -184,7 +184,7 @@ class logParser():
         '''
         #hard code for MME error
         allerrorpattern = r'' + self.errorpattern['lemon']  + '|' + \
-                          self.errorpattern['adapter'] + '|' + self.errorpattern['service'] + '|' + "E MME"
+                          self.errorpattern['adapter'] + '|' + self.errorpattern['service'] + '|' + "E MME" +'|' + "ABNF Error Code"
 
         if self.errorpattern['imscm']:
             allerrorpattern += '|' + self.errorpattern['imscm']

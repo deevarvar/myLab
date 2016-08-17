@@ -44,6 +44,7 @@ class samsungParser():
             self.keywords['statechange'] = config['samsung']['keywords']['statechange']
             self.keywords['wifichange'] = config['samsung']['keywords']['wifichange']
             self.keywords['wfcchange'] = config['samsung']['keywords']['wfcchange']
+            self.keywords['airplanechange'] = config['samsung']['keywords']['airplanechange']
 
             self.loglevel =  config['logging']['loglevel']
 
@@ -442,6 +443,27 @@ class samsungParser():
         else:
             return False
 
+    def checkairplane(self, lineno, line):
+        appattern = re.compile(self.keywords['airplanechange'])
+        match = appattern.search(line)
+        if match:
+            string = match.group(1).strip()
+            self.logger.logger.error('airplane mode is ' + string)
+            fields = line.split(' ')
+            timestamp = fields[0] + ' ' + fields[1]
+            seperateline = ' === ' + 'Airplane mode is '+ string + ' time: ' + str(timestamp) + '=== \n'
+            msg = dict()
+            msg['isevent'] = True
+            msg['isrecvreq'] = False
+            msg['isrecvrsp'] = False
+            msg['issendreq'] = False
+            msg['issendrsp'] = False
+            msg['isike'] = False
+            msg['content'] = seperateline
+            self.msgs.append(msg)
+            return True
+        else:
+            return False
 
     def checkwfc(self, lineno, line):
         wfcpattern = re.compile(self.keywords['wfcchange'])
@@ -523,15 +545,20 @@ class samsungParser():
                 handled = False
                 #self.logger.logger.info('lineno is ' + str(lineno) + '  '+line)
                 handled = self.checkwifi(lineno, line)
-
                 if not handled:
                     handled = self.checkwfc(lineno, line)
                 else:
                     continue
                 if not handled:
+                    handled =  self.checkairplane(lineno, line)
+                else:
+                    continue
+
+                if not handled:
                     handled = self.checkhostate(lineno, line)
                 else:
                     continue
+
 
                 if not handled:
                     handled = self.getIke(lineno, line)

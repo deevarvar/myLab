@@ -32,8 +32,8 @@ path = os.path.dirname(os.path.realpath(__file__))
 #   2. add service, adapter, imscm logic
 #   2.1 start from imscm
 #   3. error msg indication:
-#   4.1 parse reason,cause, cause's mo mt is fixed.
-#   4.2 b2bua recode
+#   4.1 parse ,cause, cause's mo mt is fixed.
+#   4.2 b2bua recodereason
 #  todo tag/done: 4.3. update analysis
 #  todo tag: 4.4  precondition
 #  todo tag/done: 4.5 add UE tag, User agent, ue identify
@@ -64,6 +64,7 @@ path = os.path.dirname(os.path.realpath(__file__))
 #       todo:   tag/low prio: add ims flow
 #       todo:   tag: overview flow
 #       todo:   tag: find the log correctly
+#       todo:   tag:  Get the login failed retry callback with code add log
 #web page tag:
 #   1. how to display
 #   2. overall results, use actdiag

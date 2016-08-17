@@ -455,15 +455,16 @@ imscmEvent.addEvent("(onVoWiFiError:.*)", module_ImsCM)
 imscmEvent.addEvent("(onCallStateChanged:.*)", module_ImsCM)
 
 ##post-ping
+##wifi connected
+imscmEvent.addEvent('(wifi is connected)', module_ImsCM)
 imscmEvent.addEvent("NetworkUtils: (Local IP address is:.*)", module_ImsCM)
 
 
 ##airplane open
 imscmEvent.addEvent('(open airplane mode)', module_ImsCM)
 ##airplaneclose
-imscmEvent.addEvent('(open airplane mode)', module_ImsCM)
-##wifi connected
-imscmEvent.addEvent('(wifi is connected)', module_ImsCM)
+imscmEvent.addEvent('(close airplane mode)', module_ImsCM)
+
 ##wifi disconnected
 imscmEvent.addEvent('(wifi is disconnected)', module_ImsCM)
 ##wifi calling
