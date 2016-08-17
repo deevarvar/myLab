@@ -922,6 +922,13 @@ class flowParser():
         callid = " Call-ID: " + sip['callid'] + '\n'
         lineno = " log lineno: " + str(sip['lineno'])
 
+        referto = ''
+        referredby = ''
+        if sip['referto']:
+            referto = " Refer-to: " + sip['referto'] + '\n'
+
+        if sip['referredby']:
+            referredby = " Referred-By: " + sip['referredby'] + '\n'
 
         #sample
         #x_917011021641 -> NETWORK [label = "REGISTER", note = "Time: 06-23 13:21:13.922
@@ -932,7 +939,9 @@ class flowParser():
         #Call-ID: Ic08Qn.CU6xke*qifx321ICCxI@[2405:204:3807:2ade::262e:28a0]
         #log lineno: 5249"];
 
-        note = ", note = \"" + timestamp + cseq + action + note + mediadirection + sdpinfo + expires + pasouri + supported + require + ua + paccess + retryafter+ fromtag + totag + callid +lineno + "\""
+        note = ", note = \"" + timestamp + cseq + action + note + mediadirection + sdpinfo + \
+               expires + pasouri + supported + require + ua + paccess + retryafter+\
+               fromtag + totag + referto+ referredby + callid + lineno + "\""
 
         label = label + note + labelcolor + "];\n"
         #print label
@@ -1478,6 +1487,11 @@ class flowParser():
         diaginfo['paccess'] = None
         diaginfo['pasouri'] = None #is different from pasonum
 
+        #record Refer-To
+        diaginfo['referto'] = None
+        #record Referred-By
+        diaginfo['referredby'] = None
+
         diaginfo['hascause'] = False
         diaginfo['cause'] = dict()
 
@@ -1554,6 +1568,16 @@ class flowParser():
                     diaginfo['pasouri'] += ',' + pasouri
                 continue
 
+            referto = sipparser.getHeaderContent(header, "Refer-To")
+            if referto:
+                diaginfo['referto'] = sipparser.getNumber(referto)
+                continue
+
+            referredby = sipparser.getHeaderContent(header, "Referred-By")
+            if referredby:
+                diaginfo['referredby'] = sipparser.getNumber(referredby)
+                continue
+
 
             cseq = sipparser.getCSeq(header)
             if cseq:
@@ -1567,11 +1591,13 @@ class flowParser():
                 if 'application/sdp' in header:
                     diaginfo['issdp'] = True
                     self.logger.logger.debug('found sdp ' + ' in ' + str(index) +  ' sip msg')
+                    continue
 
             #check if is B2BUA
             b2buaflag = sipparser.checkB2BUA(header)
             if b2buaflag:
                 diaginfo['b2bua'] = True
+                continue
 
             cause = sipparser.getCause(header)
             if cause:
