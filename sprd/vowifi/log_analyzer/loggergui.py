@@ -9,6 +9,7 @@ import logging
 from flowParser import flowParser
 from radioParser import radioParser
 from samsungParser import samsungParser
+from parseImsbr import *
 from threading import Thread,Event
 import multiprocessing
 from lib.newthread import ThreadWithExc, StoppableThread
@@ -146,7 +147,7 @@ class loggergui():
                         self.curtimestamp = strftime("%Y_%m_%d_%H_%M_%S", gmtime())
                         mainlog = filedict['mainlog']
                         radiolog = filedict['radiolog']
-                        #kernellog = filedict['kernellog']
+                        kernellog = filedict['kernellog']
                         #actually mainlog will always exist
 
                         #first of all , get radio log , if exist
@@ -159,13 +160,25 @@ class loggergui():
                         outputdir = dirname + '/' + shortname.split('.')[0]
                         self.utils.mkdirp(outputdir)
 
+                        if kernellog:
+                            print 'kernel log is ' + kernellog
+                            krealpath = os.path.realpath(kernellog)
+                            kshortname = os.path.basename(kernellog)
+                            kernel_results = parse_imsbr(krealpath)
+                            #FIXME: output imsbr log to diagrams
+                            kernel_outputdir = outputdir + '/diagrams/'
+                            self.utils.mkdirp(kernel_outputdir)
+                            imsbrlog = kernel_outputdir + '/'+ kshortname.split('.')[0] +'-imsbr.log'
+                            with open(imsbrlog, 'w') as imsbrlog:
+                                for dict in kernel_results:
+                                    imsbrlog.write("line%d: %s %s \n" %(dict["lineno"], dict["timestamp"], dict["msg"]))
+
                         if radiolog:
                             rp = radioParser(logname = radiolog, outputdir = outputdir)
                             self.atmsgs = rp.getflow()
                             rp.assembleStr()
                             rp.drawAllDiag()
 
-                        #TODO: need to handle main/radio/kernel
 
                         fp = flowParser(logname = mainlog, atmsgs=self.atmsgs)
                         len = fp.getFlow()
