@@ -158,7 +158,7 @@ class radioParser():
         elif state == '2':
             return "PDN connection request"
         elif state == '0':
-            return "fail to establish PDN connection"
+            return "Deactivate PDN connection"
         else:
             return "Unknow PDN state"
 
