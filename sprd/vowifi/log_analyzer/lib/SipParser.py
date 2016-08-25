@@ -148,9 +148,15 @@ class SipParser():
             self.logger.logger.debug('no num in string ' + string)
             return None
 
-        num = match.group(2).strip()
-        num = num.split('@')[0]
-        #print num
+        #we get the first semicolon's part
+        ##To: <sip:0938120779;phone-context=ims.mnc004.mcc520.3gppnetwork.org@ims.mnc004.mcc520.3gppnetwork.org;user=phone>
+        #From: "provision"<tel:0938120774;noa=national;srvattri=national;phone-context=+66>;tag=77upkw46
+        #To: <sip:+66938120779@ims.mnc004.mcc520.3gppnetwork.org>;tag=o01db3rb
+        #print 'group 2 is ' + match.group(2).strip()
+        userinfo = match.group(2).strip().split(';')[0]
+        #print 'userinfo is ' + userinfo
+        num = userinfo.split('@')[0]
+        #print 'num is ' + num
         return num
 
     def checkIp(self, string):
@@ -307,8 +313,10 @@ if __name__ == '__main__':
 
     fromline1 = "05-05 16:16:36.286  1965  2897 D LEMON   : From: \"+917011021774\"<sip:+917011021774@ims.mnc872.mcc405.3gppnetwork.org>;tag=chi6.0WU1e0Z4WD9"
     fromline2 = "05-05 16:16:36.195  1965  2897 D LEMON   : f:\"+917011021774\"<sip:+917011021774@ims.mnc872.mcc405.3gppnetwork.org>;tag=chi6.0WU1e0Z4WD9"
+
     sp.getHeaderContent(fromline1, 'From')
     sp.getHeaderContent(fromline2, 'From')
+
 
     fromtag = "from:<sip:+917011021754@ims.mnc872.mcc405.3gppnetwork.org>;tag=atqPR_w.eSVudV4213iBTI1a_7"
     totag = "to:\"+917011021774\"<sip:+917011021774@ims.mnc872.mcc405.3gppnetwork.org>;tag=chi6.0WU1e0Z4WD9"
@@ -359,3 +367,8 @@ if __name__ == '__main__':
     sp.getrtpmap(rtpmap)
     fmtp = '07-22 17:20:10.491  1999  3317 D LEMON   : a=fmtp:121 profile-level-id=42C00C; packetization-mode=1; sprop-parameter-sets=Z0LAKekHhSQCwiEagA==,aM48gA=="'
     sp.getfmtp(fmtp)
+    #new from
+    fromtag = "From: \"provision\"<tel:0938120774;noa=national;srvattri=national;phone-context=+66>;tag=77upkw46"
+    sp.getNumber(fromtag)
+
+

@@ -51,14 +51,15 @@ path = os.path.dirname(os.path.realpath(__file__))
 #  todo tag/done:  5.1.1 add p-access-network-type, P-associate-uri
 #       todo:   tag:  5.1.2 procedure overview
 #       todo:   tag/done:  5.1.3 ho's vowifi at command
-#       todo:   tag:   at command like atd, etc(too much, just add some)
+#       todo:   tag/low prio:   at command like atd, etc(too much, just add some)
 #       todo:   tag/done:  trim at log
 #       todo:   tag/done: add main/radio/kernel interface to record all log pairs,
 #       todo:   tag/done: 5.1.4 merge radio/main logs
 #       todo:
-#   4.14: add reg/s2b status code mapping.
-#       todo:   tag: 5.1.5 add imsbr
-#       todo:   tag: 5.1.6 add optimization about log tool: search event should only be called , when pid is correct.
+#       todo:  4.14: add reg/s2b status code mapping.
+                #mtc_cli.h mtc_s2b.h
+#       todo:   tag/done: 5.1.5 add imsbr
+#       todo:   tag/done: 5.1.6 add optimization about log tool: search event should only be called , when pid is correct.
 #       todo:   tag/done: add security ping printing
 #           SecurityS2bBinder: INFO: ping www.bing.com result true
 #           ImsCM NetworkUtils: Local IP address is: 2405:204:1a86:7601::1150:a8b0, P-CSCF IP address is: 2405:200:330:1581::21, Ping IP address is reachable
