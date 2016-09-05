@@ -341,17 +341,22 @@ module_Security="Security"
 module_CP="CP"
 module_dialer="Dialer"
 
-
+class eventType():
+    SEPERATOR = 1 #seperator line
+    SELFREF = 2   #self reference edge
+    EDGE = 3      # normal edge
 
 
 class eventArray():
     def __init__(self):
         self.array = list()
 
-    def addEvent(self, key, module, handler = None):
+    def addEvent(self, key, module, eventType = eventType.SEPERATOR, eventHandler = None):
         event = dict()
         event['key'] = key
         event['module'] = module
+        event['eventType'] = eventType
+        event['eventHandler'] = eventHandler
         self.array.append(event)
 
     def getarray(self):
@@ -381,6 +386,7 @@ dialerEvent.addEvent("(Putting the call on hold)", module_dialer)
 
 ### resume
 dialerEvent.addEvent("(Removing the call from hold)", module_dialer)
+dialerEvent.addEvent("(Swapping call to foreground)", module_dialer)
 #------------------------------------------------------------------------------------
 #ImsCM part
 ##ImsConnectionManagerMonitor
@@ -625,8 +631,8 @@ phoneEvent.addEvent("(Try to rotate remote render for the call:.*)", module_Phon
 phoneEvent.addEvent("(Set the pause image to.*)", module_Phone)
 ###invite conf call
 phoneEvent.addEvent("(Try to invite this call.*to the conference call.*)", module_Phone)
-
-
+#0 VOLTE; 1 VOWIFI; 2 END Call
+phoneEvent.addEvent("(Update the call state to data router. state: .*)", module_Phone)
 #------------------------------------------------------------------------------------
 #Service part
 ##RegisterService

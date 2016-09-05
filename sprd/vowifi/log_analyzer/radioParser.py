@@ -28,6 +28,7 @@ class radioParser():
             self.pattern = dict()
             self.pattern['pdnpattern'] = config['radioParser']['pdnpattern']
             self.pattern['hopattern'] = config['radioParser']['hopattern']
+            self.pattern['wifienpattern'] = config['radioParser']['wifienpattern']
             #self.pattern['repregpattern'] = config['radioParser']['repregpattern']
             self.pattern['qryregpattern'] = config['radioParser']['qryregpattern']
             self.pattern['regstspattern'] = config['radioParser']['regstspattern']
@@ -38,6 +39,7 @@ class radioParser():
             self.pattern['callendpattern'] = config['radioParser']['callendpattern']
             self.pattern['errorpattern'] = config['radioParser']['errorpattern']
             self.pattern['updatedrpattern'] = config['radioParser']['updatedrpattern']
+            self.pattern['rtppattern'] = config['radioParser']['rtppattern']
             self.initkeypattern()
             self.atmsgs = list()
             self.logger = logConf()
@@ -78,6 +80,13 @@ class radioParser():
         pdnpattern['func'] = self.getPdnstate
         pdnpattern['direct'] = '<-'
         self.keypattern.append(pdnpattern)
+
+        wifienpattern = dict()
+        wifienpattern['pattern'] = re.compile(self.pattern['wifienpattern'])
+        wifienpattern['func'] = self.getWifiEnable
+        wifienpattern['direct'] = '->'
+        self.keypattern.append(wifienpattern)
+
 
         hopattern = dict()
         hopattern['pattern'] = re.compile(self.pattern['hopattern'])
@@ -139,6 +148,13 @@ class radioParser():
         updatedrpattern['direct'] = '->'
         self.keypattern.append(updatedrpattern)
 
+        rtppattern = dict()
+        rtppattern['pattern'] = re.compile(self.pattern['rtppattern'])
+        rtppattern['func'] = self.getrtp
+        rtppattern['direct'] = '<-'
+        self.keypattern.append(rtppattern)
+
+
     def initAtmsg(self, line):
         #common steps
         #add timestamp and atcmd
@@ -176,6 +192,15 @@ class radioParser():
             return True
         else:
             return False
+
+
+    def getWifiEnable(self, state):
+        if state == '1':
+            return "Vowifi Available"
+        elif state == '0':
+            return "Vowifi Unavailable"
+        else:
+            return "Unknow Vowifi Enable state"
 
     def getHOstate(self, state):
         if state == '1':
@@ -235,6 +260,17 @@ class radioParser():
             return "Error: operation not allowed"
         else:
             return "Error Code: " + error
+
+    def getrtp(self, state):
+        if state == '0':
+            return "receive RTP data"
+        elif state == '1':
+            return "No RTP data!"
+        elif state == '2':
+            return "Clear RTP state"
+        else:
+            return "Unknow RTP state"
+
 
     def getAtmsg(self,keypattern, line, lineno):
         '''

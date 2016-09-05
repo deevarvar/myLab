@@ -451,6 +451,9 @@ class flowParser():
         for index, event in enumerate(eventarray):
             key = event['key']
             modulename = event['module']
+            eventType = event['eventType']
+            eventHandler = event['eventHandler']
+
             #later we may add pattern
             pattern = re.compile(key)
             match = pattern.search(line)

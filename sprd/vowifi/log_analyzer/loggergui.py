@@ -56,16 +56,19 @@ path = os.path.dirname(os.path.realpath(__file__))
 #       todo:   tag/done: add main/radio/kernel interface to record all log pairs,
 #       todo:   tag/done: 5.1.4 merge radio/main logs
 #       todo:
-#       todo:  4.14: add reg/s2b status code mapping.
+#       todo:  4.14 tag: add reg/s2b status code mapping.
                 #mtc_cli.h mtc_s2b.h
+        #todo: 4.14.1 remove verbose cp's at
+        #todo: 4.14.2 add update data router's state
+#       todo:  4.15 tag:  error log, trim log, key log, speed up!
 #       todo:   tag/done: 5.1.5 add imsbr
 #       todo:   tag/done: 5.1.6 add optimization about log tool: search event should only be called , when pid is correct.
 #       todo:   tag/done: add security ping printing
 #           SecurityS2bBinder: INFO: ping www.bing.com result true
 #           ImsCM NetworkUtils: Local IP address is: 2405:204:1a86:7601::1150:a8b0, P-CSCF IP address is: 2405:200:330:1581::21, Ping IP address is reachable
 #       todo:   tag/low prio: add ims flow
-#       todo:   tag: overview flow
-#       todo:   tag: find the log correctly
+#       todo:   4.16 tag: overview flow
+#       todo:   4.17 tag/done: find the log correctly
 #       todo:   tag:  Get the login failed retry callback with code add log
 #web page tag:
 #   1. how to display
