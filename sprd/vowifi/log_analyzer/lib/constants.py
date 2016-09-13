@@ -631,7 +631,7 @@ phoneEvent.addEvent("(Try to rotate remote render for the call:.*)", module_Phon
 phoneEvent.addEvent("(Set the pause image to.*)", module_Phone)
 ###invite conf call
 phoneEvent.addEvent("(Try to invite this call.*to the conference call.*)", module_Phone)
-#0 VOLTE; 1 VOWIFI; 2 END Call
+#0 VOLTE; 1 VOWIFI; 2 END Call,  value can be string/number
 phoneEvent.addEvent("(Update the call state to data router. state: .*)", module_Phone)
 #------------------------------------------------------------------------------------
 #Service part
