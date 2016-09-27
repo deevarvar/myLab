@@ -56,12 +56,7 @@ path = os.path.dirname(os.path.realpath(__file__))
 #       todo:   tag/done: add main/radio/kernel interface to record all log pairs,
 #       todo:   tag/done: 5.1.4 merge radio/main logs
 #       todo:
-#       todo:  4.14 tag: add reg/s2b status code mapping.
-                #mtc_cli.h mtc_s2b.h
-        #todo: 4.14.1 remove verbose cp's at
-        #todo: 4.14.2 add update data router's state
-#       todo:  4.15 tag:  error log, trim log, key log, speed up!
-#              4.16 tag: reg的retry, RegRegingOnCimCnf retry-after is 120 s, status code is 500.
+
 #       todo:   tag/done: 5.1.5 add imsbr
 #       todo:   tag/done: 5.1.6 add optimization about log tool: search event should only be called , when pid is correct.
 #       todo:   tag/done: add security ping printing

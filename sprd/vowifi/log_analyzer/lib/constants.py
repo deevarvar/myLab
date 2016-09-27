@@ -382,11 +382,11 @@ processmap['com.spreadtrum.vowifi'] = serviceEvent.getarray()
 
 
 
-dialerEvent.addEvent("(Putting the call on hold)", module_dialer)
+dialerEvent.addEvent("(Putting the call on hold)", module_dialer, eventType=eventType.SELFREF)
 
 ### resume
-dialerEvent.addEvent("(Removing the call from hold)", module_dialer)
-dialerEvent.addEvent("(Swapping call to foreground)", module_dialer)
+dialerEvent.addEvent("(Removing the call from hold)", module_dialer, eventType=eventType.SELFREF)
+dialerEvent.addEvent("(Swapping call to foreground)", module_dialer, eventType=eventType.SELFREF)
 #------------------------------------------------------------------------------------
 #ImsCM part
 ##ImsConnectionManagerMonitor
@@ -400,19 +400,19 @@ imscmEvent.addEvent("\[(Switch to Vowifi)\]", module_ImsCM)
 ###switch to volte
 imscmEvent.addEvent("\[(Switch to Volte)\]", module_ImsCM)
 ###Handover to Vowifi
-imscmEvent.addEvent("\[(Handover to Vowifi)\]", module_ImsCM)
+imscmEvent.addEvent("\[(Handover to Vowifi)\]", module_ImsCM, eventType=eventType.SELFREF)
 ###Handover to Volte
-imscmEvent.addEvent("\[(Handover to Volte)\]", module_ImsCM)
+imscmEvent.addEvent("\[(Handover to Volte)\]", module_ImsCM,  eventType=eventType.SELFREF)
 ###Release Vowifi resource
 imscmEvent.addEvent("\[(Release Vowifi resource)\]", module_ImsCM)
 ###Set Vowifi unavailable
-imscmEvent.addEvent("\[(Set Vowifi unavailable)\]", module_ImsCM)
+imscmEvent.addEvent("\[(Set Vowifi unavailable)\]", module_ImsCM, eventType=eventType.SELFREF)
 ###[Cancel current request]
 imscmEvent.addEvent("\[(Cancel current request)\]", module_ImsCM)
 ###[hung up Vowifi call]
-imscmEvent.addEvent("\[(hung up Vowifi call)\]", module_ImsCM)
+imscmEvent.addEvent("\[(hung up Vowifi call)\]", module_ImsCM, eventType=eventType.SELFREF)
 ###[popup Vowifi unavailable notification]
-imscmEvent.addEvent("\[(popup Vowifi unavailable notification)\]", module_ImsCM)
+imscmEvent.addEvent("\[(popup Vowifi unavailable notification)\]", module_ImsCM, eventType=eventType.SELFREF)
 
 ##TODO:ImsConnectionManagerRelianceService
 #------------------------------------------------------------------------------------
@@ -568,7 +568,7 @@ phoneEvent.addEvent("(Get the security callback:.*)", module_Phone)
 phoneEvent.addEvent("(Handle the event.*for the call.*)", module_Phone)
 ###mute
 phoneEvent.addEvent("(Mutes.*the mic for the active call)", module_Phone)
-###start call
+###start call, #important key words
 phoneEvent.addEvent("(Initiates an ims call with.*)", module_Phone)
 ###start conf call
 phoneEvent.addEvent("(Initiates an ims conference call with.*)", module_Phone)

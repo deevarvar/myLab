@@ -40,6 +40,9 @@ class radioParser():
             self.pattern['errorpattern'] = config['radioParser']['errorpattern']
             self.pattern['updatedrpattern'] = config['radioParser']['updatedrpattern']
             self.pattern['rtppattern'] = config['radioParser']['rtppattern']
+            self.pattern['volteimspattern'] = config['radioParser']['volteimspattern']
+            self.pattern['volteregaddrpattern'] = config['radioParser']['volteregaddrpattern']
+
             self.initkeypattern()
             self.atmsgs = list()
             self.logger = logConf()
@@ -154,6 +157,17 @@ class radioParser():
         rtppattern['direct'] = '<-'
         self.keypattern.append(rtppattern)
 
+        volteimspattern = dict()
+        volteimspattern['pattern'] = re.compile(self.pattern['volteimspattern'])
+        volteimspattern['func'] = self.imsenable
+        volteimspattern['direct'] = '->'
+        self.keypattern.append(volteimspattern)
+
+        volteregaddrpattern = dict()
+        volteregaddrpattern['pattern'] = re.compile(self.pattern['volteregaddrpattern'])
+        volteregaddrpattern['func'] = self.getvolteaddr
+        volteregaddrpattern['direct'] = '<-'
+        self.keypattern.append(volteregaddrpattern)
 
     def initAtmsg(self, line):
         #common steps
@@ -271,6 +285,11 @@ class radioParser():
         else:
             return "Unknow RTP state"
 
+    def imsenable(self):
+        return "Enable VoLTE IMS"
+
+    def getvolteaddr(self, addr):
+        return "Volte Register Addr is \n" + addr
 
     def getAtmsg(self,keypattern, line, lineno):
         '''
