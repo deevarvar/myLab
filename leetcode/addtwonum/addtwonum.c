@@ -22,6 +22,15 @@ struct intArray{
 	int *array;
 	int count;
 };
+
+
+struct ListNode* deleteNode(struct ListNode *list, int val){
+
+
+}
+
+
+
 //add element into the list
 struct ListNode* addToList(struct ListNode* list, int val){
 	struct ListNode *new = calloc(1, sizeof(struct ListNode));
@@ -178,10 +187,10 @@ int main(void){
 	struct ListNode* listone = NULL;
 	struct ListNode* listtwo = NULL;
 	
-//	int arrayone[] = {7, 4, 9, 9, 9};
-//	int arraytwo[] = {5, 6, 4};
-	int arrayone[] = {1, 4};
-	int arraytwo[] = {0};
+	int arrayone[] = {7, 4, 9, 9, 9};
+	int arraytwo[] = {5, 6, 4};
+//	int arrayone[] = {1, 4};
+//	int arraytwo[] = {0};
 	int arrayonelen = sizeof(arrayone)/sizeof(arrayone[0]);
 	int arraytwolen = sizeof(arraytwo)/sizeof(arraytwo[0]);
 	for(i = 0; i < arrayonelen; i++){
