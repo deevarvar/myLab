@@ -3,7 +3,8 @@
  @cases:
 1. try this one 7->8->9, 5->3->3
 2. 1->2->3, 4->5->6
-
+3. 9->9->9, 3
+4. 1->4, 0
 
 */
 
@@ -96,18 +97,45 @@ struct ListNode* addTwoNumbers(struct ListNode* l1, struct ListNode* l2) {
 	struct ListNode* l3 = NULL;
 	struct intArray *arrayl1 = iterateList(l1);
 	struct intArray *arrayl2 = iterateList(l2); 
-	int len = arrayl1->count;
+	int len1 = arrayl1->count;
+	int len2 = arrayl2->count;
+	struct intArray *big = NULL;
+	struct intArray *small = NULL;
+	int len = 0;
+	int extra = 0;
+	//choose the shorter len
+	if(len1 >= len2){
+		len = len2;
+		extra = len1 - len;
+		big = arrayl1;
+		small = arrayl2;
+	}else {
+		len = len1;
+		extra = len2 - len;
+		big = arrayl2;
+		small = arrayl1;
+	}
+	
 	int i = 0;
 	int carry = 0;
 	int temp, base = 0;
 	for(; i < len ; i++){
-		temp = arrayl1->array[i] + arrayl2->array[i];
-		base = temp % 10 + carry;
+		temp = big->array[i] + small->array[i] + carry;
+		base = temp % 10;
 		carry =  temp / 10;
 		l3 = addToList(l3, base);
 	}
-	if(carry == 1)
+	
+	for(i=1; i <= extra; i++){
+		temp = big->array[len-1 + i] + carry;
+		base = temp % 10;
+		carry = temp / 10;
+		l3 = addToList(l3, base);
+	}
+	
+	if(carry)
 		l3 = addToList(l3, carry);
+
 
 	return l3;
   
@@ -150,9 +178,11 @@ int main(void){
 	struct ListNode* listone = NULL;
 	struct ListNode* listtwo = NULL;
 	
-	int arrayone[] = {7, 4, 9};
+//	int arrayone[] = {7, 4, 9, 9, 9};
+//	int arraytwo[] = {5, 6, 4};
+	int arrayone[] = {1, 4};
+	int arraytwo[] = {0};
 	int arrayonelen = sizeof(arrayone)/sizeof(arrayone[0]);
-	int arraytwo[] = {5, 6, 4};
 	int arraytwolen = sizeof(arraytwo)/sizeof(arraytwo[0]);
 	for(i = 0; i < arrayonelen; i++){
 		listone = addToList(listone, arrayone[i]);	
