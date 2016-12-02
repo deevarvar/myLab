@@ -529,6 +529,15 @@ imscmEvent.addEvent("(loopProcess.*Qos: Vowifi maybe handover to Volte.*)", modu
 imscmEvent.addEvent("(loopProcess.*Qos: Vowifi handover to Volte.*)", module_ImsCM)
 
 
+
+### sim card
+imscmEvent.addEvent("(turn off primary SIM card)", module_ImsCM)
+
+##msg pending
+# ImsConnectionManagerService: handleMessageHandoverToVowifi: mIsPendingProcess
+#D:\code\log\bug_log\vit_log\2016_10_25\modem_log-0650-vowifiregisterfail-2
+
+
 #------------------------------------------------------------------------------------
 #Adapter Part
 ##VoWifiSecurityManager
@@ -565,7 +574,8 @@ phoneEvent.addEvent("(Stop current register process. registerState:.*)", module_
 phoneEvent.addEvent("(Get the security callback:.*)", module_Phone)
 
 ###call related event
-phoneEvent.addEvent("(Handle the event.*for the call.*)", module_Phone)
+#phoneEvent.addEvent("(Handle the event.*for the call.*)", module_Phone)
+
 ###mute
 phoneEvent.addEvent("(Mutes.*the mic for the active call)", module_Phone)
 ###start call, #important key words
@@ -639,8 +649,8 @@ phoneEvent.addEvent("(Update the call state to data router. state: .*)", module_
 #"Try to reset the sip stack."
 serviceEvent.addEvent("(Try to reset the sip stack.)", module_Service)
 
-
-serviceEvent.addEvent("(Notify the event:.*)", module_Service)
+#comment here
+#serviceEvent.addEvent("(Notify the event:.*)", module_Service)
 
 #reg status code comes here
 serviceEvent.addEvent("(RegisterService.*Get the register state changed callback.*)", module_Service)
