@@ -7,6 +7,7 @@ import sys
 import re
 import fnmatch
 import errno
+import subprocess
 import blockdiag
 import blockdiag.imagedraw
 from blockdiag.noderenderer import box,actor,beginpoint,circle,cloud,diamond,dots
@@ -28,11 +29,11 @@ class utils():
             configfile = configpath + '/config.ini'
             config = ConfigObj(configfile, file_error=True)
             self.config = config
-            #NOTE: logpatten is a list
-            self.mlogpattern = config['files']['log']
 
-            self.rlogpattern = config['files']['radiolog']
-            self.klogpattern = config['files']['kernellog']
+            self.ylog = False
+
+            #NOTE: logpatten is a list
+
 
             #all the dirs
             self.dirlist = list()
@@ -57,9 +58,31 @@ class utils():
         #0-main-07-27-12-36-30.log
         #0-radio-07-27-12-36-30.log
         #0-kernel-07-27-12-36-30.log
+
+        #UPDATED: for ylog, add android, kernel dir to run analyzer.py
+        #
         matches = list()
 
         mainmatches = list()
+
+        #if analyze.py exist, so call it.
+        for root, dirnames, filenames in os.walk(dirname):
+            for i, dname in enumerate(dirnames):
+                if 'android' == dname or 'kernel' == dname:
+                    analyerfile = root + '/' + dname + '/' + 'analyzer.py'
+                    if(os.path.exists(analyerfile)):
+                        self.ylog = True
+                        subprocess.call(analyerfile, shell=True)
+
+        if self.ylog:
+            self.mlogpattern = self.config['files']['ylog']
+            self.rlogpattern = self.config['files']['radioylog']
+            self.klogpattern = self.config['files']['kernellog']
+        else:
+            self.mlogpattern = self.config['files']['log']
+            self.rlogpattern = self.config['files']['radiolog']
+            self.klogpattern = self.config['files']['kernellog']
+
         for root, dirnames, filenames in os.walk(dirname):
             #print root
             #print dirnames
@@ -186,7 +209,7 @@ class utils():
 
 if __name__ == '__main__':
     utils = utils()
-    matches = utils.findlogs('./src')
+    matches = utils.findlogs('./src/dtac_video_mo/')
     for index, match in enumerate(matches):
         for key,value in match.iteritems():
             print 'key is ' + key + ', value is ' + value

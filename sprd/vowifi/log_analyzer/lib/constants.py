@@ -334,7 +334,7 @@ mypayloadtype = [
 
 module_UE="UE"
 module_ImsCM="ImsCM"
-module_Phone="Phone_Adapter"
+module_Phone="Phone"
 module_Service="Service"
 module_Security="Security"
 #module_Lemon="Sip Stack"
@@ -382,31 +382,31 @@ processmap['com.spreadtrum.vowifi'] = serviceEvent.getarray()
 
 
 
-dialerEvent.addEvent("(Putting the call on hold)", module_dialer, eventType=eventType.SELFREF)
+dialerEvent.addEvent("(Putting the call on hold)", module_dialer, eventType = eventType.EDGE)
 
 ### resume
-dialerEvent.addEvent("(Removing the call from hold)", module_dialer, eventType=eventType.SELFREF)
-dialerEvent.addEvent("(Swapping call to foreground)", module_dialer, eventType=eventType.SELFREF)
+dialerEvent.addEvent("(Removing the call from hold)", module_dialer, eventType = eventType.EDGE)
+dialerEvent.addEvent("(Swapping call to foreground)", module_dialer, eventType = eventType.EDGE)
 #------------------------------------------------------------------------------------
 #ImsCM part
 ##ImsConnectionManagerMonitor
 ###start up wfc status
-imscmEvent.addEvent("(Wifi-calling is.*)", module_ImsCM)
+#imscmEvent.addEvent("(Wifi-calling is.*)", module_ImsCM)
 ###bind service
 imscmEvent.addEvent("(\[bind.*)", module_ImsCM)
 ##Utils
 ###switch to wifi
-imscmEvent.addEvent("\[(Switch to Vowifi)\]", module_ImsCM)
+imscmEvent.addEvent("\[(Switch to Vowifi)\]", module_ImsCM, eventType = eventType.SELFREF)
 ###switch to volte
-imscmEvent.addEvent("\[(Switch to Volte)\]", module_ImsCM)
+imscmEvent.addEvent("\[(Switch to Volte)\]", module_ImsCM, eventType = eventType.SELFREF)
 ###Handover to Vowifi
-imscmEvent.addEvent("\[(Handover to Vowifi)\]", module_ImsCM, eventType=eventType.SELFREF)
+imscmEvent.addEvent("\[(Handover to Vowifi)\]", module_ImsCM, eventType = eventType.SELFREF)
 ###Handover to Volte
-imscmEvent.addEvent("\[(Handover to Volte)\]", module_ImsCM,  eventType=eventType.SELFREF)
+imscmEvent.addEvent("\[(Handover to Volte)\]", module_ImsCM,  eventType = eventType.SELFREF)
 ###Release Vowifi resource
 imscmEvent.addEvent("\[(Release Vowifi resource)\]", module_ImsCM)
 ###Set Vowifi unavailable
-imscmEvent.addEvent("\[(Set Vowifi unavailable)\]", module_ImsCM, eventType=eventType.SELFREF)
+imscmEvent.addEvent("\[(Set Vowifi unavailable)\]", module_ImsCM, eventType = eventType.SELFREF)
 ###[Cancel current request]
 imscmEvent.addEvent("\[(Cancel current request)\]", module_ImsCM)
 ###[hung up Vowifi call]

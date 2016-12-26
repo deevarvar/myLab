@@ -14,6 +14,7 @@ from threading import Thread,Event
 import multiprocessing
 from lib.newthread import ThreadWithExc, StoppableThread
 #sys.path.append('./lib')
+import shutil
 
 
 from lib.logConf import logConf
@@ -148,6 +149,7 @@ class loggergui():
                         mainlog = filedict['mainlog']
                         radiolog = filedict['radiolog']
                         kernellog = filedict['kernellog']
+
                         #actually mainlog will always exist
 
                         #first of all , get radio log , if exist
@@ -158,6 +160,8 @@ class loggergui():
                         shortname = os.path.basename(mainlogrealpath)
                         dirname = os.path.dirname(mainlogrealpath)
                         outputdir = dirname + '/' + shortname.split('.')[0]
+                        if os.path.isdir(outputdir):
+                            shutil.rmtree(outputdir)
                         self.utils.mkdirp(outputdir)
 
                         if kernellog:
