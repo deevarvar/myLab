@@ -541,12 +541,15 @@ imscmEvent.addEvent("(turn off primary SIM card)", module_ImsCM)
 
 
 #------------------------------------------------------------------------------------
+
+#phone imsservice logre
+##vowifi/volte icon
+phoneEvent.addEvent("updateImsFeatures->volteEnable:(.*) wifiEnable:(.*)", module_Phone, eventType=eventType.EDGE, eventHandler=geticon)
+##ims reg addr
+phoneEvent.addEvent("setIMSRegAddress addr = (.*)", module_Phone, eventType=eventType.EDGE, eventHandler=imsregaddr)
+
+
 #Adapter Part
-#phone imsservice log
-#phoneEvent.addEvent()
-
-
-
 ##VoWifiSecurityManager
 ###s2b start
 phoneEvent.addEvent("(Start the s2b attach.)",module_Phone)

@@ -465,15 +465,21 @@ class flowParser():
                 timestamp = fields[0] + ' ' + fields[1]
                 eventmsg['timestamp'] = timestamp
                 eventmsg['msg'] = line.strip(' \t')
-                #event content is modulename + matchlog
-                eventmsg['event'] = modulename + ' : ' + eventHandler(match)
+                eventdict = dict()
+                eventdict = eventHandler(match)
+                eventmsg['event'] = eventdict.msg
+                eventmsg['color'] = eventdict.color
+                eventmsg['msglevel'] = eventdict.msglevel
                 #self.logger.logger.error('the target event is ' + eventmsg['event'])
                 eventmsg['lineno'] = lineno
                 eventmsg['issip'] = 0
                 eventmsg['isevent'] = 1
                 eventmsg['eventtype'] = eventType
                 eventmsg['modulename'] = modulename
-                self.sipmsgs.append(eventmsg)
+                if eventdict:
+                    self.sipmsgs.append(eventmsg)
+                else:
+                    self.logger.logger.error("event is invalid in lineno " + str(lineno))
                 break
 
 
@@ -1077,23 +1083,29 @@ class flowParser():
     def assembleEventStr(self, event):
         #quite simple
         timestamp = event['timestamp']
-        string = event['event']
+        labelstring = event['event']
         lineno = event['lineno']
         eventtype = event['eventtype']
         frommodule = event['modulename']
+        color = event['color']
         #for event , three kind of msgs:
         #SEPERATOR, SELFREF, EDGE, default is SEPERATOR
-        words = string + ', time: ' + str(timestamp) + ', lineno: '+ str(lineno)
 
         if eventtype == eventType.EDGE:
-            #sample: User -> UE [label = "REGISTER", note = "ab"];
-            #TODO: add more conditional check
-            onestr = frommodule + " -> UE [label = \"" + string + "\", " + "note = \""
+            #sample
+            #ImsCM -> UE [label = "ImsCM : Switch to Vowifi", note = " log lineno: 17369
+            #Time: 12-26 13:18:50.966"];
+
+            onestr = frommodule + " -> UE [label = \"" + labelstring + "\", "
+            colorstr = "color = " + color + ','
+            notestr = "note = \""
             lineno = " log lineno: " + str(lineno) + '\n'
             timestamp = "Time: " + timestamp + "\"\n"
-            onestr += lineno + timestamp + '];\n'
+            notestr += lineno + timestamp
+            onestr += colorstr + notestr + '];\n'
         else:
-            #EDGE, SEPERATOR comes here
+            #SELFREF, SEPERATOR comes here
+            words = labelstring + ', time: ' + str(timestamp) + ', lineno: '+ str(lineno)
             onestr = ' === ' + words + '=== \n'
         return onestr
 
@@ -1723,8 +1735,12 @@ class flowParser():
         diaginfo['lineno'] = eventobj['lineno']
         #TODO: may add more parsing logic here
         diaginfo['event'] = eventobj['event']
+        diaginfo['color'] = eventobj['color']
+        diaginfo['msglevel'] = eventobj['msglevel']
         diaginfo['eventtype'] = eventobj['eventtype']
         diaginfo['modulename'] = eventobj['modulename']
+
+
         self.diagsips.append(diaginfo)
 
     def parseFlow(self):
