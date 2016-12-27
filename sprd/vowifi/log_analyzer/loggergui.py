@@ -141,8 +141,10 @@ class loggergui():
                     exit
                 else:
                     helper = utils(configpath='./')
+                    self.logger.logger.info('folder is ' + folder)
                     matches = helper.findlogs(folder)
-                    for index,filedict in enumerate(matches):
+
+                    for index, filedict in enumerate(matches):
                         #call the real parser
 
                         self.curtimestamp = strftime("%Y_%m_%d_%H_%M_%S", gmtime())
@@ -155,13 +157,13 @@ class loggergui():
                         #first of all , get radio log , if exist
                         if not mainlog:
                             continue
-
+                        self.logger.logger.info('mainlog is ' + mainlog);
                         mainlogrealpath = os.path.realpath(mainlog)
                         shortname = os.path.basename(mainlogrealpath)
                         dirname = os.path.dirname(mainlogrealpath)
                         outputdir = dirname + '/' + shortname.split('.')[0]
-                        if os.path.isdir(outputdir):
-                            shutil.rmtree(outputdir)
+
+
                         self.utils.mkdirp(outputdir)
 
                         if kernellog:

@@ -30,7 +30,7 @@ class radioParser():
             self.pattern['hopattern'] = config['radioParser']['hopattern']
             self.pattern['wifienpattern'] = config['radioParser']['wifienpattern']
             #self.pattern['repregpattern'] = config['radioParser']['repregpattern']
-            self.pattern['qryregpattern'] = config['radioParser']['qryregpattern']
+            #self.pattern['qryregpattern'] = config['radioParser']['qryregpattern']
             self.pattern['regstspattern'] = config['radioParser']['regstspattern']
             self.pattern['attachpattern'] = config['radioParser']['attachpattern']
             self.pattern['vowfregpattern'] = config['radioParser']['vowfregpattern']
@@ -42,6 +42,10 @@ class radioParser():
             self.pattern['rtppattern'] = config['radioParser']['rtppattern']
             self.pattern['volteimspattern'] = config['radioParser']['volteimspattern']
             self.pattern['volteregaddrpattern'] = config['radioParser']['volteregaddrpattern']
+
+            #there are always dirty msgs to ignroe, Orz...
+            self.ignoremsg = list()
+            self.ignoremsg.append("CP Unregistered")
 
             self.initkeypattern()
             self.atmsgs = list()
@@ -97,11 +101,13 @@ class radioParser():
         hopattern['direct'] = '->'
         self.keypattern.append(hopattern)
 
+        '''
         qryregpattern = dict()
         qryregpattern['pattern'] = re.compile(self.pattern['qryregpattern'])
         qryregpattern['func'] = self.getqrystring
         qryregpattern['direct'] = '->'
         self.keypattern.append(qryregpattern)
+        '''
 
         regstspattern = dict()
         regstspattern['pattern'] = re.compile(self.pattern['regstspattern'])
@@ -328,7 +334,15 @@ class radioParser():
                     atmsg['action'] = actionfunc()
                 else:
                     atmsg['action'] = actionfunc(state)
+
                 self.logger.logger.debug('state is %s, action is %s' % (state, atmsg['action']))
+
+            #only if the msg is not to be ignored...
+            for i,ignore in enumerate(self.ignoremsg):
+                if ignore == atmsg['action']:
+                    self.logger.logger.info('atcmd %s , action is %s ignored...' % (atmsg['atcmd'], atmsg['action']))
+                    return False
+
             self.atmsgs.append(atmsg)
             return True
         else:

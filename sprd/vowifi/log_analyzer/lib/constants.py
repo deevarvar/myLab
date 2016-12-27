@@ -332,6 +332,8 @@ mypayloadtype = [
 
 #bug 580143, MT_Call_Deattach can be a good example
 
+from eventhandler import *
+
 module_UE="UE"
 module_ImsCM="ImsCM"
 module_Phone="Phone"
@@ -351,7 +353,7 @@ class eventArray():
     def __init__(self):
         self.array = list()
 
-    def addEvent(self, key, module, eventType = eventType.SEPERATOR, eventHandler = None):
+    def addEvent(self, key, module, eventType = eventType.SEPERATOR, eventHandler = matchone):
         event = dict()
         event['key'] = key
         event['module'] = module
@@ -540,6 +542,11 @@ imscmEvent.addEvent("(turn off primary SIM card)", module_ImsCM)
 
 #------------------------------------------------------------------------------------
 #Adapter Part
+#phone imsservice log
+#phoneEvent.addEvent()
+
+
+
 ##VoWifiSecurityManager
 ###s2b start
 phoneEvent.addEvent("(Start the s2b attach.)",module_Phone)

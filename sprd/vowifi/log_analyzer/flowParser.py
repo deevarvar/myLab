@@ -454,7 +454,7 @@ class flowParser():
             eventType = event['eventType']
             eventHandler = event['eventHandler']
 
-            #later we may add pattern
+            #still coupled logic here.
             pattern = re.compile(key)
             match = pattern.search(line)
             if match:
@@ -466,7 +466,7 @@ class flowParser():
                 eventmsg['timestamp'] = timestamp
                 eventmsg['msg'] = line.strip(' \t')
                 #event content is modulename + matchlog
-                eventmsg['event'] = modulename + ' : ' + match.group(1)
+                eventmsg['event'] = modulename + ' : ' + eventHandler(match)
                 #self.logger.logger.error('the target event is ' + eventmsg['event'])
                 eventmsg['lineno'] = lineno
                 eventmsg['issip'] = 0

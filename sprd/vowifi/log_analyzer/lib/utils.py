@@ -14,7 +14,7 @@ from blockdiag.noderenderer import box,actor,beginpoint,circle,cloud,diamond,dot
 
 import blockdiag.plugins
 from blockdiag.imagedraw import png,pdf,svg
-
+import shutil
 
 sys.path.append('./')
 from logConf import logConf
@@ -92,6 +92,10 @@ class utils():
                 onematch = dict()
                 onematch['log'] = os.path.realpath(os.path.join(root, filename))
                 onematch['dir'] = root
+                #delete the dir tree existing
+                outputdir = root + '/' + filename.split('.')[0]
+                if os.path.isdir(outputdir):
+                    shutil.rmtree(outputdir)
                 mainmatches.append(onematch)
 
         '''
