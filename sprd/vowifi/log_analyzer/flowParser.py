@@ -472,6 +472,7 @@ class flowParser():
                 eventmsg['issip'] = 0
                 eventmsg['isevent'] = 1
                 eventmsg['eventtype'] = eventType
+                eventmsg['modulename'] = modulename
                 self.sipmsgs.append(eventmsg)
                 break
 
@@ -1079,14 +1080,15 @@ class flowParser():
         string = event['event']
         lineno = event['lineno']
         eventtype = event['eventtype']
+        frommodule = event['modulename']
         #for event , three kind of msgs:
         #SEPERATOR, SELFREF, EDGE, default is SEPERATOR
         words = string + ', time: ' + str(timestamp) + ', lineno: '+ str(lineno)
 
-        if eventtype == eventType.SELFREF:
+        if eventtype == eventType.EDGE:
             #sample: User -> UE [label = "REGISTER", note = "ab"];
             #TODO: add more conditional check
-            onestr = "User -> UE [label = \"" + string + "\", " + "note = \""
+            onestr = frommodule + " -> UE [label = \"" + string + "\", " + "note = \""
             lineno = " log lineno: " + str(lineno) + '\n'
             timestamp = "Time: " + timestamp + "\"\n"
             onestr += lineno + timestamp + '];\n'
@@ -1722,6 +1724,7 @@ class flowParser():
         #TODO: may add more parsing logic here
         diaginfo['event'] = eventobj['event']
         diaginfo['eventtype'] = eventobj['eventtype']
+        diaginfo['modulename'] = eventobj['modulename']
         self.diagsips.append(diaginfo)
 
     def parseFlow(self):
@@ -1797,15 +1800,13 @@ class flowParser():
 
 
         #make sure the element order
-        elementstr = 'ImsCM;Phone;Security;'
-        fixelementlist = ["ImsCM", "Phone", "Security"]
+        elementstr = 'ImsCM;Phone;UE;CP;NETWORK;'
+        fixelementlist = ["ImsCM", "Phone", "UE", "CP", "NETWORK"]
         #elementstr = ''
         for index, element in enumerate(self.elements):
                 if element not in fixelementlist:
                     elementstr += element + ';'
 
-        if not elementstr:
-            elementstr = "UE; NETWORK;"
         diagram_definition +=elementstr + '\n'
         diagram_definition += '\n'
 
@@ -1846,7 +1847,7 @@ class flowParser():
         pdfdraw = drawer.DiagramDraw('PDF', diagram, filename=pdfname, debug=True, fontmap=fm)
         pdfdraw.draw()
         pdfdraw.save()
-        print 'end'
+
         #mv the png to right dir
         #os.rename(pngname, self.diagdir)
 

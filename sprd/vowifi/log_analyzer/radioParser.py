@@ -37,7 +37,7 @@ class radioParser():
             self.pattern['wifiinfopattern'] = config['radioParser']['wifiinfopattern']
             self.pattern['lteinfopattern'] = config['radioParser']['lteinfopattern']
             self.pattern['callendpattern'] = config['radioParser']['callendpattern']
-            self.pattern['errorpattern'] = config['radioParser']['errorpattern']
+            #self.pattern['errorpattern'] = config['radioParser']['errorpattern']
             self.pattern['updatedrpattern'] = config['radioParser']['updatedrpattern']
             self.pattern['rtppattern'] = config['radioParser']['rtppattern']
             self.pattern['volteimspattern'] = config['radioParser']['volteimspattern']
@@ -139,12 +139,14 @@ class radioParser():
         callendpattern['direct'] = '->'
         self.keypattern.append(callendpattern)
 
+        '''
+        #seems cp logs always have CME error... Orz
         errorpattern = dict()
         errorpattern['pattern'] = re.compile(self.pattern['errorpattern'])
         errorpattern['func'] = self.geterror
         errorpattern['direct'] = '<-'
         self.keypattern.append(errorpattern)
-
+        '''
         updatedrpattern = dict()
         updatedrpattern['pattern'] = re.compile(self.pattern['updatedrpattern'])
         updatedrpattern['func'] = self.getupdatedr

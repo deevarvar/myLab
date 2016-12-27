@@ -122,16 +122,16 @@ class loggergui():
         # util will do the search
         # util will create result dir
         # flowParser only parse one file
-        title = 'VoWifi log tool by zhihua.ye, version: ' + str(self.version)
+        title = 'VoWifi log tool version: ' + str(self.version)
         buttonboxmsg = 'Please open a directory which contains slog.'
-        slogstring = 'Open the slog dir'
+        ylogstring = 'Open the ylog dir'
         samsungfile = "Open Samsung log file"
 
-        choices = [slogstring, samsungfile , 'Exit']
+        choices = [ylogstring, samsungfile , 'Exit']
         choice = buttonbox(buttonboxmsg, title = title, choices = choices)
         if choice != 'Exit':
 
-            if choice == slogstring:
+            if choice == ylogstring:
 
 
                 folder = diropenbox()

@@ -396,21 +396,21 @@ dialerEvent.addEvent("(Swapping call to foreground)", module_dialer, eventType =
 imscmEvent.addEvent("(\[bind.*)", module_ImsCM)
 ##Utils
 ###switch to wifi
-imscmEvent.addEvent("\[(Switch to Vowifi)\]", module_ImsCM, eventType = eventType.SELFREF)
+imscmEvent.addEvent("\[(Switch to Vowifi)\]", module_ImsCM, eventType = eventType.EDGE)
 ###switch to volte
-imscmEvent.addEvent("\[(Switch to Volte)\]", module_ImsCM, eventType = eventType.SELFREF)
+imscmEvent.addEvent("\[(Switch to Volte)\]", module_ImsCM, eventType = eventType.EDGE)
 ###Handover to Vowifi
-imscmEvent.addEvent("\[(Handover to Vowifi)\]", module_ImsCM, eventType = eventType.SELFREF)
+imscmEvent.addEvent("\[(Handover to Vowifi)\]", module_ImsCM, eventType = eventType.EDGE)
 ###Handover to Volte
-imscmEvent.addEvent("\[(Handover to Volte)\]", module_ImsCM,  eventType = eventType.SELFREF)
+imscmEvent.addEvent("\[(Handover to Volte)\]", module_ImsCM,  eventType = eventType.EDGE)
 ###Release Vowifi resource
 imscmEvent.addEvent("\[(Release Vowifi resource)\]", module_ImsCM)
 ###Set Vowifi unavailable
-imscmEvent.addEvent("\[(Set Vowifi unavailable)\]", module_ImsCM, eventType = eventType.SELFREF)
+imscmEvent.addEvent("\[(Set Vowifi unavailable)\]", module_ImsCM, eventType = eventType.EDGE)
 ###[Cancel current request]
 imscmEvent.addEvent("\[(Cancel current request)\]", module_ImsCM)
 ###[hung up Vowifi call]
-imscmEvent.addEvent("\[(hung up Vowifi call)\]", module_ImsCM, eventType=eventType.SELFREF)
+imscmEvent.addEvent("\[(hung up Vowifi call)\]", module_ImsCM, eventType=eventType.EDGE)
 ###[popup Vowifi unavailable notification]
 imscmEvent.addEvent("\[(popup Vowifi unavailable notification)\]", module_ImsCM, eventType=eventType.SELFREF)
 
@@ -462,17 +462,17 @@ imscmEvent.addEvent("(onCallStateChanged:.*)", module_ImsCM)
 
 ##post-ping
 ##wifi connected
-imscmEvent.addEvent('(wifi is connected)', module_ImsCM)
+imscmEvent.addEvent('(wifi is connected)', module_ImsCM, eventType = eventType.EDGE)
 imscmEvent.addEvent("NetworkUtils: (Local IP address is:.*)", module_ImsCM)
 
 
 ##airplane open
-imscmEvent.addEvent('(open airplane mode)', module_ImsCM)
+imscmEvent.addEvent('(open airplane mode)', module_ImsCM , eventType = eventType.EDGE)
 ##airplaneclose
-imscmEvent.addEvent('(close airplane mode)', module_ImsCM)
+imscmEvent.addEvent('(close airplane mode)', module_ImsCM,eventType = eventType.EDGE)
 
 ##wifi disconnected
-imscmEvent.addEvent('(wifi is disconnected)', module_ImsCM)
+imscmEvent.addEvent('(wifi is disconnected)', module_ImsCM, eventType = eventType.EDGE)
 ##wifi calling
 imscmEvent.addEvent('(database has changed, mIsWifiCallingEnabled.*)', module_ImsCM)
 
