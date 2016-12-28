@@ -467,19 +467,19 @@ class flowParser():
                 eventmsg['msg'] = line.strip(' \t')
                 eventdict = dict()
                 eventdict = eventHandler(match)
-                eventmsg['event'] = eventdict.msg
-                eventmsg['color'] = eventdict.color
-                eventmsg['msglevel'] = eventdict.msglevel
-                #self.logger.logger.error('the target event is ' + eventmsg['event'])
-                eventmsg['lineno'] = lineno
-                eventmsg['issip'] = 0
-                eventmsg['isevent'] = 1
-                eventmsg['eventtype'] = eventType
-                eventmsg['modulename'] = modulename
                 if eventdict:
+                    eventmsg['event'] = eventdict.msg
+                    eventmsg['color'] = eventdict.color
+                    eventmsg['msglevel'] = eventdict.msglevel
+                    #self.logger.logger.error('the target event is ' + eventmsg['event'])
+                    eventmsg['lineno'] = lineno
+                    eventmsg['issip'] = 0
+                    eventmsg['isevent'] = 1
+                    eventmsg['eventtype'] = eventType
+                    eventmsg['modulename'] = modulename
                     self.sipmsgs.append(eventmsg)
                 else:
-                    self.logger.logger.error("event is invalid in lineno " + str(lineno))
+                    self.logger.logger.error("event is invalid or not needed in lineno " + str(lineno))
                 break
 
 

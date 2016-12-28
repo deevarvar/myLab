@@ -581,7 +581,9 @@ phoneEvent.addEvent("(Re-register, with the type:.*)", module_Phone)
 phoneEvent.addEvent("(Stop current register process. registerState:.*)", module_Phone)
 
 ### security callback
-phoneEvent.addEvent("(Get the security callback:.*)", module_Phone)
+phoneEvent.addEvent("Get the security callback:(.*)", module_Phone, eventType=eventType.EDGE, eventHandler=s2bstatus)
+### register callback
+phoneEvent.addEvent("Get the register state changed callback: {\"event_code\":.*,\"event_name\":\"(.*)\",\"state_code\":(.*)}" , module_Phone, eventType=eventType.EDGE, eventHandler=regstatus)
 
 ###call related event
 #phoneEvent.addEvent("(Handle the event.*for the call.*)", module_Phone)
@@ -663,7 +665,8 @@ serviceEvent.addEvent("(Try to reset the sip stack.)", module_Service)
 #serviceEvent.addEvent("(Notify the event:.*)", module_Service)
 
 #reg status code comes here
-serviceEvent.addEvent("(RegisterService.*Get the register state changed callback.*)", module_Service)
+#only care about the adapter's log
+#serviceEvent.addEvent("(RegisterService.*Get the register state changed callback.*)", module_Service)
 
 
 #------------------------------------------------------------------------------------
