@@ -57,3 +57,11 @@ EN_MTC_ACC_NET_3GPP_E_UTRAN_FDD = 9
 accnettype[str(EN_MTC_ACC_NET_IEEE_802_11)] = "IEEE-802.11"
 accnettype[str(EN_MTC_ACC_NET_3GPP_E_UTRAN_FDD)] = "3GPP-E-UTRAN-FDD"
 
+#adapter definition in RegisterState
+regstate = dict()
+STATE_IDLE = 0
+STATE_PROGRESSING = 1;
+STATE_CONNECTED = 2;
+regstate[str(STATE_IDLE)] = "Unreged"
+regstate[str(STATE_PROGRESSING)] = "Reging"
+regstate[str(STATE_CONNECTED)] = "Reged"

@@ -28,7 +28,8 @@ class eventdict():
         self.msg = None
 
 
-def matchone(match):
+#NOTE: color can be set from function input , or defined in function logic
+def matchone(match, color):
     '''
     return the first match one
     :param match:
@@ -36,13 +37,74 @@ def matchone(match):
     '''
     grouplen = len(match.groups())
     retmsg = eventdict()
+    #set the color
+    retmsg.color = color
     if match and grouplen >= 1:
         retmsg.msg = match.group(1)
         return retmsg
     else:
         return None
 
-def drstatus(match):
+def startcall(match, color):
+    '''
+    imsservice start call : one pattern
+    VoWiFiCall/VoLTECall
+    :param match:
+    :param color:
+    :return:
+    '''
+    grouplen = len(match.groups())
+    retmsg = eventdict()
+    #set the color
+    retmsg.color = color
+    if match and grouplen >= 1:
+        calltype = match.group(1)
+        retmsg.msg = "start " + calltype
+        return retmsg
+    else:
+        return None
+
+def loginstatus(match, color):
+    '''
+    login status, two patterns: ip, pcscf ip
+
+    :param match:
+    :param color:
+    :return:
+    '''
+    grouplen = len(match.groups())
+    retmsg = eventdict()
+    retmsg.color = color
+    if match and grouplen >= 2:
+        ip = match.group(1).strip()
+        pcscfip = match.group(2).strip()
+        ipstr = "IP: " + ip + '\n'
+        pcscfipstr = "P-CSCF: " + pcscfip + '\n'
+        retmsg.msg = 'Call Login \n' + ipstr + pcscfipstr
+        return retmsg
+    else:
+        return None
+
+def logoutstatus(match, color):
+    '''
+    logout pattern: regstate
+    :param match:
+    :param color:
+    :return:
+    '''
+    grouplen = len(match.groups())
+    retmsg = eventdict()
+    retmsg.color = color
+    if match and grouplen >= 1:
+        regstr = regstate[(str(match.group(1)).strip())]
+        retmsg.msglevel = Msglevel.WARNING
+        retmsg.color = maplevel2color(retmsg.msglevel)
+        retmsg.msg = "Try to Logout \n"+"RegState is " + regstr
+        return retmsg
+    else:
+        return None
+
+def drstatus(match, color):
     grouplen = len(match.groups())
     level = Msglevel.INFO
     retmsg = eventdict()
@@ -56,7 +118,7 @@ def drstatus(match):
     else:
         return None
 
-def wfcstatus(match):
+def wfcstatus(match, color):
     '''
     wificalling flag
 
@@ -83,7 +145,7 @@ def wfcstatus(match):
     else:
         return None
 
-def geticon(match):
+def geticon(match, color):
     '''
     get vowifi/volte icon
     :param match:
@@ -118,7 +180,7 @@ def geticon(match):
     else:
         return None
 
-def imsregaddr(match):
+def imsregaddr(match, color):
     '''
     set ims reg addr
     :param match:
@@ -133,7 +195,46 @@ def imsregaddr(match):
     else:
         return None
 
-def akastatus(match):
+def mutestatus(match, color):
+    '''
+    mute status: one pattern
+    true muted; false unmute
+    :param match:
+    :return:
+    '''
+    grouplen = len(match.groups())
+    retmsg = eventdict()
+    if match and grouplen >= 1:
+        muteval = str(match.group(1))
+        retmsg.msglevel = Msglevel.INFO
+        retmsg.color = maplevel2color(retmsg.msglevel)
+        if muteval == 'true':
+            retmsg.msg = "Muted"
+        else:
+            retmsg.msg = "UnMuted"
+
+        return retmsg
+    else:
+        return None
+
+def makecallstatus(match, color):
+    '''
+    make call , one pattern , callee number
+    :param match:
+    :return:
+    '''
+    grouplen = len(match.groups())
+    retmsg = eventdict()
+    if match and grouplen >= 1:
+        callee = str(match.group(1)).strip()
+        retmsg.msglevel = Msglevel.INFO
+        retmsg.color = maplevel2color(retmsg.msglevel)
+        retmsg.msg = "Make call to " + callee
+        return retmsg
+    else:
+        return None
+
+def akastatus(match, color):
     '''
     aka status
     one pattern DB means auth correctly, DC means sync failure
@@ -162,7 +263,7 @@ def akastatus(match):
     else:
         return None
 
-def reregstatus(match):
+def reregstatus(match, color):
     '''
     re-register info, two pattern: access type and access info
     :param match:
@@ -171,7 +272,7 @@ def reregstatus(match):
     grouplen = len(match.groups())
     retmsg = eventdict()
     if match and grouplen >= 2:
-        acctype = accnettype[str(match.group(1))]
+        acctype = accnettype[str(match.group(1).strip())]
         accinfo = match.group(2)
         retmsg.msglevel = Msglevel.WARNING
         retmsg.color = maplevel2color(retmsg.msglevel)
@@ -182,7 +283,7 @@ def reregstatus(match):
     else:
         return None
 
-def regstatus(match):
+def regstatus(match, color):
     '''
     Get the register state changed callback: {\"event_code\":.*,\"event_name\":\"(.*)\",\"state_code\":(.*)}"
     event name , state code
@@ -215,7 +316,7 @@ def regstatus(match):
     else:
         return None
 
-def s2bstatus(match):
+def s2bstatus(match, color):
     '''
     s2b status check
     three kinds:
@@ -229,7 +330,7 @@ def s2bstatus(match):
     retmsg = eventdict()
     if match and grouplen >= 1:
         #input str is ALWAYS json string.
-        s2bstr = match.group(1)
+        s2bstr = match.group(1).strip()
         s2bjson = json.loads(s2bstr)
         action = s2bjson['security_json_action']
         if action == 'security_json_action_s2b_failed':
@@ -280,4 +381,5 @@ if __name__ == '__main__':
     line = "abc"
     pattern = re.compile(key)
     match = pattern.search(line)
-    print matchone(match)
+    color = "black"
+    print matchone(match, color)

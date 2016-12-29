@@ -353,12 +353,13 @@ class eventArray():
     def __init__(self):
         self.array = list()
 
-    def addEvent(self, key, module, eventType = eventType.SEPERATOR, eventHandler = matchone):
+    def addEvent(self, key, module, eventType = eventType.SEPERATOR, eventHandler = matchone, color= "black"):
         event = dict()
         event['key'] = key
         event['module'] = module
         event['eventType'] = eventType
         event['eventHandler'] = eventHandler
+        event['color'] = color
         self.array.append(event)
 
     def getarray(self):
@@ -388,31 +389,31 @@ dialerEvent.addEvent("(Putting the call on hold)", module_dialer, eventType = ev
 
 ### resume
 dialerEvent.addEvent("(Removing the call from hold)", module_dialer, eventType = eventType.EDGE)
-dialerEvent.addEvent("(Swapping call to foreground)", module_dialer, eventType = eventType.EDGE)
+dialerEvent.addEvent("(Swapping call to foreground)", module_dialer, eventType = eventType.EDGE, )
 #------------------------------------------------------------------------------------
 #ImsCM part
 ##ImsConnectionManagerMonitor
 ###start up wfc status
 #imscmEvent.addEvent("(Wifi-calling is.*)", module_ImsCM)
 ###bind service
-imscmEvent.addEvent("(\[bind.*)", module_ImsCM)
+imscmEvent.addEvent("(\[bind.*)", module_ImsCM, eventType = eventType.EDGE)
 ##Utils
 ###switch to wifi
-imscmEvent.addEvent("\[(Switch to Vowifi)\]", module_ImsCM, eventType = eventType.EDGE)
+imscmEvent.addEvent("\[(Switch to Vowifi)\]", module_ImsCM, eventType = eventType.EDGE, color = "blue")
 ###switch to volte
-imscmEvent.addEvent("\[(Switch to Volte)\]", module_ImsCM, eventType = eventType.EDGE)
+imscmEvent.addEvent("\[(Switch to Volte)\]", module_ImsCM, eventType = eventType.EDGE, color = "blue")
 ###Handover to Vowifi
-imscmEvent.addEvent("\[(Handover to Vowifi)\]", module_ImsCM, eventType = eventType.EDGE)
+imscmEvent.addEvent("\[(Handover to Vowifi)\]", module_ImsCM, eventType = eventType.EDGE, color = "blue")
 ###Handover to Volte
-imscmEvent.addEvent("\[(Handover to Volte)\]", module_ImsCM,  eventType = eventType.EDGE)
+imscmEvent.addEvent("\[(Handover to Volte)\]", module_ImsCM,  eventType = eventType.EDGE, color = "blue")
 ###Release Vowifi resource
-imscmEvent.addEvent("\[(Release Vowifi resource)\]", module_ImsCM)
+imscmEvent.addEvent("\[(Release Vowifi resource)\]", module_ImsCM, eventType = eventType.EDGE)
 ###Set Vowifi unavailable
-imscmEvent.addEvent("\[(Set Vowifi unavailable)\]", module_ImsCM, eventType = eventType.EDGE)
+imscmEvent.addEvent("\[(Set Vowifi unavailable)\]", module_ImsCM, eventType = eventType.EDGE, color = "red")
 ###[Cancel current request]
 imscmEvent.addEvent("\[(Cancel current request)\]", module_ImsCM)
 ###[hung up Vowifi call]
-imscmEvent.addEvent("\[(hung up Vowifi call)\]", module_ImsCM, eventType=eventType.EDGE)
+imscmEvent.addEvent("\[(hung up Vowifi call)\]", module_ImsCM, eventType=eventType.EDGE, color = "blue")
 ###[popup Vowifi unavailable notification]
 imscmEvent.addEvent("\[(popup Vowifi unavailable notification)\]", module_ImsCM, eventType=eventType.SELFREF)
 
@@ -464,17 +465,17 @@ imscmEvent.addEvent("(onCallStateChanged:.*)", module_ImsCM)
 
 ##post-ping
 ##wifi connected
-imscmEvent.addEvent('(wifi is connected)', module_ImsCM, eventType = eventType.EDGE)
+imscmEvent.addEvent('(wifi is connected)', module_ImsCM, eventType = eventType.EDGE, color="blue")
 imscmEvent.addEvent("NetworkUtils: (Local IP address is:.*)", module_ImsCM)
 
 
 ##airplane open
-imscmEvent.addEvent('(open airplane mode)', module_ImsCM , eventType = eventType.EDGE)
+imscmEvent.addEvent('(open airplane mode)', module_ImsCM , eventType = eventType.EDGE, color="blue")
 ##airplaneclose
-imscmEvent.addEvent('(close airplane mode)', module_ImsCM,eventType = eventType.EDGE)
+imscmEvent.addEvent('(close airplane mode)', module_ImsCM,eventType = eventType.EDGE, color="blue")
 
 ##wifi disconnected
-imscmEvent.addEvent('(wifi is disconnected)', module_ImsCM, eventType = eventType.EDGE)
+imscmEvent.addEvent('(wifi is disconnected)', module_ImsCM, eventType = eventType.EDGE, color="blue")
 ##wifi calling
 imscmEvent.addEvent('database has changed, mIsWifiCallingEnabled = (.*)', module_ImsCM, eventType = eventType.EDGE, eventHandler=wfcstatus)
 
@@ -546,7 +547,8 @@ imscmEvent.addEvent("(turn off primary SIM card)", module_ImsCM)
 phoneEvent.addEvent("updateImsFeatures->volteEnable:(.*) wifiEnable:(.*)", module_Phone, eventType=eventType.EDGE, eventHandler=geticon)
 ##ims reg addr
 phoneEvent.addEvent("setIMSRegAddress addr = (.*)", module_Phone, eventType=eventType.EDGE, eventHandler=imsregaddr)
-
+## start vowifi/volte call
+phoneEvent.addEvent("createCallSession-> start(.*)", module_Phone, eventType=eventType.EDGE, eventHandler=startcall, color = "blue")
 
 #Adapter Part
 ##VoWifiSecurityManager
@@ -555,33 +557,33 @@ phoneEvent.addEvent("setIMSRegAddress addr = (.*)", module_Phone, eventType=even
 ##update datarouter
 phoneEvent.addEvent('VoWifiCallManager: Update the call state to data router. state: (.*)', module_Phone, eventType = eventType.EDGE, eventHandler=drstatus)
 ###s2b start
-phoneEvent.addEvent("(Start the s2b attach.)",module_Phone)
+phoneEvent.addEvent("(Start the s2b attach.)",module_Phone, eventType = eventType.EDGE)
 ###deattach
-phoneEvent.addEvent("(Try to de-attach, is handover:.*)", module_Phone)
+#phoneEvent.addEvent("(Try to de-attach, is handover:.*)", module_Phone)
 ###force stop
-phoneEvent.addEvent("(Force stop the s2b.)", module_Phone)
+#phoneEvent.addEvent("(Force stop the s2b.)", module_Phone)
 ###s2b success
-phoneEvent.addEvent("(S2b attach success.)", module_Phone)
+#phoneEvent.addEvent("(S2b attach success.)", module_Phone)
 ###s2b failed
-phoneEvent.addEvent("(S2b attach failed, errorCode:.*)", module_Phone)
+#phoneEvent.addEvent("(S2b attach failed, errorCode:.*)", module_Phone)
 ###s2b state change
-phoneEvent.addEvent("(S2b attach progress state changed to.*)", module_Phone)
+#phoneEvent.addEvent("(S2b attach progress state changed to.*)", module_Phone)
 ###s2b stop
-phoneEvent.addEvent("(S2b attach stopped, errorCode: .*)", module_Phone)
+#phoneEvent.addEvent("(S2b attach stopped, errorCode: .*)", module_Phone)
 #------------------------------------------------------------------------------------
 ##VoWifiRegisterManager
 ###prepare login
-phoneEvent.addEvent("(Prepare the info before login, subId is:.*)", module_Phone)
+phoneEvent.addEvent("(Prepare the info before login), subId is:.*", module_Phone, eventType=eventType.EDGE)
 ###try to login
-phoneEvent.addEvent("(Try to login to the ims, current register state: .*)", module_Phone)
+#phoneEvent.addEvent("(Try to login to the ims, current register state: .*)", module_Phone)
 ###Login info: ip, p-cscf
-phoneEvent.addEvent("(Login with the local ip: .*)", module_Phone)
+phoneEvent.addEvent("Login with the local ip: (.*), pcscf ip: (.*)", module_Phone, eventType=eventType.EDGE, eventHandler=loginstatus)
 ###logout
-phoneEvent.addEvent("(Try to logout from the ims, current register state:.*)", module_Phone)
+phoneEvent.addEvent("Try to logout from the ims, current register state: (.*)", module_Phone, eventType=eventType.EDGE, eventHandler=logoutstatus)
 ###Re-register, do this in service
 #phoneEvent.addEvent("(Re-register, with the type:.*)", module_Phone)
-###force stop
-phoneEvent.addEvent("(Stop current register process. registerState:.*)", module_Phone)
+###force stop, no need to track
+#phoneEvent.addEvent("(Stop current register process. registerState:.*)", module_Phone)
 
 ### security callback
 phoneEvent.addEvent("Get the security callback:(.*)", module_Phone, eventType=eventType.EDGE, eventHandler=s2bstatus)
@@ -591,10 +593,11 @@ phoneEvent.addEvent("Get the register state changed callback: {\"event_code\":.*
 ###call related event
 #phoneEvent.addEvent("(Handle the event.*for the call.*)", module_Phone)
 
+
 ###mute
-phoneEvent.addEvent("(Mutes.*the mic for the active call)", module_Phone)
+phoneEvent.addEvent("Mutes\((.*)\)the mic for the active call", module_Phone, eventType=eventType.EDGE, eventHandler=mutestatus)
 ###start call, #important key words
-phoneEvent.addEvent("(Initiates an ims call with.*)", module_Phone)
+phoneEvent.addEvent("Initiates an ims call with (.*)", module_Phone, eventType=eventType.EDGE, eventHandler=makecallstatus)
 ###start conf call
 phoneEvent.addEvent("(Initiates an ims conference call with.*)", module_Phone)
 ###accept
@@ -670,7 +673,7 @@ serviceEvent.addEvent("Get the challenge response: TAG = (.*),.*", module_Servic
 serviceEvent.addEvent("Try to start the re-register process with the type: (.*), info: (.*)", module_Service, eventType=eventType.EDGE, eventHandler=reregstatus)
 
 #"Try to reset the sip stack."
-serviceEvent.addEvent("(Try to reset the sip stack.)", module_Service)
+serviceEvent.addEvent("(Try to reset the sip stack)", module_Service, eventType=eventType.EDGE, color="blue")
 
 #comment here
 #serviceEvent.addEvent("(Notify the event:.*)", module_Service)

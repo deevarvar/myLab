@@ -142,6 +142,10 @@ class flowParser():
             self.datalentags = config['sprd']['datalentags']
             self.loglevel =  config['logging']['loglevel']
 
+            #global switch to search sip/ike/etc...
+            self.switch = dict()
+            self.switch['searchsip'] = config['switch']['searchsip']
+            self.switch['searchike'] = config['switch']['searchike']
 
             #list all elements in the scenario
             self.elements = list()
@@ -157,7 +161,6 @@ class flowParser():
             #despreated logic
            # self.files['log'] = config['files']['log']
             #self.logger.logger.debug('log file pattern is ' +  self.files['log'])
-
 
 
             self.utils = utils(configpath='./')
@@ -453,7 +456,7 @@ class flowParser():
             modulename = event['module']
             eventType = event['eventType']
             eventHandler = event['eventHandler']
-
+            defaultcolor = event['color']
             #still coupled logic here.
             pattern = re.compile(key)
             match = pattern.search(line)
@@ -466,7 +469,7 @@ class flowParser():
                 eventmsg['timestamp'] = timestamp
                 eventmsg['msg'] = line.strip(' \t')
                 eventdict = dict()
-                eventdict = eventHandler(match)
+                eventdict = eventHandler(match, defaultcolor)
                 if eventdict:
 
                     eventmsg['event'] = eventdict.msg
@@ -520,17 +523,17 @@ class flowParser():
                 #FIXME: there may be race condition
                 #the data print can be different.
                 #if it is receivertags, search forward
-                if receiverpattern.search(line):
+                if self.switch['searchsip'] == "enabled" and receiverpattern.search(line):
                     with open(self.lemonlog, 'a+') as llog:
                         llog.write(line)
                     self.getRecvSip(line, lineno)
                 #if it is sendertags, search backward
-                elif senderpattern.search(line):
+                elif self.switch['searchsip'] == "enabled" and senderpattern.search(line):
                     self.getSendSip(line, lineno)
                     with open(self.lemonlog, 'a+') as llog:
                         llog.write(line)
 
-                elif ikepattern.search(line):
+                elif self.switch['searchike'] == "enabled" and ikepattern.search(line):
                     self.getikemsg(line, lineno)
 
                 #add function to detect event msg

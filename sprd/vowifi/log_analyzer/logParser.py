@@ -107,6 +107,8 @@ class logParser():
             self.elog = outputdir + 'logs/' + 'error_' + os.path.basename(realpath)
             self.diagdir = outputdir + 'diagrams/'
 
+
+
             self.diagstr = ''
 
             #read errorpattern and keys
