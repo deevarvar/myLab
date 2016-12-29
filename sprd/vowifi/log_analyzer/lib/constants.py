@@ -353,13 +353,14 @@ class eventArray():
     def __init__(self):
         self.array = list()
 
-    def addEvent(self, key, module, eventType = eventType.SEPERATOR, eventHandler = matchone, color= "black"):
+    def addEvent(self, key, module, eventType = eventType.SEPERATOR, eventHandler = matchone, color= "black", groupnum=1):
         event = dict()
         event['key'] = key
         event['module'] = module
         event['eventType'] = eventType
         event['eventHandler'] = eventHandler
         event['color'] = color
+        event['groupnum'] = groupnum
         self.array.append(event)
 
     def getarray(self):
@@ -389,7 +390,7 @@ dialerEvent.addEvent("(Putting the call on hold)", module_dialer, eventType = ev
 
 ### resume
 dialerEvent.addEvent("(Removing the call from hold)", module_dialer, eventType = eventType.EDGE)
-dialerEvent.addEvent("(Swapping call to foreground)", module_dialer, eventType = eventType.EDGE, )
+dialerEvent.addEvent("(Swapping call to foreground)", module_dialer, eventType = eventType.EDGE)
 #------------------------------------------------------------------------------------
 #ImsCM part
 ##ImsConnectionManagerMonitor
@@ -544,7 +545,7 @@ imscmEvent.addEvent("(turn off primary SIM card)", module_ImsCM)
 
 #phone imsservice logre
 ##vowifi/volte icon
-phoneEvent.addEvent("updateImsFeatures->volteEnable:(.*) wifiEnable:(.*)", module_Phone, eventType=eventType.EDGE, eventHandler=geticon)
+phoneEvent.addEvent("updateImsFeatures->volteEnable:(.*) wifiEnable:(.*)", module_Phone, eventType=eventType.EDGE, eventHandler=geticon,groupnum=2)
 ##ims reg addr
 phoneEvent.addEvent("setIMSRegAddress addr = (.*)", module_Phone, eventType=eventType.EDGE, eventHandler=imsregaddr)
 ## start vowifi/volte call
@@ -577,7 +578,7 @@ phoneEvent.addEvent("(Prepare the info before login), subId is:.*", module_Phone
 ###try to login
 #phoneEvent.addEvent("(Try to login to the ims, current register state: .*)", module_Phone)
 ###Login info: ip, p-cscf
-phoneEvent.addEvent("Login with the local ip: (.*), pcscf ip: (.*)", module_Phone, eventType=eventType.EDGE, eventHandler=loginstatus)
+phoneEvent.addEvent("Login with the local ip: (.*), pcscf ip: (.*)", module_Phone, eventType=eventType.EDGE, eventHandler=loginstatus, groupnum=2)
 ###logout
 phoneEvent.addEvent("Try to logout from the ims, current register state: (.*)", module_Phone, eventType=eventType.EDGE, eventHandler=logoutstatus)
 ###Re-register, do this in service
@@ -588,7 +589,7 @@ phoneEvent.addEvent("Try to logout from the ims, current register state: (.*)", 
 ### security callback
 phoneEvent.addEvent("Get the security callback:(.*)", module_Phone, eventType=eventType.EDGE, eventHandler=s2bstatus)
 ### register callback
-phoneEvent.addEvent("Get the register state changed callback: {\"event_code\":.*,\"event_name\":\"(.*)\",\"state_code\":(.*)}" , module_Phone, eventType=eventType.EDGE, eventHandler=regstatus)
+phoneEvent.addEvent("Get the register state changed callback: {\"event_code\":.*,\"event_name\":\"(.*)\",\"state_code\":(.*)}" , module_Phone, eventType=eventType.EDGE, eventHandler=regstatus, groupnum=2)
 
 ###call related event
 #phoneEvent.addEvent("(Handle the event.*for the call.*)", module_Phone)
@@ -670,7 +671,7 @@ phoneEvent.addEvent("(Try to invite this call.*to the conference call.*)", modul
 serviceEvent.addEvent("Get the challenge response: TAG = (.*),.*", module_Service, eventType=eventType.EDGE, eventHandler=akastatus)
 
 #re-register
-serviceEvent.addEvent("Try to start the re-register process with the type: (.*), info: (.*)", module_Service, eventType=eventType.EDGE, eventHandler=reregstatus)
+serviceEvent.addEvent("Try to start the re-register process with the type: (.*), info: (.*)", module_Service, eventType=eventType.EDGE, eventHandler=reregstatus, groupnum=2)
 
 #"Try to reset the sip stack."
 serviceEvent.addEvent("(Try to reset the sip stack)", module_Service, eventType=eventType.EDGE, color="blue")

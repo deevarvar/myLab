@@ -27,137 +27,116 @@ class eventdict():
         self.color = "black"
         self.msg = None
 
+class eventhandler():
+    def __init__(self, match, color, groupnum):
+        self.match = match
+        self.color = color
+        self.groupnum = groupnum
+        self.retmsg = eventdict()
+        #set the selected color
+        self.retmsg.color = color
 
-#NOTE: color can be set from function input , or defined in function logic
-def matchone(match, color):
-    '''
-    return the first match one
-    :param match:
-    :return:
-    '''
-    grouplen = len(match.groups())
-    retmsg = eventdict()
-    #set the color
-    retmsg.color = color
-    if match and grouplen >= 1:
-        retmsg.msg = match.group(1)
-        return retmsg
-    else:
+    def handler(self):
+        #need to overwrite the handler.
         return None
 
-def startcall(match, color):
+    '''
+       ######### main process #########
+    '''
+    def getret(self):
+        grouplen = len(self.match.groups())
+        if self.match and grouplen >= self.groupnum:
+            return self.handler()
+        else:
+            return None
+
+class demoinherit(eventhandler):
+    def handler(self):
+        self.retmsg = self.match.group(1).strip()
+        return self.retmsg
+
+#NOTE: color can be set from function input , or defined in function logic
+class matchone(eventhandler):
+    '''
+    only match one , return one
+    '''
+    def handler(self):
+        self.retmsg.msg = self.match.group(1)
+        return self.retmsg
+
+class startcall(eventhandler):
     '''
     imsservice start call : one pattern
     VoWiFiCall/VoLTECall
-    :param match:
-    :param color:
-    :return:
     '''
-    grouplen = len(match.groups())
-    retmsg = eventdict()
-    #set the color
-    retmsg.color = color
-    if match and grouplen >= 1:
-        calltype = match.group(1)
-        retmsg.msg = "start " + calltype
-        return retmsg
-    else:
-        return None
+    def handler(self):
+        calltype = self.match.group(1)
+        self.retmsg.msg = "start " + calltype
+        return self.retmsg
 
-def loginstatus(match, color):
+class loginstatus(eventhandler):
     '''
     login status, two patterns: ip, pcscf ip
-
-    :param match:
-    :param color:
-    :return:
     '''
-    grouplen = len(match.groups())
-    retmsg = eventdict()
-    retmsg.color = color
-    if match and grouplen >= 2:
-        ip = match.group(1).strip()
-        pcscfip = match.group(2).strip()
+    def handler(self):
+        ip = self.match.group(1).strip()
+        pcscfip = self.match.group(2).strip()
         ipstr = "IP: " + ip + '\n'
         pcscfipstr = "P-CSCF: " + pcscfip + '\n'
-        retmsg.msg = 'Call Login \n' + ipstr + pcscfipstr
-        return retmsg
-    else:
-        return None
+        self.retmsg.msg = 'Call Login \n' + ipstr + pcscfipstr
+        return self.retmsg
 
-def logoutstatus(match, color):
+
+class logoutstatus(eventhandler):
     '''
     logout pattern: regstate
-    :param match:
-    :param color:
-    :return:
     '''
-    grouplen = len(match.groups())
-    retmsg = eventdict()
-    retmsg.color = color
-    if match and grouplen >= 1:
-        regstr = regstate[(str(match.group(1)).strip())]
-        retmsg.msglevel = Msglevel.WARNING
-        retmsg.color = maplevel2color(retmsg.msglevel)
-        retmsg.msg = "Try to Logout \n"+"RegState is " + regstr
-        return retmsg
-    else:
-        return None
+    def handler(self):
+        regstr = regstate[(str(self.match.group(1)).strip())]
+        self.retmsg.msglevel = Msglevel.WARNING
+        self.retmsg.color = maplevel2color(self.retmsg.msglevel)
+        self.retmsg.msg = "Try to Logout \n"+"RegState is " + regstr
+        return self.retmsg
 
-def drstatus(match, color):
-    grouplen = len(match.groups())
-    level = Msglevel.INFO
-    retmsg = eventdict()
-    if match and grouplen >=1:
-        drstate = str(match.group(1))
+
+class drstatus(eventhandler):
+    '''
+    data route pattern, one: volte/vowifi/none
+    '''
+    def handler(self):
+        drstate = str(self.match.group(1))
         drstr = "Update data router to "+drstate
-        retmsg.msglevel = Msglevel.INFO
-        retmsg.color = maplevel2color(retmsg.msglevel)
-        retmsg.msg = drstr
-        return retmsg
-    else:
-        return None
+        self.retmsg.msglevel = Msglevel.INFO
+        self.retmsg.color = maplevel2color(self.retmsg.msglevel)
+        self.retmsg.msg = drstr
+        return self.retmsg
 
-def wfcstatus(match, color):
+
+class wfcstatus(eventhandler):
     '''
-    wificalling flag
-
+    wificalling flag, one pattern
     database has changed, mIsWifiCallingEnabled = true
-
-    :param match:
-    :return:
     '''
-    grouplen = len(match.groups())
-    level = Msglevel.WARNING
-    retmsg = eventdict()
-    if match and grouplen >=1:
-        wfcdb = str(match.group(1))
+    def handler(self):
+        wfcdb = str(self.match.group(1))
         wfcstr = ""
         if wfcdb == "true":
             wfcstr = "WiFi-Calling is Enabled"
         else:
             wfcstr = "WiFi-Calling is Disabled"
 
-        retmsg.msglevel = Msglevel.WARNING
-        retmsg.color = maplevel2color(retmsg.msglevel)
-        retmsg.msg = wfcstr
-        return retmsg
-    else:
-        return None
+        self.retmsg.msglevel = Msglevel.WARNING
+        self.retmsg.color = maplevel2color(self.retmsg.msglevel)
+        self.retmsg.msg = wfcstr
+        return self.retmsg
 
-def geticon(match, color):
+class geticon(eventhandler):
     '''
     get vowifi/volte icon
-    :param match:
-    :return:
     '''
-    grouplen = len(match.groups())
-    iconstr = None
-    level = Msglevel.INFO
-    retmsg = eventdict()
-    if match and grouplen >=2:
-        ltestr = match.group(1)
-        wifistr = match.group(2)
+    def handler(self):
+        ltestr = self.match.group(1)
+        wifistr = self.match.group(2)
         if ltestr == "true":
             if wifistr == "true":
                 iconstr = "show VoWiFi and VoLTE signal icons"
@@ -173,173 +152,136 @@ def geticon(match, color):
             else:
                 iconstr = "No VoLTE/VoWiFi signal icon"
                 level = Msglevel.WARNING
-        retmsg.msg = iconstr
-        retmsg.level = level
-        retmsg.color = maplevel2color(retmsg.level)
-        return retmsg
-    else:
-        return None
+        self.retmsg.msg = iconstr
+        self.retmsg.level = level
+        self.retmsg.color = maplevel2color(self.retmsg.level)
+        return self.retmsg
 
-def imsregaddr(match, color):
+class imsregaddr(eventhandler):
     '''
-    set ims reg addr
-    :param match:
-    :return:
+    set ims reg addr, one pattern
     '''
-    grouplen = len(match.groups())
-    retmsg = eventdict()
-    if match and grouplen >= 1:
-        regaddr = match.group(1)
-        retmsg.msg = "SetIMSRegAddr:\n   " + regaddr
-        return retmsg
-    else:
-        return None
+    def handler(self):
+        regaddr = self.match.group(1)
+        self.retmsg.msg = "SetIMSRegAddr:\n   " + regaddr
+        return self.retmsg
 
-def mutestatus(match, color):
+
+class mutestatus(eventhandler):
     '''
     mute status: one pattern
     true muted; false unmute
-    :param match:
-    :return:
     '''
-    grouplen = len(match.groups())
-    retmsg = eventdict()
-    if match and grouplen >= 1:
-        muteval = str(match.group(1))
-        retmsg.msglevel = Msglevel.INFO
-        retmsg.color = maplevel2color(retmsg.msglevel)
+    def handler(self):
+        muteval = str(self.match.group(1))
+        self.retmsg.msglevel = Msglevel.INFO
+        self.sg.color = maplevel2color(self.retmsg.msglevel)
         if muteval == 'true':
-            retmsg.msg = "Muted"
+            self.retmsg.msg = "Muted"
         else:
-            retmsg.msg = "UnMuted"
+            self.retmsg.msg = "UnMuted"
 
-        return retmsg
-    else:
-        return None
+        return self.retmsg
 
-def makecallstatus(match, color):
+
+class makecallstatus(eventhandler):
     '''
     make call , one pattern , callee number
-    :param match:
-    :return:
     '''
-    grouplen = len(match.groups())
-    retmsg = eventdict()
-    if match and grouplen >= 1:
-        callee = str(match.group(1)).strip()
-        retmsg.msglevel = Msglevel.INFO
-        retmsg.color = maplevel2color(retmsg.msglevel)
-        retmsg.msg = "Make call to " + callee
-        return retmsg
-    else:
-        return None
+    def handler(self):
+        callee = str(self.match.group(1)).strip()
+        self.retmsg.msglevel = Msglevel.INFO
+        self.retmsg.color = maplevel2color(self.retmsg.msglevel)
+        self.retmsg.msg = "Make call to " + callee
+        return self.retmsg
 
-def akastatus(match, color):
+
+class akastatus(eventhandler):
     '''
     aka status
     one pattern DB means auth correctly, DC means sync failure
-
-    :param match:
-    :return:
     '''
-    grouplen = len(match.groups())
-    retmsg = eventdict()
-    if match and grouplen >= 1:
-        akatag = match.group(1)
+    def handler(self):
+        akatag = self.match.group(1)
         if akatag == "DB":
             akastr = "AKA AUTH correctly"
-            retmsg.msglevel = Msglevel.INFO
-            retmsg.color = maplevel2color(retmsg.msglevel)
-            retmsg.msg = akastr
-            return retmsg
+            self.retmsg.msglevel = Msglevel.INFO
+            self.retmsg.color = maplevel2color(self.retmsg.msglevel)
+            self.retmsg.msg = akastr
+            return self.retmsg
         elif akatag == "DC":
             akastr = "AKA AUTH SYNC Failure"
-            retmsg.msglevel = Msglevel.WARNING
-            retmsg.color = maplevel2color(retmsg.msglevel)
-            retmsg.msg = akastr
-            return retmsg
+            self.retmsg.msglevel = Msglevel.WARNING
+            self.retmsg.color = maplevel2color(self.retmsg.msglevel)
+            self.retmsg.msg = akastr
+            return self.retmsg
         else:
             return None
-    else:
-        return None
 
-def reregstatus(match, color):
+
+class reregstatus(eventhandler):
     '''
     re-register info, two pattern: access type and access info
-    :param match:
-    :return:
     '''
-    grouplen = len(match.groups())
-    retmsg = eventdict()
-    if match and grouplen >= 2:
-        acctype = accnettype[str(match.group(1).strip())]
-        accinfo = match.group(2)
-        retmsg.msglevel = Msglevel.WARNING
-        retmsg.color = maplevel2color(retmsg.msglevel)
+    def handler(self):
+        acctype = accnettype[str(self.match.group(1).strip())]
+        accinfo = self.match.group(2)
+        self.retmsg.msglevel = Msglevel.WARNING
+        self.retmsg.color = maplevel2color(self.retmsg.msglevel)
         acctypestr = "Access Type:" + acctype + '\n'
         accinfostr =  "Access Info:" + accinfo + '\n'
-        retmsg.msg = "Re-Register\n" + acctypestr + accinfostr
-        return retmsg
-    else:
-        return None
+        self.retmsg.msg = "Re-Register\n" + acctypestr + accinfostr
+        return self.retmsg
 
-def regstatus(match, color):
+
+class regstatus(eventhandler):
     '''
     Get the register state changed callback: {\"event_code\":.*,\"event_name\":\"(.*)\",\"state_code\":(.*)}"
     event name , state code
-    :param match:
-    :return:
     '''
-    grouplen = len(match.groups())
-    retmsg = eventdict()
-    if match and grouplen >= 2:
-        eventname = match.group(1)
-        statecode = int(match.group(2))
+    def handler(self):
+        eventname = self.match.group(1)
+        statecode = int(self.match.group(2))
         regbase = int(MTC_CLI_REG_BASE)
         #only return when statecode >= 0xE100 or -1
         if statecode > regbase:
-            retmsg.level = Msglevel.ERROR
-            retmsg.color = maplevel2color(retmsg.level)
+            self.retmsg.level = Msglevel.ERROR
+            self.retmsg.color = maplevel2color(self.retmsg.level)
             eventstr = "Register event: " + eventname + '\n'
             statestr = "state: " + regerrcode[str(statecode)]
-            retmsg.msg = eventstr + statestr
-            return retmsg
+            self.retmsg.msg = eventstr + statestr
+            return self.retmsg
         elif statecode == -1:
             #in service's log, -1 is default value , which means good~
-            retmsg.level = Msglevel.WARNING
-            retmsg.color = maplevel2color(retmsg.level)
+            self.retmsg.level = Msglevel.WARNING
+            self.retmsg.color = maplevel2color(self.retmsg.level)
             eventstr = "Register event: " + eventname + '\n'
-            retmsg.msg = eventstr
-            return retmsg
+            self.retmsg.msg = eventstr
+            return self.retmsg
         else:
             return None
-    else:
-        return None
 
-def s2bstatus(match, color):
+
+class s2bstatus(eventhandler):
     '''
     s2b status check
     three kinds:
     {"security_json_action":"security_json_action_s2b_failed","security_json_param_error_code":53760}
     {"security_json_action":"security_json_action_s2b_stopped","security_json_param_error_code":53959,"security_json_param_handover":true}
     {"security_json_action":"security_json_action_s2b_successed","security_json_param_local_ip4":"192.168.1.11","security_json_param_local_ip6":"2001:0:0:2::1","security_json_param_pcscf_ip4":"192.168.1.12;","security_json_param_pcscf_ip6":"2001:0:0:2::2;","security_json_param_dns_ip4":"0.0.0.0","security_json_param_pref_ip4":false}
-    :param match:
-    :return:
     '''
-    grouplen = len(match.groups())
-    retmsg = eventdict()
-    if match and grouplen >= 1:
+    def handler(self):
         #input str is ALWAYS json string.
-        s2bstr = match.group(1).strip()
+        s2bstr = self.match.group(1).strip()
         s2bjson = json.loads(s2bstr)
         action = s2bjson['security_json_action']
         if action == 'security_json_action_s2b_failed':
             errorcode = s2bjson['security_json_param_error_code']
             statestr = "epdg attach failed\n"
             errorstr = "   stateCode: " + s2berrcode[str(errorcode)]
-            retmsg.level = Msglevel.ERROR
-            retmsg.color = maplevel2color(retmsg.level)
-            retmsg.msg = statestr + errorstr
+            self.retmsg.level = Msglevel.ERROR
+            self.retmsg.color = maplevel2color(self.retmsg.level)
+            self.retmsg.msg = statestr + errorstr
         elif action == "security_json_action_s2b_stopped":
             errorcode = s2bjson['security_json_param_error_code']
             ishandover = s2bjson['security_json_param_handover']
@@ -347,9 +289,9 @@ def s2bstatus(match, color):
             #add three spaces for alignment, not working...Orz...
             hostr = " ishandover: " + str(ishandover) + '\n'
             errorstr = " StateCode: " + s2berrcode[str(errorcode)]
-            retmsg.level = Msglevel.WARNING
-            retmsg.color = maplevel2color(retmsg.level)
-            retmsg.msg = statestr + hostr + errorstr
+            self.retmsg.level = Msglevel.WARNING
+            self.retmsg.color = maplevel2color(self.retmsg.level)
+            self.retmsg.msg = statestr + hostr + errorstr
         elif action == "security_json_action_s2b_successed":
             statestr = "epdg attach successfully\n"
             ipv4str = ipv6str = pcscfv4str = pcscfv6str = dnsv4 = dnsv6 = ''
@@ -365,16 +307,14 @@ def s2bstatus(match, color):
                 dnsv4str = "   DNS IPv4: " + s2bjson['security_json_param_dns_ip4'] + '\n'
             if 'security_json_param_dns_ip6' in s2bjson:
                 dnsv4str = "   DNS IPv6: " + s2bjson['security_json_param_dns_ip6'] + '\n'
-            retmsg.level = Msglevel.WARNING
-            retmsg.color = maplevel2color(retmsg.level)
-            retmsg.msg = statestr + ipv4str + ipv6str + pcscfv4str + pcscfv6str + dnsv4 + dnsv6
+            self.retmsg.level = Msglevel.WARNING
+            self.retmsg.color = maplevel2color(self.retmsg.level)
+            self.retmsg.msg = statestr + ipv4str + ipv6str + pcscfv4str + pcscfv6str + dnsv4 + dnsv6
         else:
             return None
 
-        return retmsg
+        return self.retmsg
 
-    else:
-        return None
 
 if __name__ == '__main__':
     key = 'abc'
@@ -382,4 +322,7 @@ if __name__ == '__main__':
     pattern = re.compile(key)
     match = pattern.search(line)
     color = "black"
+
     print matchone(match, color)
+    demohandler =  demoinherit(match, "black", 1)
+    print demohandler.getret()

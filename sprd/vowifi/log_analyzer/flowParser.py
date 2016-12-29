@@ -457,6 +457,7 @@ class flowParser():
             eventType = event['eventType']
             eventHandler = event['eventHandler']
             defaultcolor = event['color']
+            groupnum = event['groupnum']
             #still coupled logic here.
             pattern = re.compile(key)
             match = pattern.search(line)
@@ -469,7 +470,8 @@ class flowParser():
                 eventmsg['timestamp'] = timestamp
                 eventmsg['msg'] = line.strip(' \t')
                 eventdict = dict()
-                eventdict = eventHandler(match, defaultcolor)
+                handlerobj =  eventHandler(match, defaultcolor, groupnum)
+                eventdict = handlerobj.getret()
                 if eventdict:
 
                     eventmsg['event'] = eventdict.msg
