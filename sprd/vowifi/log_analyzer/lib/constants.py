@@ -476,8 +476,7 @@ imscmEvent.addEvent('(close airplane mode)', module_ImsCM,eventType = eventType.
 ##wifi disconnected
 imscmEvent.addEvent('(wifi is disconnected)', module_ImsCM, eventType = eventType.EDGE)
 ##wifi calling
-imscmEvent.addEvent('(database has changed, mIsWifiCallingEnabled.*)', module_ImsCM)
-
+imscmEvent.addEvent('database has changed, mIsWifiCallingEnabled = (.*)', module_ImsCM, eventType = eventType.EDGE, eventHandler=wfcstatus)
 
 
 ##no rtp
@@ -551,6 +550,10 @@ phoneEvent.addEvent("setIMSRegAddress addr = (.*)", module_Phone, eventType=even
 
 #Adapter Part
 ##VoWifiSecurityManager
+
+###update data router
+##update datarouter
+phoneEvent.addEvent('VoWifiCallManager: Update the call state to data router. state: (.*)', module_Phone, eventType = eventType.EDGE, eventHandler=drstatus)
 ###s2b start
 phoneEvent.addEvent("(Start the s2b attach.)",module_Phone)
 ###deattach
@@ -575,8 +578,8 @@ phoneEvent.addEvent("(Try to login to the ims, current register state: .*)", mod
 phoneEvent.addEvent("(Login with the local ip: .*)", module_Phone)
 ###logout
 phoneEvent.addEvent("(Try to logout from the ims, current register state:.*)", module_Phone)
-###Re-register
-phoneEvent.addEvent("(Re-register, with the type:.*)", module_Phone)
+###Re-register, do this in service
+#phoneEvent.addEvent("(Re-register, with the type:.*)", module_Phone)
 ###force stop
 phoneEvent.addEvent("(Stop current register process. registerState:.*)", module_Phone)
 
@@ -654,10 +657,18 @@ phoneEvent.addEvent("(Set the pause image to.*)", module_Phone)
 ###invite conf call
 phoneEvent.addEvent("(Try to invite this call.*to the conference call.*)", module_Phone)
 #0 VOLTE; 1 VOWIFI; 2 END Call,  value can be string/number
-phoneEvent.addEvent("(Update the call state to data router. state: .*)", module_Phone)
+#need to do here
+#phoneEvent.addEvent("(Update the call state to data router. state: .*)", module_Phone)
 #------------------------------------------------------------------------------------
 #Service part
 ##RegisterService
+
+#aka response
+serviceEvent.addEvent("Get the challenge response: TAG = (.*),.*", module_Service, eventType=eventType.EDGE, eventHandler=akastatus)
+
+#re-register
+serviceEvent.addEvent("Try to start the re-register process with the type: (.*), info: (.*)", module_Service, eventType=eventType.EDGE, eventHandler=reregstatus)
+
 #"Try to reset the sip stack."
 serviceEvent.addEvent("(Try to reset the sip stack.)", module_Service)
 

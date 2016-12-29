@@ -98,6 +98,25 @@ class utils():
                     shutil.rmtree(outputdir)
                 mainmatches.append(onematch)
 
+        #dirty hacks , what if ylog is disabled....
+        if mainmatches is None:
+            self.mlogpattern = self.config['files']['log']
+            for root, dirnames, filenames in os.walk(dirname):
+            #print root
+            #print dirnames
+            #print filenames
+
+                for filename in fnmatch.filter(filenames, self.mlogpattern):
+                    onematch = dict()
+                    onematch['log'] = os.path.realpath(os.path.join(root, filename))
+                    onematch['dir'] = root
+                    #delete the dir tree existing
+                    outputdir = root + '/' + filename.split('.')[0]
+                    if os.path.isdir(outputdir):
+                        shutil.rmtree(outputdir)
+                    mainmatches.append(onematch)
+
+
         '''
         radiomatches = list()
         for root, dirnames, filenames in os.walk(dirname):

@@ -49,3 +49,11 @@ s2berrcode[str(int(MTC_S2B_BASE+15))] = "IKE dpd error"
 s2berrcode[str(int(MTC_S2B_BASE+198))] = "IKE interrupt stop"
 s2berrcode[str(int(MTC_S2B_BASE+199))] = "IKE handover stop"
 s2berrcode[str(int(MTC_S2B_BASE+200))] = "IKE other error"
+
+#some definition in EN_MTC_ACC_NET_TYPE
+accnettype = dict()
+EN_MTC_ACC_NET_IEEE_802_11 = 1
+EN_MTC_ACC_NET_3GPP_E_UTRAN_FDD = 9
+accnettype[str(EN_MTC_ACC_NET_IEEE_802_11)] = "IEEE-802.11"
+accnettype[str(EN_MTC_ACC_NET_3GPP_E_UTRAN_FDD)] = "3GPP-E-UTRAN-FDD"
+

@@ -468,6 +468,7 @@ class flowParser():
                 eventdict = dict()
                 eventdict = eventHandler(match)
                 if eventdict:
+
                     eventmsg['event'] = eventdict.msg
                     eventmsg['color'] = eventdict.color
                     eventmsg['msglevel'] = eventdict.msglevel
@@ -1082,11 +1083,12 @@ class flowParser():
 
     def assembleEventStr(self, event):
         #quite simple
+        frommodule = event['modulename']
         timestamp = event['timestamp']
         labelstring = event['event']
         lineno = event['lineno']
         eventtype = event['eventtype']
-        frommodule = event['modulename']
+
         color = event['color']
         #for event , three kind of msgs:
         #SEPERATOR, SELFREF, EDGE, default is SEPERATOR
@@ -1095,8 +1097,8 @@ class flowParser():
             #sample
             #ImsCM -> UE [label = "ImsCM : Switch to Vowifi", note = " log lineno: 17369
             #Time: 12-26 13:18:50.966"];
-
-            onestr = frommodule + " -> UE [label = \"" + labelstring + "\", "
+            modulelabel = frommodule + ':\n' + labelstring
+            onestr = "AP -> UE [label = \"" + modulelabel + "\", "
             colorstr = "color = " + color + ','
             notestr = "note = \""
             lineno = " log lineno: " + str(lineno) + '\n'
@@ -1816,7 +1818,7 @@ class flowParser():
 
 
         #make sure the element order
-        elementstr = 'ImsCM;Phone;UE;CP;NETWORK;'
+        elementstr = 'AP;UE;CP;NETWORK;'
         fixelementlist = ["ImsCM", "Phone", "UE", "CP", "NETWORK"]
         #elementstr = ''
         for index, element in enumerate(self.elements):

@@ -42,6 +42,47 @@ def matchone(match):
     else:
         return None
 
+def drstatus(match):
+    grouplen = len(match.groups())
+    level = Msglevel.INFO
+    retmsg = eventdict()
+    if match and grouplen >=1:
+        drstate = str(match.group(1))
+        drstr = "Update data router to "+drstate
+        retmsg.msglevel = Msglevel.INFO
+        retmsg.color = maplevel2color(retmsg.msglevel)
+        retmsg.msg = drstr
+        return retmsg
+    else:
+        return None
+
+def wfcstatus(match):
+    '''
+    wificalling flag
+
+    database has changed, mIsWifiCallingEnabled = true
+
+    :param match:
+    :return:
+    '''
+    grouplen = len(match.groups())
+    level = Msglevel.WARNING
+    retmsg = eventdict()
+    if match and grouplen >=1:
+        wfcdb = str(match.group(1))
+        wfcstr = ""
+        if wfcdb == "true":
+            wfcstr = "WiFi-Calling is Enabled"
+        else:
+            wfcstr = "WiFi-Calling is Disabled"
+
+        retmsg.msglevel = Msglevel.WARNING
+        retmsg.color = maplevel2color(retmsg.msglevel)
+        retmsg.msg = wfcstr
+        return retmsg
+    else:
+        return None
+
 def geticon(match):
     '''
     get vowifi/volte icon
@@ -88,6 +129,55 @@ def imsregaddr(match):
     if match and grouplen >= 1:
         regaddr = match.group(1)
         retmsg.msg = "SetIMSRegAddr:\n   " + regaddr
+        return retmsg
+    else:
+        return None
+
+def akastatus(match):
+    '''
+    aka status
+    one pattern DB means auth correctly, DC means sync failure
+
+    :param match:
+    :return:
+    '''
+    grouplen = len(match.groups())
+    retmsg = eventdict()
+    if match and grouplen >= 1:
+        akatag = match.group(1)
+        if akatag == "DB":
+            akastr = "AKA AUTH correctly"
+            retmsg.msglevel = Msglevel.INFO
+            retmsg.color = maplevel2color(retmsg.msglevel)
+            retmsg.msg = akastr
+            return retmsg
+        elif akatag == "DC":
+            akastr = "AKA AUTH SYNC Failure"
+            retmsg.msglevel = Msglevel.WARNING
+            retmsg.color = maplevel2color(retmsg.msglevel)
+            retmsg.msg = akastr
+            return retmsg
+        else:
+            return None
+    else:
+        return None
+
+def reregstatus(match):
+    '''
+    re-register info, two pattern: access type and access info
+    :param match:
+    :return:
+    '''
+    grouplen = len(match.groups())
+    retmsg = eventdict()
+    if match and grouplen >= 2:
+        acctype = accnettype[str(match.group(1))]
+        accinfo = match.group(2)
+        retmsg.msglevel = Msglevel.WARNING
+        retmsg.color = maplevel2color(retmsg.msglevel)
+        acctypestr = "Access Type:" + acctype + '\n'
+        accinfostr =  "Access Info:" + accinfo + '\n'
+        retmsg.msg = "Re-Register\n" + acctypestr + accinfostr
         return retmsg
     else:
         return None
