@@ -493,7 +493,8 @@ class flowParser():
         #first of all we get the whole important logs
         lpdaps = logParser(logname=self.log, filterlevel='low', outputdir=self.resultdir)
         self.pidpair =  lpdaps.pidpair
-        self.keylogdaps= lpdaps.getflow(has_ps=False)
+        #keylogdpas is meaningless.
+        lpdaps.getflow(has_ps=False)
 
 
         # lpall = logParser(logname=self.log, filterlevel='high', outputdir=self.resultdir)
@@ -518,9 +519,11 @@ class flowParser():
             for lineno, line in enumerate(logfile):
                 line = line.strip(' \t')
                 self.getRegType(line)
-                if sprdPattern.search(line):
-                    with open(self.lemonlog, 'a+') as llog:
-                        llog.write(line)
+
+                if self.switch['searchsip'] == "enabled":
+                    if sprdPattern.search(line):
+                        with open(self.lemonlog, 'a+') as llog:
+                            llog.write(line)
 
                 #FIXME: there may be race condition
                 #the data print can be different.
@@ -1102,7 +1105,7 @@ class flowParser():
             #sample
             #ImsCM -> UE [label = "ImsCM : Switch to Vowifi", note = " log lineno: 17369
             #Time: 12-26 13:18:50.966"];
-            modulelabel = frommodule + ':\n' + labelstring
+            modulelabel = "Module: " + frommodule + ':\n' + labelstring
             onestr = "AP -> UE [label = \"" + modulelabel + "\", "
             colorstr = "color = " + color + ','
             notestr = "note = \""

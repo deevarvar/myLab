@@ -62,6 +62,8 @@ class logParser():
 
             self.process = filterinfo['juphoon'] + filterinfo['android']
 
+            self.switch = dict()
+            self.switch['trimlog'] = config['switch']['trimlog']
 
             #pid array, it will be used to grep pid logs
             self.pids = list()
@@ -273,6 +275,13 @@ class logParser():
             self.getpid()
         else:
             self.getPidsByTagsAndWords()
+
+        #add global flag here to disable log trimming.
+        if self.switch['trimlog'] == "disabled":
+            self.logger.logger.info('trimlog flag is ' + self.switch['trimlog'])
+            return
+
+
         if self.log:
             #get main log's date, 0-main-04-17-23-20-45.log
             matchindex = 0
@@ -328,7 +337,8 @@ class logParser():
                 #self.genflowdiag()
                 #self.drawDiag()
         self.logger.logger.info("total " + str(matchindex) + " lines.")
-        return self.log
+        #no need to return
+        #return self.log
 
 
     def gettags(self):

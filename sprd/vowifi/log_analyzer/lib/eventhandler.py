@@ -64,14 +64,178 @@ class matchone(eventhandler):
         self.retmsg.msg = self.match.group(1)
         return self.retmsg
 
+class oneclickconf(eventhandler):
+    '''
+    the one click conf participants, one pattern
+    '''
+    def handler(self):
+        partner = str(self.match.group(1)).strip()
+        self.retmsg.msg = "Start Conf with " + partner
+        return self.retmsg
+
+class acceptcall(eventhandler):
+    '''
+    accept call , one pattern, calltype
+    '''
+    def handler(self):
+        calltype = Constantcalltype[str(self.match.group(1).strip())]
+        self.retmsg.msglevel = Msglevel.WARNING
+        self.retmsg.color = maplevel2color(self.retmsg.msglevel)
+        self.retmsg.msg = "Accept As " + calltype
+        return self.retmsg
+
+class rejectcall(eventhandler):
+    '''
+    reject call,
+    '''
+    def handler(self):
+        rejectreason = Constantimsreason[str(self.match.group(1).strip())]
+        self.retmsg.msg = "Reject As :" + rejectreason
+        return self.retmsg
+
+
 class startcall(eventhandler):
     '''
     imsservice start call : one pattern
     VoWiFiCall/VoLTECall
     '''
     def handler(self):
-        calltype = self.match.group(1)
-        self.retmsg.msg = "start " + calltype
+        callbearer = self.match.group(1)
+        self.retmsg.msg = "start " + callbearer
+        return self.retmsg
+
+
+
+class servicecallback(eventhandler):
+    '''
+    complex handler to parse #####Vowifiserservice.java######
+    the pattern is only one, the callback json
+    sample:
+    Notify the event: {"event_code":104,"event_name":"call_talking","id":2,"phone_num":"+917011821207","is_video":false}
+    Notify the event: {"event_code":105,"event_name":"call_terminate","id":3,"state_code":335}
+    Notify the event: {"event_code":110,"event_name":"call_hold_received","id":2}
+    Notify the event: {"event_code":302,"event_name":"remote_video_resize","video_width":240,"video_height":320}
+    Notify the event:  {"event_code":103,"event_name":"call_alerted","alert_type":57899,"id":3,"phone_num":"+917011821207","is_video":true}
+    Notify the event: {"event_code":118,"event_name":"call_rtp_received","id":1,"rtp_received":true,"is_video":false}
+    Notify the event: {"event_code":209,"event_name":"conf_part_update","id":23,"phone_num":"+917011821118","sip_uri":"sip:+917011821118@ims.mnc872.mcc405.3gppnetwork.org","conf_part_new_status":"disconnected"}
+    '''
+    def handler(self):
+        servicestr = self.match.group(1).strip()
+        servicejson = json.loads(servicestr)
+        #event_name is must
+        #enumerate the key in Constants.java
+        eventstr = termreason = callidstr = alertstr = isvideostr = phonenumstr = sipuristr = ''
+        videohight = videowidth = videoorient = rtprecv = confpartstatus = ''
+        msgstr = ''
+        #there will event skipped, which means other key will have better phrase
+        skipevent = list()
+        skipevent.append('call_terminate')
+        skipevent.append('call_rtp_received')
+
+        #event to be ignored, like rtcp changed
+        ignoreevent = list()
+        ignoreevent.append('call_rtcp_changed')
+        ignoreevent.append('conf_rtcp_changed')
+
+        #event should be colored blue
+        infoevent = list()
+        infoevent.append("call_incoming")
+        infoevent.append("call_talking")
+        infoevent.append("call_terminate") #actually it is skipped
+        infoevent.append("call_hold_ok")
+        infoevent.append("call_resume_ok")
+        infoevent.append("call_hold_received")
+        infoevent.append("call_resume_received")
+        infoevent.append("call_add_video_ok")
+        infoevent.append("call_remove_video_ok")
+        infoevent.append("call_add_video_request")
+        infoevent.append("call_add_video_cancel")
+        infoevent.append("call_rtp_received") #actually it is skipped
+        infoevent.append("call_is_focus")
+        infoevent.append("conf_connected")
+        infoevent.append("conf_disconnected")
+        infoevent.append("conf_invite_accept")
+        infoevent.append("conf_kick_accept")
+        infoevent.append("conf_part_update")
+        infoevent.append("conf_hold_ok")
+        infoevent.append("conf_resume_ok")
+        infoevent.append("conf_hold_received")
+        infoevent.append("conf_resume_received")
+
+        #event should be colored red
+        errevent = list()
+        errevent.append("call_hold_failed")
+        errevent.append("call_resume_failed")
+        errevent.append("call_add_video_failed")
+        errevent.append("call_remove_video_failed")
+        errevent.append("conf_invite_failed")
+        errevent.append("conf_kick_failed")
+        errevent.append("conf_hold_failed")
+        errevent.append("conf_resume_failed")
+
+        if 'event_name' in servicejson:
+            curevent = str(servicejson['event_name']).strip()
+            #rtcp changed is too verbose , so ignore it.
+            if curevent in ignoreevent:
+                return None
+
+            if curevent not in skipevent:
+                #some event should be highlighted
+                #just change the color here, phrase is not converted.
+                if curevent in infoevent:
+                    self.retmsg.msglevel = Msglevel.WARNING
+                    self.retmsg.color = maplevel2color(self.retmsg.msglevel)
+                elif curevent in errevent:
+                    self.retmsg.msglevel = Msglevel.ERROR
+                    self.retmsg.color = maplevel2color(self.retmsg.msglevel)
+
+                eventstr = 'Event: ' + curevent + '\n'
+            if servicejson['event_name'] == "call_terminate":
+                if 'state_code' in servicejson:
+                    termreason = 'Term Call: ' + Constantimsreason[str(servicejson['state_code'])] + '\n'
+                    self.retmsg.msglevel = Msglevel.WARNING
+                    self.retmsg.color = maplevel2color(self.retmsg.msglevel)
+
+            if servicejson['event_name'] == "call_rtp_received":
+                if 'rtp_received' in servicejson:
+                    #python will convert true to True, false to False
+                    rtpstate = str(servicejson['rtp_received']).lower()
+                    if rtpstate == 'true':
+                        rtprecv = "RTP received\n"
+                    else:
+                        #show error msg.
+                        self.retmsg.msglevel = Msglevel.ERROR
+                        self.retmsg.color = maplevel2color(self.retmsg.msglevel)
+                        rtprecv = "No RTP received\n"
+
+
+        if 'id' in servicejson:
+            callidstr = "Callid: " + str(servicejson['id']) + '\n'
+        if 'alert_type' in servicejson:
+            alertstr = "User Alert: " + Constantcallcode[str(servicejson['alert_type'])] + '\n'
+        if 'is_video' in servicejson:
+            if str(servicejson['is_video']).lower() == "false":
+                isvideostr = "calltype: Voice Call\n"
+            else:
+                isvideostr = "calltype: Video Call\n"
+        if 'phone_num' in servicejson:
+            phonenumstr = "PhoneNum :" + servicejson['phone_num'] + '\n'
+        if 'sip_uri' in servicejson:
+            #seems not useful, so comment here
+            #sipuristr = "SIP URI :" + servicejson['sip_uri'] + '\n'
+            sipuristr = ''
+        if 'video_height' in servicejson:
+            videohight = "Video Height :" + str(servicejson['video_height']) + '\n'
+        if 'video_width' in servicejson:
+            videowidth = "Video Width :" + str(servicejson['video_width']) + '\n'
+        if 'video_orientation' in servicejson:
+            #seems dead code ... Orz~
+            pass
+        if 'conf_part_new_status' in servicejson:
+            confpartstatus = "Conf Part State: " + str(servicejson['conf_part_new_status'])
+        #assemble the str
+        self.retmsg.msg = eventstr + rtprecv + termreason + callidstr + alertstr + isvideostr + phonenumstr + sipuristr + \
+                     videohight + videowidth + videoorient + confpartstatus
         return self.retmsg
 
 class loginstatus(eventhandler):
@@ -83,21 +247,20 @@ class loginstatus(eventhandler):
         pcscfip = self.match.group(2).strip()
         ipstr = "IP: " + ip + '\n'
         pcscfipstr = "P-CSCF: " + pcscfip + '\n'
-        self.retmsg.msg = 'Call Login \n' + ipstr + pcscfipstr
+        self.retmsg.msg = 'Login \n' + ipstr + pcscfipstr
         return self.retmsg
 
 
 class logoutstatus(eventhandler):
     '''
-    logout pattern: regstate
+    logout pattern: Constantregstate
     '''
     def handler(self):
-        regstr = regstate[(str(self.match.group(1)).strip())]
+        regstr = Constantregstate[(str(self.match.group(1)).strip())]
         self.retmsg.msglevel = Msglevel.WARNING
         self.retmsg.color = maplevel2color(self.retmsg.msglevel)
         self.retmsg.msg = "Try to Logout \n"+"RegState is " + regstr
         return self.retmsg
-
 
 class drstatus(eventhandler):
     '''
@@ -174,7 +337,7 @@ class mutestatus(eventhandler):
     '''
     def handler(self):
         muteval = str(self.match.group(1))
-        self.retmsg.msglevel = Msglevel.INFO
+        self.retmsg.msglevel = Msglevel.WARNING
         self.sg.color = maplevel2color(self.retmsg.msglevel)
         if muteval == 'true':
             self.retmsg.msg = "Muted"
@@ -190,7 +353,7 @@ class makecallstatus(eventhandler):
     '''
     def handler(self):
         callee = str(self.match.group(1)).strip()
-        self.retmsg.msglevel = Msglevel.INFO
+        self.retmsg.msglevel = Msglevel.WARNING
         self.retmsg.color = maplevel2color(self.retmsg.msglevel)
         self.retmsg.msg = "Make call to " + callee
         return self.retmsg
@@ -211,7 +374,7 @@ class akastatus(eventhandler):
             return self.retmsg
         elif akatag == "DC":
             akastr = "AKA AUTH SYNC Failure"
-            self.retmsg.msglevel = Msglevel.WARNING
+            self.retmsg.msglevel = Msglevel.ERROR
             self.retmsg.color = maplevel2color(self.retmsg.msglevel)
             self.retmsg.msg = akastr
             return self.retmsg
@@ -224,13 +387,13 @@ class reregstatus(eventhandler):
     re-register info, two pattern: access type and access info
     '''
     def handler(self):
-        acctype = accnettype[str(self.match.group(1).strip())]
+        acctype = Constantaccnettype[str(self.match.group(1).strip())]
         accinfo = self.match.group(2)
         self.retmsg.msglevel = Msglevel.WARNING
         self.retmsg.color = maplevel2color(self.retmsg.msglevel)
         acctypestr = "Access Type:" + acctype + '\n'
         accinfostr =  "Access Info:" + accinfo + '\n'
-        self.retmsg.msg = "Re-Register\n" + acctypestr + accinfostr
+        self.retmsg.msg = "start to Re-Register\n" + acctypestr + accinfostr
         return self.retmsg
 
 
@@ -248,7 +411,7 @@ class regstatus(eventhandler):
             self.retmsg.level = Msglevel.ERROR
             self.retmsg.color = maplevel2color(self.retmsg.level)
             eventstr = "Register event: " + eventname + '\n'
-            statestr = "state: " + regerrcode[str(statecode)]
+            statestr = "state: " + Constantregerrcode[str(statecode)]
             self.retmsg.msg = eventstr + statestr
             return self.retmsg
         elif statecode == -1:
@@ -278,7 +441,7 @@ class s2bstatus(eventhandler):
         if action == 'security_json_action_s2b_failed':
             errorcode = s2bjson['security_json_param_error_code']
             statestr = "epdg attach failed\n"
-            errorstr = "   stateCode: " + s2berrcode[str(errorcode)]
+            errorstr = "   stateCode: " + Constants2berrcode[str(errorcode)]
             self.retmsg.level = Msglevel.ERROR
             self.retmsg.color = maplevel2color(self.retmsg.level)
             self.retmsg.msg = statestr + errorstr
@@ -288,7 +451,7 @@ class s2bstatus(eventhandler):
             statestr = "epdg attach stopped\n"
             #add three spaces for alignment, not working...Orz...
             hostr = " ishandover: " + str(ishandover) + '\n'
-            errorstr = " StateCode: " + s2berrcode[str(errorcode)]
+            errorstr = " StateCode: " + Constants2berrcode[str(errorcode)]
             self.retmsg.level = Msglevel.WARNING
             self.retmsg.color = maplevel2color(self.retmsg.level)
             self.retmsg.msg = statestr + hostr + errorstr

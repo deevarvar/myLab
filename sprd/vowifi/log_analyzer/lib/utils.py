@@ -96,11 +96,14 @@ class utils():
                 outputdir = root + '/' + filename.split('.')[0]
                 if os.path.isdir(outputdir):
                     shutil.rmtree(outputdir)
+
                 mainmatches.append(onematch)
 
         #dirty hacks , what if ylog is disabled....
-        if mainmatches is None:
+        if len(mainmatches) == 0:
+            print 'enter'
             self.mlogpattern = self.config['files']['log']
+            self.rlogpattern = self.config['files']['radiolog']
             for root, dirnames, filenames in os.walk(dirname):
             #print root
             #print dirnames

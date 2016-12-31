@@ -599,20 +599,28 @@ phoneEvent.addEvent("Get the register state changed callback: {\"event_code\":.*
 phoneEvent.addEvent("Mutes\((.*)\)the mic for the active call", module_Phone, eventType=eventType.EDGE, eventHandler=mutestatus)
 ###start call, #important key words
 phoneEvent.addEvent("Initiates an ims call with (.*)", module_Phone, eventType=eventType.EDGE, eventHandler=makecallstatus)
-###start conf call
-phoneEvent.addEvent("(Initiates an ims conference call with.*)", module_Phone)
+###one clikc start conf call
+phoneEvent.addEvent("Initiates an ims conference call with participants: (.*)", module_Phone, eventType=eventType.EDGE, eventHandler=oneclickconf)
 ###accept
-phoneEvent.addEvent("(Accept an incoming call with call type is.*)", module_Phone)
+phoneEvent.addEvent("Accept an incoming call with call type is (.*)", module_Phone, eventType=eventType.EDGE, eventHandler=acceptcall)
+
 ###reject
-phoneEvent.addEvent("(Reject an incoming call as the reason is.*)", module_Phone)
+phoneEvent.addEvent("Reject an incoming call as the reason is (.*)", module_Phone, eventType=eventType.EDGE, eventHandler=rejectcall)
+
+
+#TBD:
+###merge
+phoneEvent.addEvent("(Merge the active & hold call)", module_Phone)
+
+
+
 ###terminate
 phoneEvent.addEvent("(Terminate a call as the reason is.*)", module_Phone)
 ###hold
 phoneEvent.addEvent("(Hold a call with the media profile:.*)", module_Phone)
 ###resume
 phoneEvent.addEvent("(Continues a call with the media profile.*)", module_Phone)
-###merge
-phoneEvent.addEvent("(Merge the active & hold call)", module_Phone)
+
 ###update
 phoneEvent.addEvent("(Update the current call's type to .*)", module_Phone)
 ###invite conf participants
@@ -660,6 +668,10 @@ phoneEvent.addEvent("(Try to rotate remote render for the call:.*)", module_Phon
 phoneEvent.addEvent("(Set the pause image to.*)", module_Phone)
 ###invite conf call
 phoneEvent.addEvent("(Try to invite this call.*to the conference call.*)", module_Phone)
+
+###create conf call
+#TODO: Try to create the conference call
+
 #0 VOLTE; 1 VOWIFI; 2 END Call,  value can be string/number
 #need to do here
 #phoneEvent.addEvent("(Update the call state to data router. state: .*)", module_Phone)
@@ -676,8 +688,9 @@ serviceEvent.addEvent("Try to start the re-register process with the type: (.*),
 #"Try to reset the sip stack."
 serviceEvent.addEvent("(Try to reset the sip stack)", module_Service, eventType=eventType.EDGE, color="blue")
 
-#comment here
-#serviceEvent.addEvent("(Notify the event:.*)", module_Service)
+#important callback event
+#call_rtcp_changed should be ignored.
+serviceEvent.addEvent("Notify the event: (.*)", module_Service, eventType=eventType.EDGE, eventHandler=servicecallback)
 
 #reg status code comes here
 #only care about the adapter's log

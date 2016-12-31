@@ -143,7 +143,11 @@ class loggergui():
                     helper = utils(configpath='./')
                     self.logger.logger.info('folder is ' + folder)
                     matches = helper.findlogs(folder)
-
+                    '''
+                    print matches
+                    import time
+                    time.sleep(50)
+                    '''
                     for index, filedict in enumerate(matches):
                         #call the real parser
 
