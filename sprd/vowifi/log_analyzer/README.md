@@ -8,6 +8,7 @@ This repo is about vowifi log analyzer
 * pip install pyinstaller
 * pyinstaller loggergui.py
 * copy **config.ini** and  **seqdiag.ext** into the direcory **dist\loggergui**
+* copy **font** dir to **dist\loggergui**
 
 ##any questions
 Please contact with [zhihua.ye](zhihua.ye@spreadtrum.com)

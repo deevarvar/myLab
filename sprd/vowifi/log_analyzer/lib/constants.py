@@ -595,79 +595,110 @@ phoneEvent.addEvent("Get the register state changed callback: {\"event_code\":.*
 #phoneEvent.addEvent("(Handle the event.*for the call.*)", module_Phone)
 
 
-###mute
+###mute success
 phoneEvent.addEvent("Mutes\((.*)\)the mic for the active call", module_Phone, eventType=eventType.EDGE, eventHandler=mutestatus)
+###mute failed
+phoneEvent.addEvent("(Native set mute failed)", module_Phone, eventType=eventType.EDGE, eventHandler=defaultfailed)
+
 ###start call, #important key words
 phoneEvent.addEvent("Initiates an ims call with (.*)", module_Phone, eventType=eventType.EDGE, eventHandler=makecallstatus)
-###one clikc start conf call
+###start failed
+phoneEvent.addEvent("(Native start the call failed)", module_Phone, eventType=eventType.EDGE, eventHandler=defaultfailed)
+
+###one click start conf call
 phoneEvent.addEvent("Initiates an ims conference call with participants: (.*)", module_Phone, eventType=eventType.EDGE, eventHandler=oneclickconf)
+###one click start failed
+phoneEvent.addEvent("(Start the conference failed)", module_Phone, eventType=eventType.EDGE, eventHandler=defaultfailed)
+
 ###accept
 phoneEvent.addEvent("Accept an incoming call with call type is (.*)", module_Phone, eventType=eventType.EDGE, eventHandler=acceptcall)
+### lemon async send answer msg, so always right.
+#phoneEvent.addEvent("(Native accept the incoming call failed)", module_Phone, eventType=eventType.EDGE, eventHandler=defaultfailed)
 
 ###reject
 phoneEvent.addEvent("Reject an incoming call as the reason is (.*)", module_Phone, eventType=eventType.EDGE, eventHandler=rejectcall)
-
-
-#TBD:
-###merge
-phoneEvent.addEvent("(Merge the active & hold call)", module_Phone)
-
-
+#phoneEvent.addEvent("(Native reject the incoming call failed)", module_Phone, eventType=eventType.EDGE, eventHandler=defaultfailed)
 
 ###terminate
-phoneEvent.addEvent("(Terminate a call as the reason is.*)", module_Phone)
-###hold
-phoneEvent.addEvent("(Hold a call with the media profile:.*)", module_Phone)
-###resume
-phoneEvent.addEvent("(Continues a call with the media profile.*)", module_Phone)
+phoneEvent.addEvent("Terminate a call as the reason is (.*)", module_Phone, eventType=eventType.EDGE, eventHandler=termcall)
+#term failed will not come here, lemon async
+#phoneEvent.addEvent("(Native terminate a call failed)", module_Phone, eventType=eventType.EDGE, eventHandler=defaultfailed)
 
-###update
-phoneEvent.addEvent("(Update the current call's type to .*)", module_Phone)
-###invite conf participants
-phoneEvent.addEvent("(Request server to invite participants:.*)", module_Phone)
+###hold
+phoneEvent.addEvent("Hold a call with the media profile: (.*)", module_Phone, eventType=eventType.EDGE, eventHandler=holdcall)
+#hold will not fail, lemon async
+#phoneEvent.addEvent("(Native hold the call failed)", module_Phone, eventType=eventType.EDGE, eventHandler=defaultfailed)
+
+###resume
+phoneEvent.addEvent("Continues a call with the media profile: (.*)", module_Phone, eventType=eventType.EDGE, eventHandler=resumecall)
+#resume will not fail, lemon async
+#phoneEvent.addEvent("(Native resume the call failed)", module_Phone, eventType=eventType.EDGE, eventHandler=defaultfailed)
+
+###merge
+phoneEvent.addEvent("(Merge the active & hold call)", module_Phone, eventType=eventType.EDGE)
+
+###update, seems not called
+#phoneEvent.addEvent("(Update the current call's type to .*)", module_Phone)
+
+
 ###remove conf participants
-phoneEvent.addEvent("(Remove the participants:.*)", module_Phone)
-###send dtmf
-phoneEvent.addEvent("(sendDtmf.*)", module_Phone)
+phoneEvent.addEvent("Remove the participants: (.*)", module_Phone, eventType=eventType.EDGE, eventHandler=removepart)
+###send dtmf, #, * may also in
+phoneEvent.addEvent("sendDtmf(.*)", module_Phone,  eventType=eventType.EDGE, eventHandler=dtmf)
 ###start dtmf
-phoneEvent.addEvent("(startDtmf.*)", module_Phone)
+phoneEvent.addEvent("startDtmf(.*)", module_Phone,  eventType=eventType.EDGE, eventHandler=dtmf)
 ###send ussd
-phoneEvent.addEvent("(Send an USSD message:.*)", module_Phone)
+phoneEvent.addEvent("Send an USSD message: (.*)", module_Phone, eventType=eventType.EDGE, eventHandler=ussd)
 
 ###start camera
-phoneEvent.addEvent("(Try to start the camera:.*)", module_Phone)
+phoneEvent.addEvent("ImsCallSessionImpl: Try to start the camera: (\w+) for the call: (\w+)", module_Phone, eventType=eventType.EDGE, eventHandler=startcamera, groupnum=2)
 
 ###stop camera
-phoneEvent.addEvent("(Try to stop the camera for the call:.*)", module_Phone)
-###modify request
-phoneEvent.addEvent("(Try to send the modify request, isVideo:.*)", module_Phone)
+phoneEvent.addEvent("Try to stop the camera for the call: (\w+)", module_Phone, eventType=eventType.EDGE, eventHandler=stopcamera)
 
 ###start local render
-phoneEvent.addEvent("(Try to start the local render for the call:.*)", module_Phone)
+phoneEvent.addEvent("Try to start the local render for the call: (\w+)", module_Phone, eventType=eventType.EDGE, eventHandler=startlocalrender)
+
 ###stop local render
-phoneEvent.addEvent("(Try to stop the local render for the call:.*)", module_Phone)
+phoneEvent.addEvent("Try to stop the local render for the call: (\w+)", module_Phone, eventType=eventType.EDGE, eventHandler=stoplocalrender)
 ###start remote render
-phoneEvent.addEvent("(Try to start the remote render for the call:.*)", module_Phone)
+phoneEvent.addEvent("Try to start the remote render for the call: (\w+)", module_Phone, eventType=eventType.EDGE, eventHandler=startremoterender)
 ### stop remote render
-phoneEvent.addEvent("(Try to stop the remote render for the call:.*)", module_Phone)
+phoneEvent.addEvent("Try to stop the remote render for the call: (\w+)", module_Phone, eventType=eventType.EDGE, eventHandler=stopremoterender)
 ### start capture
-phoneEvent.addEvent("(try to start capture for the call:.*)", module_Phone)
+phoneEvent.addEvent("Try to start capture for the call: (\w+), cameraId: (\w+), videoQuality index: (\w+)", module_Phone,eventType=eventType.EDGE, eventHandler=startcapture, groupnum=3 )
 ### stop capture
-phoneEvent.addEvent("(Try to stop capture for the call:.*)", module_Phone)
+phoneEvent.addEvent("Try to stop capture for the call: (\w+)", module_Phone, eventType=eventType.EDGE, eventHandler=stopcapture )
+
 ###start video trans
-phoneEvent.addEvent("(Try to start the video transmission for the call:.*)", module_Phone)
+phoneEvent.addEvent("Try to start the video transmission for the call: (\w+)", module_Phone, eventType=eventType.EDGE, eventHandler=startvideo)
+
+phoneEvent.addEvent("Failed to start the video transmission for the call: (\w+)", module_Phone, eventType=eventType.EDGE, eventHandler=startvideofailed)
+
 ### stop video trans
-phoneEvent.addEvent("(Try to stop the video transmission for the call:.*)", module_Phone)
+phoneEvent.addEvent("Try to stop the video transmission for the call: (\w+)", module_Phone, eventType=eventType.EDGE, eventHandler=stopvideo)
+phoneEvent.addEvent("Failed to stop the video transmission for the call: (\w+)", module_Phone, eventType=eventType.EDGE, eventHandler=stopvideofailed)
+
 ###local rotate
-phoneEvent.addEvent("(Try to rotate local render for the call:.*)", module_Phone)
+phoneEvent.addEvent("Try to rotate local render for the call: (\w)", module_Phone, eventType=eventType.EDGE, eventHandler=rotatelocalrender)
+phoneEvent.addEvent("Failed to rotate local render for the call: (\w+)", module_Phone, eventType=eventType.EDGE, eventHandler=rotatelocalrenderfailed)
+
 ### remote rotate
-phoneEvent.addEvent("(Try to rotate remote render for the call:.*)", module_Phone)
+phoneEvent.addEvent("Try to rotate remote render for the call: (\w)", module_Phone, eventType=eventType.EDGE, eventHandler=rotateremoterender)
+phoneEvent.addEvent("Failed to rotate remote render for the call: (\w+)", module_Phone, eventType=eventType.EDGE, eventHandler=rotateremoterenderfailed)
+
+###modify request
+phoneEvent.addEvent("Try to send the modify request, isVideo: (\w+)", module_Phone, eventType=eventType.EDGE, eventHandler=modifyrequest)
 
 
 ###set pause image
 phoneEvent.addEvent("(Set the pause image to.*)", module_Phone)
 ###invite conf call
 phoneEvent.addEvent("(Try to invite this call.*to the conference call.*)", module_Phone)
+
+
+
+
 
 ###create conf call
 #TODO: Try to create the conference call

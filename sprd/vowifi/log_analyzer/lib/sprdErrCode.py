@@ -9,7 +9,7 @@
 #D:\code\log\india_2016_8_24\bugs\592271\No_Volte_Icon_Idle
 
 Constantregerrcode = dict()
-MTC_CLI_REG_BASE=0xE100
+MTC_CLI_REG_BASE=0xE100 #57600
 
 Constantregerrcode[str(int(MTC_CLI_REG_BASE+1))] = "Local request error"
 Constantregerrcode[str(int(MTC_CLI_REG_BASE+2))] = "Send message error"
@@ -29,7 +29,7 @@ Constantregerrcode[str(int(MTC_CLI_REG_BASE+15))] = "Register no resource"
 Constantregerrcode[str(int(MTC_CLI_REG_BASE+16))] = "Other register error"
 
 Constants2berrcode = dict()
-MTC_S2B_BASE=0xD200
+MTC_S2B_BASE=0xD200 #53760
 Constants2berrcode[str(int(MTC_S2B_BASE))] = "no error"
 Constants2berrcode[str(int(MTC_S2B_BASE+1))] = "idle error"
 Constants2berrcode[str(int(MTC_S2B_BASE+2))] = "fqdn error"
@@ -101,8 +101,8 @@ Constantaccnettype[str(EN_MTC_ACC_NET_3GPP_E_UTRAN_FDD)] = "3GPP-E-UTRAN-FDD"
 #adapter definition in RegisterState
 Constantregstate = dict()
 STATE_IDLE = 0
-STATE_PROGRESSING = 1;
-STATE_CONNECTED = 2;
+STATE_PROGRESSING = 1
+STATE_CONNECTED = 2
 Constantregstate[str(STATE_IDLE)] = "Unreged"
 Constantregstate[str(STATE_PROGRESSING)] = "Reging"
 Constantregstate[str(STATE_CONNECTED)] = "Reged"
@@ -115,4 +115,101 @@ CALL_TYPE_VT = 4
 Constantcalltype[str(CALL_TYPE_VOICE)] = "Voice Call"
 Constantcalltype[str(CALL_TYPE_VT)] = "Video Call"
 
+#media profiel defined in ImsStreamMediaProfile.java
+#Media Direction
+DIRECTION_INVALID = -1
+DIRECTION_INACTIVE = 0
+DIRECTION_RECEIVE = 1
+DIRECTION_SEND = 2
+DIRECTION_SEND_RECEIVE = 3
+Constantdirection = dict()
+Constantdirection[str(DIRECTION_INVALID)] = "invalid"
+Constantdirection[str(DIRECTION_INACTIVE)] = "inactive"
+Constantdirection[str(DIRECTION_RECEIVE)] = "receiveonly"
+Constantdirection[str(DIRECTION_SEND)] = "sendonly"
+Constantdirection[str(DIRECTION_SEND_RECEIVE)] = "sendrecv"
 
+#audio info
+AUDIO_QUALITY_NONE = 0
+AUDIO_QUALITY_AMR = 1
+AUDIO_QUALITY_AMR_WB = 2
+AUDIO_QUALITY_QCELP13K = 3
+AUDIO_QUALITY_EVRC = 4
+AUDIO_QUALITY_EVRC_B = 5
+AUDIO_QUALITY_EVRC_WB = 6
+AUDIO_QUALITY_EVRC_NW = 7
+AUDIO_QUALITY_GSM_EFR = 8
+AUDIO_QUALITY_GSM_FR = 9
+AUDIO_QUALITY_GSM_HR = 10
+AUDIO_QUALITY_G711U = 11
+AUDIO_QUALITY_G723 = 12
+AUDIO_QUALITY_G711A = 13
+AUDIO_QUALITY_G722 = 14
+AUDIO_QUALITY_G711AB = 15
+AUDIO_QUALITY_G729 = 16
+AUDIO_QUALITY_EVS_NB = 17
+AUDIO_QUALITY_EVS_WB = 18
+AUDIO_QUALITY_EVS_SWB = 19
+AUDIO_QUALITY_EVS_FB = 20
+ConstantAudioQ = dict()
+ConstantAudioQ[str(AUDIO_QUALITY_NONE)] = "None Audio"
+ConstantAudioQ[str(AUDIO_QUALITY_AMR)] = "AMR"
+ConstantAudioQ[str(AUDIO_QUALITY_AMR_WB)] = "AMR WB"
+ConstantAudioQ[str(AUDIO_QUALITY_QCELP13K)] = "QCELP13K"
+ConstantAudioQ[str(AUDIO_QUALITY_EVRC)] = "EVRC"
+ConstantAudioQ[str(AUDIO_QUALITY_EVRC_B)] = "EVRC_B"
+ConstantAudioQ[str(AUDIO_QUALITY_EVRC_WB)] = "EVRC_WB"
+ConstantAudioQ[str(AUDIO_QUALITY_EVRC_NW)] = "EVRC_NW"
+ConstantAudioQ[str(AUDIO_QUALITY_GSM_EFR)] = "GSM_EFR"
+ConstantAudioQ[str(AUDIO_QUALITY_GSM_FR)] = "GSM_FR"
+ConstantAudioQ[str(AUDIO_QUALITY_GSM_HR)] = "GSM_HR"
+ConstantAudioQ[str(AUDIO_QUALITY_G711U)] = "G711u"
+ConstantAudioQ[str(AUDIO_QUALITY_G723)] = "G723"
+ConstantAudioQ[str(AUDIO_QUALITY_G711A)] = "G711A"
+ConstantAudioQ[str(AUDIO_QUALITY_G722)] = "G722"
+ConstantAudioQ[str(AUDIO_QUALITY_G711AB)] = "G711AB"
+ConstantAudioQ[str(AUDIO_QUALITY_G729)] = "G729"
+ConstantAudioQ[str(AUDIO_QUALITY_EVS_NB)] = "EVS_NB"
+ConstantAudioQ[str(AUDIO_QUALITY_EVS_WB)] = "EVS_WB"
+ConstantAudioQ[str(AUDIO_QUALITY_EVS_SWB)] = "EVS_SWB"
+ConstantAudioQ[str(AUDIO_QUALITY_EVS_FB)] = "EVS_FB"
+
+#video info
+VIDEO_QUALITY_NONE = 0
+VIDEO_QUALITY_QCIF = 1 << 0
+VIDEO_QUALITY_QVGA_LANDSCAPE = 1 << 1
+VIDEO_QUALITY_QVGA_PORTRAIT = 1 << 2
+VIDEO_QUALITY_VGA_LANDSCAPE = 1 << 3
+VIDEO_QUALITY_VGA_PORTRAIT = 1 << 4
+ConstantVideoQ = dict()
+ConstantVideoQ[str(VIDEO_QUALITY_NONE)] = "None Video"
+ConstantVideoQ[str(VIDEO_QUALITY_QCIF)] = "QCIF"
+ConstantVideoQ[str(VIDEO_QUALITY_QVGA_LANDSCAPE)] = "QVGA_LANDSCAPE"
+ConstantVideoQ[str(VIDEO_QUALITY_QVGA_PORTRAIT)] = "QVGA_PORTRAIT"
+ConstantVideoQ[str(VIDEO_QUALITY_VGA_LANDSCAPE)] = "VGA_LANDSCAPE"
+ConstantVideoQ[str(VIDEO_QUALITY_VGA_PORTRAIT)] = "VGA_PORTRAIT"
+
+#VT config in ImsConfigImpl.java
+VT_RESOLUTION_720P = 0
+VT_RESOLUTION_VGA_REVERSED_15 = 1
+VT_RESOLUTION_VGA_REVERSED_30 = 2
+VT_RESOLUTION_QVGA_REVERSED_15 = 3
+VT_RESOLUTION_QVGA_REVERSED_30 = 4
+VT_RESOLUTION_CIF = 5
+VT_RESOLUTION_QCIF = 6
+VT_RESOLUTION_VGA_15 = 7
+VT_RESOLUTION_VGA_30 = 8
+VT_RESOLUTION_QVGA_15 = 9
+VT_RESOLUTION_QVGA_30 = 10
+ConstantVTResolution = dict()
+ConstantVTResolution[str(VT_RESOLUTION_720P)] = "1280x720x30"
+ConstantVTResolution[str(VT_RESOLUTION_VGA_REVERSED_15)] = "480x640x15"
+ConstantVTResolution[str(VT_RESOLUTION_VGA_REVERSED_30)] = "480x640x30"
+ConstantVTResolution[str(VT_RESOLUTION_QVGA_REVERSED_15)] = "240x320x15"
+ConstantVTResolution[str(VT_RESOLUTION_QVGA_REVERSED_30)] = "240x320x30"
+ConstantVTResolution[str(VT_RESOLUTION_CIF)] = "352x288x30"
+ConstantVTResolution[str(VT_RESOLUTION_QCIF)] = "176x144x30"
+ConstantVTResolution[str(VT_RESOLUTION_VGA_15)] = "640x480x15"
+ConstantVTResolution[str(VT_RESOLUTION_VGA_30)] = "640x480x30"
+ConstantVTResolution[str(VT_RESOLUTION_QVGA_15)] = "320x240x15"
+ConstantVTResolution[str(VT_RESOLUTION_QVGA_30)] = "320x240x30"

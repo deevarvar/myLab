@@ -93,6 +93,301 @@ class rejectcall(eventhandler):
         self.retmsg.msg = "Reject As :" + rejectreason
         return self.retmsg
 
+class termcall(eventhandler):
+    '''
+    term call, one pattern, term reason
+    '''
+    def handler(self):
+        reasonstr = str(self.match.group(1)).strip()
+        termreason = Constantimsreason[reasonstr]
+        self.retmsg.msglevel = Msglevel.WARNING
+        self.retmsg.msg = maplevel2color(self.retmsg.msglevel)
+        self.retmsg.msg = "Term Call As :" + termreason
+        return self.retmsg
+
+def parsemprofile(mprofile):
+    if mprofile:
+        profilekey = "audioQuality=(\d+), audioDirection=(\d+), videoQuality=(\d+), videoDirection=(\d+)"
+        profilepattern = re.compile(profilekey)
+        match = profilepattern.search(mprofile)
+
+        if match:
+            mlen = len(match.groups())
+            if mlen == 4:
+                aq = str(match.group(1)).strip()
+                ad = str(match.group(2)).strip()
+                vq = str(match.group(3)).strip()
+                vd = str(match.group(4)).strip()
+                #define the format
+                ret = dict()
+                ret['audio'] = dict()
+                ret['audio']['codec'] = ConstantAudioQ[aq]
+                ret['audio']['direct'] = Constantdirection[ad]
+                ret['video'] = dict()
+                ret['video']['codec'] = ConstantVideoQ[vq]
+                ret['video']['direct'] = Constantdirection[vd]
+                return ret
+            else:
+                return None
+    else:
+        return None
+
+
+class holdcall(eventhandler):
+    '''
+    hold call, one COMPLEX pattern
+    { audioQuality=2, audioDirection=2, videoQuality=1, videoDirection=2 }
+    '''
+    def handler(self):
+        mprofile = self.match.group(1)
+        if mprofile:
+            self.retmsg.msglevel = Msglevel.WARNING
+            self.retmsg.color = maplevel2color(self.retmsg.msglevel)
+            parsedprofile = parsemprofile(mprofile)
+            if parsedprofile:
+                acodec = parsedprofile['audio']['codec']
+                adirect = parsedprofile['audio']['direct']
+                vcodec = parsedprofile['video']['codec']
+                vdirect = parsedprofile['video']['direct']
+                holdmsg = "Hold Call\n"
+                holdmsg += "Audio: " + acodec + " , "+ adirect +'\n'
+                if vdirect != Constantdirection[str(DIRECTION_INVALID)]:
+                    holdmsg += "Video: " + vcodec + " , "+ vdirect +'\n'
+                self.retmsg.msg = holdmsg
+                return self.retmsg
+        else:
+            return None
+
+class resumecall(eventhandler):
+    '''
+    resume call, one COMPLEX pattern
+    { audioQuality=2, audioDirection=3, videoQuality=1, videoDirection=3 }
+    '''
+    def handler(self):
+        #almost the same as holdcall
+        mprofile = self.match.group(1)
+        if mprofile:
+            self.retmsg.msglevel = Msglevel.WARNING
+            self.retmsg.color = maplevel2color(self.retmsg.msglevel)
+            parsedprofile = parsemprofile(mprofile)
+            if parsedprofile:
+                acodec = parsedprofile['audio']['codec']
+                adirect = parsedprofile['audio']['direct']
+                vcodec = parsedprofile['video']['codec']
+                vdirect = parsedprofile['video']['direct']
+                holdmsg = "Resume Call\n"
+                holdmsg += "Audio: " + acodec + " , "+ adirect +'\n'
+                if vdirect != Constantdirection[str(DIRECTION_INVALID)]:
+                    holdmsg += "Video: " + vcodec + " , "+ vdirect +'\n'
+                self.retmsg.msg = holdmsg
+                return self.retmsg
+        else:
+            return None
+
+class removepart(eventhandler):
+    def handler(self):
+        self.retmsg.msglevel = Msglevel.INFO
+        self.retmsg.color = maplevel2color(self.retmsg.msglevel)
+        part = self.match.group(1)
+        self.retmsg.msg = "Remove " + part + " From ConfCall"
+        return self.retmsg
+
+class dtmf(eventhandler):
+    def handler(self):
+        self.retmsg.msglevel = Msglevel.WARNING
+        self.retmsg.color = maplevel2color(self.retmsg.msglevel)
+        code = str(self.match.group(1)).strip()
+        self.retmsg.msg = "Press DTMF " + code
+        return self.retmsg
+
+class ussd(eventhandler):
+    def handler(self):
+        self.retmsg.msglevel = Msglevel.WARNING
+        self.retmsg.color = maplevel2color(self.retmsg.msglevel)
+        ussdmsg = str(self.match.group(1)).strip()
+        self.retmsg.msg = "Send USSD " + ussdmsg
+        return self.retmsg
+
+
+class startcamera(eventhandler):
+    '''
+    camera pattern, two pattern, one is cameraid, two is callid
+    '''
+    def handler(self):
+        self.retmsg.msglevel = Msglevel.INFO
+        self.retmsg.color = maplevel2color(self.retmsg.msglevel)
+        cameraid = str(self.match.group(1)).strip()
+        callid = str(self.match.group(2)).strip()
+        fmsg = "Start Camera\n"
+        fmsg += "Cameraid : " + cameraid+ '\n'
+        fmsg += "Callid : " + callid
+        self.retmsg.msg = fmsg
+        return self.retmsg
+
+class stopcamera(eventhandler):
+    def handler(self):
+        self.retmsg.msglevel = Msglevel.INFO
+        self.retmsg.color = maplevel2color(self.retmsg.msglevel)
+        callid = str(self.match.group(1)).strip()
+        fmsg = "Stop Camera\n"
+        fmsg += "Callid : " + callid
+        self.retmsg.msg = fmsg
+        return self.retmsg
+
+class startlocalrender(eventhandler):
+    def handler(self):
+        self.retmsg.msglevel = Msglevel.INFO
+        self.retmsg.color = maplevel2color(self.retmsg.msglevel)
+        callid = str(self.match.group(1)).strip()
+        fmsg = "Start localrender\n"
+        fmsg += "Callid : " + callid
+        self.retmsg.msg = fmsg
+        return self.retmsg
+
+class stoplocalrender(eventhandler):
+    def handler(self):
+        self.retmsg.msglevel = Msglevel.INFO
+        self.retmsg.color = maplevel2color(self.retmsg.msglevel)
+        callid = str(self.match.group(1)).strip()
+        fmsg = "Stop localrender\n"
+        fmsg += "Callid : " + callid
+        self.retmsg.msg = fmsg
+        return self.retmsg
+
+class startremoterender(eventhandler):
+    def handler(self):
+        self.retmsg.msglevel = Msglevel.INFO
+        self.retmsg.color = maplevel2color(self.retmsg.msglevel)
+        callid = str(self.match.group(1)).strip()
+        fmsg = "Start remoterender\n"
+        fmsg += "Callid : " + callid
+        self.retmsg.msg = fmsg
+        return self.retmsg
+
+class stopremoterender(eventhandler):
+    def handler(self):
+        self.retmsg.msglevel = Msglevel.INFO
+        self.retmsg.color = maplevel2color(self.retmsg.msglevel)
+        callid = str(self.match.group(1)).strip()
+        fmsg = "Stop remoterender\n"
+        fmsg += "Callid : " + callid
+        self.retmsg.msg = fmsg
+        return self.retmsg
+
+class startcapture(eventhandler):
+    '''
+    three pattern: callid, cameraid, qualityid
+    '''
+    def handler(self):
+        callid = str(self.match.group(1)).strip()
+        cameraid = str(self.match.group(2)).strip()
+        qualityid = str(self.match.group(3)).strip()
+        qualitystr = ConstantVTResolution[qualityid]
+        fmsg = "Start Capture\n"
+        fmsg += "Resolution: " + qualitystr + '\n'
+        fmsg += "Callid: " + callid + '\n'
+        fmsg += "Cameraid: " + cameraid + '\n'
+        self.retmsg.msglevel = Msglevel.INFO
+        self.retmsg.color = maplevel2color(self.retmsg.msglevel)
+        self.retmsg.msg = fmsg
+        return self.retmsg
+
+class stopcapture(eventhandler):
+    def handler(self):
+        self.retmsg.msglevel = Msglevel.INFO
+        self.retmsg.color = maplevel2color(self.retmsg.msglevel)
+        callid = str(self.match.group(1)).strip()
+        fmsg = "Stop Capture\n"
+        fmsg += "Callid : " + callid
+        self.retmsg.msg = fmsg
+        return self.retmsg
+
+class startvideo(eventhandler):
+    def handler(self):
+        self.retmsg.msglevel = Msglevel.INFO
+        self.retmsg.color = maplevel2color(self.retmsg.msglevel)
+        callid = str(self.match.group(1)).strip()
+        fmsg = "Start Video\n"
+        fmsg += "Callid : " + callid
+        self.retmsg.msg = fmsg
+        return self.retmsg
+
+class startvideofailed(eventhandler):
+    def handler(self):
+        self.retmsg.msglevel = Msglevel.ERROR
+        self.retmsg.color = maplevel2color(self.retmsg.msglevel)
+        callid = str(self.match.group(1)).strip()
+        fmsg = "Start Video Failed\n"
+        fmsg += "Callid : " + callid
+        self.retmsg.msg = fmsg
+        return self.retmsg
+
+class stopvideo(eventhandler):
+    def handler(self):
+        self.retmsg.msglevel = Msglevel.INFO
+        self.retmsg.color = maplevel2color(self.retmsg.msglevel)
+        callid = str(self.match.group(1)).strip()
+        fmsg = "Stop Video\n"
+        fmsg += "Callid : " + callid
+        self.retmsg.msg = fmsg
+        return self.retmsg
+
+class stopvideofailed(eventhandler):
+    def handler(self):
+        self.retmsg.msglevel = Msglevel.ERROR
+        self.retmsg.color = maplevel2color(self.retmsg.msglevel)
+        callid = str(self.match.group(1)).strip()
+        fmsg = "Stop Video Failed\n"
+        fmsg += "Callid : " + callid
+        self.retmsg.msg = fmsg
+        return self.retmsg
+
+class rotatelocalrender(eventhandler):
+    def handler(self):
+        self.retmsg.msglevel = Msglevel.INFO
+        self.retmsg.color = maplevel2color(self.retmsg.msglevel)
+        callid = str(self.match.group(1)).strip()
+        fmsg = "Rotate local render\n"
+        fmsg += "Callid : " + callid
+        self.retmsg.msg = fmsg
+        return self.retmsg
+
+class rotatelocalrenderfailed(eventhandler):
+    def handler(self):
+        self.retmsg.msglevel = Msglevel.ERROR
+        self.retmsg.color = maplevel2color(self.retmsg.msglevel)
+        callid = str(self.match.group(1)).strip()
+        fmsg = "Rotate local Failed\n"
+        fmsg += "Callid : " + callid
+        self.retmsg.msg = fmsg
+        return self.retmsg
+class rotateremoterender(eventhandler):
+    def handler(self):
+        self.retmsg.msglevel = Msglevel.INFO
+        self.retmsg.color = maplevel2color(self.retmsg.msglevel)
+        callid = str(self.match.group(1)).strip()
+        fmsg = "Rotate remote render\n"
+        fmsg += "Callid : " + callid
+        self.retmsg.msg = fmsg
+        return self.retmsg
+
+class rotateremoterenderfailed(eventhandler):
+    def handler(self):
+        self.retmsg.msglevel = Msglevel.ERROR
+        self.retmsg.color = maplevel2color(self.retmsg.msglevel)
+        callid = str(self.match.group(1)).strip()
+        fmsg = "Rotate remote Failed\n"
+        fmsg += "Callid : " + callid
+        self.retmsg.msg = fmsg
+        return self.retmsg
+
+class modifyrequest(eventhandler):
+    def handler(self):
+        self.retmsg.msglevel = Msglevel.WARNING
+        self.retmsg.color = maplevel2color(self.retmsg.msglevel)
+        pass
+
+
 
 class startcall(eventhandler):
     '''
@@ -103,8 +398,6 @@ class startcall(eventhandler):
         callbearer = self.match.group(1)
         self.retmsg.msg = "start " + callbearer
         return self.retmsg
-
-
 
 class servicecallback(eventhandler):
     '''
@@ -338,7 +631,7 @@ class mutestatus(eventhandler):
     def handler(self):
         muteval = str(self.match.group(1))
         self.retmsg.msglevel = Msglevel.WARNING
-        self.sg.color = maplevel2color(self.retmsg.msglevel)
+        self.retmsg.color = maplevel2color(self.retmsg.msglevel)
         if muteval == 'true':
             self.retmsg.msg = "Muted"
         else:
@@ -346,6 +639,12 @@ class mutestatus(eventhandler):
 
         return self.retmsg
 
+class defaultfailed(eventhandler):
+    def handler(self):
+        self.retmsg.msglevel = Msglevel.ERROR
+        self.retmsg.color = maplevel2color(self.retmsg.msglevel)
+        self.retmsg.msg = str(self.match.group(1))
+        return self.retmsg
 
 class makecallstatus(eventhandler):
     '''
@@ -357,6 +656,7 @@ class makecallstatus(eventhandler):
         self.retmsg.color = maplevel2color(self.retmsg.msglevel)
         self.retmsg.msg = "Make call to " + callee
         return self.retmsg
+
 
 
 class akastatus(eventhandler):
@@ -411,7 +711,7 @@ class regstatus(eventhandler):
             self.retmsg.level = Msglevel.ERROR
             self.retmsg.color = maplevel2color(self.retmsg.level)
             eventstr = "Register event: " + eventname + '\n'
-            statestr = "state: " + Constantregerrcode[str(statecode)]
+            statestr = "state: " + str(statecode) + '-->' + Constantregerrcode[str(statecode)]
             self.retmsg.msg = eventstr + statestr
             return self.retmsg
         elif statecode == -1:
@@ -441,7 +741,7 @@ class s2bstatus(eventhandler):
         if action == 'security_json_action_s2b_failed':
             errorcode = s2bjson['security_json_param_error_code']
             statestr = "epdg attach failed\n"
-            errorstr = "   stateCode: " + Constants2berrcode[str(errorcode)]
+            errorstr = "   stateCode: " + str(errorcode) + '-->' + Constants2berrcode[str(errorcode)]
             self.retmsg.level = Msglevel.ERROR
             self.retmsg.color = maplevel2color(self.retmsg.level)
             self.retmsg.msg = statestr + errorstr
@@ -451,7 +751,7 @@ class s2bstatus(eventhandler):
             statestr = "epdg attach stopped\n"
             #add three spaces for alignment, not working...Orz...
             hostr = " ishandover: " + str(ishandover) + '\n'
-            errorstr = " StateCode: " + Constants2berrcode[str(errorcode)]
+            errorstr = " StateCode: " + str(errorcode) + '-->' + Constants2berrcode[str(errorcode)]
             self.retmsg.level = Msglevel.WARNING
             self.retmsg.color = maplevel2color(self.retmsg.level)
             self.retmsg.msg = statestr + hostr + errorstr
@@ -486,6 +786,8 @@ if __name__ == '__main__':
     match = pattern.search(line)
     color = "black"
 
-    print matchone(match, color)
     demohandler =  demoinherit(match, "black", 1)
+
+    mprofile ="{ audioQuality=2, audioDirection=3, videoQuality=1, videoDirection=3 }"
+    print parsemprofile(mprofile)
     print demohandler.getret()
