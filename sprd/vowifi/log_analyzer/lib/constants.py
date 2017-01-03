@@ -652,23 +652,37 @@ phoneEvent.addEvent("Send an USSD message: (.*)", module_Phone, eventType=eventT
 
 ###start camera
 phoneEvent.addEvent("ImsCallSessionImpl: Try to start the camera: (\w+) for the call: (\w+)", module_Phone, eventType=eventType.EDGE, eventHandler=startcamera, groupnum=2)
+#start failed
+phoneEvent.addEvent("(Failed to start the camera as.*)",  module_Phone, eventType=eventType.EDGE, color="red")
 
 ###stop camera
 phoneEvent.addEvent("Try to stop the camera for the call: (\w+)", module_Phone, eventType=eventType.EDGE, eventHandler=stopcamera)
+#error handling
+phoneEvent.addEvent("(Failed to stop the camera.)", module_Phone, eventType=eventType.EDGE, color="red")
 
 ###start local render
 phoneEvent.addEvent("Try to start the local render for the call: (\w+)", module_Phone, eventType=eventType.EDGE, eventHandler=startlocalrender)
+phoneEvent.addEvent("(Failed to start the local render.)", module_Phone, eventType=eventType.EDGE, color="red")
 
 ###stop local render
 phoneEvent.addEvent("Try to stop the local render for the call: (\w+)", module_Phone, eventType=eventType.EDGE, eventHandler=stoplocalrender)
+phoneEvent.addEvent("(Failed to stop the local render.)", module_Phone, eventType=eventType.EDGE, color="red")
+
 ###start remote render
 phoneEvent.addEvent("Try to start the remote render for the call: (\w+)", module_Phone, eventType=eventType.EDGE, eventHandler=startremoterender)
+phoneEvent.addEvent("(Failed to start the remote render.)", module_Phone, eventType=eventType.EDGE, color="red")
+
 ### stop remote render
 phoneEvent.addEvent("Try to stop the remote render for the call: (\w+)", module_Phone, eventType=eventType.EDGE, eventHandler=stopremoterender)
+phoneEvent.addEvent("(Failed to stop the remote render.)", module_Phone, eventType=eventType.EDGE, color="red")
+
 ### start capture
 phoneEvent.addEvent("Try to start capture for the call: (\w+), cameraId: (\w+), videoQuality index: (\w+)", module_Phone,eventType=eventType.EDGE, eventHandler=startcapture, groupnum=3 )
+phoneEvent.addEvent("(Failed to start capture.)", module_Phone, eventType=eventType.EDGE, color="red")
+
 ### stop capture
 phoneEvent.addEvent("Try to stop capture for the call: (\w+)", module_Phone, eventType=eventType.EDGE, eventHandler=stopcapture )
+phoneEvent.addEvent("(Failed to stop capture.)", module_Phone, eventType=eventType.EDGE, color="red")
 
 ###start video trans
 phoneEvent.addEvent("Try to start the video transmission for the call: (\w+)", module_Phone, eventType=eventType.EDGE, eventHandler=startvideo)
@@ -691,8 +705,8 @@ phoneEvent.addEvent("Failed to rotate remote render for the call: (\w+)", module
 phoneEvent.addEvent("Try to send the modify request, isVideo: (\w+)", module_Phone, eventType=eventType.EDGE, eventHandler=modifyrequest)
 
 
-###set pause image
-phoneEvent.addEvent("(Set the pause image to.*)", module_Phone)
+###TODO: set pause image, not common function
+phoneEvent.addEvent("Set the pause image to.*", module_Phone)
 ###invite conf call
 phoneEvent.addEvent("(Try to invite this call.*to the conference call.*)", module_Phone)
 

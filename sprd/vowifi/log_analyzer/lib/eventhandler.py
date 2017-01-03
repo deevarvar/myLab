@@ -224,6 +224,16 @@ class startcamera(eventhandler):
         self.retmsg.msg = fmsg
         return self.retmsg
 
+class startcamerafailed(eventhandler):
+    def handler(self):
+        self.retmsg.msglevel = Msglevel.ERROR
+        self.retmsg.color = maplevel2color(self.retmsg.msglevel)
+        cameraid = str(self.match.group(1)).strip()
+        fmsg = "Start Camera Failed\n"
+        fmsg += "Cameraid : " + cameraid+ '\n'
+        self.retmsg.msg = fmsg
+        return self.retmsg
+
 class stopcamera(eventhandler):
     def handler(self):
         self.retmsg.msglevel = Msglevel.INFO
@@ -233,6 +243,16 @@ class stopcamera(eventhandler):
         fmsg += "Callid : " + callid
         self.retmsg.msg = fmsg
         return self.retmsg
+
+
+class stopcamerafailed(eventhandler):
+    def handler(self):
+        self.retmsg.msglevel = Msglevel.ERROR
+        self.retmsg.color = maplevel2color(self.retmsg.msglevel)
+        fmsg = "Stop Camera Failed\n"
+        self.retmsg.msg = fmsg
+        return self.retmsg
+
 
 class startlocalrender(eventhandler):
     def handler(self):
@@ -366,7 +386,7 @@ class rotateremoterender(eventhandler):
         self.retmsg.msglevel = Msglevel.INFO
         self.retmsg.color = maplevel2color(self.retmsg.msglevel)
         callid = str(self.match.group(1)).strip()
-        fmsg = "Rotate remote render\n"
+        fmsg = "Rotate remote render \n"
         fmsg += "Callid : " + callid
         self.retmsg.msg = fmsg
         return self.retmsg
@@ -385,7 +405,12 @@ class modifyrequest(eventhandler):
     def handler(self):
         self.retmsg.msglevel = Msglevel.WARNING
         self.retmsg.color = maplevel2color(self.retmsg.msglevel)
-        pass
+        isvideo = str(self.match.group(1)).strip().lower()
+        if isvideo == "true":
+            self.retmsg.msg = "Upgrade Video"
+        else:
+            self.retmsg.msg = "Downgrade Video"
+        return self.retmsg
 
 
 
