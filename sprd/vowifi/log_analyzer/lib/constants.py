@@ -391,6 +391,10 @@ dialerEvent.addEvent("(Putting the call on hold)", module_dialer, eventType = ev
 ### resume
 dialerEvent.addEvent("(Removing the call from hold)", module_dialer, eventType = eventType.EDGE)
 dialerEvent.addEvent("(Swapping call to foreground)", module_dialer, eventType = eventType.EDGE)
+
+#pause video, no correct keyword?
+
+
 #------------------------------------------------------------------------------------
 #ImsCM part
 ##ImsConnectionManagerMonitor
@@ -414,38 +418,38 @@ imscmEvent.addEvent("\[(Set Vowifi unavailable)\]", module_ImsCM, eventType = ev
 ###[Cancel current request]
 imscmEvent.addEvent("\[(Cancel current request)\]", module_ImsCM)
 ###[hung up Vowifi call]
-imscmEvent.addEvent("\[(hung up Vowifi call)\]", module_ImsCM, eventType=eventType.EDGE, color = "blue")
+imscmEvent.addEvent("(hung up Vowifi call)", module_ImsCM, eventType=eventType.EDGE, color = "blue")
 ###[popup Vowifi unavailable notification]
-imscmEvent.addEvent("\[(popup Vowifi unavailable notification)\]", module_ImsCM, eventType=eventType.SELFREF)
+imscmEvent.addEvent("(popup Vowifi unavailable notification)", module_ImsCM, eventType=eventType.EDGE, color = "blue")
 
 ##TODO:ImsConnectionManagerRelianceService
 #------------------------------------------------------------------------------------
 ##ImsConnectionManagerService
 ###release vowifi resource
-imscmEvent.addEvent("(releaseVoWifiResource:.*)", module_ImsCM)
+#imscmEvent.addEvent("(releaseVoWifiResource:.*)", module_ImsCM)
 ###vowifi unavailable
-imscmEvent.addEvent("(vowifiUnavailable:.*)", module_ImsCM)
+#imscmEvent.addEvent("(vowifiUnavailable:.*)", module_ImsCM)
 ###cancel request
-imscmEvent.addEvent("(cancelCurrentRequest:.*)", module_ImsCM)
+#imscmEvent.addEvent("(cancelCurrentRequest:.*)", module_ImsCM)
 ###switchOrHandoverVowifi:
-imscmEvent.addEvent("(switchOrHandoverVowifi:.*)", module_ImsCM)
+#imscmEvent.addEvent("(switchOrHandoverVowifi:.*)", module_ImsCM)
 ###handoverToVolte
-imscmEvent.addEvent("(handoverToVolte:.*)", module_ImsCM)
+#imscmEvent.addEvent("(handoverToVolte:.*)", module_ImsCM)
 ###hungUpVowifiCall
-imscmEvent.addEvent("(hungUpVowifiCall:.*)", module_ImsCM)
-###operation success
-imscmEvent.addEvent("(operationSuccessed:.*)", module_ImsCM)
+#imscmEvent.addEvent("(hungUpVowifiCall:.*)", module_ImsCM)
+###operation success , no need
+#imscmEvent.addEvent("(operationSuccessed:.*)", module_ImsCM)
 ###operation failed
-imscmEvent.addEvent("(operationFailed:.*)", module_ImsCM)
+#imscmEvent.addEvent("(operationFailed:.*)", module_ImsCM)
 ###imsCallEnd
-imscmEvent.addEvent("(imsCallEnd:.*)", module_ImsCM)
+#imscmEvent.addEvent("(imsCallEnd:.*)", module_ImsCM)
 
 ###CP module
-imscmEvent.addEvent("ImsConnectionManagerService:(.*CP module.*)", module_ImsCM)
-###onNoRtpReceived
-imscmEvent.addEvent("(onNoRtpReceived:.*)", module_ImsCM)
-###onRtpReceived
-imscmEvent.addEvent("(onRtpReceived:.*)", module_ImsCM)
+#imscmEvent.addEvent("ImsConnectionManagerService:(.*CP module.*)", module_ImsCM)
+###onNoRtpReceived, adapter will do this
+#imscmEvent.addEvent("(onNoRtpReceived:.*)", module_ImsCM)
+###onRtpReceived, adapter will do this
+#imscmEvent.addEvent("(onRtpReceived:.*)", module_ImsCM)
 ###onProcessDpdDisconnectedError
 imscmEvent.addEvent("(onProcessDpdDisconnectedError.*)", module_ImsCM)
 ###onProcessSipTimeoutError
