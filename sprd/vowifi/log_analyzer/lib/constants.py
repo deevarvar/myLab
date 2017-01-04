@@ -648,9 +648,9 @@ phoneEvent.addEvent("(Merge the active & hold call)", module_Phone, eventType=ev
 ###remove conf participants
 phoneEvent.addEvent("Remove the participants: (.*)", module_Phone, eventType=eventType.EDGE, eventHandler=removepart)
 ###send dtmf, #, * may also in
-phoneEvent.addEvent("sendDtmf(.*)", module_Phone,  eventType=eventType.EDGE, eventHandler=dtmf)
+phoneEvent.addEvent("sendDtmf(\w)", module_Phone,  eventType=eventType.EDGE, eventHandler=dtmf)
 ###start dtmf
-phoneEvent.addEvent("startDtmf(.*)", module_Phone,  eventType=eventType.EDGE, eventHandler=dtmf)
+phoneEvent.addEvent("startDtmf(\w)", module_Phone,  eventType=eventType.EDGE, eventHandler=dtmf)
 ###send ussd
 phoneEvent.addEvent("Send an USSD message: (.*)", module_Phone, eventType=eventType.EDGE, eventHandler=ussd)
 
