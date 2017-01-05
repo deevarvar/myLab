@@ -45,7 +45,7 @@ class radioParser():
 
             #there are always dirty msgs to ignroe, Orz...
             self.ignoremsg = list()
-            self.ignoremsg.append("CP Unregistered")
+            self.ignoremsg.append("VoLTE Unregistered")
 
             self.initkeypattern()
             self.atmsgs = list()
@@ -238,11 +238,11 @@ class radioParser():
 
     def getregstate(self, state):
         if state == '0':
-            return "CP Unregistered"
+            return "VoLTE Unregistered"
         elif state == '1':
-            return "CP Registered"
+            return "VoLTE Registered"
         else:
-            return "Unknown CP Register state"
+            return "Unknown VoLTE Register state"
 
     def getattachstate(self,state):
         if state == '0':
@@ -262,11 +262,11 @@ class radioParser():
 
     def getwifireg(self, state):
         if state == '0':
-            return "AP failed to Register"
+            return "VoWiFi failed to Register"
         elif state == '1':
-            return "AP Registered successfully"
+            return "VoWiFi Registered successfully"
         else:
-            state = "Unknown AP Register state"
+            state = "Unknown VoWiFi Register state"
 
     def getwifiinfo(self, info):
         #"405872003c00000ec"

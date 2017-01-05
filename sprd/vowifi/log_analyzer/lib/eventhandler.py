@@ -5,6 +5,7 @@
 
 import re
 import json
+import mobile_codes
 from sprdErrCode import *
 
 class Msglevel():
@@ -801,6 +802,63 @@ class s2bstatus(eventhandler):
         else:
             return None
 
+        return self.retmsg
+
+class simstatus(eventhandler):
+    '''
+    Note: *HEAVILY* rely on definition
+    two patterns, one is sim action(get/update), two is plmn
+    updateSimState: get primary USIM card plmn = 001010
+    '''
+    def handler(self):
+        simaction = str(self.match.group(1)).strip()
+        plmn = str(self.match.group(2)).strip()
+        self.retmsg.level = Msglevel.WARNING
+        self.retmsg.color = maplevel2color(self.retmsg.level)
+
+        if simaction == "get":
+            simstr = "Get Primary Sim Card\n"
+        elif simaction == "update":
+            simstr = "Change Primary Sim Card\n"
+        else:
+            return None
+        plmnstr = "PLMN: " + plmn + '\n'
+        operatorstr = ""
+        if len(plmn) >= 5:
+            mnc = plmn[0:3]
+            mcc = plmn[3:]
+            try:
+                mcode = mobile_codes.mcc_mnc(mnc, mcc)
+                operator = mcode.operator
+                operatorstr = "Operator: " + operator + '\n'
+            except KeyError,e:
+                operatorstr = ""
+        self.retmsg.msg = simstr + plmnstr + operatorstr
+        return self.retmsg
+
+class simchanged7(eventhandler):
+    '''
+    just to match android 7.0's sim changed logic in ImsCM
+    '''
+    def handler(self):
+        self.retmsg.level = Msglevel.WARNING
+        self.retmsg.color = maplevel2color(self.retmsg.level)
+        self.retmsg.msg = "Primary Sim Card Changed."
+        return self.retmsg
+
+class slotstatus(eventhandler):
+    '''
+    two pattern: slot id,  status str
+    '''
+    def handler(self):
+        self.retmsg.level = Msglevel.WARNING
+        self.retmsg.color = maplevel2color(self.retmsg.level)
+        slot = str(self.match.group(1)).strip()
+        #simstatus may contain "
+        simstatus = str(self.match.group(2)).strip().replace('"','')
+        slotstr = "SimCard Slot " + slot + '\n'
+        simstatusstr = "Status " + simstatus
+        self.retmsg.msg = slotstr + simstatusstr
         return self.retmsg
 
 

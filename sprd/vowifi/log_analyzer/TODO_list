@@ -1,0 +1,77 @@
+TODO:
+#       todo:  4.14 tag: add reg/s2b status code mapping.
+                #mrf_err.h ,mtc_cli.h mtc_s2b.h
+        #todo: 4.14.1 remove verbose cp's at
+        #todo: 4.14.2 add update data router's state
+#       todo:  4.15 tag:  error log, trim log, key log, speed up, remove internal dir parsing!
+#              4.16 tag: reg的retry, RegRegingOnCimCnf retry-after is 120 s, status code is 500.
+#              4.17 tag: mtc_sproc_call.c
+#              4.18    Ping the pcscfIP 2405:200:310:1581::21 failed, D:\code\log\bug_log\vit_log\2016_9_12\fail_attach_Jio_Idea\fail_attach_Jio_Idea
+#        fixed 4.19    IMSEN, IMSREGADDR D:\code\log\india_2016_8_24\ho\1\aplog
+#              4.20 ImsCallProfile CALL_TYPE_VOICE =2, CALL_TYPE_VT = 4; D:\code\so\juphoonlib\develop\rc2\scenario\1\caller
+#              4.21 sip stack internal fsm, etc
+#              4.21.1 internal Mtf_EvntGetUmsgDesc USER HOLD
+#              4.22 FEATURE_TYPE_VIDEO_OVER_LTE = 1;  FEATURE_TYPE_VOICE_OVER_WIFI = 2; FEATURE_TYPE_VIDEO_OVER_WIFI = 3;
+#                   ImsService: VoLTERegisterListener-> mCurrentImsFeature:2serviceId:2 service is null:false service:false
+#
+#               4.25: add more imsservice's log
+                updateImsFeatures
+                4.23 ImsCM Utils: [hung up IMS call]
+                4.24
+                fixed: ylog logic:
+                pcap udp.port == 10000, add ipsec delete log
+                D:\code\log\bug_log\vit_log\2016_11_11\623221
+
+
+                fixed: setIMSRegAddress, updateImsFeatures
+                fixed: adapter error code
+                added: ip_monitor
+                fixed: "Synchronisation failure" tag = 'DC', "Successful 3G authentication" tag = 'DB'
+                fixed: wifi calling, data router,re-reg process
+                fixed: change default color, createCallSession-> start
+                fixed: add flag for sip/ike msg parsing
+                fixed:refactor the eventhandler, inherit
+
+                D:\code\log\bug_log\vit_log\20161210\628680\ volte call log
+                initial invite without sdp, Mtf_CallAnsweringOnUeAlert should return 180, answer with 200 OK with sdp
+
+                fixed: add service
+                fixed: adapter log, video call, voice call
+                fixed: low, error logs, big flags to disable
+                sms over ip,  radio.log smsservice.java
+
+
+                preping, post-ping : realnetwork
+                add overview instead of key,  event types
+
+                imscm
+                1. ongoing: ImsConnectionManagerMonitor.java
+                mRadioBusyObserver
+                mReceiver -> updateSimState
+                D:\code\log\ref_log\instruments\Anritsu\call_scenarioes\SIM_ylog
+                D:\code\log\ref_log\DATC\imscm_turnoff
+                TODO: try scenario on 7.0
+                "primary card id has changed" 7.0
+
+                2. base: ImsConnectionManagerService.java
+                mSimStandbyContentObserver
+
+                switchOrHandoverVowifi : handleMessageSwitchToVowifi, handleMessageHandoverToVowifi
+                handoverToVolte: handleMessageHandoverToVolte, handleMessageHandoverToVolteByTimer
+
+                3. operator's wifi observer
+
+                4. radio color
+
+
+                5.  log level
+
+
+                client send
+                add ho process calcute
+                overview
+
+# log material:
+#              1. D:\code\log\bug_log\vit_log\2016_09_26\595321   ho bugs: Vowifi is registered, don't switch vowifi again
+#
+

@@ -418,9 +418,30 @@ imscmEvent.addEvent("\[(Set Vowifi unavailable)\]", module_ImsCM, eventType = ev
 ###[Cancel current request]
 imscmEvent.addEvent("\[(Cancel current request)\]", module_ImsCM)
 ###[hung up Vowifi call]
-imscmEvent.addEvent("(hung up Vowifi call)", module_ImsCM, eventType=eventType.EDGE, color = "blue")
+imscmEvent.addEvent("(hung up IMS call)", module_ImsCM, eventType=eventType.EDGE, color = "red")
 ###[popup Vowifi unavailable notification]
 imscmEvent.addEvent("(popup Vowifi unavailable notification)", module_ImsCM, eventType=eventType.EDGE, color = "blue")
+
+
+##ImsConnectionManagerMonitor.java
+###init sim card, change sim card
+#android 6.0 logic...
+imscmEvent.addEvent(': (\w+) primary USIM card plmn = (\w+)' , module_ImsCM, eventType = eventType.EDGE, eventHandler=simstatus, groupnum=2)
+#slot status
+imscmEvent.addEvent('card (\d) status :(.*)' , module_ImsCM, eventType = eventType.EDGE, eventHandler=slotstatus, groupnum=2)
+
+
+
+#TODO: android 7.0 logic need to be verified
+#android 7.0 logic
+#sim card plmn
+imscmEvent.addEvent(': updateSubscriptionInfo: (\w+) primary USIM card plmn, mPrimaryPlmn = (\w+)' , module_ImsCM, eventType = eventType.EDGE, eventHandler=simstatus, groupnum=2)
+#slot status
+imscmEvent.addEvent('updateSimState: Slot (\d) status is (.*)' , module_ImsCM, eventType = eventType.EDGE, eventHandler=slotstatus, groupnum=2)
+#mDefaultDataSubscriptionObserver
+imscmEvent.addEvent('(primary card id has changed)' , module_ImsCM, eventType = eventType.EDGE, eventHandler=simchanged7)
+
+
 
 ##TODO:ImsConnectionManagerRelianceService
 #------------------------------------------------------------------------------------
@@ -538,7 +559,8 @@ imscmEvent.addEvent("(loopProcess.*Qos: Vowifi handover to Volte.*)", module_Ims
 
 
 ### sim card
-imscmEvent.addEvent("(turn off primary SIM card)", module_ImsCM)
+imscmEvent.addEvent("(turn off primary SIM card)", module_ImsCM,eventType = eventType.EDGE, color="red")
+imscmEvent.addEvent("(turn on primary SIM card)", module_ImsCM,eventType = eventType.EDGE, color="red")
 
 ##msg pending
 # ImsConnectionManagerService: handleMessageHandoverToVowifi: mIsPendingProcess

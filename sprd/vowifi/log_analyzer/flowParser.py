@@ -1818,7 +1818,7 @@ class flowParser():
         #http://blockdiag.com/en/blockdiag/attributes/diagram.attributes.html
         diagram_definition += " default_fontsize = 16;\n"
         diagram_definition += " node_width = 155;\n"
-        diagram_definition += " edge_length = 300;\n"
+        diagram_definition += " edge_length = 350;\n"
         #Do not show activity line
         diagram_definition += " activation = none;\n"
         #Numbering edges automaticaly
@@ -1826,7 +1826,7 @@ class flowParser():
 
 
         #make sure the element order
-        elementstr = 'AP;UE;CP;NETWORK;'
+        elementstr = 'AP;UE;CP;'
         fixelementlist = ["ImsCM", "Phone", "UE", "CP", "NETWORK"]
         #elementstr = ''
         for index, element in enumerate(self.elements):
