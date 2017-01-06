@@ -740,15 +740,13 @@ class regstatus(eventhandler):
             statestr = "state: " + str(statecode) + '-->' + Constantregerrcode[str(statecode)]
             self.retmsg.msg = eventstr + statestr
             return self.retmsg
-        elif statecode == -1:
+        else:
             #in service's log, -1 is default value , which means good~
             self.retmsg.level = Msglevel.WARNING
             self.retmsg.color = maplevel2color(self.retmsg.level)
             eventstr = "Register event: " + eventname + '\n'
             self.retmsg.msg = eventstr
             return self.retmsg
-        else:
-            return None
 
 
 class s2bstatus(eventhandler):
