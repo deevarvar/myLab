@@ -437,10 +437,14 @@ imscmEvent.addEvent('card (\d) status :(.*)' , module_ImsCM, eventType = eventTy
 #sim card plmn
 imscmEvent.addEvent(': updateSubscriptionInfo: (\w+) primary USIM card plmn, mPrimaryPlmn = (\w+)' , module_ImsCM, eventType = eventType.EDGE, eventHandler=simstatus, groupnum=2)
 #slot status
+imscmEvent.addEvent('updateSimState: Slot (\d) status is (.*)' , module_ImsCM, eventType = eventType.EDGE, eventHandler=slotstatus, groupnum=2)
 imscmEvent.addEvent('updateSimState: Slot (\d) simState = (.*)' , module_ImsCM, eventType = eventType.EDGE, eventHandler=slotstatus, groupnum=2)
 #mDefaultDataSubscriptionObserver
 imscmEvent.addEvent('(primary card id has changed)' , module_ImsCM, eventType = eventType.EDGE, eventHandler=simchanged7)
 
+
+#pending logic
+imscmEvent.addEvent('handleMessage.*: \"(.*)\", mCurPendingProcessMsgId = (.*)' , module_ImsCM, eventType = eventType.EDGE, eventHandler=imscmpending)
 
 
 ##TODO:ImsConnectionManagerRelianceService
@@ -559,13 +563,15 @@ imscmEvent.addEvent("(loopProcess.*Qos: Vowifi handover to Volte.*)", module_Ims
 
 
 
-### sim card
+### sim card only used in android 6
 imscmEvent.addEvent("(turn off primary SIM card)", module_ImsCM,eventType = eventType.EDGE, color="red")
 imscmEvent.addEvent("(turn on primary SIM card)", module_ImsCM,eventType = eventType.EDGE, color="red")
 
 ##msg pending
 # ImsConnectionManagerService: handleMessageHandoverToVowifi: mIsPendingProcess
 #D:\code\log\bug_log\vit_log\2016_10_25\modem_log-0650-vowifiregisterfail-2
+
+
 
 
 #------------------------------------------------------------------------------------

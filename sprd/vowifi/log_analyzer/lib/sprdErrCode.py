@@ -213,3 +213,16 @@ ConstantVTResolution[str(VT_RESOLUTION_VGA_15)] = "640x480x15"
 ConstantVTResolution[str(VT_RESOLUTION_VGA_30)] = "640x480x30"
 ConstantVTResolution[str(VT_RESOLUTION_QVGA_15)] = "320x240x15"
 ConstantVTResolution[str(VT_RESOLUTION_QVGA_30)] = "320x240x30"
+
+
+#msg id in ImsConnectionManagerService.java
+ConstantImsReq = dict()
+ConstantImsReq['MSG_PROCESSING_LOOP'] = "LOOP"
+ConstantImsReq['MSG_SWITCH_TO_VOWIFI'] = "Switch to VoWiFi"
+ConstantImsReq['MSG_SWITCH_TO_VOLTE'] = "Switch to VoLTE"
+ConstantImsReq['MSG_HANDOVER_TO_VOWIFI'] = "Handover to VoWiFi"
+ConstantImsReq['MSG_HANDOVER_TO_VOLTE'] = "Handover to VoLTE"
+ConstantImsReq['MSG_HANDOVER_TO_VOLTE_BY_TIMER'] = "Handover to VoLTE By Timer"
+ConstantImsReq['MSG_RELEASE_VOWIFI_RES'] = "Release VoWiFi Res"
+ConstantImsReq['MSG_VOWIFI_UNAVAILABLE'] = "VoWiFi Unavailable"
+ConstantImsReq['MSG_CANCEL_CURRENT_REQUEST'] = "Cancel Current Request"

@@ -855,10 +855,27 @@ class slotstatus(eventhandler):
         self.retmsg.color = maplevel2color(self.retmsg.level)
         slot = str(self.match.group(1)).strip()
         #simstatus may contain "
-        simstatus = str(self.match.group(2)).strip().replace('"','')
+        simstatus = str(self.match.group(2)).strip().replace('"','').replace("'", '')
         slotstr = "SimCard Slot " + slot + '\n'
         simstatusstr = "Status " + simstatus
         self.retmsg.msg = slotstr + simstatusstr
+        return self.retmsg
+
+class imscmpending(eventhandler):
+    def handler(self):
+        self.retmsg.level = Msglevel.WARNING
+        self.retmsg.color = maplevel2color(self.retmsg.level)
+        curreq = str(self.match.group(1)).strip().replace('"', '').replace("'",'')
+        pendreq = str(self.match.group(2)).strip().replace('"', '').replace("'",'')
+        if curreq in ConstantImsReq:
+            curreq = ConstantImsReq[curreq]
+
+        if pendreq in ConstantImsReq:
+            pendreq = ConstantImsReq[pendreq]
+
+        curreqstr = "Current Req:" + curreq  + '\n'
+        pendreqstr ="Pending Req:" + pendreq + '\n'
+        self.retmsg.msg = curreqstr + pendreqstr
         return self.retmsg
 
 
