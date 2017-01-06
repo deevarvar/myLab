@@ -437,7 +437,7 @@ imscmEvent.addEvent('card (\d) status :(.*)' , module_ImsCM, eventType = eventTy
 #sim card plmn
 imscmEvent.addEvent(': updateSubscriptionInfo: (\w+) primary USIM card plmn, mPrimaryPlmn = (\w+)' , module_ImsCM, eventType = eventType.EDGE, eventHandler=simstatus, groupnum=2)
 #slot status
-imscmEvent.addEvent('updateSimState: Slot (\d) status is (.*)' , module_ImsCM, eventType = eventType.EDGE, eventHandler=slotstatus, groupnum=2)
+imscmEvent.addEvent('updateSimState: Slot (\d) simState = (.*)' , module_ImsCM, eventType = eventType.EDGE, eventHandler=slotstatus, groupnum=2)
 #mDefaultDataSubscriptionObserver
 imscmEvent.addEvent('(primary card id has changed)' , module_ImsCM, eventType = eventType.EDGE, eventHandler=simchanged7)
 
@@ -504,7 +504,8 @@ imscmEvent.addEvent('(close airplane mode)', module_ImsCM,eventType = eventType.
 imscmEvent.addEvent('(wifi is disconnected)', module_ImsCM, eventType = eventType.EDGE, color="blue")
 ##wifi calling
 imscmEvent.addEvent('database has changed, mIsWifiCallingEnabled = (.*)', module_ImsCM, eventType = eventType.EDGE, eventHandler=wfcstatus)
-
+##default wifi calling
+imscmEvent.addEvent('(Wifi-calling is .*)', module_ImsCM, eventType = eventType.EDGE, color = "blue")
 
 ##no rtp
 imscmEvent.addEvent("ImsConnectionManagerService:(.*mNoRtpTimes.*)", module_ImsCM)
