@@ -445,53 +445,29 @@ imscmEvent.addEvent('(primary card id has changed)' , module_ImsCM, eventType = 
 
 #pending logic
 imscmEvent.addEvent('handleMessage.*: \"(.*)\", mCurPendingProcessMsgId = (.*)' , module_ImsCM, eventType = eventType.EDGE, eventHandler=imscmpending)
+#no need to add clearLoopMsgQueue
+#no need to add ImsServiceListenerEx, all release action will be recorded.
+
+##audio/video qos and threshhold, vowifi call
+imscmEvent.addEvent('loop(\w+)CallQos: Vowifi handover to Volte' , module_ImsCM, eventType = eventType.EDGE, eventHandler=qos2volte)
 
 
-##TODO:ImsConnectionManagerRelianceService
-#------------------------------------------------------------------------------------
-##ImsConnectionManagerService
-###release vowifi resource
-#imscmEvent.addEvent("(releaseVoWifiResource:.*)", module_ImsCM)
-###vowifi unavailable
-#imscmEvent.addEvent("(vowifiUnavailable:.*)", module_ImsCM)
-###cancel request
-#imscmEvent.addEvent("(cancelCurrentRequest:.*)", module_ImsCM)
-###switchOrHandoverVowifi:
-#imscmEvent.addEvent("(switchOrHandoverVowifi:.*)", module_ImsCM)
-###handoverToVolte
-#imscmEvent.addEvent("(handoverToVolte:.*)", module_ImsCM)
-###hungUpVowifiCall
-#imscmEvent.addEvent("(hungUpVowifiCall:.*)", module_ImsCM)
-###operation success , no need
-#imscmEvent.addEvent("(operationSuccessed:.*)", module_ImsCM)
-###operation failed
-#imscmEvent.addEvent("(operationFailed:.*)", module_ImsCM)
-###imsCallEnd
-#imscmEvent.addEvent("(imsCallEnd:.*)", module_ImsCM)
+##audio/video rssi threshhold, volte call
+imscmEvent.addEvent('loop(\w+)CallThreshold: Volte handover to (\w+)' , module_ImsCM, eventType = eventType.EDGE, eventHandler=callthreshholdho, groupnum=2)
 
-###CP module
-#imscmEvent.addEvent("ImsConnectionManagerService:(.*CP module.*)", module_ImsCM)
-###onNoRtpReceived, adapter will do this
-#imscmEvent.addEvent("(onNoRtpReceived:.*)", module_ImsCM)
-###onRtpReceived, adapter will do this
-#imscmEvent.addEvent("(onRtpReceived:.*)", module_ImsCM)
-###onProcessDpdDisconnectedError
-imscmEvent.addEvent("(onProcessDpdDisconnectedError.*)", module_ImsCM)
-###onProcessSipTimeoutError
-imscmEvent.addEvent("(onProcessSipTimeoutError:.*)", module_ImsCM)
-###onProcessUnsolicitedSipLogoutError
-imscmEvent.addEvent("(onProcessUnsolicitedSipLogoutError:.*)", module_ImsCM)
-###onProcessSecurityRekeyError
-imscmEvent.addEvent("(onProcessSecurityRekeyError:.*)", module_ImsCM)
-###onProcessUnsolicitedEpdgStopError
-imscmEvent.addEvent("(onProcessUnsolicitedEpdgStopError:.*)", module_ImsCM)
-###onVoWiFiError
-imscmEvent.addEvent("(onVoWiFiError:.*)", module_ImsCM)
-###ServiceStateChanged
-#seems too verbose
-#addEvent("(ServiceStateChanged:.*)", module_ImsCM)
-###onCallStateChanged
-imscmEvent.addEvent("(onCallStateChanged:.*)", module_ImsCM)
+
+##idle , reged than handover
+imscmEvent.addEvent('loopProcessIdleThreshold: Volte switch to (\w+)' , module_ImsCM, eventType = eventType.EDGE, eventHandler=idlethreshholdho)
+##idle non-reg attach
+imscmEvent.addEvent('(loopProcessIdleThreshold: Auto attach Vowifi)' , module_ImsCM, eventType = eventType.EDGE, eventHandler=idleautovowifi)
+
+##imscm error pattern
+imscmEvent.addEvent('\[(.*)\] error, mRequestId =' , module_ImsCM, eventType = eventType.EDGE, eventHandler=imscmhandlemsgerror)
+
+#TODO: add no rtp received
+
+
+
 
 ##post-ping
 ##wifi connected
@@ -518,48 +494,6 @@ imscmEvent.addEvent("ImsConnectionManagerService:(.*mNoRtpTimes.*)", module_ImsC
 ##D:\code\log\otherlog\stephen\1236_in_voice_call_auto_handover_to_volte
 
 
-imscmEvent.addEvent("(getPhoneStateListenerEx: Both new Volte and new Vowifi are not registered, releaseAllTimer.*)", module_ImsCM)
-imscmEvent.addEvent("(createTimerTask: Wifi or Lte conditions are not satisfied, don't create timer task.*)", module_ImsCM)
-
-#volte threshold
-imscmEvent.addEvent("(createTimerTask: create.*threshold timer task during .* idle.*)", module_ImsCM)
-imscmEvent.addEvent("(loopProcess.*Threshold: .* maybe switch to.*)", module_ImsCM)
-imscmEvent.addEvent("(loopProcess.*Threshold: .* switch to.*)", module_ImsCM)
-imscmEvent.addEvent("(loopProcess.*Threshold: .* maybe handover to .*)", module_ImsCM)
-imscmEvent.addEvent("(loopProcess.*Threshold: .* handover to .*)", module_ImsCM)
-imscmEvent.addEvent("(create.*ThresholdTimerTask Wifi or Lte conditions are not satisfied, release.*)", module_ImsCM)
-'''
-###wifi threshold
-addEvent("(createTimerTask: create \[Idle\] threshold timer task during Vowifi idle.*)", module_ImsCM)
-addEvent("(loopProcessIdleThreshold: Vowifi maybe switch to Volte.*)", module_ImsCM)
-addEvent("(loopProcessIdleThreshold: Vowifi switch to Volte.*)", module_ImsCM)
-
-### audio volte
-addEvent("(createTimerTask: create \[Audio\] threshold timer task during Volte call.*)", module_ImsCM)
-addEvent("(loopProcessAudioThreshold: Volte maybe handover to Vowifi.*)", module_ImsCM)
-addEvent("(loopProcessAudioThreshold: Volte handover to Vowifi.*)", module_ImsCM)
-
-### video volte
-addEvent("(createTimerTask: create \[Video\] threshold timer task during Volte call)", module_ImsCM)
-addEvent("(loopProcessVideoThreshold: Volte maybe handover to Vowifi.*)", module_ImsCM)
-addEvent("(loopProcessVideoThreshold: Volte handover to Vowifi.*)", module_ImsCM)
-### audio vowifi
-addEvent("(createTimerTask: create \[Audio\] threshold timer task during Vowifi call)", module_ImsCM)
-addEvent("(loopProcessAudioThreshold: Vowifi maybe handover to Volte.*)", module_ImsCM)
-addEvent("(loopProcessAudioThreshold: Vowifi handover to Volte.*)", module_ImsCM)
-
-### video vowifi
-addEvent("(createTimerTask: create \[Video\] threshold timer task during Vowifi call)", module_ImsCM)
-addEvent("(loopProcessVideoThreshold: Vowifi maybe handover to Volte.*)", module_ImsCM)
-addEvent("(loopProcessVideoThreshold: Vowifi handover to Volte.*)", module_ImsCM)
-'''
-###misc
-imscmEvent.addEvent("(createQosWifiRssiTimerTask: Wifi rssi isn't better, release.*)", module_ImsCM)
-imscmEvent.addEvent("(createQosWifiRssiTimerTask: Conditions are not satisfied, release.*)", module_ImsCM)
-### audio/video qos
-imscmEvent.addEvent("(loopProcess.*Qos: Vowifi maybe handover to Volte.*)", module_ImsCM)
-imscmEvent.addEvent("(loopProcess.*Qos: Vowifi maybe handover to Volte.*)", module_ImsCM)
-imscmEvent.addEvent("(loopProcess.*Qos: Vowifi handover to Volte.*)", module_ImsCM)
 
 
 

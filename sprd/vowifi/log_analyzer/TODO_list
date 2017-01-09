@@ -52,13 +52,25 @@ TODO:
                 D:\code\log\ref_log\DATC\imscm_turnoff
                 TODO: try scenario on 7.0
                 "primary card id has changed" 7.0
-
-                2. base: ImsConnectionManagerService.java
+                add msg, remove msg
+                2. fixed  base: ImsConnectionManagerService.java
                 mSimStandbyContentObserver
 
                 switchOrHandoverVowifi : handleMessageSwitchToVowifi, handleMessageHandoverToVowifi
                 handoverToVolte: handleMessageHandoverToVolte, handleMessageHandoverToVolteByTimer
 
+                fixed: reliance handover logs:   D:\code\log\ref_log\reliance\handover_qos
+                loopAudioCallQos
+                loopAudioCallThreshold
+                loopProcessIdleThreshold
+                loopVideoCallQos
+                loopVideoCallThreshold
+
+
+
+                2.1 add function to redirect the logs.
+                2.2 MSG_RECEIVE_NO_RTP add function, ping unreachable
+                    D:\code\log\ref_log\reliance\handover_qos\video_HO\ylog\ylog
                 3. operator's wifi observer
 
                 4. radio color
@@ -67,7 +79,10 @@ TODO:
                 5.  log level
 
 
-                client send
+                client send - better
+                JuIpsecServer: Server Recv: {"ZIpsecCmd":"ZIpsecIpCmd","Cmd":"ip xfrm
+                anritsu vowifi ho to volte and ringing answer, wait for 40s, sa should be deleted.
+                IPSEC_SA_ADD_IN and IPSEC_SA_ADD_OUT are different
                 add ho process calcute
                 overview
 

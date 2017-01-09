@@ -95,8 +95,10 @@ Constantimsreason[str(CODE_BLACKLISTED_CALL_ID)] = "Blacklisted callid"
 Constantaccnettype = dict()
 EN_MTC_ACC_NET_IEEE_802_11 = 1
 EN_MTC_ACC_NET_3GPP_E_UTRAN_FDD = 9
+EN_MTC_ACC_NET_3GPP_E_UTRAN_TDD = 10
 Constantaccnettype[str(EN_MTC_ACC_NET_IEEE_802_11)] = "IEEE-802.11"
 Constantaccnettype[str(EN_MTC_ACC_NET_3GPP_E_UTRAN_FDD)] = "3GPP-E-UTRAN-FDD"
+Constantaccnettype[str(EN_MTC_ACC_NET_3GPP_E_UTRAN_TDD)] = "3GPP-E-UTRAN-TDD"
 
 #adapter definition in RegisterState
 Constantregstate = dict()
