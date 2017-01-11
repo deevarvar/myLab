@@ -445,9 +445,14 @@ class flowParser():
         lpid = lineinfo[2]
 
         if lpid not in self.pidpair:
+            #add some exceptional event like dhcp event
             return
 
         process = self.pidpair[lpid]
+
+        if process not in processmap:
+            self.logger.logger.error('process is not in processmap.')
+            return
 
         eventarray = processmap[process]
 

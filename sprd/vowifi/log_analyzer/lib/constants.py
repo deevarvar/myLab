@@ -342,6 +342,8 @@ module_Security="Security"
 #module_Lemon="Sip Stack"
 module_CP="CP"
 module_dialer="Dialer"
+module_systemserver="systemserver"
+module_wpasupplicant="wpasupplicant"
 
 class eventType():
     SEPERATOR = 1 #seperator line
@@ -371,6 +373,10 @@ imscmEvent = eventArray()
 phoneEvent = eventArray()
 securityEvent = eventArray()
 serviceEvent = eventArray()
+systemserverEvent = eventArray()
+wpaEvent = eventArray()
+
+
 
 processmap = dict()
 processmap['com.sprd.ImsConnectionManager'] = imscmEvent.getarray()
@@ -378,7 +384,8 @@ processmap['com.android.phone'] = phoneEvent.getarray()
 processmap['com.android.dialer'] = dialerEvent.getarray()
 processmap['com.sprd.vowifi.security'] = securityEvent.getarray()
 processmap['com.spreadtrum.vowifi'] = serviceEvent.getarray()
-
+processmap['system_server'] = systemserverEvent.getarray()
+processmap['wpa_supplicant'] = wpaEvent.getarray()
 
 #dialer part
 ### hold
@@ -464,15 +471,37 @@ imscmEvent.addEvent('(loopProcessIdleThreshold: Auto attach Vowifi)' , module_Im
 ##imscm error pattern
 imscmEvent.addEvent('\[(.*)\] error, mRequestId =' , module_ImsCM, eventType = eventType.EDGE, eventHandler=imscmhandlemsgerror)
 
-#TODO: add no rtp received
+## imscm no rtp received
+imscmEvent.addEvent('handleMessage: \"MSG_RECEIVE_NO_RTP\", \"(.*)\", isVideoPacket = (.*)' , module_ImsCM, eventType = eventType.EDGE, eventHandler=imscmnortp)
 
+## imscm ping unreachable, seems no need to draw
+imscmEvent.addEvent('(handleMessage: ping unreachable, must reset noAudioRtpCounter and noVideoRtpCounter)', module_ImsCM)
+## ping ok, no audio/no video reach max counter
+imscmEvent.addEvent('(handleMessage: .* meet max counter conditions, must reset noAudioRtpCounter and noVideoRtpCounter)', module_ImsCM)
 
+## operation Successed
+imscmEvent.addEvent('operationSuccessed: id = .*, type = "OPERATION_(.*)"', module_ImsCM, eventType = eventType.EDGE, eventHandler=imscmopsuccessed)
 
+##error msg
+###operation failed
+imscmEvent.addEvent('operationFailed: id = .*, type = "OPERATION_(.*)", failed reason = (.*)', module_ImsCM, eventType = eventType.EDGE, eventHandler=imscmopfailed)
+### switch vowifi error, not useful
+'''
+imscmEvent.addEvent('(switchOrHandoverVowifi: Device isn\'t in LTE environment)', module_ImsCM)
+imscmEvent.addEvent('(switchOrHandoverVowifi: primary USIM card is disabled)', module_ImsCM)
+imscmEvent.addEvent('(switchOrHandoverVowifi: error call mode and return this method, mCallMode =.*)', module_ImsCM)
+imscmEvent.addEvent('(switchOrHandoverVowifi: invalid vowifi rssi)', module_ImsCM)
+'''
+
+### some ho exception
+imscmEvent.addEvent('(Waiting for Volte registered for Volte call end)', module_ImsCM, eventType = eventType.EDGE, eventHandler=imswaitvoltereg)
+imscmEvent.addEvent('(Volte is registered, don\'t)', module_ImsCM, eventType = eventType.EDGE, eventHandler=imsrepeatvolte)
+imscmEvent.addEvent('(Vowifi is registered, don\'t)', module_ImsCM, eventType = eventType.EDGE, eventHandler=imsrepeatvowifi)
 
 ##post-ping
 ##wifi connected
 imscmEvent.addEvent('(wifi is connected)', module_ImsCM, eventType = eventType.EDGE, color="blue")
-imscmEvent.addEvent("NetworkUtils: (Local IP address is:.*)", module_ImsCM)
+#imscmEvent.addEvent("NetworkUtils: (Local IP address is:.*)", module_ImsCM)
 
 
 ##airplane open
@@ -486,16 +515,6 @@ imscmEvent.addEvent('(wifi is disconnected)', module_ImsCM, eventType = eventTyp
 imscmEvent.addEvent('database has changed, mIsWifiCallingEnabled = (.*)', module_ImsCM, eventType = eventType.EDGE, eventHandler=wfcstatus)
 ##default wifi calling
 imscmEvent.addEvent('(Wifi-calling is .*)', module_ImsCM, eventType = eventType.EDGE, color = "blue")
-
-##no rtp
-imscmEvent.addEvent("ImsConnectionManagerService:(.*mNoRtpTimes.*)", module_ImsCM)
-
-## more log about rssi
-##D:\code\log\otherlog\stephen\1236_in_voice_call_auto_handover_to_volte
-
-
-
-
 
 ### sim card only used in android 6
 imscmEvent.addEvent("(turn off primary SIM card)", module_ImsCM,eventType = eventType.EDGE, color="red")
@@ -722,3 +741,12 @@ serviceEvent.addEvent("(ACK to reinvite with no offer does not received when cal
 securityEvent.addEvent("LEMON.*(imsi is.*)", module_Security)
 securityEvent.addEvent("SecurityS2bBinder: INFO: (ping.*)", module_Security)
 
+#system_server part
+## wifi
+
+systemserverEvent.addEvent("(DhcpClient: Broadcasting DHCPDISCOVER)", module_systemserver, eventType=eventType.EDGE, eventHandler=dhcpdiscover)
+systemserverEvent.addEvent("DhcpClient: Received packet: .* ACK: your new IP /(.*), netmask", module_systemserver, eventType=eventType.EDGE, eventHandler=dhcpack)
+
+#wpa_supplicant part
+## get ssid
+wpaEvent.addEvent("wpa_supplicant: wlan0:    selected BSS (.*) ssid=\'(.*)\'", module_wpasupplicant,eventType=eventType.EDGE, eventHandler=wpaselect, groupnum=2)

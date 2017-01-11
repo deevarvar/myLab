@@ -906,9 +906,9 @@ class callthreshholdho(eventhandler):
         self.retmsg.level = Msglevel.WARNING
         self.retmsg.color = maplevel2color(self.retmsg.level)
         if hodirect == "Vowifi":
-            hostr = "Weak VoLTE signal\n"
+            hostr = "Strong WiFi signal\n"
         else:
-            hostr = "Strong VoLTE signal\n"
+            hostr = "Strong LTE signal\n"
 
         hostr += calltype + " Call Handover to " + hodirect
         self.retmsg.msg = hostr
@@ -926,9 +926,9 @@ class idlethreshholdho(eventhandler):
         self.retmsg.color = maplevel2color(self.retmsg.level)
         hostr = ''
         if hodirect == "Vowifi":
-            hostr = "Weak VoLTE signal\n"
+            hostr = "Strong WiFi signal\n"
         else:
-            hostr = "Strong VoLTE signal\n"
+            hostr = "Strong LTE signal\n"
         hostr +=  " Idle Handover to " + hodirect
         self.retmsg.msg = hostr
         return self.retmsg
@@ -950,6 +950,106 @@ class imscmhandlemsgerror(eventhandler):
         self.retmsg.level = Msglevel.ERROR
         self.retmsg.color = maplevel2color(self.retmsg.level)
         self.retmsg.msg = "Error happened when " + errorstr
+        return self.retmsg
+
+class imscmnortp(eventhandler):
+    '''
+    two pattern: call type, isvideo
+
+    '''
+    def handler(self):
+        calltype = str(self.match.group(1)).strip()
+        isvideo = str(self.match.group(2)).strip().lower()
+        if isvideo == "true":
+            nortp = "Video"
+        else:
+            nortp = "Audio"
+
+        nortpstr = "No " + nortp  + " in " + calltype
+        self.retmsg.level = Msglevel.ERROR
+        self.retmsg.color = maplevel2color(self.retmsg.level)
+        self.retmsg.msg = nortpstr
+        return self.retmsg
+
+class imscmopfailed(eventhandler):
+    '''
+    two pattern: operation, reason
+    operationFailed: id = 1, type = "OPERATION_HANDOVER_TO_VOLTE", failed reason = VOLTE pdn failed
+    '''
+    def handler(self):
+        self.retmsg.level = Msglevel.ERROR
+        self.retmsg.color = maplevel2color(self.retmsg.level)
+        operation = str(self.match.group(1)).strip()
+        reason = str(self.match.group(2)).strip()
+        operationstr = operation + " Failed\n"
+        reasonstr = "Reason: " + reason
+        self.retmsg.msg = operationstr + reasonstr
+        return self.retmsg
+
+class imscmopsuccessed(eventhandler):
+    '''
+    one pattern: operation
+    '''
+    def handler(self):
+        self.retmsg.level = Msglevel.WARNING
+        self.retmsg.color = maplevel2color(self.retmsg.level)
+        operation = str(self.match.group(1)).strip()
+        operationstr = operation + " Succeeded\n"
+        self.retmsg.msg = operationstr
+        return self.retmsg
+
+class imswaitvoltereg(eventhandler):
+    def handler(self):
+        self.retmsg.level = Msglevel.ERROR
+        self.retmsg.color = maplevel2color(self.retmsg.level)
+        self.retmsg.msg = "After VoLte Call End\nWait for Volte to register\nBlock HO to VoWiFi"
+        return self.retmsg
+
+class imsrepeatvolte(eventhandler):
+    def handler(self):
+        self.retmsg.level = Msglevel.WARNING
+        self.retmsg.color = maplevel2color(self.retmsg.level)
+        self.retmsg.msg = "VoLTE already registered\n Not HO to VoLTE"
+        return self.retmsg
+
+class imsrepeatvowifi(eventhandler):
+    def handler(self):
+        self.retmsg.level = Msglevel.WARNING
+        self.retmsg.color = maplevel2color(self.retmsg.level)
+        self.retmsg.msg = "VoWiFi already registered\n Not HO to VoWiFi"
+        return self.retmsg
+
+class wpaselect(eventhandler):
+    '''
+    two patterns: wifi mac, ssid
+    '''
+    def handler(self):
+        self.retmsg.level = Msglevel.WARNING
+        self.retmsg.color = maplevel2color(self.retmsg.level)
+        mac = str(self.match.group(1)).strip()
+        ssid = str(self.match.group(2)).strip()
+        ssidstr = "Select New WiFi AP: " + ssid + '\n'
+        macstr = "AP Mac: " + mac
+        self.retmsg.msg =  ssidstr + macstr
+        return self.retmsg
+
+class dhcpdiscover(eventhandler):
+    def handler(self):
+        self.retmsg.level = Msglevel.WARNING
+        self.retmsg.color = maplevel2color(self.retmsg.level)
+        self.retmsg.msg = "DHCP Discover"
+        return self.retmsg
+
+class dhcpack(eventhandler):
+    '''
+    one pattern: dhcp ip
+     DhcpClient: Received packet: 00:27:15:74:63:47 ACK: your new IP /10.1.63.66, netmask /255.255.252.0, gateway /10.1.60.1 DNS servers: /10.0.0.8 , lease time 600
+    '''
+    def handler(self):
+        ip = str(self.match.group(1)).strip()
+        self.retmsg.level = Msglevel.WARNING
+        self.retmsg.color = maplevel2color(self.retmsg.level)
+        self.retmsg.msg = "DHCP Get new IP: " + ip
         return self.retmsg
 
 

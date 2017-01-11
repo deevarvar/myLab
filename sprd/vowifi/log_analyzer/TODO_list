@@ -65,26 +65,36 @@ TODO:
                 loopProcessIdleThreshold
                 loopVideoCallQos
                 loopVideoCallThreshold
-
-
-
-                2.1 add function to redirect the logs.
-                2.2 MSG_RECEIVE_NO_RTP add function, ping unreachable
+                fixed MSG_RECEIVE_NO_RTP add function, ping unreachable, operation failed operationSuccessed
                     D:\code\log\ref_log\reliance\handover_qos\video_HO\ylog\ylog
-                3. operator's wifi observer
 
-                4. radio color
+                2. add function to redirect the logs.
+                add one member line in sipmsgs to enumate
+                3. radio color
+                4.  log level, color level
+
+                5. fixed  wifi roaming related
+                D:\code\log\bug_log\vit_log\2017_1_1\633336\01slog_20170109115506_S02_MOC_Fail_call_drop_1143\external_storage
+
+                     wpa_supplicant: wlan0:    selected BSS 64:f6:9d:66:1e:12 ssid='SPRD_visitor'
+                     DhcpClient: Broadcasting DHCPDISCOVER
+                     DhcpClient: Received packet: 00:27:15:74:63:47 OFFER
+                     DhcpClient: Received packet: 00:27:15:74:63:47 ACK
+
+                6.  add ho process calcute, overview
 
 
-                5.  log level
+TODO:
+                0. add flag to collect logs by module: imscm, service, adapter, network
 
-
-                client send - better
+                1. in imsconnectionmanagerservice.java ImsServiceListenerEx to look into
+                    imsPdnStateChange, onCallStateChanged
+                2. sim card status related in imsconnectionmonitor.java
+                3. client send - better
                 JuIpsecServer: Server Recv: {"ZIpsecCmd":"ZIpsecIpCmd","Cmd":"ip xfrm
                 anritsu vowifi ho to volte and ringing answer, wait for 40s, sa should be deleted.
                 IPSEC_SA_ADD_IN and IPSEC_SA_ADD_OUT are different
-                add ho process calcute
-                overview
+                4. if process restart , all the logic will not be exeed..
 
 # log material:
 #              1. D:\code\log\bug_log\vit_log\2016_09_26\595321   ho bugs: Vowifi is registered, don't switch vowifi again
