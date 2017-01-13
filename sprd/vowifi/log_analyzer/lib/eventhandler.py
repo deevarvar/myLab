@@ -22,6 +22,14 @@ def maplevel2color(level):
     else:
         return "red"
 
+def mapcode2str(code, map):
+    if type(map) is not dict:
+        return code
+    if code in map:
+        return map[code]
+    else:
+        return code
+
 class eventdict():
     def __init__(self):
         self.msglevel = Msglevel.INFO
@@ -79,7 +87,8 @@ class acceptcall(eventhandler):
     accept call , one pattern, calltype
     '''
     def handler(self):
-        calltype = Constantcalltype[str(self.match.group(1).strip())]
+        calltype = str(self.match.group(1).strip())
+        calltype = mapcode2str(calltype, Constantcalltype)
         self.retmsg.msglevel = Msglevel.WARNING
         self.retmsg.color = maplevel2color(self.retmsg.msglevel)
         self.retmsg.msg = "Accept As " + calltype
@@ -90,7 +99,8 @@ class rejectcall(eventhandler):
     reject call,
     '''
     def handler(self):
-        rejectreason = Constantimsreason[str(self.match.group(1).strip())]
+        rejectreason = str(self.match.group(1).strip())
+        rejectreason = mapcode2str(rejectreason,Constantimsreason)
         self.retmsg.msg = "Reject As :" + rejectreason
         return self.retmsg
 
@@ -100,10 +110,10 @@ class termcall(eventhandler):
     '''
     def handler(self):
         reasonstr = str(self.match.group(1)).strip()
-        termreason = Constantimsreason[reasonstr]
+        reasonstr = mapcode2str(reasonstr, Constantimsreason)
         self.retmsg.msglevel = Msglevel.WARNING
         self.retmsg.msg = maplevel2color(self.retmsg.msglevel)
-        self.retmsg.msg = "Term Call As :" + termreason
+        self.retmsg.msg = "Term Call As :" + reasonstr
         return self.retmsg
 
 def parsemprofile(mprofile):
@@ -122,11 +132,11 @@ def parsemprofile(mprofile):
                 #define the format
                 ret = dict()
                 ret['audio'] = dict()
-                ret['audio']['codec'] = ConstantAudioQ[aq]
-                ret['audio']['direct'] = Constantdirection[ad]
+                ret['audio']['codec'] = mapcode2str(aq, ConstantAudioQ)
+                ret['audio']['direct'] = mapcode2str(ad, Constantdirection)
                 ret['video'] = dict()
-                ret['video']['codec'] = ConstantVideoQ[vq]
-                ret['video']['direct'] = Constantdirection[vd]
+                ret['video']['codec'] = mapcode2str(vq, ConstantVideoQ)
+                ret['video']['direct'] = mapcode2str(vd, Constantdirection)
                 return ret
             else:
                 return None
@@ -303,7 +313,7 @@ class startcapture(eventhandler):
         callid = str(self.match.group(1)).strip()
         cameraid = str(self.match.group(2)).strip()
         qualityid = str(self.match.group(3)).strip()
-        qualitystr = ConstantVTResolution[qualityid]
+        qualitystr = mapcode2str(qualityid,ConstantVTResolution)
         fmsg = "Start Capture\n"
         fmsg += "Resolution: " + qualitystr + '\n'
         fmsg += "Callid: " + callid + '\n'
@@ -511,7 +521,7 @@ class servicecallback(eventhandler):
                 eventstr = 'Event: ' + curevent + '\n'
             if servicejson['event_name'] == "call_terminate":
                 if 'state_code' in servicejson:
-                    termreason = 'Term Call: ' + Constantimsreason[str(servicejson['state_code'])] + '\n'
+                    termreason = 'Term Call: ' + mapcode2str(str(servicejson['state_code']), Constantimsreason) + '\n'
                     self.retmsg.msglevel = Msglevel.WARNING
                     self.retmsg.color = maplevel2color(self.retmsg.msglevel)
 
@@ -531,7 +541,7 @@ class servicecallback(eventhandler):
         if 'id' in servicejson:
             callidstr = "Callid: " + str(servicejson['id']) + '\n'
         if 'alert_type' in servicejson:
-            alertstr = "User Alert: " + Constantcallcode[str(servicejson['alert_type'])] + '\n'
+            alertstr = "User Alert: " + mapcode2str(str(servicejson['alert_type']), Constantcallcode) + '\n'
         if 'is_video' in servicejson:
             if str(servicejson['is_video']).lower() == "false":
                 isvideostr = "calltype: Voice Call\n"
@@ -575,7 +585,7 @@ class logoutstatus(eventhandler):
     logout pattern: Constantregstate
     '''
     def handler(self):
-        regstr = Constantregstate[(str(self.match.group(1)).strip())]
+        regstr = mapcode2str(str(self.match.group(1)).strip(),Constantregstate)
         self.retmsg.msglevel = Msglevel.WARNING
         self.retmsg.color = maplevel2color(self.retmsg.msglevel)
         self.retmsg.msg = "Try to Logout \n"+"RegState is " + regstr
@@ -713,7 +723,8 @@ class reregstatus(eventhandler):
     re-register info, two pattern: access type and access info
     '''
     def handler(self):
-        acctype = Constantaccnettype[str(self.match.group(1).strip())]
+        acctype = str(self.match.group(1).strip())
+        acctype = mapcode2str(acctype, Constantaccnettype)
         accinfo = self.match.group(2)
         self.retmsg.msglevel = Msglevel.WARNING
         self.retmsg.color = maplevel2color(self.retmsg.msglevel)
@@ -737,7 +748,7 @@ class regstatus(eventhandler):
             self.retmsg.level = Msglevel.ERROR
             self.retmsg.color = maplevel2color(self.retmsg.level)
             eventstr = "Register event: " + eventname + '\n'
-            statestr = "state: " + str(statecode) + '-->' + Constantregerrcode[str(statecode)]
+            statestr = "state: " + str(statecode) + '-->' + mapcode2str(str(statecode),Constantregerrcode)
             self.retmsg.msg = eventstr + statestr
             return self.retmsg
         else:
@@ -765,7 +776,7 @@ class s2bstatus(eventhandler):
         if action == 'security_json_action_s2b_failed':
             errorcode = s2bjson['security_json_param_error_code']
             statestr = "epdg attach failed\n"
-            errorstr = "   stateCode: " + str(errorcode) + '-->' + Constants2berrcode[str(errorcode)]
+            errorstr = "   stateCode: " + str(errorcode) + '-->' + mapcode2str(str(errorcode), Constants2berrcode)
             self.retmsg.level = Msglevel.ERROR
             self.retmsg.color = maplevel2color(self.retmsg.level)
             self.retmsg.msg = statestr + errorstr
@@ -775,7 +786,7 @@ class s2bstatus(eventhandler):
             statestr = "epdg attach stopped\n"
             #add three spaces for alignment, not working...Orz...
             hostr = " ishandover: " + str(ishandover) + '\n'
-            errorstr = " StateCode: " + str(errorcode) + '-->' + Constants2berrcode[str(errorcode)]
+            errorstr = " StateCode: " + str(errorcode) + '-->' + mapcode2str(str(errorcode), Constants2berrcode)
             self.retmsg.level = Msglevel.WARNING
             self.retmsg.color = maplevel2color(self.retmsg.level)
             self.retmsg.msg = statestr + hostr + errorstr
@@ -865,11 +876,8 @@ class imscmpending(eventhandler):
         self.retmsg.color = maplevel2color(self.retmsg.level)
         curreq = str(self.match.group(1)).strip().replace('"', '').replace("'",'')
         pendreq = str(self.match.group(2)).strip().replace('"', '').replace("'",'')
-        if curreq in ConstantImsReq:
-            curreq = ConstantImsReq[curreq]
-
-        if pendreq in ConstantImsReq:
-            pendreq = ConstantImsReq[pendreq]
+        curreq = mapcode2str(curreq, ConstantImsReq)
+        pendreq = mapcode2str(pendreq, ConstantImsReq)
 
         curreqstr = "Current Req:" + curreq  + '\n'
         pendreqstr ="Pending Req:" + pendreq + '\n'
@@ -1052,6 +1060,63 @@ class dhcpack(eventhandler):
         self.retmsg.msg = "DHCP Get new IP: " + ip
         return self.retmsg
 
+
+class pingmsg(eventhandler):
+    '''
+    two pattern:  ping times, pingstring
+    pingCount = 0 this time ping www.bing.com success
+    '''
+    def handler(self):
+        pingcount = str(int(self.match.group(1))+1).strip()
+        pingstring = str(self.match.group(2)).strip()
+        self.retmsg.level = Msglevel.WARNING
+        self.retmsg.color = maplevel2color(self.retmsg.level)
+        index = "th"
+        if pingcount == "1":
+            index = "st"
+        elif pingcount == "2":
+            index = "nd"
+        elif pingcount == "3":
+            index = "rd"
+        self.retmsg.msg = pingcount + index + " Ping \n" + pingstring
+        return self.retmsg
+
+class ikeroaming(eventhandler):
+    '''
+    four pattern: roaming type, hplmn, vplmn, static address
+    '''
+    def handler(self):
+        roamingtype = str(self.match.group(1)).strip()
+        roamingtype = mapcode2str(roamingtype, Constantikeroaming)
+        hplmn = str(self.match.group(2)).strip()
+        vplmn = str(self.match.group(3)).strip()
+        static = str(self.match.group(4)).strip()
+        self.retmsg.level = Msglevel.WARNING
+        self.retmsg.color = maplevel2color(self.retmsg.level)
+        roamstr = "Roaming Type: " + roamingtype + '\n'
+        hplmnstr = "HPLMN: " + hplmn + '\n'
+        vplmnstr = "VPLMN: " + vplmn + '\n'
+        staticstr = "Static FQDN: " + static
+        self.retmsg.msg = roamstr + hplmnstr + vplmnstr + staticstr
+        return self.retmsg
+
+class networktype(eventhandler):
+    def handler(self):
+        self.retmsg.level = Msglevel.WARNING
+        self.retmsg.color = maplevel2color(self.retmsg.level)
+        networktype = str(self.match.group(1)).strip()
+        networktype = mapcode2str(networktype, ConstantNetworkType)
+        self.retmsg.msg = "Network Type: " + networktype
+        return self.retmsg
+
+class teleaction(eventhandler):
+    def handler(self):
+        self.retmsg.level = Msglevel.WARNING
+        self.retmsg.color = maplevel2color(self.retmsg.level)
+        msgtype = str(self.match.group(1)).strip()
+        msgtype = mapcode2str(msgtype, Constanttelemsg)
+        self.retmsg.msg = msgtype
+        return self.retmsg
 
 if __name__ == '__main__':
     key = 'abc'

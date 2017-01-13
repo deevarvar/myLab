@@ -509,6 +509,11 @@ imscmEvent.addEvent('(open airplane mode)', module_ImsCM , eventType = eventType
 ##airplaneclose
 imscmEvent.addEvent('(close airplane mode)', module_ImsCM,eventType = eventType.EDGE, color="blue")
 
+##lte network
+
+
+imscmEvent.addEvent('Lte network, networkType = (.*)', module_ImsCM, eventType = eventType.EDGE, eventHandler=networktype)
+
 ##wifi disconnected
 imscmEvent.addEvent('(wifi is disconnected)', module_ImsCM, eventType = eventType.EDGE, color="blue")
 ##wifi calling
@@ -523,7 +528,6 @@ imscmEvent.addEvent("(turn on primary SIM card)", module_ImsCM,eventType = event
 ##msg pending
 # ImsConnectionManagerService: handleMessageHandoverToVowifi: mIsPendingProcess
 #D:\code\log\bug_log\vit_log\2016_10_25\modem_log-0650-vowifiregisterfail-2
-
 
 
 
@@ -696,6 +700,7 @@ phoneEvent.addEvent("Set the pause image to.*", module_Phone)
 ###invite conf call
 phoneEvent.addEvent("(Try to invite this call.*to the conference call.*)", module_Phone)
 
+phoneEvent.addEvent("The handler get the message: (\d+)", module_Phone, eventType=eventType.EDGE, eventHandler=teleaction)
 
 
 
@@ -738,8 +743,20 @@ serviceEvent.addEvent("(ACK to reinvite with no offer does not received when cal
 ### MTC_EBASE_S2B , MTC_EBASE_REG
 
 #security part
-securityEvent.addEvent("LEMON.*(imsi is.*)", module_Security)
-securityEvent.addEvent("SecurityS2bBinder: INFO: (ping.*)", module_Security)
+securityEvent.addEvent("SecurityS2bBinder.*(Failed to exec the ping cmd)", module_Security, eventType=eventType.EDGE, color="red")
+securityEvent.addEvent("SecurityS2bBinder.*Mtc_S2bStart (no wifi network) get", module_Security, eventType=eventType.EDGE, color="red")
+securityEvent.addEvent("SecurityS2bBinder.*Mtc_S2bStart (netid is error)", module_Security, eventType=eventType.EDGE, color="red")
+securityEvent.addEvent("SecurityS2bBinder.*Mtc_S2bStart (netid is error)", module_Security, eventType=eventType.EDGE, color="red")
+securityEvent.addEvent("SecurityS2bBinder.*(phoneId = -1)", module_Security, eventType=eventType.EDGE, color="red")
+
+#strange ping algo for others...
+securityEvent.addEvent("SecurityS2bBinder.*pingCount = (\d) this time (ping .* success)", module_Security, eventType=eventType.EDGE, eventHandler=pingmsg, groupnum=2)
+#strange ping algo for reliance
+securityEvent.addEvent("SecurityS2bBinder.*this time (ping.*success)", module_Security, eventType=eventType.EDGE, color="blue")
+securityEvent.addEvent("SecurityS2bBinder.*(\d+ times of pings fail), notify fail", module_Security, eventType=eventType.EDGE, color="red")
+securityEvent.addEvent("SecurityS2bBinder.*(s2b Start fail), notify fail.", module_Security, eventType=eventType.EDGE, color="red")
+securityEvent.addEvent("SecurityS2bBinder.*roaming=(.*) hplmn =(.*) vplmn=(.*) static=(.*)", module_Security, eventType=eventType.EDGE, eventHandler=ikeroaming)
+securityEvent.addEvent("LEMON.*(imsi is.*)", module_Security, eventType=eventType.EDGE)
 
 #system_server part
 ## wifi

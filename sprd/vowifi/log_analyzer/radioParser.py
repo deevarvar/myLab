@@ -29,7 +29,7 @@ class radioParser():
             self.pattern['pdnpattern'] = config['radioParser']['pdnpattern']
             self.pattern['hopattern'] = config['radioParser']['hopattern']
             self.pattern['wifienpattern'] = config['radioParser']['wifienpattern']
-            #self.pattern['repregpattern'] = config['radioParser']['repregpattern']
+            self.pattern['repregpattern'] = config['radioParser']['repregpattern']
             #self.pattern['qryregpattern'] = config['radioParser']['qryregpattern']
             self.pattern['regstspattern'] = config['radioParser']['regstspattern']
             self.pattern['attachpattern'] = config['radioParser']['attachpattern']
@@ -109,11 +109,19 @@ class radioParser():
         self.keypattern.append(qryregpattern)
         '''
 
+        repregpattern = dict()
+        repregpattern['pattern'] = re.compile(self.pattern['repregpattern'])
+        repregpattern['func'] = self.repregstate
+        repregpattern['direct'] = '<-'
+        self.keypattern.append(repregpattern)
+
+        '''
         regstspattern = dict()
         regstspattern['pattern'] = re.compile(self.pattern['regstspattern'])
         regstspattern['func'] = self.getregstate
         regstspattern['direct'] = '<-'
         self.keypattern.append(regstspattern)
+        '''
 
         attachpattern = dict()
         attachpattern['pattern'] = re.compile(self.pattern['attachpattern'])
@@ -236,6 +244,24 @@ class radioParser():
         else:
             return "Unknown Handover state"
 
+    def repregstate(self, state):
+        if state == '0':
+            return "VoLTE Unregistered"
+        elif state == '1':
+            return "VoLTE Registered"
+        elif state == '2':
+            return "VoLTE Registering"
+        elif state == '3':
+            return "VoLTE Register fail"
+        elif state == '4':
+            return "Unknow state"
+        elif state == '5':
+            return "VoLTE Roaming"
+        elif state == '6':
+            return "VoLTE De-Registering"
+        else:
+            return "Unknown VoLTE Register state"
+
     def getregstate(self, state):
         if state == '0':
             return "VoLTE Unregistered"
@@ -255,7 +281,7 @@ class radioParser():
         return "Query CP Regsiter state"
 
     def getcallendstring(self):
-        return "Vowifi Call End"
+        return "Call End"
 
     def getupdatedr(self):
         return "Update Data Router"

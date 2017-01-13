@@ -67,12 +67,6 @@ TODO:
                 loopVideoCallThreshold
                 fixed MSG_RECEIVE_NO_RTP add function, ping unreachable, operation failed operationSuccessed
                     D:\code\log\ref_log\reliance\handover_qos\video_HO\ylog\ylog
-
-                2. add function to redirect the logs.
-                add one member line in sipmsgs to enumate
-                3. radio color
-                4.  log level, color level
-
                 5. fixed  wifi roaming related
                 D:\code\log\bug_log\vit_log\2017_1_1\633336\01slog_20170109115506_S02_MOC_Fail_call_drop_1143\external_storage
 
@@ -80,7 +74,23 @@ TODO:
                      DhcpClient: Broadcasting DHCPDISCOVER
                      DhcpClient: Received packet: 00:27:15:74:63:47 OFFER
                      DhcpClient: Received packet: 00:27:15:74:63:47 ACK
+                2. add function to redirect the logs.
+                add one member line in sipmsgs to enumate
+                3.fixed security ping, roaming
+D:\code\log\bug_log\vit_log\2017_1_1\634894\03slog_20170112202241_sp9832a_2h11_4mvoltesea_drop call_VoWIFI_Icon_gone_1724\ylog\ylog
+D:\code\log\bug_log\vit_log\2017_1_1\Info_590126_2\AP\ylog
+               fixed:  ImsConnectionManagerService: is Lte network, networkType
+                TelephonyManager.java, NETWORK_TYPE_LTE
 
+                fixed: "the handler get the message"  tele tell the adapter to do sth.
+
+
+
+
+
+                4. ImsCall : processCallTerminated
+                5. radio color
+                6.  log level, color level: switch algo yellow
                 6.  add ho process calcute, overview
 
 
@@ -97,6 +107,17 @@ TODO:
                 4. if process restart , all the logic will not be exeed..
 
 # log material:
-#              1. D:\code\log\bug_log\vit_log\2016_09_26\595321   ho bugs: Vowifi is registered, don't switch vowifi again
+#           1. ping/pong D:\code\log\bug_log\vit_log\2017_1_1\634407\1\Thailand_vowifi_MOC_nosound_pingpang_HO
+#           2. wifi roaming D:\code\log\bug_log\vit_log\2017_1_1\633336\01slog_20170109115506_S02_MOC_Fail_call_drop_1143\external_storage
+#           3. sms failed/success D:\code\log\bug_log\vit_log\2017_1_1\634707\1\01slog_20170112142706_sp9832a_sms_send_Fail_incall_142344\external_storage\ylog\ylog
+
+
+
+
+
+
+
+
+#1. D:\code\log\bug_log\vit_log\2016_09_26\595321   ho bugs: Vowifi is registered, don't switch vowifi again
 #
 

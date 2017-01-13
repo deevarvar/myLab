@@ -228,3 +228,80 @@ ConstantImsReq['MSG_HANDOVER_TO_VOLTE_BY_TIMER'] = "Handover to VoLTE By Timer"
 ConstantImsReq['MSG_RELEASE_VOWIFI_RES'] = "Release VoWiFi Res"
 ConstantImsReq['MSG_VOWIFI_UNAVAILABLE'] = "VoWiFi Unavailable"
 ConstantImsReq['MSG_CANCEL_CURRENT_REQUEST'] = "Cancel Current Request"
+
+
+#security code
+Constantikeroaming = dict()
+ROAMING_TYPE_NOT_ROAMING = 0
+ROAMING_TYPE_UNKNOWN = 1
+ROAMING_TYPE_DOMESTIC = 2
+ROAMING_TYPE_INTERNATIONAL = 3
+Constantikeroaming[str(ROAMING_TYPE_NOT_ROAMING)] = "not roaming"
+Constantikeroaming[str(ROAMING_TYPE_UNKNOWN)] = "unknow"
+Constantikeroaming[str(ROAMING_TYPE_DOMESTIC)] = "Domestic"
+Constantikeroaming[str(ROAMING_TYPE_INTERNATIONAL)] = "international"
+
+#TelephonyManager.java
+ConstantNetworkType = dict()
+NETWORK_TYPE_UNKNOWN = 0
+NETWORK_TYPE_GPRS = 1
+NETWORK_TYPE_EDGE = 2
+NETWORK_TYPE_UMTS = 3
+NETWORK_TYPE_CDMA = 4
+NETWORK_TYPE_EVDO_0 = 5
+NETWORK_TYPE_EVDO_A = 6
+NETWORK_TYPE_1xRTT = 7
+NETWORK_TYPE_HSDPA = 8
+NETWORK_TYPE_HSUPA = 9
+NETWORK_TYPE_HSPA = 10
+NETWORK_TYPE_IDEN = 11
+NETWORK_TYPE_EVDO_B = 12
+NETWORK_TYPE_LTE = 13
+NETWORK_TYPE_EHRPD = 14
+NETWORK_TYPE_HSPAP = 15
+NETWORK_TYPE_GSM = 16
+NETWORK_TYPE_TD_SCDMA = 17
+NETWORK_TYPE_IWLAN = 18
+NETWORK_TYPE_LTE_CA = 19
+
+ConstantNetworkType[str(NETWORK_TYPE_UNKNOWN)] = "Unknown"
+ConstantNetworkType[str(NETWORK_TYPE_GPRS)] = "GPRS"
+ConstantNetworkType[str(NETWORK_TYPE_EDGE)] = "EDGE"
+ConstantNetworkType[str(NETWORK_TYPE_UMTS)] = "UMTS"
+ConstantNetworkType[str(NETWORK_TYPE_CDMA)] = "CDMA"
+ConstantNetworkType[str(NETWORK_TYPE_EVDO_0)] = "EVDO_0"
+ConstantNetworkType[str(NETWORK_TYPE_EVDO_A)] = "EVDO_A"
+ConstantNetworkType[str(NETWORK_TYPE_1xRTT)] = "1xRTT"
+ConstantNetworkType[str(NETWORK_TYPE_HSDPA)] = "HSDPA"
+ConstantNetworkType[str(NETWORK_TYPE_HSUPA)] = "HSUPA"
+ConstantNetworkType[str(NETWORK_TYPE_HSPA)] = "HSPA"
+ConstantNetworkType[str(NETWORK_TYPE_IDEN)] = "IDEN"
+ConstantNetworkType[str(NETWORK_TYPE_EVDO_B)] = "EVDO_B"
+ConstantNetworkType[str(NETWORK_TYPE_LTE)] = "LTE"
+ConstantNetworkType[str(NETWORK_TYPE_EHRPD)] = "EHRPD"
+ConstantNetworkType[str(NETWORK_TYPE_HSPAP)] = "HSPAP"
+ConstantNetworkType[str(NETWORK_TYPE_GSM)] = "GSM"
+ConstantNetworkType[str(NETWORK_TYPE_TD_SCDMA)] = "TD_SCDMA"
+ConstantNetworkType[str(NETWORK_TYPE_IWLAN)] = "WLAN"
+ConstantNetworkType[str(NETWORK_TYPE_LTE_CA)] = "LTE_CA"
+
+#telephony and adapter's msg
+Constanttelemsg = dict()
+MSG_RESET = 1
+MSG_RESET_FORCE = 2
+MSG_ATTACH = 3
+MSG_DEATTACH = 4
+MSG_REGISTER = 5
+MSG_DEREGISTER = 6
+MSG_REREGISTER = 7
+MSG_UPDATE_DATAROUTER_STATE = 8
+MSG_TERMINATE_CALLS = 9
+Constanttelemsg[str(MSG_RESET)] = 'Reset'
+Constanttelemsg[str(MSG_RESET_FORCE)] = 'Force Reset'
+Constanttelemsg[str(MSG_ATTACH)] = 'start Epdg attach'
+Constanttelemsg[str(MSG_DEATTACH)] = 'Stop Epdg attach'
+Constanttelemsg[str(MSG_REGISTER)] = 'Start VoWiFi Register'
+Constanttelemsg[str(MSG_DEREGISTER)] = 'Start VoWiFi De-Register'
+Constanttelemsg[str(MSG_REREGISTER)] = 'Start Re-Register'
+Constanttelemsg[str(MSG_UPDATE_DATAROUTER_STATE)] = 'Update DataRouter'
+Constanttelemsg[str(MSG_TERMINATE_CALLS)] = 'Term Call'
