@@ -81,18 +81,19 @@ D:\code\log\bug_log\vit_log\2017_1_1\634894\03slog_20170112202241_sp9832a_2h11_4
 D:\code\log\bug_log\vit_log\2017_1_1\Info_590126_2\AP\ylog
                fixed:  ImsConnectionManagerService: is Lte network, networkType
                 TelephonyManager.java, NETWORK_TYPE_LTE
-
                 fixed: "the handler get the message"  tele tell the adapter to do sth.
 
 
 
 
+                0. sms tracking
 
-                4. ImsCall : processCallTerminated
-                5. radio color
-                6.  log level, color level: switch algo yellow
-                6.  add ho process calcute, overview
-
+                2. radio color, add finish time
+                3.  log level, color level: switch algo yellow
+                4.  add ho process calcute, overview: attach, pdn, reg, ho, call , sms
+                4.1 overview , only big event, once error happen, list error transaction
+                4.2 transaction check and display, blockdiag
+                5. Imsservice: ImsCall : processCallTerminated
 
 TODO:
                 0. add flag to collect logs by module: imscm, service, adapter, network

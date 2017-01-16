@@ -1118,6 +1118,86 @@ class teleaction(eventhandler):
         self.retmsg.msg = msgtype
         return self.retmsg
 
+class regstatewrongcallfail(eventhandler):
+    def handler(self):
+        self.retmsg.level = Msglevel.ERROR
+        self.retmsg.color = maplevel2color(self.retmsg.level)
+        self.retmsg.msg = "VoWiFi not Registered.\nEnd Call!"
+        return self.retmsg
+
+class sendsms(eventhandler):
+    '''
+    retry times , messageref, smsmsg
+    '''
+    def handler(self):
+        self.retmsg.level = Msglevel.WARNING
+        self.retmsg.color = maplevel2color(self.retmsg.level)
+        retry = str(self.match.group(1)).strip()
+        idstr = "messageRef: " + str(self.match.group(2)).strip() + '\n'
+        smsmsg = str(self.match.group(3)).strip()
+        retrystr = ""
+        if int(retry) >= 1:
+            retrystr = "Retry: " + retry + " times"
+        self.retmsg.msg = "Send Sms: " + smsmsg + '\n' + retrystr + idstr
+        return self.retmsg
+
+
+class smspair(eventhandler):
+    '''
+    messageref, id
+    '''
+    def handler(self):
+        self.retmsg.level = Msglevel.WARNING
+        self.retmsg.color = maplevel2color(self.retmsg.level)
+        messageRefstr = "messageRef: " + str(self.match.group(1)).strip() + '\n'
+        idstr = "ID: " + str(self.match.group(2)).strip() + '\n'
+        self.retmsg.msg = messageRefstr + idstr
+        return self.retmsg
+
+class sendsmsok(eventhandler):
+    '''
+    id, smstype
+    '''
+    def handler(self):
+        self.retmsg.level = Msglevel.WARNING
+        self.retmsg.color = maplevel2color(self.retmsg.level)
+        idstr = "ID: " + str(self.match.group(1)).strip() + '\n'
+        smstype = str(self.match.group(2)).strip()
+        smsstr = "Sms Type: " + mapcode2str(smstype, ConstantSmsType) + '\n'
+        self.retmsg.msg = "Send Sms OK\n" + idstr + smsstr
+        return self.retmsg
+
+class sendsmsfailed(eventhandler):
+    '''
+    messageRef, smstype, errorcode
+    '''
+    def handler(self):
+        self.retmsg.level = Msglevel.ERROR
+        self.retmsg.color = maplevel2color(self.retmsg.level)
+        messageRefstr = "messageRef: " + str(self.match.group(1)).strip() + '\n'
+        smstype = str(self.match.group(2)).strip()
+        smsstr = "Sms Type: " + mapcode2str(smstype, ConstantSmsType) + '\n'
+        error = str(self.match.group(3)).strip()
+        errorstr = "Error State: " + mapcode2str(error, ConstantImmsg)
+        self.retmsg.msg = "Send Sms Failed!\n" + messageRefstr + smsstr + errorstr
+        return self.retmsg
+
+class smstimeout(eventhandler):
+    def handler(self):
+        self.retmsg.level = Msglevel.ERROR
+        self.retmsg.color = maplevel2color(self.retmsg.level)
+        messageRefstr = "messageRef: " + str(self.match.group(1)).strip() + '\n'
+        self.retmsg.msg = "Send Sms timeout!\n" + messageRefstr
+        return self.retmsg
+
+class recvsms(eventhandler):
+    def handler(self):
+        self.retmsg.level = Msglevel.WARNING
+        self.retmsg.color = maplevel2color(self.retmsg.level)
+        idstr = "ID: " + str(self.match.group(1)).strip() + '\n'
+        self.retmsg.msg = "Receive Sms \n" + idstr
+        return self.retmsg
+
 if __name__ == '__main__':
     key = 'abc'
     line = "abc"

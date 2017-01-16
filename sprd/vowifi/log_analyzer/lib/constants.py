@@ -595,6 +595,10 @@ phoneEvent.addEvent("Initiates an ims call with (.*)", module_Phone, eventType=e
 ###start failed
 phoneEvent.addEvent("(Native start the call failed)", module_Phone, eventType=eventType.EDGE, eventHandler=defaultfailed)
 
+#FIXME: reg state is wrong.
+phoneEvent.addEvent("ImsCallSessionImpl.*(Start the call failed. Check the callee or profile)", module_Phone, eventType=eventType.EDGE, eventHandler=regstatewrongcallfail)
+
+
 ###one click start conf call
 phoneEvent.addEvent("Initiates an ims conference call with participants: (.*)", module_Phone, eventType=eventType.EDGE, eventHandler=oneclickconf)
 ###one click start failed
@@ -694,7 +698,7 @@ phoneEvent.addEvent("Failed to rotate remote render for the call: (\w+)", module
 ###modify request
 phoneEvent.addEvent("Try to send the modify request, isVideo: (\w+)", module_Phone, eventType=eventType.EDGE, eventHandler=modifyrequest)
 
-
+phoneEvent.addEvent("(Failed to send the modify request) for the call", module_Phone, eventType=eventType.EDGE, color="red")
 ###TODO: set pause image, not common function
 phoneEvent.addEvent("Set the pause image to.*", module_Phone)
 ###invite conf call
@@ -737,6 +741,16 @@ serviceEvent.addEvent("Notify the event: (.*)", module_Service, eventType=eventT
 #lemon part
 ##reinvite ack not received
 serviceEvent.addEvent("(ACK to reinvite with no offer does not received when call.*)", module_Service)
+
+#sms logs
+
+serviceEvent.addEvent("Send the sms over wifi: smscPDU\[.*\] pdu\[.*\] retry\[(.*)\] messageRef\[.*\] serial\[(.*)\] text\[(.*)\]", module_Service, eventType=eventType.EDGE, eventHandler=sendsms, groupnum = 3)
+
+serviceEvent.addEvent("Native send vowifi SMS, rpMessageRef: (.*), id: (.*)", module_Service, eventType=eventType.EDGE, eventHandler=smspair, groupnum =2)
+serviceEvent.addEvent("Get the native callback, message send ok: id = (.*), type = (.*)", module_Service, eventType=eventType.EDGE, eventHandler=sendsmsok, groupnum =2)
+serviceEvent.addEvent("SmsService: Get the .* callback, received message: id = (.*)", module_Service, eventType=eventType.EDGE, eventHandler=recvsms)
+serviceEvent.addEvent("Get the native callback, message send failed: id = (.*), type = (.*), stateCode = (.*)", module_Service, eventType=eventType.EDGE, eventHandler=sendsmsfailed, groupnum = 3)
+serviceEvent.addEvent("Handle the timeout message, rpMessageRef: (.*)", module_Service, eventType=eventType.EDGE, eventHandler=smstimeout)
 
 
 
