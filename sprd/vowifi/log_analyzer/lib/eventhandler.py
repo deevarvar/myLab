@@ -657,7 +657,18 @@ class imsregaddr(eventhandler):
         regaddr = self.match.group(1)
         self.retmsg.msg = "SetIMSRegAddr:\n   " + regaddr
         return self.retmsg
-
+class turnmute(eventhandler):
+    def handler(self):
+        self.retmsg.msglevel = Msglevel.WARNING
+        self.retmsg.color = maplevel2color(self.retmsg.msglevel)
+        mute = str(self.match.group(1)).strip().lower()
+        mutestr = ""
+        if mute == "false":
+            mutestr = "Unmuted"
+        else:
+            mutestr = "Muted"
+        self.retmsg.msg = mutestr
+        return self.retmsg
 
 class mutestatus(eventhandler):
     '''
@@ -701,7 +712,7 @@ class akastatus(eventhandler):
     one pattern DB means auth correctly, DC means sync failure
     '''
     def handler(self):
-        akatag = self.match.group(1)
+        akatag = str(self.match.group(1)).strip()[:2]
         if akatag == "DB":
             akastr = "AKA AUTH correctly"
             self.retmsg.msglevel = Msglevel.INFO
@@ -1133,12 +1144,12 @@ class sendsms(eventhandler):
         self.retmsg.level = Msglevel.WARNING
         self.retmsg.color = maplevel2color(self.retmsg.level)
         retry = str(self.match.group(1)).strip()
-        idstr = "messageRef: " + str(self.match.group(2)).strip() + '\n'
-        smsmsg = str(self.match.group(3)).strip()
+        #idstr = "messageRef: " + str(self.match.group(2)).strip() + '\n'
+        smsmsg = str(self.match.group(2)).strip()
         retrystr = ""
         if int(retry) >= 1:
             retrystr = "Retry: " + retry + " times"
-        self.retmsg.msg = "Send Sms: " + smsmsg + '\n' + retrystr + idstr
+        self.retmsg.msg = "Send Sms: " + smsmsg + '\n' + retrystr
         return self.retmsg
 
 
@@ -1174,12 +1185,12 @@ class sendsmsfailed(eventhandler):
     def handler(self):
         self.retmsg.level = Msglevel.ERROR
         self.retmsg.color = maplevel2color(self.retmsg.level)
-        messageRefstr = "messageRef: " + str(self.match.group(1)).strip() + '\n'
+        idstr = "ID: " + str(self.match.group(1)).strip() + '\n'
         smstype = str(self.match.group(2)).strip()
         smsstr = "Sms Type: " + mapcode2str(smstype, ConstantSmsType) + '\n'
         error = str(self.match.group(3)).strip()
-        errorstr = "Error State: " + mapcode2str(error, ConstantImmsg)
-        self.retmsg.msg = "Send Sms Failed!\n" + messageRefstr + smsstr + errorstr
+        errorstr = "Error State: " + error+ '-->' + mapcode2str(error, ConstantImmsg)
+        self.retmsg.msg = "Send Sms Failed!\n" + idstr + smsstr + errorstr
         return self.retmsg
 
 class smstimeout(eventhandler):

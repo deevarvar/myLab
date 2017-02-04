@@ -197,12 +197,18 @@ class flowParser():
             self.keylogall = ''
             self.keylogdaps = ''
 
+            #eventlog
+            self.eventlog = self.diagdir + 'event.log'
+
             #first we just cache all lines
             with open(self.log, 'rb') as logfile:
                 self.loglines = logfile.readlines()
 
             with open(self.lemonlog, 'w') as tlog:
                 tlog.truncate()
+
+            with open(self.eventlog, 'w') as elog:
+                elog.truncate()
 
             #important structure: sipmsgs, is a list with order
             #currently sipmsgs will include ike/sip
@@ -488,6 +494,9 @@ class flowParser():
                     eventmsg['isevent'] = 1
                     eventmsg['eventtype'] = eventType
                     eventmsg['modulename'] = modulename
+                    #store the match line
+                    eventmsg['line'] = line
+
                     self.sipmsgs.append(eventmsg)
                 else:
                     self.logger.logger.error("event is invalid or not needed in lineno " + str(lineno))
@@ -1174,6 +1183,7 @@ class flowParser():
             else:
                 if 'isevent' in sip:
                     onestr = self.assembleEventStr(sip)
+
                 elif 'isike' in sip:
                     #parse ike msg
                     onestr = self.assembleIkeStr(sip, elements)
@@ -1754,7 +1764,9 @@ class flowParser():
         diaginfo['msglevel'] = eventobj['msglevel']
         diaginfo['eventtype'] = eventobj['eventtype']
         diaginfo['modulename'] = eventobj['modulename']
-
+        diaginfo['line'] = eventobj['line']
+        with open(self.eventlog, 'a+') as elog:
+            elog.write(diaginfo['line'])
 
         self.diagsips.append(diaginfo)
 

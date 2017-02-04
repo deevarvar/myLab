@@ -398,7 +398,8 @@ dialerEvent.addEvent("(Putting the call on hold)", module_dialer, eventType = ev
 ### resume
 dialerEvent.addEvent("(Removing the call from hold)", module_dialer, eventType = eventType.EDGE)
 dialerEvent.addEvent("(Swapping call to foreground)", module_dialer, eventType = eventType.EDGE)
-
+#
+dialerEvent.addEvent("CallButtonPresenter - turning on mute: (.*)", module_Phone, eventType=eventType.EDGE, eventHandler=turnmute)
 #pause video, no correct keyword?
 
 
@@ -585,10 +586,12 @@ phoneEvent.addEvent("Get the register state changed callback: {\"event_code\":.*
 #phoneEvent.addEvent("(Handle the event.*for the call.*)", module_Phone)
 
 
-###mute success
-phoneEvent.addEvent("Mutes\((.*)\)the mic for the active call", module_Phone, eventType=eventType.EDGE, eventHandler=mutestatus)
-###mute failed
-phoneEvent.addEvent("(Native set mute failed)", module_Phone, eventType=eventType.EDGE, eventHandler=defaultfailed)
+###mute success, not come here
+#phoneEvent.addEvent("Mutes\((.*)\)the mic for the active call", module_Phone, eventType=eventType.EDGE, eventHandler=mutestatus)
+###mute failed, not come here
+#phoneEvent.addEvent("(Native set mute failed)", module_Phone, eventType=eventType.EDGE, eventHandler=defaultfailed)
+
+
 
 ###start call, #important key words
 phoneEvent.addEvent("Initiates an ims call with (.*)", module_Phone, eventType=eventType.EDGE, eventHandler=makecallstatus)
@@ -744,7 +747,7 @@ serviceEvent.addEvent("(ACK to reinvite with no offer does not received when cal
 
 #sms logs
 
-serviceEvent.addEvent("Send the sms over wifi: smscPDU\[.*\] pdu\[.*\] retry\[(.*)\] messageRef\[.*\] serial\[(.*)\] text\[(.*)\]", module_Service, eventType=eventType.EDGE, eventHandler=sendsms, groupnum = 3)
+serviceEvent.addEvent("Send the sms over wifi: smscPDU\[.*\] pdu\[.*\] retry\[(.*)\] messageRef\[.*\] serial\[.*\] text\[(.*)\]", module_Service, eventType=eventType.EDGE, eventHandler=sendsms, groupnum = 2)
 
 serviceEvent.addEvent("Native send vowifi SMS, rpMessageRef: (.*), id: (.*)", module_Service, eventType=eventType.EDGE, eventHandler=smspair, groupnum =2)
 serviceEvent.addEvent("Get the native callback, message send ok: id = (.*), type = (.*)", module_Service, eventType=eventType.EDGE, eventHandler=sendsmsok, groupnum =2)
