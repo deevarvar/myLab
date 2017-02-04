@@ -346,7 +346,7 @@ class radioParser():
             atmsg['atcmd'] = match.group(0).strip().replace('"', '')
             atmsg['direct'] = direct
             atmsg['lineno'] = 'radio log:' + str(lineno)
-
+            atmsg['line'] = line.strip(' \t')
             groupnum = pattern.groups
             if not actionfunc:
                 atmsg['action'] = ''

@@ -1765,10 +1765,17 @@ class flowParser():
         diaginfo['eventtype'] = eventobj['eventtype']
         diaginfo['modulename'] = eventobj['modulename']
         diaginfo['line'] = eventobj['line']
-        with open(self.eventlog, 'a+') as elog:
-            elog.write(diaginfo['line'])
-
         self.diagsips.append(diaginfo)
+
+    def directEventLog(self, msglist):
+        if msglist and type(msglist) is list:
+            with open(self.eventlog, 'a+') as elog:
+                for index, msg in enumerate(msglist):
+                    if 'isevent' in msg:
+                        elog.write( "main log:"+ str(msg['lineno']) + ':'+ msg['line'])
+                    elif 'isat' in msg:
+                        #radio log already add the prefix
+                        elog.write(str(msg['lineno']) + ':'+ msg['line'])
 
     def parseFlow(self):
         '''
@@ -1797,8 +1804,11 @@ class flowParser():
             self.diagsips = self.diagsips + self.atmsgs
         self.diagsips = self.utils.mergelistbykey(self.diagsips, 'timestamp')
 
-        #dump the trim sip
-        self.dumpDiagsip()
+        #add function output radio/event log to event.log
+        self.directEventLog(self.diagsips)
+
+        #dump the trim sip, no need to dump
+        #self.dumpDiagsip()
 
         if self.diagsips:
             self.assembleDiagStr()
