@@ -1178,6 +1178,17 @@ class sendsmsok(eventhandler):
         self.retmsg.msg = "Send Sms OK\n" + idstr + smsstr
         return self.retmsg
 
+class sendsmsok2(eventhandler):
+    '''
+    msgref
+    '''
+    def handler(self):
+        self.retmsg.level = Msglevel.WARNING
+        self.retmsg.color = maplevel2color(self.retmsg.level)
+        msgrefstr = "messageRef: " + str(self.match.group(1)).strip() + '\n'
+        self.retmsg.msg = "Send Sms OK\n" + msgrefstr
+        return self.retmsg
+
 class sendsmsfailed(eventhandler):
     '''
     messageRef, smstype, errorcode
@@ -1207,6 +1218,22 @@ class recvsms(eventhandler):
         self.retmsg.color = maplevel2color(self.retmsg.level)
         idstr = "ID: " + str(self.match.group(1)).strip() + '\n'
         self.retmsg.msg = "Receive Sms \n" + idstr
+        return self.retmsg
+
+class recvsms2(eventhandler):
+    def handler(self):
+        self.retmsg.level = Msglevel.WARNING
+        self.retmsg.color = maplevel2color(self.retmsg.level)
+        msgrefstr = "messageRef: " + str(self.match.group(1)).strip() + '\n'
+        self.retmsg.msg = "Receive Sms \n" + msgrefstr
+        return self.retmsg
+
+class smsack(eventhandler):
+    def handler(self):
+        self.retmsg.level = Msglevel.WARNING
+        self.retmsg.color = maplevel2color(self.retmsg.level)
+        msgrefstr = "messageRef: " + str(self.match.group(1)).strip() + '\n'
+        self.retmsg.msg = "Send Sms ACK\n" + msgrefstr
         return self.retmsg
 
 if __name__ == '__main__':

@@ -751,10 +751,14 @@ serviceEvent.addEvent("Send the sms over wifi: smscPDU\[.*\] pdu\[.*\] retry\[(.
 
 serviceEvent.addEvent("Native send vowifi SMS, rpMessageRef: (.*), id: (.*)", module_Service, eventType=eventType.EDGE, eventHandler=smspair, groupnum =2)
 serviceEvent.addEvent("Get the native callback, message send ok: id = (.*), type = (.*)", module_Service, eventType=eventType.EDGE, eventHandler=sendsmsok, groupnum =2)
+serviceEvent.addEvent("SmsService: Message send ok, get the rpMessageRef: (.*)", module_Service, eventType=eventType.EDGE, eventHandler=sendsmsok2)
+
 serviceEvent.addEvent("SmsService: Get the .* callback, received message: id = (.*)", module_Service, eventType=eventType.EDGE, eventHandler=recvsms)
+serviceEvent.addEvent("SmsService: Received message, get the rpMessageRef: (.*)", module_Service, eventType=eventType.EDGE, eventHandler=recvsms2)
+
 serviceEvent.addEvent("Get the native callback, message send failed: id = (.*), type = (.*), stateCode = (.*)", module_Service, eventType=eventType.EDGE, eventHandler=sendsmsfailed, groupnum = 3)
 serviceEvent.addEvent("Handle the timeout message, rpMessageRef: (.*)", module_Service, eventType=eventType.EDGE, eventHandler=smstimeout)
-
+serviceEvent.addEvent("Send SMS ack for rpMessageRef: (.*)", module_Service, eventType=eventType.EDGE, eventHandler=smsack)
 
 
 ### MTC_EBASE_S2B , MTC_EBASE_REG
