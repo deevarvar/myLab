@@ -86,8 +86,8 @@ D:\code\log\bug_log\vit_log\2017_1_1\Info_590126_2\AP\ylog
                 fixed: sim card status related in imsconnectionmonitor.java
 
 
-                0. fixed :old sms tracking
-                1. new sms tracking, new ping error, ping fail
+                0. fixed: old sms tracking
+                1. fixed: new sms tracking, new ping error, ping fail
                 2. radio color, add finish time
                 3.  log level, color level: switch algo yellow
                 4.  add ho process calcute, overview: attach, pdn, reg, ho, call , sms
