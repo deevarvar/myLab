@@ -58,7 +58,7 @@ Q850map['23']['sip'] = "410 Gone"
 
 
 Q850map['25'] = dict()
-Q850map['25']['isdn'] = "EXCHANGE_ROUTING_ERRORn"
+Q850map['25']['isdn'] = "EXCHANGE_ROUTING_ERROR"
 Q850map['25']['sip'] = "483 Too Many Hops"
 
 Q850map['26'] = dict()
@@ -355,7 +355,7 @@ class eventArray():
     def __init__(self):
         self.array = list()
 
-    def addEvent(self, key, module, eventType = eventType.SEPERATOR, eventHandler = matchone, color= "black", groupnum=1):
+    def addEvent(self, key, module, eventType = eventType.SEPERATOR, eventHandler = matchone, color= "black", groupnum=1 ):
         event = dict()
         event['key'] = key
         event['module'] = module
@@ -363,6 +363,7 @@ class eventArray():
         event['eventHandler'] = eventHandler
         event['color'] = color
         event['groupnum'] = groupnum
+
         self.array.append(event)
 
     def getarray(self):

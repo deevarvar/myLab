@@ -7,12 +7,16 @@ import re
 import json
 import mobile_codes
 from sprdErrCode import *
+from reportEvent import *
+
 
 class Msglevel():
     DEBUG = 1
     INFO = 2
     WARNING = 3
     ERROR = 4
+
+
 
 def maplevel2color(level):
     if level <= Msglevel.INFO:
@@ -35,6 +39,8 @@ class eventdict():
         self.msglevel = Msglevel.INFO
         self.color = "black"
         self.msg = None
+        #report type, default is none, should be set in eventHandler
+        self.reporttype = None
 
 class eventhandler():
     def __init__(self, match, color, groupnum):
@@ -755,6 +761,7 @@ class regstatus(eventhandler):
         statecode = int(self.match.group(2))
         regbase = int(MTC_CLI_REG_BASE)
         #only return when statecode >= 0xE100 or -1
+        self.retmsg.reporttype = ReportType.PHONEEVENT_BASE
         if statecode > regbase:
             self.retmsg.level = Msglevel.ERROR
             self.retmsg.color = maplevel2color(self.retmsg.level)
@@ -784,6 +791,7 @@ class s2bstatus(eventhandler):
         s2bstr = self.match.group(1).strip()
         s2bjson = json.loads(s2bstr)
         action = s2bjson['security_json_action']
+        self.retmsg.reporttype = ReportType.PHONEEVENT_BASE
         if action == 'security_json_action_s2b_failed':
             errorcode = s2bjson['security_json_param_error_code']
             statestr = "epdg attach failed\n"
@@ -801,9 +809,10 @@ class s2bstatus(eventhandler):
             self.retmsg.level = Msglevel.WARNING
             self.retmsg.color = maplevel2color(self.retmsg.level)
             self.retmsg.msg = statestr + hostr + errorstr
+
         elif action == "security_json_action_s2b_successed":
             statestr = "epdg attach successfully\n"
-            ipv4str = ipv6str = pcscfv4str = pcscfv6str = dnsv4 = dnsv6 = ''
+            ipv4str = ipv6str = pcscfv4str = pcscfv6str = dnsv4str = dnsv6str = ''
             if 'security_json_param_local_ip4' in s2bjson:
                 ipv4str = "     IPv4: " + s2bjson['security_json_param_local_ip4'] + '\n'
             if 'security_json_param_local_ip6' in s2bjson:
@@ -815,10 +824,11 @@ class s2bstatus(eventhandler):
             if 'security_json_param_dns_ip4' in s2bjson:
                 dnsv4str = "   DNS IPv4: " + s2bjson['security_json_param_dns_ip4'] + '\n'
             if 'security_json_param_dns_ip6' in s2bjson:
-                dnsv4str = "   DNS IPv6: " + s2bjson['security_json_param_dns_ip6'] + '\n'
+                dnsv6str = "   DNS IPv6: " + s2bjson['security_json_param_dns_ip6'] + '\n'
             self.retmsg.level = Msglevel.WARNING
             self.retmsg.color = maplevel2color(self.retmsg.level)
-            self.retmsg.msg = statestr + ipv4str + ipv6str + pcscfv4str + pcscfv6str + dnsv4 + dnsv6
+            self.retmsg.msg = statestr + ipv4str + ipv6str + pcscfv4str + pcscfv6str + dnsv4str + dnsv6str
+
         else:
             return None
 

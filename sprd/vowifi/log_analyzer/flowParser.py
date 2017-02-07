@@ -106,6 +106,7 @@ from PyPDF2 import PdfFileMerger, PdfFileReader
 #sys.path.append('./lib')
 from lib.SipParser import SipParser
 from lib.IkeParser import IkeParser
+from lib.reportEvent import ReportEvent
 from lib.logConf import logConf
 from lib.utils import utils
 
@@ -157,6 +158,7 @@ class flowParser():
             self.logger = logConf(debuglevel=logging.getLevelName(self.loglevel))
             self.sipparser = SipParser(configpath='./')
             self.ikeParser = IkeParser(configpath='./')
+
             self.files = dict()
             #despreated logic
            # self.files['log'] = config['files']['log']
@@ -199,6 +201,9 @@ class flowParser():
 
             #eventlog
             self.eventlog = self.diagdir + 'event.log'
+            self.report = self.diagdir + 'report.html'
+
+            self.reportevent = ReportEvent(configpath='./', reportpath=self.report)
 
             #first we just cache all lines
             with open(self.log, 'rb') as logfile:
@@ -209,6 +214,9 @@ class flowParser():
 
             with open(self.eventlog, 'w') as elog:
                 elog.truncate()
+
+            with open(self.report, 'w') as rlog:
+                rlog.truncate()
 
             #important structure: sipmsgs, is a list with order
             #currently sipmsgs will include ike/sip
@@ -496,7 +504,7 @@ class flowParser():
                     eventmsg['modulename'] = modulename
                     #store the match line
                     eventmsg['line'] = line
-
+                    eventmsg['reporttype'] = eventdict.reporttype
                     self.sipmsgs.append(eventmsg)
                 else:
                     self.logger.logger.error("event is invalid or not needed in lineno " + str(lineno))
@@ -1765,9 +1773,16 @@ class flowParser():
         diaginfo['eventtype'] = eventobj['eventtype']
         diaginfo['modulename'] = eventobj['modulename']
         diaginfo['line'] = eventobj['line']
+        diaginfo['reporttype'] = eventobj['reporttype']
+
         self.diagsips.append(diaginfo)
 
-    def directEventLog(self, msglist):
+    def redirectEventLog(self, msglist):
+        '''
+        need to add more logic , calculate the event.
+        :param msglist:
+        :return:
+        '''
         if msglist and type(msglist) is list:
             with open(self.eventlog, 'a+') as elog:
                 for index, msg in enumerate(msglist):
@@ -1776,6 +1791,9 @@ class flowParser():
                     elif 'isat' in msg:
                         #radio log already add the prefix
                         elog.write(str(msg['lineno']) + ':'+ msg['line'])
+
+                    #add logic to generate the report
+                    self.reportevent.grepEvent(msg)
 
     def parseFlow(self):
         '''
@@ -1805,7 +1823,7 @@ class flowParser():
         self.diagsips = self.utils.mergelistbykey(self.diagsips, 'timestamp')
 
         #add function output radio/event log to event.log
-        self.directEventLog(self.diagsips)
+        self.redirectEventLog(self.diagsips)
 
         #dump the trim sip, no need to dump
         #self.dumpDiagsip()

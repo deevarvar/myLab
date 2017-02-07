@@ -84,17 +84,24 @@ D:\code\log\bug_log\vit_log\2017_1_1\Info_590126_2\AP\ylog
                 fixed: "the handler get the message"  tele tell the adapter to do sth.
 
                 fixed: sim card status related in imsconnectionmonitor.java
+                fixed: old sms tracking
+                fixed: new sms tracking, new ping error, ping fail
+                fixed: event/radio log redirect
 
-
-                0. fixed: old sms tracking
-                1. fixed: new sms tracking, new ping error, ping fail
                 2. radio color, add finish time
                 3.  log level, color level: switch algo yellow
+                3.1 remove video/call related logs
                 4.  add ho process calcute, overview: attach, pdn, reg, ho, call , sms
+                error sample log:
+                D:\code\log\bug_log\vit_log\2017_1_1\634894\03slog_20170112202241_sp9832a_2h11_4mvoltesea_drop call_VoWIFI_Icon_gone_1724\ylog\ylog
+
+                regstatus, s2bstatus
+
+
+
                 4.1 overview , only big event, once error happen, list error transaction
                 4.2 transaction check and display, blockdiag
                 5. Imsservice: ImsCall : processCallTerminated
-                6. SecurityS2bWrapper: init apk start
 
 
 TODO:
@@ -113,7 +120,7 @@ TODO:
                 anritsu vowifi ho to volte and ringing answer, wait for 40s, sa should be deleted.
                 IPSEC_SA_ADD_IN and IPSEC_SA_ADD_OUT are different
                 4. if process restart , all the logic will not be exeed..
-
+                999. am_proc_start in event.log
 # log material:
 #           1. ping/pong D:\code\log\bug_log\vit_log\2017_1_1\634407\1\Thailand_vowifi_MOC_nosound_pingpang_HO
 #           2. wifi roaming D:\code\log\bug_log\vit_log\2017_1_1\633336\01slog_20170109115506_S02_MOC_Fail_call_drop_1143\external_storage

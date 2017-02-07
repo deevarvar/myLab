@@ -33,7 +33,7 @@ class IkeParser():
 
             self.logger = logConf()
         except (ConfigObjError, IOError) as e:
-             print 'Could not read "%s": %s' % (configfile, e)
+             print 'Could not read "%s": %s' % (configpath + '/config.ini', e)
 
 
 
