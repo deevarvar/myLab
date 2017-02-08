@@ -758,11 +758,11 @@ class regstatus(eventhandler):
     def handler(self):
         eventname = self.match.group(1)
         statecode = int(self.match.group(2))
-        regbase = int(MTC_CLI_REG_BASE)
+
         #only return when statecode >= 0xE100 or -1
 
         #seems MTC_CLI_REG_BASE+16: other error is not error,
-        if statecode > regbase and statecode != int(MTC_CLI_REG_BASE+16):
+        if isRegError(statecode):
             self.retmsg.level = Msglevel.ERROR
             self.retmsg.color = maplevel2color(self.retmsg.level)
             eventstr = map2phrase(eventname, Reportregphrase) + '\n'
@@ -818,11 +818,19 @@ class s2bstatus(eventhandler):
             #add three spaces for alignment, not working...Orz...
             hostr = " ishandover: " + str(ishandover) + '\n'
             errorstr = " StateCode: " + str(errorcode) + '-->' + mapcode2str(str(errorcode), Constants2berrcode)
-            self.retmsg.level = Msglevel.WARNING
+
+            #in s2b stopped, the statecode should be checked
+            if isS2bError(errorcode):
+                self.retmsg.level = Msglevel.ERROR
+                constructS2bReport(self.retmsg.report, "stopped_abnormally", self.retmsg.level)
+            else:
+                self.retmsg.level = Msglevel.WARNING
+                constructS2bReport(self.retmsg.report, "stopped", self.retmsg.level)
+
             self.retmsg.color = maplevel2color(self.retmsg.level)
             self.retmsg.msg = statestr + hostr + errorstr
 
-            constructS2bReport(self.retmsg.report, "stopped", self.retmsg.level)
+
 
         elif action == "security_json_action_s2b_successed":
             statestr = "epdg attach successfully\n"

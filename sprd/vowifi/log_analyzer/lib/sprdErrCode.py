@@ -30,6 +30,7 @@ Constantregerrcode[str(int(MTC_CLI_REG_BASE+4))] = "Invalid user"
 Constantregerrcode[str(int(MTC_CLI_REG_BASE+5))] = "Register timeout"
 Constantregerrcode[str(int(MTC_CLI_REG_BASE+6))] = "Register server busy"
 Constantregerrcode[str(int(MTC_CLI_REG_BASE+7))] = "Register server not reache"
+Constantregerrcode[str(int(MTC_CLI_REG_BASE+7))] = "Register server not reache"
 Constantregerrcode[str(int(MTC_CLI_REG_BASE+8))] = "Register forbidden"
 Constantregerrcode[str(int(MTC_CLI_REG_BASE+9))] = "Register unavailable"
 Constantregerrcode[str(int(MTC_CLI_REG_BASE+10))] = "Register dns query error"
@@ -39,6 +40,13 @@ Constantregerrcode[str(int(MTC_CLI_REG_BASE+13))] = "Register probation"
 Constantregerrcode[str(int(MTC_CLI_REG_BASE+14))] = "Register internal error"
 Constantregerrcode[str(int(MTC_CLI_REG_BASE+15))] = "Register no resource"
 Constantregerrcode[str(int(MTC_CLI_REG_BASE+16))] = "Other register error"
+
+def isRegError(statecode):
+    if statecode > MTC_CLI_REG_BASE and statecode != int(MTC_CLI_REG_BASE+16):
+        return True
+    else:
+        return False
+
 
 Constants2berrcode = dict()
 MTC_S2B_BASE=0xD200 #53760
@@ -63,6 +71,11 @@ Constants2berrcode[str(int(MTC_S2B_BASE+198))] = "IKE interrupt stop"
 Constants2berrcode[str(int(MTC_S2B_BASE+199))] = "IKE handover stop"
 Constants2berrcode[str(int(MTC_S2B_BASE+200))] = "IKE other error"
 
+def isS2bError(statecode):
+    if statecode > MTC_S2B_BASE and statecode != int(MTC_S2B_BASE+200):
+        return True
+    else:
+        return False
 
 #some alert definition in  MtcCallConstants.java
 #Note, do not enumate every error code here

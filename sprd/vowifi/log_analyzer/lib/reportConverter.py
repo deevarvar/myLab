@@ -4,7 +4,7 @@
 # in the main.pdf or in the report
 
 #TODO:
-#      1. epdg stop/failed analysis
+#      1. epdg stop/failed analysis, add detailed cause
 #   html
 #       1. add html ref link
 #       2. go to top
@@ -56,7 +56,10 @@ Reports2bphrase['failed'] = dict()
 Reports2bphrase['failed'] = langBuilder(zh="ePDG驻网失败", en="ePDG attach failed")
 
 Reports2bphrase['stopped'] = dict()
-Reports2bphrase['stopped'] = langBuilder(zh="ePDG驻网停止", en="ePDG attach stopped")
+Reports2bphrase['stopped'] = langBuilder(zh="ePDG驻网正常停止", en="ePDG attach stopped")
+
+Reports2bphrase['stopped_abnormally'] = dict()
+Reports2bphrase['stopped_abnormally'] = langBuilder(zh="ePDG驻网异常停止", en="ePDG attach stopped abnormally")
 
 #Register callback
 Reportregphrase = dict()

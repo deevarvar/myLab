@@ -1803,16 +1803,16 @@ class flowParser():
             thlist = ["No.", "Event name", "Occurence"]
 
             self.reportevent.gentableopen(testcaption, thlist)
-            index = 1
+
             for index, eventtuple in enumerate(eventcalc):
                  event = eventtuple[0]
                  count = eventtuple[1]
                  self.reportevent.genrowopen()
-                 self.reportevent.gencolumn(str(index))
+                 self.reportevent.gencolumn(str(index+1))
                  self.reportevent.gencolumn(event)
                  self.reportevent.gencolumn(str(count))
                  self.reportevent.genrowclose()
-                 index = index + 1
+
             self.reportevent.gentableclose()
 
             self.reportevent.genheaderclose()
