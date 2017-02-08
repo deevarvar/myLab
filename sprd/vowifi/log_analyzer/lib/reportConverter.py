@@ -8,6 +8,9 @@
 #   html
 #       1. add html ref link
 #       2. go to top
+#       3. error table list, td with color
+
+from reportEvent import *
 
 
 
@@ -24,11 +27,23 @@ class langBuilder():
     def getzh(self):
         return self.phrase['lang']['zh']
 
+    def getenzh(self):
+        #use <br> to combine
+        return self.phrase['lang']['zh'] + "<br>" + self.phrase['lang']['en']
+
 def map2phrase(key, phrasemap):
     if type(phrasemap) is not dict:
         return key
     if key in phrasemap:
         return phrasemap[key].geten()
+    else:
+        return key
+
+def mapzhphrase(key, phrasemap):
+    if type(phrasemap) is not dict:
+        return key
+    if key in phrasemap:
+        return phrasemap[key].getenzh()
     else:
         return key
 
@@ -62,3 +77,18 @@ Reportregphrase['refresh_failed'] = langBuilder(zh="VoWiFi 刷新注册失败", 
 
 Reportregphrase['state_update'] = dict()
 Reportregphrase['state_update'] = langBuilder(zh="VoWiFi注册状态更新", en="VoWiFi RegState Update")
+
+
+#helper function to construct report
+#report definition is in eventdict in eventhandler
+#add error event
+def constructRegReport(report, eventname, level):
+    report['type'] = ReportType.PHONEEVENT_BASE
+    report['event'] = mapzhphrase(eventname, Reportregphrase)
+    report['level'] = level
+    #add logic to
+
+def constructS2bReport(report, eventname, level, errorcode=None):
+    report['type'] = ReportType.PHONEEVENT_BASE
+    report['event'] = mapzhphrase(eventname, Reports2bphrase)
+    report['level'] = level

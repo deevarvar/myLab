@@ -10,11 +10,7 @@ from sprdErrCode import *
 from reportEvent import *
 from reportConverter import *
 
-class Msglevel():
-    DEBUG = 1
-    INFO = 2
-    WARNING = 3
-    ERROR = 4
+
 
 
 
@@ -43,7 +39,7 @@ class eventdict():
         self.report = dict()
         self.report['type'] = None
         self.report['event'] = None
-        self.report['detail'] = None
+        self.report['level'] = Msglevel.INFO
 
 class eventhandler():
     def __init__(self, match, color, groupnum):
@@ -764,13 +760,13 @@ class regstatus(eventhandler):
         statecode = int(self.match.group(2))
         regbase = int(MTC_CLI_REG_BASE)
         #only return when statecode >= 0xE100 or -1
-        self.retmsg.report['type'] = ReportType.PHONEEVENT_BASE
 
-        if statecode > regbase:
+        #seems MTC_CLI_REG_BASE+16: other error is not error,
+        if statecode > regbase and statecode != int(MTC_CLI_REG_BASE+16):
             self.retmsg.level = Msglevel.ERROR
             self.retmsg.color = maplevel2color(self.retmsg.level)
-            eventstr = map2phrase(eventname,Reportregphrase) + '\n'
-            self.retmsg.report['event'] = eventstr
+            eventstr = map2phrase(eventname, Reportregphrase) + '\n'
+            constructRegReport(self.retmsg.report, eventname, self.retmsg.level)
             statestr = "state: " + str(statecode) + '-->' + mapcode2str(str(statecode),Constantregerrcode)
             self.retmsg.msg = eventstr + statestr
             return self.retmsg
@@ -779,13 +775,13 @@ class regstatus(eventhandler):
             #login_ok, login_failed, logouted,refresh_ok, refresh_failed
             self.retmsg.level = Msglevel.WARNING
             self.retmsg.color = maplevel2color(self.retmsg.level)
-            eventstr = map2phrase(eventname,Reportregphrase)
+            eventstr = map2phrase(eventname, Reportregphrase)
 
             if eventname == "state_update":
                 eventstr += " to " + mapcode2str(str(statecode), Constantregstatecode)
             else:
                 #state_update event is some kind of verbose, will not be included in report
-                self.retmsg.report['event'] = eventstr
+                constructRegReport(self.retmsg.report, eventname, self.retmsg.level)
 
 
             self.retmsg.msg = eventstr
@@ -805,7 +801,7 @@ class s2bstatus(eventhandler):
         s2bstr = self.match.group(1).strip()
         s2bjson = json.loads(s2bstr)
         action = s2bjson['security_json_action']
-        self.retmsg.report['type'] = ReportType.PHONEEVENT_BASE
+
         if action == 'security_json_action_s2b_failed':
             errorcode = s2bjson['security_json_param_error_code']
             statestr = "epdg attach failed\n"
@@ -814,7 +810,7 @@ class s2bstatus(eventhandler):
             self.retmsg.level = Msglevel.ERROR
             self.retmsg.color = maplevel2color(self.retmsg.level)
             self.retmsg.msg = statestr + errorstr
-            self.retmsg.report['event'] = statestr
+            constructS2bReport(self.retmsg.report, "failed", self.retmsg.level)
         elif action == "security_json_action_s2b_stopped":
             errorcode = s2bjson['security_json_param_error_code']
             ishandover = s2bjson['security_json_param_handover']
@@ -826,7 +822,7 @@ class s2bstatus(eventhandler):
             self.retmsg.color = maplevel2color(self.retmsg.level)
             self.retmsg.msg = statestr + hostr + errorstr
 
-            self.retmsg.report['event'] = statestr
+            constructS2bReport(self.retmsg.report, "stopped", self.retmsg.level)
 
         elif action == "security_json_action_s2b_successed":
             statestr = "epdg attach successfully\n"
@@ -846,7 +842,7 @@ class s2bstatus(eventhandler):
             self.retmsg.level = Msglevel.WARNING
             self.retmsg.color = maplevel2color(self.retmsg.level)
             self.retmsg.msg = statestr + ipv4str + ipv6str + pcscfv4str + pcscfv6str + dnsv4str + dnsv6str
-            self.retmsg.report['event'] = statestr
+            constructS2bReport(self.retmsg.report, "successed", self.retmsg.level)
         else:
             return None
 
