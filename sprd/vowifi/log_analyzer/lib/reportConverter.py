@@ -2,6 +2,15 @@
 # author: zhihua.ye@spreadtrum.com
 # analyzed result may be changed due to different ui result
 # in the main.pdf or in the report
+
+#TODO:
+#      1. epdg stop/failed analysis
+#   html
+#       1. add html ref link
+#       2. go to top
+
+
+
 class langBuilder():
     def __init__(self, zh='', en=''):
         self.phrase = dict()
@@ -26,13 +35,13 @@ def map2phrase(key, phrasemap):
 #S2B phrase
 Reports2bphrase = dict()
 Reports2bphrase['successed'] = dict()
-Reports2bphrase['successed'] = langBuilder(zh="epdg驻网成功", en="epdg attach successfully")
+Reports2bphrase['successed'] = langBuilder(zh="ePDG驻网成功", en="ePDG attach successfully")
 
 Reports2bphrase['failed'] = dict()
-Reports2bphrase['failed'] = langBuilder(zh="epdg驻网失败", en="epdg attach failed")
+Reports2bphrase['failed'] = langBuilder(zh="ePDG驻网失败", en="ePDG attach failed")
 
 Reports2bphrase['stopped'] = dict()
-Reports2bphrase['stopped'] = langBuilder(zh="epdg驻网停止", en="epdg attach stopped")
+Reports2bphrase['stopped'] = langBuilder(zh="ePDG驻网停止", en="ePDG attach stopped")
 
 #Register callback
 Reportregphrase = dict()
@@ -51,3 +60,5 @@ Reportregphrase['refresh_ok'] = langBuilder(zh="VoWiFi 刷新注册成功", en="
 Reportregphrase['refresh_failed'] = dict()
 Reportregphrase['refresh_failed'] = langBuilder(zh="VoWiFi 刷新注册失败", en="VoWiFi Failed to Re-Registered")
 
+Reportregphrase['state_update'] = dict()
+Reportregphrase['state_update'] = langBuilder(zh="VoWiFi注册状态更新", en="VoWiFi RegState Update")

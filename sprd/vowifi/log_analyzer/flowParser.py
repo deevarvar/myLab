@@ -1799,11 +1799,23 @@ class flowParser():
 
             #get eventlist and iterate it
             eventcalc = self.reportevent.getEventList()
+            testcaption="Event table"
+            thlist = ["No.", "Event name", "Occurence"]
+
+            self.reportevent.gentableopen(testcaption, thlist)
+            index = 1
             for event, count in eventcalc.iteritems():
-                with open(self.reportpath, 'a+') as rlog:
-                    rlog.write(event + ":" + str(count) + '<br>')
+                 self.reportevent.genrowopen()
+                 self.reportevent.gencolumn(str(index))
+                 self.reportevent.gencolumn(event)
+                 self.reportevent.gencolumn(str(count))
+                 self.reportevent.genrowclose()
+                 index = index + 1
+            self.reportevent.gentableclose()
 
             self.reportevent.genheaderclose()
+
+
     def parseFlow(self):
         '''
             generate the diag from self.sipmsgs

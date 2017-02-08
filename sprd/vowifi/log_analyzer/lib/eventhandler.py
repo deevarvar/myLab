@@ -769,7 +769,7 @@ class regstatus(eventhandler):
         if statecode > regbase:
             self.retmsg.level = Msglevel.ERROR
             self.retmsg.color = maplevel2color(self.retmsg.level)
-            eventstr = "Reg event: " + map2phrase(eventname,Reportregphrase) + '\n'
+            eventstr = map2phrase(eventname,Reportregphrase) + '\n'
             self.retmsg.report['event'] = eventstr
             statestr = "state: " + str(statecode) + '-->' + mapcode2str(str(statecode),Constantregerrcode)
             self.retmsg.msg = eventstr + statestr
@@ -779,7 +779,7 @@ class regstatus(eventhandler):
             #login_ok, login_failed, logouted,refresh_ok, refresh_failed
             self.retmsg.level = Msglevel.WARNING
             self.retmsg.color = maplevel2color(self.retmsg.level)
-            eventstr = "Reg event: " + map2phrase(eventname,Reportregphrase)
+            eventstr = map2phrase(eventname,Reportregphrase)
 
             if eventname == "state_update":
                 eventstr += " to " + mapcode2str(str(statecode), Constantregstatecode)
