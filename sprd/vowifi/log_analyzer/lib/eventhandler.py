@@ -8,7 +8,7 @@ import json
 import mobile_codes
 from sprdErrCode import *
 from reportEvent import *
-
+from reportConverter import *
 
 class Msglevel():
     DEBUG = 1
@@ -40,7 +40,10 @@ class eventdict():
         self.color = "black"
         self.msg = None
         #report type, default is none, should be set in eventHandler
-        self.reporttype = None
+        self.report = dict()
+        self.report['type'] = None
+        self.report['event'] = None
+        self.report['detail'] = None
 
 class eventhandler():
     def __init__(self, match, color, groupnum):
@@ -761,19 +764,30 @@ class regstatus(eventhandler):
         statecode = int(self.match.group(2))
         regbase = int(MTC_CLI_REG_BASE)
         #only return when statecode >= 0xE100 or -1
-        self.retmsg.reporttype = ReportType.PHONEEVENT_BASE
+        self.retmsg.report['type'] = ReportType.PHONEEVENT_BASE
+
         if statecode > regbase:
             self.retmsg.level = Msglevel.ERROR
             self.retmsg.color = maplevel2color(self.retmsg.level)
-            eventstr = "Register event: " + eventname + '\n'
+            eventstr = "Reg event: " + map2phrase(eventname,Reportregphrase) + '\n'
+            self.retmsg.report['event'] = eventstr
             statestr = "state: " + str(statecode) + '-->' + mapcode2str(str(statecode),Constantregerrcode)
             self.retmsg.msg = eventstr + statestr
             return self.retmsg
         else:
-            #in service's log, -1 is default value , which means good~
+            #in service's log, -1 is default value when login_ok or refresh_ok
+            #login_ok, login_failed, logouted,refresh_ok, refresh_failed
             self.retmsg.level = Msglevel.WARNING
             self.retmsg.color = maplevel2color(self.retmsg.level)
-            eventstr = "Register event: " + eventname + '\n'
+            eventstr = "Reg event: " + map2phrase(eventname,Reportregphrase)
+
+            if eventname == "state_update":
+                eventstr += " to " + mapcode2str(str(statecode), Constantregstatecode)
+            else:
+                #state_update event is some kind of verbose, will not be included in report
+                self.retmsg.report['event'] = eventstr
+
+
             self.retmsg.msg = eventstr
             return self.retmsg
 
@@ -791,14 +805,16 @@ class s2bstatus(eventhandler):
         s2bstr = self.match.group(1).strip()
         s2bjson = json.loads(s2bstr)
         action = s2bjson['security_json_action']
-        self.retmsg.reporttype = ReportType.PHONEEVENT_BASE
+        self.retmsg.report['type'] = ReportType.PHONEEVENT_BASE
         if action == 'security_json_action_s2b_failed':
             errorcode = s2bjson['security_json_param_error_code']
             statestr = "epdg attach failed\n"
             errorstr = "   stateCode: " + str(errorcode) + '-->' + mapcode2str(str(errorcode), Constants2berrcode)
+
             self.retmsg.level = Msglevel.ERROR
             self.retmsg.color = maplevel2color(self.retmsg.level)
             self.retmsg.msg = statestr + errorstr
+            self.retmsg.report['event'] = statestr
         elif action == "security_json_action_s2b_stopped":
             errorcode = s2bjson['security_json_param_error_code']
             ishandover = s2bjson['security_json_param_handover']
@@ -809,6 +825,8 @@ class s2bstatus(eventhandler):
             self.retmsg.level = Msglevel.WARNING
             self.retmsg.color = maplevel2color(self.retmsg.level)
             self.retmsg.msg = statestr + hostr + errorstr
+
+            self.retmsg.report['event'] = statestr
 
         elif action == "security_json_action_s2b_successed":
             statestr = "epdg attach successfully\n"
@@ -828,7 +846,7 @@ class s2bstatus(eventhandler):
             self.retmsg.level = Msglevel.WARNING
             self.retmsg.color = maplevel2color(self.retmsg.level)
             self.retmsg.msg = statestr + ipv4str + ipv6str + pcscfv4str + pcscfv6str + dnsv4str + dnsv6str
-
+            self.retmsg.report['event'] = statestr
         else:
             return None
 

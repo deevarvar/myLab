@@ -8,6 +8,18 @@
 #security_json_action_s2b_successed, security_json_action_s2b_failed, security_json_action_s2b_stopped
 #D:\code\log\india_2016_8_24\bugs\592271\No_Volte_Icon_Idle
 
+
+Constantregstatecode = dict()
+MTC_CLI_STATE_IDLE=0
+MTC_CLI_STATE_REGING=1
+EN_MTC_CLI_STATE_LOGINED=2
+EN_MTC_CLI_STATE_UNREGING=3
+Constantregstatecode[str(int(MTC_CLI_STATE_IDLE))] = "IDLE"
+Constantregstatecode[str(int(MTC_CLI_STATE_REGING))] = "REGING"
+Constantregstatecode[str(int(EN_MTC_CLI_STATE_LOGINED))] = "LOGINED"
+Constantregstatecode[str(int(EN_MTC_CLI_STATE_UNREGING))] = "UNREGING"
+
+
 Constantregerrcode = dict()
 MTC_CLI_REG_BASE=0xE100 #57600
 

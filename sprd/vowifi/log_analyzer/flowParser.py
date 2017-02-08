@@ -201,9 +201,9 @@ class flowParser():
 
             #eventlog
             self.eventlog = self.diagdir + 'event.log'
-            self.report = self.diagdir + 'report.html'
+            self.reportpath = self.diagdir + 'report.html'
 
-            self.reportevent = ReportEvent(configpath='./', reportpath=self.report)
+            self.reportevent = ReportEvent(configpath='./', reportpath=self.reportpath)
 
             #first we just cache all lines
             with open(self.log, 'rb') as logfile:
@@ -215,8 +215,7 @@ class flowParser():
             with open(self.eventlog, 'w') as elog:
                 elog.truncate()
 
-            with open(self.report, 'w') as rlog:
-                rlog.truncate()
+
 
             #important structure: sipmsgs, is a list with order
             #currently sipmsgs will include ike/sip
@@ -504,7 +503,7 @@ class flowParser():
                     eventmsg['modulename'] = modulename
                     #store the match line
                     eventmsg['line'] = line
-                    eventmsg['reporttype'] = eventdict.reporttype
+                    eventmsg['report'] = eventdict.report
                     self.sipmsgs.append(eventmsg)
                 else:
                     self.logger.logger.error("event is invalid or not needed in lineno " + str(lineno))
@@ -1773,7 +1772,7 @@ class flowParser():
         diaginfo['eventtype'] = eventobj['eventtype']
         diaginfo['modulename'] = eventobj['modulename']
         diaginfo['line'] = eventobj['line']
-        diaginfo['reporttype'] = eventobj['reporttype']
+        diaginfo['report'] = eventobj['report']
 
         self.diagsips.append(diaginfo)
 
@@ -1784,7 +1783,10 @@ class flowParser():
         :return:
         '''
         if msglist and type(msglist) is list:
+
+            self.reportevent.genheaderopen()
             with open(self.eventlog, 'a+') as elog:
+
                 for index, msg in enumerate(msglist):
                     if 'isevent' in msg:
                         elog.write( "main log:"+ str(msg['lineno']) + ':'+ msg['line'])
@@ -1795,6 +1797,13 @@ class flowParser():
                     #add logic to generate the report
                     self.reportevent.grepEvent(msg)
 
+            #get eventlist and iterate it
+            eventcalc = self.reportevent.getEventList()
+            for event, count in eventcalc.iteritems():
+                with open(self.reportpath, 'a+') as rlog:
+                    rlog.write(event + ":" + str(count) + '<br>')
+
+            self.reportevent.genheaderclose()
     def parseFlow(self):
         '''
             generate the diag from self.sipmsgs
