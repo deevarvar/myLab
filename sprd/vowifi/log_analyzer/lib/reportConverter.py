@@ -85,13 +85,15 @@ Reportregphrase['state_update'] = langBuilder(zh="VoWiFi注册状态更新", en=
 #helper function to construct report
 #report definition is in eventdict in eventhandler
 #add error event
-def constructRegReport(report, eventname, level):
+def constructRegReport(report, eventname, level, errorstr=''):
     report['type'] = ReportType.PHONEEVENT_BASE
     report['event'] = mapzhphrase(eventname, Reportregphrase)
     report['level'] = level
+    report['errorstr'] = errorstr
     #add logic to
 
-def constructS2bReport(report, eventname, level, errorcode=None):
+def constructS2bReport(report, eventname, level, errorstr=''):
     report['type'] = ReportType.PHONEEVENT_BASE
     report['event'] = mapzhphrase(eventname, Reports2bphrase)
     report['level'] = level
+    report['errorstr'] = errorstr

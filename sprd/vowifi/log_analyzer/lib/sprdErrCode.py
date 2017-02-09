@@ -72,7 +72,8 @@ Constants2berrcode[str(int(MTC_S2B_BASE+199))] = "IKE handover stop"
 Constants2berrcode[str(int(MTC_S2B_BASE+200))] = "IKE other error"
 
 def isS2bError(statecode):
-    if statecode > MTC_S2B_BASE and statecode != int(MTC_S2B_BASE+200):
+    if statecode > MTC_S2B_BASE and statecode != int(MTC_S2B_BASE+200) \
+            and statecode != int(MTC_S2B_BASE+199) and statecode != int(MTC_S2B_BASE+198) :
         return True
     else:
         return False

@@ -1795,7 +1795,11 @@ class flowParser():
                         elog.write(str(msg['lineno']) + ':'+ msg['line'])
 
                     #add logic to generate the report
-                    self.reportevent.grepEvent(msg)
+                    self.reportevent.fillReport(msg)
+
+            #for debug purpose
+            print 'DEBUG-----------------------------------'
+            print self.reportevent.etable
 
             #get eventlist and iterate it
             eventcalc = self.reportevent.getEventList()
@@ -1812,8 +1816,9 @@ class flowParser():
                  self.reportevent.gencolumn(event)
                  self.reportevent.gencolumn(str(count))
                  self.reportevent.genrowclose()
-
             self.reportevent.gentableclose()
+
+
 
             self.reportevent.genheaderclose()
 

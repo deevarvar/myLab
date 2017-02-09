@@ -40,6 +40,10 @@ class eventdict():
         self.report['type'] = None
         self.report['event'] = None
         self.report['level'] = Msglevel.INFO
+        self.report['errorstr'] = None
+        self.report['lineno'] = None
+        self.report['line'] =  None
+        self.report['timestamp'] = None
 
 class eventhandler():
     def __init__(self, match, color, groupnum):
@@ -766,8 +770,9 @@ class regstatus(eventhandler):
             self.retmsg.level = Msglevel.ERROR
             self.retmsg.color = maplevel2color(self.retmsg.level)
             eventstr = map2phrase(eventname, Reportregphrase) + '\n'
-            constructRegReport(self.retmsg.report, eventname, self.retmsg.level)
-            statestr = "state: " + str(statecode) + '-->' + mapcode2str(str(statecode),Constantregerrcode)
+            mappedstr = str(statecode) + '-->' + mapcode2str(str(statecode),Constantregerrcode)
+            statestr = "state: " + str(statecode) + mappedstr
+            constructRegReport(self.retmsg.report, eventname, self.retmsg.level, mappedstr)
             self.retmsg.msg = eventstr + statestr
             return self.retmsg
         else:
@@ -782,7 +787,6 @@ class regstatus(eventhandler):
             else:
                 #state_update event is some kind of verbose, will not be included in report
                 constructRegReport(self.retmsg.report, eventname, self.retmsg.level)
-
 
             self.retmsg.msg = eventstr
             return self.retmsg
@@ -805,32 +809,32 @@ class s2bstatus(eventhandler):
         if action == 'security_json_action_s2b_failed':
             errorcode = s2bjson['security_json_param_error_code']
             statestr = "epdg attach failed\n"
-            errorstr = "   stateCode: " + str(errorcode) + '-->' + mapcode2str(str(errorcode), Constants2berrcode)
+            mappedstr = str(errorcode) + '-->' + mapcode2str(str(errorcode), Constants2berrcode)
+            errorstr = "   stateCode: " +  mappedstr
 
             self.retmsg.level = Msglevel.ERROR
             self.retmsg.color = maplevel2color(self.retmsg.level)
             self.retmsg.msg = statestr + errorstr
-            constructS2bReport(self.retmsg.report, "failed", self.retmsg.level)
+            constructS2bReport(self.retmsg.report, "failed", self.retmsg.level, mappedstr)
         elif action == "security_json_action_s2b_stopped":
             errorcode = s2bjson['security_json_param_error_code']
             ishandover = s2bjson['security_json_param_handover']
             statestr = "epdg attach stopped\n"
             #add three spaces for alignment, not working...Orz...
             hostr = " ishandover: " + str(ishandover) + '\n'
-            errorstr = " StateCode: " + str(errorcode) + '-->' + mapcode2str(str(errorcode), Constants2berrcode)
+            mappedstr = str(errorcode) + '-->' +mapcode2str(str(errorcode), Constants2berrcode)
+            errorstr = " StateCode: " + str(errorcode) + mappedstr
 
             #in s2b stopped, the statecode should be checked
             if isS2bError(errorcode):
                 self.retmsg.level = Msglevel.ERROR
-                constructS2bReport(self.retmsg.report, "stopped_abnormally", self.retmsg.level)
+                constructS2bReport(self.retmsg.report, "stopped_abnormally", self.retmsg.level, errorstr=mappedstr)
             else:
                 self.retmsg.level = Msglevel.WARNING
-                constructS2bReport(self.retmsg.report, "stopped", self.retmsg.level)
+                constructS2bReport(self.retmsg.report, "stopped", self.retmsg.level, errorstr=mappedstr)
 
             self.retmsg.color = maplevel2color(self.retmsg.level)
             self.retmsg.msg = statestr + hostr + errorstr
-
-
 
         elif action == "security_json_action_s2b_successed":
             statestr = "epdg attach successfully\n"
