@@ -114,6 +114,8 @@ from lib.constants import *
 
 from logParser import logParser
 
+
+
 path = os.path.dirname(os.path.realpath(__file__))
 
 
@@ -1776,6 +1778,7 @@ class flowParser():
 
         self.diagsips.append(diaginfo)
 
+
     def redirectEventLog(self, msglist):
         '''
         need to add more logic , calculate the event.
@@ -1784,7 +1787,8 @@ class flowParser():
         '''
         if msglist and type(msglist) is list:
 
-            self.reportevent.genheaderopen()
+
+
             with open(self.eventlog, 'a+') as elog:
 
                 for index, msg in enumerate(msglist):
@@ -1797,30 +1801,6 @@ class flowParser():
                     #add logic to generate the report
                     self.reportevent.fillReport(msg)
 
-            #for debug purpose
-            print 'DEBUG-----------------------------------'
-            print self.reportevent.etable
-
-            #get eventlist and iterate it
-            eventcalc = self.reportevent.getEventList()
-            testcaption="Event table"
-            thlist = ["No.", "Event name", "Occurence"]
-
-            self.reportevent.gentableopen(testcaption, thlist)
-
-            for index, eventtuple in enumerate(eventcalc):
-                 event = eventtuple[0]
-                 count = eventtuple[1]
-                 self.reportevent.genrowopen()
-                 self.reportevent.gencolumn(str(index+1))
-                 self.reportevent.gencolumn(event)
-                 self.reportevent.gencolumn(str(count))
-                 self.reportevent.genrowclose()
-            self.reportevent.gentableclose()
-
-
-
-            self.reportevent.genheaderclose()
 
 
     def parseFlow(self):
@@ -1853,6 +1833,7 @@ class flowParser():
         #add function output radio/event log to event.log
         self.redirectEventLog(self.diagsips)
 
+        self.reportevent.generateHTML()
         #dump the trim sip, no need to dump
         #self.dumpDiagsip()
 

@@ -25,7 +25,15 @@ import re
                     "errorcount": 1
                 },
 
-            ]
+            ],
+            errordetailslist:[
+                {
+                    "timestamp":
+                    "error":
+                    "lineno":
+                },
+
+            }
         }
     ]
 '''
@@ -53,6 +61,9 @@ def constructreportEvent(ename, errorstr):
     newevent['enamecount'] = 1
     #errostr is a new list, may include different error str
     newevent['errorlist'] = list()
+    # the complete error list
+    newevent['errordetailslist'] = list()
+
     if errorstr and len(errorstr):
         newerror = dict()
         newerror['error'] = errorstr
@@ -76,6 +87,7 @@ def updatereportEvent(ename, errorstr, etable):
                 #iterate the errorlist
                 errorlist = element['errorlist']
 
+
                 if type(errorlist) is list and len(errorlist) > 0:
                     for eindex, error in enumerate(errorlist):
                         if error['error'] == errorstr:
@@ -90,3 +102,6 @@ def updatereportEvent(ename, errorstr, etable):
     else:
         #no etable exist, so invoke new one.
         return constructreportEvent(ename, errorstr)
+
+
+

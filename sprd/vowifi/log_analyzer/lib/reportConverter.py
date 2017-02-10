@@ -3,12 +3,17 @@
 # analyzed result may be changed due to different ui result
 # in the main.pdf or in the report
 
-#TODO:
-#      1. epdg stop/failed analysis, add detailed cause
-#   html
-#       1. add html ref link
-#       2. go to top
-#       3. error table list, td with color
+#Done:
+#      1. done: epdg stop/failed analysis, add detailed cause
+#      2. done: error table list, td with color
+#   TODO:
+#       1. add html ref link,
+#       2. link on the error text
+#       3. error details display
+        #3.1 rewrite updatereportEvent and constructreportEvent, add field
+#       4. add ho, call
+#       10. go to top
+#
 
 from reportEvent import *
 
@@ -29,7 +34,7 @@ class langBuilder():
 
     def getenzh(self):
         #use <br> to combine
-        return self.phrase['lang']['zh'] + "<br>" + self.phrase['lang']['en']
+        return self.phrase['lang']['en'] + "<br>" + self.phrase['lang']['zh']
 
 def map2phrase(key, phrasemap):
     if type(phrasemap) is not dict:
@@ -85,14 +90,14 @@ Reportregphrase['state_update'] = langBuilder(zh="VoWiFi注册状态更新", en=
 #helper function to construct report
 #report definition is in eventdict in eventhandler
 #add error event
-def constructRegReport(report, eventname, level, errorstr=''):
+def constructRegReport(report, eventname, level, errorstr='', timestamp='', line='', lineno=''):
     report['type'] = ReportType.PHONEEVENT_BASE
     report['event'] = mapzhphrase(eventname, Reportregphrase)
     report['level'] = level
     report['errorstr'] = errorstr
     #add logic to
 
-def constructS2bReport(report, eventname, level, errorstr=''):
+def constructS2bReport(report, eventname, level, errorstr='', timestamp='', line='', lineno=''):
     report['type'] = ReportType.PHONEEVENT_BASE
     report['event'] = mapzhphrase(eventname, Reports2bphrase)
     report['level'] = level
