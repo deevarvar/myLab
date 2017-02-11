@@ -28,6 +28,7 @@ import re
             ],
             errordetailslist:[
                 {
+
                     "timestamp":
                     "error":
                     "lineno":
@@ -49,12 +50,17 @@ def name_in_list(tname, tkey,tlist):
     return False
 
 
-def constructreportEvent(ename, errorstr):
+def constructreportEvent(report):
     '''
     :param ename:
     :param errorstr:
     :return:
     '''
+    ename = report['event']
+    errorstr = report['errorstr']
+    timestamp = report['timestamp']
+    line = report['line']
+    lineno = report['lineno']
 
     newevent = dict()
     newevent['ename'] = ename
@@ -64,14 +70,22 @@ def constructreportEvent(ename, errorstr):
     # the complete error list
     newevent['errordetailslist'] = list()
 
+    detailerror = dict()
+    detailerror['errorstr'] = errorstr
+    detailerror['timestamp'] = timestamp
+    detailerror['line'] = line
+    detailerror['lineno'] = lineno
+    newevent['errordetailslist'].append(detailerror)
+
     if errorstr and len(errorstr):
         newerror = dict()
-        newerror['error'] = errorstr
+        newerror['errorstr'] = errorstr
         newerror['errorcount'] = 1
         newevent['errorlist'].append(newerror)
+
     return newevent
 
-def updatereportEvent(ename, errorstr, etable):
+def updatereportEvent(report, etable):
     '''
     1. update ename count
     2. update errorlist
@@ -80,6 +94,12 @@ def updatereportEvent(ename, errorstr, etable):
     :param etable: all the event table
     :return:
     '''
+    ename = report['event']
+    errorstr = report['errorstr']
+    timestamp = report['timestamp']
+    line = report['line']
+    lineno = report['lineno']
+
     if type(etable) is list and len(etable) > 0:
         for index, element in enumerate(etable):
             if element['ename'] == ename:
@@ -87,21 +107,27 @@ def updatereportEvent(ename, errorstr, etable):
                 #iterate the errorlist
                 errorlist = element['errorlist']
 
+                detailerror = dict()
+                detailerror['errorstr'] = errorstr
+                detailerror['timestamp'] = timestamp
+                detailerror['line'] = line
+                detailerror['lineno'] = lineno
+                element['errordetailslist'].append(detailerror)
 
                 if type(errorlist) is list and len(errorlist) > 0:
                     for eindex, error in enumerate(errorlist):
-                        if error['error'] == errorstr:
+                        if error['errorstr'] == errorstr:
                             error['errorcount'] += 1
                             return
                     #if come here, so new error found
                     newerror = dict()
-                    newerror['error'] = errorstr
+                    newerror['errorstr'] = errorstr
                     newerror['errorcount'] = 1
                     errorlist.append(newerror)
 
     else:
         #no etable exist, so invoke new one.
-        return constructreportEvent(ename, errorstr)
+        return constructreportEvent(report)
 
 
 
