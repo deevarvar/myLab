@@ -123,7 +123,7 @@ class idlehowifi(eventhandler):
         self.retmsg.msg = self.match.group(1)
         self.retmsg.level = Msglevel.WARNING
         event = mapzhphrase("idlehowifi", ReportHandoverphrase)
-        self.retmsg.report = constructReport(type=ReportType.USEREVENT_BASE, event=event, level=self.retmsg.level)
+        self.retmsg.report = constructReport(type=ReportType.PHONEEVENT_BASE, event=event, level=self.retmsg.level)
         return self.retmsg
 
 class idleholte(eventhandler):
@@ -131,7 +131,7 @@ class idleholte(eventhandler):
         self.retmsg.msg = self.match.group(1)
         self.retmsg.level = Msglevel.WARNING
         event = mapzhphrase("idleholte", ReportHandoverphrase)
-        self.retmsg.report = constructReport(type=ReportType.USEREVENT_BASE, event=event, level=self.retmsg.level)
+        self.retmsg.report = constructReport(type=ReportType.PHONEEVENT_BASE, event=event, level=self.retmsg.level)
         return self.retmsg
 
 class callhowifi(eventhandler):
@@ -139,7 +139,7 @@ class callhowifi(eventhandler):
         self.retmsg.msg = self.match.group(1)
         self.retmsg.level = Msglevel.WARNING
         event = mapzhphrase("callhowifi", ReportHandoverphrase)
-        self.retmsg.report = constructReport(type=ReportType.USEREVENT_BASE, event=event, level=self.retmsg.level)
+        self.retmsg.report = constructReport(type=ReportType.PHONEEVENT_BASE, event=event, level=self.retmsg.level)
         return self.retmsg
 
 class callholte(eventhandler):
@@ -147,7 +147,7 @@ class callholte(eventhandler):
         self.retmsg.msg = self.match.group(1)
         self.retmsg.level = Msglevel.WARNING
         event = mapzhphrase("callholte", ReportHandoverphrase)
-        self.retmsg.report = constructReport(type=ReportType.USEREVENT_BASE, event=event, level=self.retmsg.level)
+        self.retmsg.report = constructReport(type=ReportType.PHONEEVENT_BASE, event=event, level=self.retmsg.level)
         return self.retmsg
 
 class oneclickconf(eventhandler):
