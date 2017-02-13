@@ -82,6 +82,74 @@ class matchone(eventhandler):
         self.retmsg.msg = self.match.group(1)
         return self.retmsg
 
+
+#function only match one, but need to generate the report
+class wificonn(eventhandler):
+    def handler(self):
+        self.retmsg.msg = self.match.group(1)
+        self.retmsg.level = Msglevel.WARNING
+
+        event=mapzhphrase("wificonn", ReportHandoverphrase)
+        self.retmsg.report = constructReport(type=ReportType.USEREVENT_BASE, event=event, level=self.retmsg.level)
+        return self.retmsg
+
+#function only match one, but need to generate the report
+class wifidisconn(eventhandler):
+    def handler(self):
+        self.retmsg.msg = self.match.group(1)
+        self.retmsg.level = Msglevel.WARNING
+        event = mapzhphrase("wifidisconn", ReportHandoverphrase)
+        self.retmsg.report = constructReport(type=ReportType.USEREVENT_BASE, event=event, level=self.retmsg.level)
+        return self.retmsg
+
+class airon(eventhandler):
+    def handler(self):
+        self.retmsg.msg = self.match.group(1)
+        self.retmsg.level = Msglevel.WARNING
+        event = mapzhphrase("airon", ReportHandoverphrase)
+        self.retmsg.report = constructReport(type=ReportType.USEREVENT_BASE, event=event, level=self.retmsg.level)
+        return self.retmsg
+
+class airoff(eventhandler):
+    def handler(self):
+        self.retmsg.msg = self.match.group(1)
+        self.retmsg.level = Msglevel.WARNING
+        event = mapzhphrase("airoff", ReportHandoverphrase)
+        self.retmsg.report = constructReport(type=ReportType.USEREVENT_BASE, event=event, level=self.retmsg.level)
+        return self.retmsg
+
+class idlehowifi(eventhandler):
+    def handler(self):
+        self.retmsg.msg = self.match.group(1)
+        self.retmsg.level = Msglevel.WARNING
+        event = mapzhphrase("idlehowifi", ReportHandoverphrase)
+        self.retmsg.report = constructReport(type=ReportType.USEREVENT_BASE, event=event, level=self.retmsg.level)
+        return self.retmsg
+
+class idleholte(eventhandler):
+    def handler(self):
+        self.retmsg.msg = self.match.group(1)
+        self.retmsg.level = Msglevel.WARNING
+        event = mapzhphrase("idleholte", ReportHandoverphrase)
+        self.retmsg.report = constructReport(type=ReportType.USEREVENT_BASE, event=event, level=self.retmsg.level)
+        return self.retmsg
+
+class callhowifi(eventhandler):
+    def handler(self):
+        self.retmsg.msg = self.match.group(1)
+        self.retmsg.level = Msglevel.WARNING
+        event = mapzhphrase("callhowifi", ReportHandoverphrase)
+        self.retmsg.report = constructReport(type=ReportType.USEREVENT_BASE, event=event, level=self.retmsg.level)
+        return self.retmsg
+
+class callholte(eventhandler):
+    def handler(self):
+        self.retmsg.msg = self.match.group(1)
+        self.retmsg.level = Msglevel.WARNING
+        event = mapzhphrase("callholte", ReportHandoverphrase)
+        self.retmsg.report = constructReport(type=ReportType.USEREVENT_BASE, event=event, level=self.retmsg.level)
+        return self.retmsg
+
 class oneclickconf(eventhandler):
     '''
     the one click conf participants, one pattern
@@ -622,13 +690,18 @@ class wfcstatus(eventhandler):
         wfcdb = str(self.match.group(1))
         wfcstr = ""
         if wfcdb == "true":
-            wfcstr = "WiFi-Calling is Enabled"
+            wfcstr = "Enable WiFi-Calling"
+            event = mapzhphrase("enwfc", ReportHandoverphrase)
         else:
-            wfcstr = "WiFi-Calling is Disabled"
+            wfcstr = "Disable WiFi-Calling"
+            event = mapzhphrase("disenwfc", ReportHandoverphrase)
 
         self.retmsg.msglevel = Msglevel.WARNING
         self.retmsg.color = maplevel2color(self.retmsg.msglevel)
         self.retmsg.msg = wfcstr
+
+        self.retmsg.report = constructReport(type=ReportType.USEREVENT_BASE,event=event, level=self.retmsg.msglevel)
+
         return self.retmsg
 
 class geticon(eventhandler):
@@ -772,7 +845,9 @@ class regstatus(eventhandler):
             eventstr = map2phrase(eventname, Reportregphrase) + '\n'
             mappedstr = str(statecode) + '-->' + mapcode2str(str(statecode),Constantregerrcode)
             statestr = "state: " + str(statecode) + mappedstr
-            constructRegReport(self.retmsg.report, eventname, self.retmsg.level, mappedstr)
+
+            event = mapzhphrase(eventname, Reportregphrase)
+            self.retmsg.report = constructReport(event=event, level=self.retmsg.level, errorstr=mappedstr)
             self.retmsg.msg = eventstr + statestr
             return self.retmsg
         else:
@@ -786,7 +861,8 @@ class regstatus(eventhandler):
                 eventstr += " to " + mapcode2str(str(statecode), Constantregstatecode)
             else:
                 #state_update event is some kind of verbose, will not be included in report
-                constructRegReport(self.retmsg.report, eventname, self.retmsg.level)
+                event = mapzhphrase(eventname, Reportregphrase)
+                self.retmsg.report = constructReport(event=event, level=self.retmsg.level)
 
             self.retmsg.msg = eventstr
             return self.retmsg
@@ -815,7 +891,9 @@ class s2bstatus(eventhandler):
             self.retmsg.level = Msglevel.ERROR
             self.retmsg.color = maplevel2color(self.retmsg.level)
             self.retmsg.msg = statestr + errorstr
-            constructS2bReport(self.retmsg.report, "failed", self.retmsg.level, mappedstr)
+
+            event = mapzhphrase("failed", Reports2bphrase)
+            self.retmsg.report = constructReport(event=event, level=self.retmsg.level, errorstr=mappedstr)
         elif action == "security_json_action_s2b_stopped":
             errorcode = s2bjson['security_json_param_error_code']
             ishandover = s2bjson['security_json_param_handover']
@@ -828,10 +906,12 @@ class s2bstatus(eventhandler):
             #in s2b stopped, the statecode should be checked
             if isS2bError(errorcode):
                 self.retmsg.level = Msglevel.ERROR
-                constructS2bReport(self.retmsg.report, "stopped_abnormally", self.retmsg.level, errorstr=mappedstr)
+                event = mapzhphrase("stopped_abnormally", Reports2bphrase)
+                self.retmsg.report = constructReport(event=event, level=self.retmsg.level, errorstr=mappedstr)
             else:
                 self.retmsg.level = Msglevel.WARNING
-                constructS2bReport(self.retmsg.report, "stopped", self.retmsg.level, errorstr=mappedstr)
+                event = mapzhphrase("stopped", Reports2bphrase)
+                self.retmsg.report = constructReport(event=event, level=self.retmsg.level, errorstr=mappedstr)
 
             self.retmsg.color = maplevel2color(self.retmsg.level)
             self.retmsg.msg = statestr + hostr + errorstr
@@ -854,7 +934,8 @@ class s2bstatus(eventhandler):
             self.retmsg.level = Msglevel.WARNING
             self.retmsg.color = maplevel2color(self.retmsg.level)
             self.retmsg.msg = statestr + ipv4str + ipv6str + pcscfv4str + pcscfv6str + dnsv4str + dnsv6str
-            constructS2bReport(self.retmsg.report, "successed", self.retmsg.level)
+            event = mapzhphrase("successed", Reports2bphrase)
+            self.retmsg.report = constructReport(event=event, level=self.retmsg.level)
         else:
             return None
 
