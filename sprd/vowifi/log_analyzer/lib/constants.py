@@ -535,7 +535,7 @@ imscmEvent.addEvent("(turn on primary SIM card)", module_ImsCM,eventType = event
 
 #------------------------------------------------------------------------------------
 
-#phone imsservice logre
+#phone imsservice logic
 ##vowifi/volte icon
 phoneEvent.addEvent("updateImsFeatures->volteEnable:(.*) wifiEnable:(.*)", module_Phone, eventType=eventType.EDGE, eventHandler=geticon,groupnum=2)
 ##ims reg addr

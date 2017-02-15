@@ -147,7 +147,32 @@ ReportHandoverphrase['rssiho2wifi'] = langBuilder(zh="WiFi信号好切换到VoWi
 ReportHandoverphrase['autowifi'] = dict()
 ReportHandoverphrase['autowifi'] = langBuilder(zh="WiFi信号好驻到VoWiFi", en="Auto Attach to VoWiFi Due to Strong WiFi Signal")
 
+#some error between imscm and telephony
+#defined in ImsConnectionManagerService.java
+ReportHandoverphrase['switch vowifi'] = dict()
+ReportHandoverphrase['switch vowifi'] = langBuilder(zh="Telephony Error: 切换到VoWiFi失败", en="Telephony Error: Failed to handover to VoWiFi")
+ReportHandoverphrase['handover vowifi'] = dict()
+ReportHandoverphrase['handover vowifi'] = langBuilder(zh="Telephony Error: 电话中切换到VoWiFi失败", en="Telephony Error: Failed to handover to VoWiFi In Call")
+ReportHandoverphrase['handover volte'] = dict()
+ReportHandoverphrase['handover volte'] = langBuilder(zh="Telephony Error: 电话中切换到VoLTE失败", en="Telephony Error: Failed to handover to VoLTE In Call")
+ReportHandoverphrase['handover volte by timer'] = dict()
+ReportHandoverphrase['handover volte by timer'] = langBuilder(zh="Telephony Error: 电话中定时器切换到VoLTE失败", en="Telephony Error: Failed to handover to VoLTE by Timer In Call")
+ReportHandoverphrase['release vowifi resource'] = dict()
+ReportHandoverphrase['release vowifi resource'] = langBuilder(zh="Telephony Error: 释放VoWiFi资源失败", en="Telephony Error: Failed to release vowifi resource")
+ReportHandoverphrase['set vowifi unavailable'] = dict()
+ReportHandoverphrase['set vowifi unavailable'] = langBuilder(zh="Telephony Error: 关闭VoWiFi失败", en="Telephony Error: Failed to set vowifi unavailable")
+ReportHandoverphrase['cancel current request'] = dict()
+ReportHandoverphrase['cancel current request'] = langBuilder(zh="Telephony Error: 取消当前请求失败", en="Telephony Error: Failed to cancel current request")
+ReportHandoverphrase['videonortp'] = dict()
+ReportHandoverphrase['videonortp'] = langBuilder(zh="没有视频数据", en="No RTP in Video")
+ReportHandoverphrase['voicenortp'] = dict()
+ReportHandoverphrase['voicenortp'] = langBuilder(zh="没有语音数据", en="No RTP in Voice")
 
+ReportScenariophrase = dict()
+ReportScenariophrase['startvoltecall'] = dict()
+ReportScenariophrase['startvoltecall'] = langBuilder(zh="拨打VoLTE电话", en="Start VoLTE Call")
+ReportScenariophrase['startvowificall'] = dict()
+ReportScenariophrase['startvowificall'] = langBuilder(zh="拨打VoWiFi电话", en="Start VoWiFi Call")
 
 #write a report builder
 

@@ -510,6 +510,11 @@ class startcall(eventhandler):
     def handler(self):
         callbearer = self.match.group(1)
         self.retmsg.msg = "start " + callbearer
+        if callbearer == "VoWifiCall":
+            event = mapzhphrase("startvowificall", ReportScenariophrase)
+        else:
+            event = mapzhphrase("startvoltecall", ReportScenariophrase)
+        self.retmsg.report = constructReport(type=ReportType.SCEEVENT_BASE,event=event, level=self.retmsg.msglevel)
         return self.retmsg
 
 class servicecallback(eventhandler):
@@ -1098,6 +1103,8 @@ class imscmhandlemsgerror(eventhandler):
         self.retmsg.level = Msglevel.ERROR
         self.retmsg.color = maplevel2color(self.retmsg.level)
         self.retmsg.msg = "Error happened when " + errorstr
+        event=mapzhphrase(errorstr, ReportHandoverphrase)
+        self.retmsg.report = constructReport(type=ReportType.PHONEEVENT_BASE, event=event, level=self.retmsg.level)
         return self.retmsg
 
 class imscmnortp(eventhandler):
@@ -1110,13 +1117,16 @@ class imscmnortp(eventhandler):
         isvideo = str(self.match.group(2)).strip().lower()
         if isvideo == "true":
             nortp = "Video"
+            event = mapzhphrase("videonortp", ReportHandoverphrase)
         else:
             nortp = "Audio"
+            event = mapzhphrase("voicenortp", ReportHandoverphrase)
 
         nortpstr = "No " + nortp  + " in " + calltype
         self.retmsg.level = Msglevel.ERROR
         self.retmsg.color = maplevel2color(self.retmsg.level)
         self.retmsg.msg = nortpstr
+        self.retmsg.report = constructReport(type=ReportType.PHONEEVENT_BASE, event=event, level=self.retmsg.level)
         return self.retmsg
 
 class imscmopfailed(eventhandler):

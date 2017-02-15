@@ -402,7 +402,7 @@ class ReportEvent():
 
 
         etablehtml = ""
-        etablehtml += self.genOneTableHTML(self.getTlist('usertable'), tabletitle=self.getTitle('phonetable'), tableid=self.getTname('phonetable'))
+        etablehtml += self.genOneTableHTML(self.getTlist('usertable'), tabletitle=self.getTitle('usertable'), tableid=self.getTname('usertable'))
         etablehtml += self.genOneTableHTML(self.getTlist('phonetable'), tabletitle=self.getTitle('phonetable'), tableid=self.getTname('phonetable'))
         etablehtml += self.genOneTableHTML(self.getTlist('scenariotable'), tabletitle=self.getTitle('scenariotable'), tableid=self.getTname('scenariotable'))
         etablehtml += self.genOneTableHTML(self.getTlist('hoalgotable'), tabletitle=self.getTitle('hoalgotable'), tableid=self.getTname('hoalgotable'))
