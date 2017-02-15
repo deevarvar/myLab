@@ -901,7 +901,7 @@ class s2bstatus(eventhandler):
             #add three spaces for alignment, not working...Orz...
             hostr = " ishandover: " + str(ishandover) + '\n'
             mappedstr = str(errorcode) + '-->' +mapcode2str(str(errorcode), Constants2berrcode)
-            errorstr = " StateCode: " + str(errorcode) + mappedstr
+            errorstr = " StateCode: " + mappedstr
 
             #in s2b stopped, the statecode should be checked
             if isS2bError(errorcode):
@@ -1024,6 +1024,12 @@ class qos2volte(eventhandler):
         self.retmsg.color = maplevel2color(self.retmsg.level)
         hostr = "Poor " + calltype + " Qos\n" #" or Strong LTE signal\n"
         hostr += calltype + " Call Handover to VoLTE\n"
+        if calltype == "Video":
+            event=mapzhphrase("videoqos2lte", ReportHandoverphrase)
+        else:
+            event=mapzhphrase("voiceqos2lte", ReportHandoverphrase)
+
+        self.retmsg.report = constructReport(type=ReportType.HOALGO_BASE, event=event, level=self.retmsg.level)
         self.retmsg.msg = hostr
         return self.retmsg
 
@@ -1043,8 +1049,10 @@ class callthreshholdho(eventhandler):
         self.retmsg.color = maplevel2color(self.retmsg.level)
         if hodirect == "Vowifi":
             hostr = "Strong WiFi signal\n"
+            event=mapzhphrase("incallrssiho2wifi", ReportHandoverphrase)
+            self.retmsg.report = constructReport(type=ReportType.HOALGO_BASE, event=event, level=self.retmsg.level)
         else:
-            hostr = "Strong LTE signal\n"
+            hostr = "Weak WiFi signal\n"
 
         hostr += calltype + " Call Handover to " + hodirect
         self.retmsg.msg = hostr
@@ -1063,8 +1071,10 @@ class idlethreshholdho(eventhandler):
         hostr = ''
         if hodirect == "Vowifi":
             hostr = "Strong WiFi signal\n"
+            event=mapzhphrase("rssiho2wifi", ReportHandoverphrase)
+            self.retmsg.report = constructReport(type=ReportType.HOALGO_BASE, event=event, level=self.retmsg.level)
         else:
-            hostr = "Strong LTE signal\n"
+            hostr = "Weak WiFi signal\n"
         hostr +=  " Idle Handover to " + hodirect
         self.retmsg.msg = hostr
         return self.retmsg
@@ -1074,6 +1084,8 @@ class idleautovowifi(eventhandler):
         self.retmsg.level = Msglevel.WARNING
         self.retmsg.color = maplevel2color(self.retmsg.level)
         hostr = "Idle switch to VoWiFi"
+        event=mapzhphrase("autowifi", ReportHandoverphrase)
+        self.retmsg.report = constructReport(type=ReportType.HOALGO_BASE, event=event, level=self.retmsg.level)
         self.retmsg.msg = hostr
         return self.retmsg
 

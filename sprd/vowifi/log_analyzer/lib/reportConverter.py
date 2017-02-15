@@ -10,7 +10,7 @@
 #      4. link on the error text
 #      5. error details display
 #      5.1 rewrite updatereportEvent and constructreportEvent, add field
-
+#      11. back to top
 #TODO:
 #       6. add catagory to display, top occurence and timestamp (Definition of Done: DoD )
 #       6.1 user action,  phone, scenario
@@ -18,7 +18,6 @@
 #       8. add normal scenarioes details
 #       8.1 timestamps, etc
 #       10. process duration: s2b, reg, ho, call
-#       11. go to top
 #
 
 from reportEvent import *
@@ -134,6 +133,21 @@ ReportHandoverphrase['callhowifi'] = dict()
 ReportHandoverphrase['callhowifi'] = langBuilder(zh="电话中切到VoWiFi", en="Handover to VoWiFi in Call")
 ReportHandoverphrase['callholte'] = dict()
 ReportHandoverphrase['callholte'] = langBuilder(zh="电话中切到VoLTE", en="Handover to VoLTE in Call")
+ReportHandoverphrase['voiceqos2lte'] = dict()
+ReportHandoverphrase['voiceqos2lte'] = langBuilder(zh="语音通话质量差切换到Volte", en="Handover to VoLTE Due to Poor Voice Quality")
+ReportHandoverphrase['videoqos2lte'] = dict()
+ReportHandoverphrase['videoqos2lte'] = langBuilder(zh="视频通话质量差切换到Volte", en="Handover to VoLTE Due to Poor Video Quality")
+
+ReportHandoverphrase['incallrssiho2wifi'] = dict()
+ReportHandoverphrase['incallrssiho2wifi'] = langBuilder(zh="通话中WiFi信号好切换到VoWiFi", en="Handover to VoWiFi In Call Due to Strong WiFi Signal")
+
+ReportHandoverphrase['rssiho2wifi'] = dict()
+ReportHandoverphrase['rssiho2wifi'] = langBuilder(zh="WiFi信号好切换到VoWiFi", en="Handover to VoWiFi From VoLTE Due to Strong WiFi Signal")
+
+ReportHandoverphrase['autowifi'] = dict()
+ReportHandoverphrase['autowifi'] = langBuilder(zh="WiFi信号好驻到VoWiFi", en="Auto Attach to VoWiFi Due to Strong WiFi Signal")
+
+
 
 #write a report builder
 
