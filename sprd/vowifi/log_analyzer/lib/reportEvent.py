@@ -72,23 +72,30 @@ class ReportEvent():
             usertable = dict()
             usertable['list'] = list()
             usertable['name'] = "usertable"
-            usertable['title'] = "User Action"
+            usertable['title'] = "User Action Statistics"
+            usertable['flowname'] = "userflowtable"
+            usertable['flowtitle'] = "User Action Flow"
 
             phonetable = dict()
             phonetable['list'] = list()
             phonetable['name'] = "phonetable"
-            phonetable['title'] = "Phone Status"
+            phonetable['flowname'] = "phoneflowtable "
+            phonetable['title'] = "Phone Status Statistics"
+            phonetable['flowtitle'] = "Phone Status Flow"
 
             scenariotable = dict()
             scenariotable['list'] = list()
             scenariotable['name'] = "scenariotable"
-            scenariotable['title'] = "VoWiFi Service"
+            scenariotable['flowname'] = "scenarioflowtable"
+            scenariotable['title'] = "VoWiFi Service Statistics"
+            scenariotable['flowtitle'] = "VoWiFi Service Flow"
 
             hoalgotable = dict()
             hoalgotable['list'] = list()
             hoalgotable['name'] = 'hoalgotable'
-            hoalgotable['title'] = "Handover Strategy"
-
+            hoalgotable['flowname'] = 'hoalgoflowtable'
+            hoalgotable['title'] = "Handover Strategy Statistics"
+            hoalgotable['flowtitle'] = "Handover Strategy Flow"
 
 
             etable = dict()
@@ -108,12 +115,12 @@ class ReportEvent():
             self.tableattr['etable']['caption'] = "Event table"
             self.tableattr['etable']['thlist'] = ["No.", "Event name", "Occurence", 'Details']
 
-            #each error detail should have a different format
+            #ecaptionach error detail should have a different format
 
             self.tableattr['errtable'] = dict()
             #this caption should be overwritten
             self.tableattr['errtable']['caption'] = "Error table"
-            self.tableattr['errtable']['thlist'] = ["No.", "Timestamp","Error Code", 'lineno', 'line']
+            self.tableattr['errtable']['thlist'] = ["No.", "Eventname","Timestamp","Error Code", 'lineno', 'line']
             self.tableattr['errtable']['tname'] = ""
 
             #some global id indexes
@@ -147,8 +154,14 @@ class ReportEvent():
     def getTname(self, tname):
         return self.tables[tname]['name']
 
+    def getTflowname(self, tname):
+        return self.tables[tname]['flowname']
+
     def getTitle(self, tname):
         return self.tables[tname]['title']
+
+    def getFlowTitle(self, tname):
+        return self.tables[tname]['flowtitle']
 
 
     def getErrorIndex(self, index):
@@ -296,9 +309,9 @@ class ReportEvent():
         listr += "<li>" + content + "</li>\n"
         return listr
 
-    def genaref(self,content, href):
+    def genaref(self,content, href, id=''):
         arefstr = ""
-        arefstr += "<a href=\""+ href +"\">" + content + "</a>\n"
+        arefstr += "<a href=\""+ href +"\"" +" id=\""+str(id)+"\" >" + content + "</a>\n"
         return arefstr
 
     def genOverviewIndex(self):
@@ -311,8 +324,8 @@ class ReportEvent():
         hoalgoname = self.getTname('hoalgotable')
 
         overviewstr += self.genaref(listr1, '#' + username)
+
         overviewstr += self.genulopen()
-        #FIXME
 
         userlistr = self.genli(self.getTitle('usertable'))
         #add the id
@@ -334,6 +347,55 @@ class ReportEvent():
 
         return overviewstr
 
+    def genErrorIndex(self):
+        errorindex = ''
+
+        listr2 = self.genli("Error Scenarioes")
+        errorindex += self.genaref(listr2, "")
+        errorindex += self.genulopen()
+        etable = self.getTlist('etable')
+
+        for index, eventdict in enumerate(etable):
+            event = eventdict['ename']
+            if event in self.errorevent:
+                listr = self.genli(event)
+                errorindex += self.genaref(listr, self.getErrorIndex(index))
+
+        errorindex += self.genulclose()
+        return errorindex
+
+    def genFlowIndex(self):
+        flowstr = ''
+
+
+        username = self.getTflowname('usertable')
+        phonename = self.getTflowname('phonetable')
+        scenarioname = self.getTflowname('scenariotable')
+        hoalgoname = self.getTflowname('hoalgotable')
+        listr1 = self.genli("Event Flow")
+        flowstr += self.genaref(listr1, '#' + username)
+        flowstr += self.genulopen()
+
+        userlistr = self.genli(self.getFlowTitle('usertable'))
+        #add the id
+        flowstr += self.genaref(userlistr, '#' + username)
+
+        phonelistr = self.genli(self.getFlowTitle('phonetable'))
+        #add the id
+        flowstr += self.genaref(phonelistr, '#' + phonename)
+
+        scenariolistr = self.genli(self.getFlowTitle('scenariotable'))
+        #add the id
+        flowstr += self.genaref(scenariolistr, '#' + scenarioname)
+
+        hoalgolistr = self.genli(self.getFlowTitle('hoalgotable'))
+        #add the id
+        flowstr += self.genaref(hoalgolistr, '#' + hoalgoname)
+
+        flowstr += self.genulclose()
+
+        return flowstr
+
     def generateIndex(self):
         #parse the etable, generate the index and sub index
         indexstr = ""
@@ -342,18 +404,8 @@ class ReportEvent():
         indexstr += self.genOverviewIndex()
         #if no error , the li is not used;
         #but for sprd, there will be always error.
-        listr2 = self.genli("Error Scenarioes")
-        indexstr += self.genaref(listr2, "")
-
-        etable = self.getTlist('etable')
-        indexstr += self.genulopen()
-        for index, eventdict in enumerate(etable):
-            event = eventdict['ename']
-            if event in self.errorevent:
-                listr = self.genli(event)
-                indexstr += self.genaref(listr, self.getErrorIndex(index))
-
-        indexstr += self.genulclose()
+        indexstr += self.genErrorIndex()
+        indexstr += self.genFlowIndex()
 
         return indexstr
 
@@ -368,7 +420,35 @@ class ReportEvent():
 
         return bttstr
 
-    def genOneTableHTML(self, table, tabletitle,tableid):
+    def genstatsrow(self,eventdict, index):
+        rowstr = ''
+        event = eventdict['ename']
+        count = str(eventdict['enamecount'])
+        detailstr = self.genEventDetails(eventdict['errorlist'])
+        rowstr +=self.genrowopen()
+        rowstr +=self.gencolumn(str(index+1))
+        rowstr +=self.gencolumn(event)
+        rowstr +=self.gencolumn(count)
+        rowstr +=self.gencolumn(detailstr)
+        rowstr +=self.genrowclose()
+        return rowstr
+
+    def genflowrow(self,eventdict, index):
+        rowstr = ''
+        event = eventdict['ename']
+        count = str(eventdict['enamecount'])
+        detailstr = self.genEventDetails(eventdict['errorlist'])
+        rowstr +=self.genrowopen()
+        rowstr +=self.gencolumn(str(index+1))
+        rowstr +=self.gencolumn(event)
+        rowstr +=self.gencolumn(count)
+        rowstr +=self.gencolumn(detailstr)
+        rowstr +=self.genrowclose()
+        return rowstr
+
+
+
+    def genOneTableHTML(self, table, tabletitle,tableid, rowgen):
 
         #get eventlist and iterate it, wirte it in right place
         testcaption = self.getEventTableCaption()
@@ -381,15 +461,7 @@ class ReportEvent():
         self.logger.logger.info('DEBUG----------------')
         self.logger.logger.info(table)
         for index, eventdict in enumerate(table):
-             event = eventdict['ename']
-             count = str(eventdict['enamecount'])
-             detailstr = self.genEventDetails(eventdict['errorlist'])
-             tablehtml +=self.genrowopen()
-             tablehtml +=self.gencolumn(str(index+1))
-             tablehtml +=self.gencolumn(event)
-             tablehtml +=self.gencolumn(count)
-             tablehtml +=self.gencolumn(detailstr)
-             tablehtml +=self.genrowclose()
+             tablehtml += rowgen(eventdict,index)
         tablehtml +=self.gentableclose()
 
         #generate the back to top link
@@ -398,14 +470,14 @@ class ReportEvent():
         tablehtml += self.genhorizonline()
         return tablehtml
 
-    def generateAllTableHTML(self):
+    def generateAllSTATSTableHTML(self):
 
 
         etablehtml = ""
-        etablehtml += self.genOneTableHTML(self.getTlist('usertable'), tabletitle=self.getTitle('usertable'), tableid=self.getTname('usertable'))
-        etablehtml += self.genOneTableHTML(self.getTlist('phonetable'), tabletitle=self.getTitle('phonetable'), tableid=self.getTname('phonetable'))
-        etablehtml += self.genOneTableHTML(self.getTlist('scenariotable'), tabletitle=self.getTitle('scenariotable'), tableid=self.getTname('scenariotable'))
-        etablehtml += self.genOneTableHTML(self.getTlist('hoalgotable'), tabletitle=self.getTitle('hoalgotable'), tableid=self.getTname('hoalgotable'))
+        etablehtml += self.genOneTableHTML(self.getTlist('usertable'), tabletitle=self.getTitle('usertable'), tableid=self.getTname('usertable'), rowgen=self.genstatsrow)
+        etablehtml += self.genOneTableHTML(self.getTlist('phonetable'), tabletitle=self.getTitle('phonetable'), tableid=self.getTname('phonetable'),rowgen=self.genstatsrow)
+        etablehtml += self.genOneTableHTML(self.getTlist('scenariotable'), tabletitle=self.getTitle('scenariotable'), tableid=self.getTname('scenariotable'),rowgen=self.genstatsrow)
+        etablehtml += self.genOneTableHTML(self.getTlist('hoalgotable'), tabletitle=self.getTitle('hoalgotable'), tableid=self.getTname('hoalgotable'),rowgen=self.genstatsrow)
         return etablehtml
 
     def genhorizonline(self):
@@ -425,15 +497,19 @@ class ReportEvent():
             errorstr = error['errorstr']
             lineno = str(error['lineno'])
             line = str(error['line'])
+            event = str(error['ename'])
             errortablehtml += self.genrowopen()
             errortablehtml +=self.gencolumn(str(no+1))
             errortablehtml +=self.gencolumn(timestamp)
+            errortablehtml +=self.gencolumn(event)
             errortablehtml +=self.gencolumn(errorstr)
             errortablehtml +=self.gencolumn(lineno)
             errortablehtml +=self.gencolumn(line)
             errortablehtml += self.genrowclose()
 
         errortablehtml += self.gentableclose()
+        #generate the back to top link
+        errortablehtml += self.genBackToTop()
         #add horizon line
         errortablehtml += self.genhorizonline()
 
@@ -475,6 +551,16 @@ class ReportEvent():
         self.setTlist('phonetable', phonetable)
         self.setTlist('scenariotable',scenariotable)
 
+    def genAllFlowTable(self):
+        ftablestr = ''
+
+        ftablestr += self.genOneTableHTML(self.getTlist('usertable'), tabletitle=self.getFlowTitle('usertable'), tableid=self.getTflowname('usertable'), rowgen=self.genflowrow)
+        ftablestr += self.genOneTableHTML(self.getTlist('phonetable'), tabletitle=self.getFlowTitle('phonetable'), tableid=self.getTflowname('phonetable'),rowgen=self.genflowrow)
+        ftablestr += self.genOneTableHTML(self.getTlist('scenariotable'), tabletitle=self.getFlowTitle('scenariotable'), tableid=self.getTflowname('scenariotable'),rowgen=self.genflowrow)
+        ftablestr += self.genOneTableHTML(self.getTlist('hoalgotable'), tabletitle=self.getFlowTitle('hoalgotable'), tableid=self.getTflowname('hoalgotable'),rowgen=self.genflowrow)
+
+        return ftablestr
+
     def generateHTML(self):
         #first of all, combine all tables
         self.formattables()
@@ -483,8 +569,10 @@ class ReportEvent():
         if self.isValidTable(etable) > 0 :
             self.htmlstr += self.genheaderopen()
             self.htmlstr += self.generateIndex()
-            self.htmlstr += self.generateAllTableHTML()
+            self.htmlstr += self.generateAllSTATSTableHTML()
             self.htmlstr += self.genAllErrorTable()
+            #FIXME: need to rearrange event's order
+            #self.htmlstr += self.genAllFlowTable()
             self.htmlstr += self.genheaderclose()
             with open(self.reportpath, 'a+') as rlog:
                 rlog.write(self.htmlstr)

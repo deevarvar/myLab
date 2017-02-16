@@ -11,14 +11,19 @@
 #      5. error details display
 #      5.1 rewrite updatereportEvent and constructreportEvent, add field
 #      11. back to top
-#TODO:
-#       6. add catagory to display, top occurence and timestamp (Definition of Done: DoD )
+#      #       6. add catagory to display, top occurence and timestamp (Definition of Done: DoD )
 #       6.1 user action,  phone, scenario
 #       7. add ho, call, user action
+#TODO:
+#
 #       8. add normal scenarioes details
 #       8.1 timestamps, etc
+#       8.2 redirect all overview log to overview.log and add a link in html, link to main.pdf
 #       9. radio log catagory
-#       10. process duration: s2b, reg, ho, call
+#       10. add datarouter count
+#       12. process duration: s2b, reg, ho, call
+#       12.1 duration
+#
 #
 
 from reportEvent import *
@@ -246,6 +251,98 @@ ReportScenariophrase['sendsmstimeout'] = langBuilder(zh="发送SMS超时", en="S
 
 ReportScenariophrase['pingfail'] = dict()
 ReportScenariophrase['pingfail'] = langBuilder(zh="驻网ping失败", en="ping failed when ePDG attach")
+
+ReportScenariophrase['wpaselect'] = dict()
+ReportScenariophrase['wpaselect'] = langBuilder(zh="选择新的WiFi AP:", en="Select New WiFi AP:")
+#drstatus
+ReportScenariophrase['drstatus'] = dict()
+ReportScenariophrase['drstatus'] = langBuilder(zh="更新数据路由到", en="Update data router to ")
+
+#various servicecallback phrase
+ReportScenariophrase["call_incoming"] = dict()
+ReportScenariophrase["call_incoming"] = langBuilder(zh="收到来电", en="Receive incoming Call")
+
+ReportScenariophrase["call_talking"] = dict()
+ReportScenariophrase["call_talking"] = langBuilder(zh="电话接通", en="Call is established")
+
+ReportScenariophrase["call_hold_ok"] = dict()
+ReportScenariophrase["call_hold_ok"] = langBuilder(zh="电话保持成功", en="Call hold successfully")
+
+ReportScenariophrase["call_resume_ok"] = dict()
+ReportScenariophrase["call_resume_ok"] = langBuilder(zh="电话恢复成功", en="Call resume successfully")
+
+ReportScenariophrase["call_hold_received"] = dict()
+ReportScenariophrase["call_hold_received"] = langBuilder(zh="被对方保持电话", en="Call is held by peer")
+
+ReportScenariophrase["call_resume_received"] = dict()
+ReportScenariophrase["call_resume_received"] = langBuilder(zh="被对方恢复电话", en="Call is resumed by peer")
+
+ReportScenariophrase["call_add_video_ok"] = dict()
+ReportScenariophrase["call_add_video_ok"] = langBuilder(zh="添加视频成功", en="Add Video OK")
+
+ReportScenariophrase["call_remove_video_ok"] = dict()
+ReportScenariophrase["call_remove_video_ok"] = langBuilder(zh="移除视频成功", en="Remove Video OK")
+
+ReportScenariophrase["call_remove_video_ok"] = dict()
+ReportScenariophrase["call_remove_video_ok"] = langBuilder(zh="移除视频成功", en="Remove Video OK")
+
+ReportScenariophrase["call_add_video_request"] = dict()
+ReportScenariophrase["call_add_video_request"] = langBuilder(zh="收到添加视频的请求", en="Receive add video request")
+
+ReportScenariophrase["call_add_video_cancel"] = dict()
+ReportScenariophrase["call_add_video_cancel"] = langBuilder(zh="收到取消添加视频的请求", en="Receive request to cancel add video")
+
+ReportScenariophrase["conf_connected"] = dict()
+ReportScenariophrase["conf_connected"] = langBuilder(zh="会议电话建立", en="Conference Call is established")
+
+ReportScenariophrase["conf_disconnected"] = dict()
+ReportScenariophrase["conf_disconnected"] = langBuilder(zh="会议电话结束", en="Conference Call is disconnedted")
+
+ReportScenariophrase["conf_invite_accept"] = dict()
+ReportScenariophrase["conf_invite_accept"] = langBuilder(zh="对方接受会议电话", en="Peer accept Conference Call")
+
+ReportScenariophrase["conf_kick_accept"] = dict()
+ReportScenariophrase["conf_kick_accept"] = langBuilder(zh="移除会议参加者", en="Kick Peer from Conference Call")
+
+ReportScenariophrase["conf_part_update"] = dict()
+ReportScenariophrase["conf_part_update"] = langBuilder(zh="会议参加者状态更新", en="Conf Peer state updated")
+
+ReportScenariophrase["conf_hold_ok"] = dict()
+ReportScenariophrase["conf_hold_ok"] = langBuilder(zh="会议电话保持成功", en="Conference Call hold successfully")
+
+ReportScenariophrase["conf_resume_ok"] = dict()
+ReportScenariophrase["conf_resume_ok"] = langBuilder(zh="会议电话恢复成功", en="Conference Call resume successfully")
+
+ReportScenariophrase["conf_hold_received"] = dict()
+ReportScenariophrase["conf_hold_received"] = langBuilder(zh="被对方保持会议电话", en="Conference Call is held by peer")
+
+ReportScenariophrase["conf_resume_received"] = dict()
+ReportScenariophrase["conf_resume_received"] = langBuilder(zh="被对方恢复会议电话", en="Conference Call is resumed by peer")
+
+ReportScenariophrase["call_hold_failed"] = dict()
+ReportScenariophrase["call_hold_failed"] = langBuilder(zh="电话保持失败", en="Failed to hold call")
+
+ReportScenariophrase["call_resume_failed"] = dict()
+ReportScenariophrase["call_resume_failed"] = langBuilder(zh="电话恢复失败", en="Failed to resume call")
+
+ReportScenariophrase["call_add_video_failed"] = dict()
+ReportScenariophrase["call_add_video_failed"] = langBuilder(zh="添加视频失败", en="Failed to add video to call")
+
+ReportScenariophrase["call_remove_video_failed"] = dict()
+ReportScenariophrase["call_remove_video_failed"] = langBuilder(zh="移除视频失败", en="Failed to remove video from call")
+
+ReportScenariophrase["conf_invite_failed"] = dict()
+ReportScenariophrase["conf_invite_failed"] = langBuilder(zh="会议电话失败", en="Failed to start Conference call")
+
+ReportScenariophrase["conf_kick_failed"] = dict()
+ReportScenariophrase["conf_kick_failed"] = langBuilder(zh="会议电话移除参与者失败", en="Failed to kick peer from Conference call")
+
+ReportScenariophrase["conf_hold_failed"] = dict()
+ReportScenariophrase["conf_hold_failed"] = langBuilder(zh="会议电话保持失败", en="Failed to hold Conference call")
+
+ReportScenariophrase["conf_resume_failed"] = dict()
+ReportScenariophrase["conf_resume_failed"] = langBuilder(zh="会议电话恢复失败", en="Failed to resume Conference call")
+
 
 
 #write a report builder

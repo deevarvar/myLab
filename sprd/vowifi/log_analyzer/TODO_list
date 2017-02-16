@@ -89,7 +89,7 @@ D:\code\log\bug_log\vit_log\2017_1_1\Info_590126_2\AP\ylog
                 fixed: event/radio log redirect
 
 
-                1. add logic for  wpa_supplicant if occurs more than once
+                fixed: 1. add logic for  wpa_supplicant if occurs more than once
                 2. radio color, add finish time
                 3.  log level, color level: switch algo yellow
                 3.1 remove video/call related logs

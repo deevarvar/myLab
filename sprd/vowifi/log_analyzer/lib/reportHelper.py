@@ -28,10 +28,11 @@ import re
             ],
             errordetailslist:[
                 {
-
+                    "ename":
                     "timestamp":
                     "error":
                     "lineno":
+
                 },
 
             }
@@ -71,6 +72,7 @@ def constructreportEvent(report):
     newevent['errordetailslist'] = list()
 
     detailerror = dict()
+    detailerror['ename'] = ename
     detailerror['errorstr'] = errorstr
     detailerror['timestamp'] = timestamp
     detailerror['line'] = line
@@ -112,6 +114,7 @@ def updatereportEvent(report, etable):
                 detailerror['timestamp'] = timestamp
                 detailerror['line'] = line
                 detailerror['lineno'] = lineno
+                detailerror['ename'] = ename
                 element['errordetailslist'].append(detailerror)
 
                 if type(errorlist) is list and len(errorlist) > 0:

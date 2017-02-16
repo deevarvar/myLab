@@ -623,9 +623,13 @@ class servicecallback(eventhandler):
                 if curevent in infoevent:
                     self.retmsg.msglevel = Msglevel.WARNING
                     self.retmsg.color = maplevel2color(self.retmsg.msglevel)
+                    event = mapzhphrase(curevent, ReportScenariophrase)
+                    self.retmsg.report = constructReport(type=ReportType.SCEEVENT_BASE,event=event, level=self.retmsg.msglevel)
                 elif curevent in errevent:
                     self.retmsg.msglevel = Msglevel.ERROR
                     self.retmsg.color = maplevel2color(self.retmsg.msglevel)
+                    event = mapzhphrase(curevent, ReportScenariophrase)
+                    self.retmsg.report = constructReport(type=ReportType.SCEEVENT_BASE,event=event, level=self.retmsg.msglevel)
 
                 eventstr = 'Event: ' + curevent + '\n'
             if servicejson['event_name'] == "call_terminate":
@@ -710,6 +714,8 @@ class drstatus(eventhandler):
         self.retmsg.msglevel = Msglevel.INFO
         self.retmsg.color = maplevel2color(self.retmsg.msglevel)
         self.retmsg.msg = drstr
+        event = mapzhphrase("drstatus", ReportScenariophrase, post=drstate)
+        self.retmsg.report = constructReport(type=ReportType.SCEEVENT_BASE,event=event, level=self.retmsg.msglevel)
         return self.retmsg
 
 
@@ -1224,6 +1230,8 @@ class wpaselect(eventhandler):
         ssidstr = "Select New WiFi AP: " + ssid + '\n'
         macstr = "AP Mac: " + mac
         self.retmsg.msg =  ssidstr + macstr
+        event=mapzhphrase("wpaselect", ReportScenariophrase, post=ssid)
+        self.retmsg.report = constructReport(type=ReportType.USEREVENT_BASE, event=event, level=self.retmsg.level)
         return self.retmsg
 
 class dhcpdiscover(eventhandler):

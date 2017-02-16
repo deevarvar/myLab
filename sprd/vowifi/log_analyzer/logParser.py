@@ -397,6 +397,8 @@ class logParser():
             self.words[process] = dict()
             self.words[process]['words'] = wordssection[process]
             self.words[process]['found'] = 0
+            #some process wpa_supplicant not only have one pid
+            self.words[process]['pids'] = list()
 
         tagsection = self.config['tags']
         for process in tagsection:
@@ -483,9 +485,10 @@ class logParser():
 
                     #FIXME: add logic to track service and security
                     for process in wordssection:
-                       if int(self.words[process]['found']) == 0 and self.words[process]['words'] in line:
-                           self.words[process]['found'] = 1
-                           self.words[process]['pid'] = lpid
+                       if self.words[process]['words'] in line:
+                           self.words[process]['found'] += 1
+                           #FIXME: this 'pid' can be a list
+                           self.words[process]['pids'].append(lpid)
                            self.pids.append(lpid)
                            self.piddb[lpid] = dict()
                            self.piddb[lpid]['process'] = process
@@ -519,13 +522,14 @@ class logParser():
         for process, content in self.words.iteritems():
             self.logger.logger.info(process)
             self.logger.logger.info(content)
-            if 'pid' in content:
-                lpid = content['pid']
-                self.pidpair[lpid] = process
-                self.logger.logger.info(process + ' pid is '+ str(lpid))
-                with open(self.processout, 'a+') as processout:
-                    linfo = process + ':' + str(lpid) + '\n'
-                    processout.write(linfo)
+            if type(content['pids']) is list and len(content['pids']) > 1:
+                pidlist = content['pids']
+                for pidindex, pid in enumerate(pidlist):
+                    self.pidpair[pid] = process
+                    self.logger.logger.info(process + ' pid is '+ str(pid))
+                    with open(self.processout, 'a+') as processout:
+                        linfo = process + ':' + str(pid) + '\n'
+                        processout.write(linfo)
 
     def getTagsNum(self):
         """
