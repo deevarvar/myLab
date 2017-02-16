@@ -702,7 +702,7 @@ phoneEvent.addEvent("Failed to rotate remote render for the call: (\w+)", module
 ###modify request
 phoneEvent.addEvent("Try to send the modify request, isVideo: (\w+)", module_Phone, eventType=eventType.EDGE, eventHandler=modifyrequest)
 
-phoneEvent.addEvent("(Failed to send the modify request) for the call", module_Phone, eventType=eventType.EDGE, color="red")
+phoneEvent.addEvent("(Failed to send the modify request) for the call", module_Phone, eventType=eventType.EDGE, color="red", eventHandler=modifyrequestfailed)
 ###TODO: set pause image, not common function
 phoneEvent.addEvent("Set the pause image to.*", module_Phone)
 ###invite conf call
@@ -768,14 +768,13 @@ serviceEvent.addEvent("Send SMS ack for rpMessageRef: (.*)", module_Service, eve
 securityEvent.addEvent("SecurityS2bBinder.*(Failed to exec the ping cmd)", module_Security, eventType=eventType.EDGE, color="red")
 securityEvent.addEvent("SecurityS2bBinder.*Mtc_S2bStart (no wifi network) get", module_Security, eventType=eventType.EDGE, color="red")
 securityEvent.addEvent("SecurityS2bBinder.*Mtc_S2bStart (netid is error)", module_Security, eventType=eventType.EDGE, color="red")
-securityEvent.addEvent("SecurityS2bBinder.*Mtc_S2bStart (netid is error)", module_Security, eventType=eventType.EDGE, color="red")
 securityEvent.addEvent("SecurityS2bBinder.*(phoneId = -1)", module_Security, eventType=eventType.EDGE, color="red")
 
 #strange ping algo for others...
 securityEvent.addEvent("SecurityS2bBinder.*pingCount = (\d) this time (ping .* success)", module_Security, eventType=eventType.EDGE, eventHandler=pingmsg, groupnum=2)
 #strange ping algo for reliance
 securityEvent.addEvent("SecurityS2bBinder.*this time (ping.*success)", module_Security, eventType=eventType.EDGE, color="blue")
-securityEvent.addEvent("SecurityS2bBinder.*(\d+ times of pings fail), notify fail", module_Security, eventType=eventType.EDGE, color="red")
+securityEvent.addEvent("SecurityS2bBinder.*(\d+ times of pings fail), notify fail", module_Security, eventType=eventType.EDGE, color="red", eventHandler=pingfail)
 securityEvent.addEvent("SecurityS2bBinder.*(s2b Start fail), notify fail.", module_Security, eventType=eventType.EDGE, color="red")
 securityEvent.addEvent("SecurityS2bBinder.*roaming=(.*) hplmn =(.*) vplmn=(.*) static=(.*)", module_Security, eventType=eventType.EDGE, eventHandler=ikeroaming)
 securityEvent.addEvent("LEMON.*(imsi is.*)", module_Security, eventType=eventType.EDGE)

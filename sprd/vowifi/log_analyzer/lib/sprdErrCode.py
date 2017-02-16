@@ -154,7 +154,7 @@ DIRECTION_SEND_RECEIVE = 3
 Constantdirection = dict()
 Constantdirection[str(DIRECTION_INVALID)] = "invalid"
 Constantdirection[str(DIRECTION_INACTIVE)] = "inactive"
-Constantdirection[str(DIRECTION_RECEIVE)] = "receiveonly"
+Constantdirection[str(DIRECTION_RECEIVE)] = "recvonly"
 Constantdirection[str(DIRECTION_SEND)] = "sendonly"
 Constantdirection[str(DIRECTION_SEND_RECEIVE)] = "sendrecv"
 

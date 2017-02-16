@@ -496,6 +496,8 @@ class logParser():
             processout.truncate()
 
         #write the tags pid output
+        self.logger.logger.info('print self.tags')
+        self.logger.logger.info(self.tags)
         for process, content in self.tags.iteritems():
             self.logger.logger.info(process)
             self.logger.logger.info(content)
@@ -511,7 +513,8 @@ class logParser():
                 with open(self.processout, 'a+') as processout:
                     linfo = process + ':' + str(lpid) + '\n'
                     processout.write(linfo)
-
+        self.logger.logger.info('print self.words')
+        self.logger.logger.info(self.words)
         #write the words pid
         for process, content in self.words.iteritems():
             self.logger.logger.info(process)

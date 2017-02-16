@@ -169,6 +169,8 @@ class acceptcall(eventhandler):
         self.retmsg.msglevel = Msglevel.WARNING
         self.retmsg.color = maplevel2color(self.retmsg.msglevel)
         self.retmsg.msg = "Accept As " + calltype
+        event = mapzhphrase(calltype, ReportScenariophrase)
+        self.retmsg.report = constructReport(type=ReportType.SCEEVENT_BASE, event=event, level=self.retmsg.msglevel)
         return self.retmsg
 
 class rejectcall(eventhandler):
@@ -179,6 +181,8 @@ class rejectcall(eventhandler):
         rejectreason = str(self.match.group(1).strip())
         rejectreason = mapcode2str(rejectreason,Constantimsreason)
         self.retmsg.msg = "Reject As :" + rejectreason
+        event = mapzhphrase("rejectcall", ReportScenariophrase, post=rejectreason)
+        self.retmsg.report = constructReport(type=ReportType.SCEEVENT_BASE, event=event, level=self.retmsg.msglevel)
         return self.retmsg
 
 class termcall(eventhandler):
@@ -191,16 +195,19 @@ class termcall(eventhandler):
         self.retmsg.msglevel = Msglevel.WARNING
         self.retmsg.msg = maplevel2color(self.retmsg.msglevel)
         self.retmsg.msg = "Term Call As :" + reasonstr
+        event = mapzhphrase("termcall", ReportScenariophrase, post=reasonstr)
+        self.retmsg.report = constructReport(type=ReportType.SCEEVENT_BASE, event=event, level=self.retmsg.msglevel)
         return self.retmsg
 
 def parsemprofile(mprofile):
     if mprofile:
-        profilekey = "audioQuality=(\d+), audioDirection=(\d+), videoQuality=(\d+), videoDirection=(\d+)"
+        profilekey = "{ audioQuality=(.*), audioDirection=(.*), videoQuality=(.*), videoDirection=(.*) }"
         profilepattern = re.compile(profilekey)
         match = profilepattern.search(mprofile)
 
         if match:
             mlen = len(match.groups())
+            print 'abc ' + str(mlen)
             if mlen == 4:
                 aq = str(match.group(1)).strip()
                 ad = str(match.group(2)).strip()
@@ -239,8 +246,13 @@ class holdcall(eventhandler):
                 vdirect = parsedprofile['video']['direct']
                 holdmsg = "Hold Call\n"
                 holdmsg += "Audio: " + acodec + " , "+ adirect +'\n'
+
                 if vdirect != Constantdirection[str(DIRECTION_INVALID)]:
                     holdmsg += "Video: " + vcodec + " , "+ vdirect +'\n'
+
+
+                event = mapzhphrase("holdcall", ReportScenariophrase)
+                self.retmsg.report = constructReport(type=ReportType.SCEEVENT_BASE, event=event, level=self.retmsg.msglevel)
                 self.retmsg.msg = holdmsg
                 return self.retmsg
         else:
@@ -267,6 +279,9 @@ class resumecall(eventhandler):
                 holdmsg += "Audio: " + acodec + " , "+ adirect +'\n'
                 if vdirect != Constantdirection[str(DIRECTION_INVALID)]:
                     holdmsg += "Video: " + vcodec + " , "+ vdirect +'\n'
+
+                event = mapzhphrase("resumecall", ReportScenariophrase)
+                self.retmsg.report = constructReport(type=ReportType.SCEEVENT_BASE, event=event, level=self.retmsg.msglevel)
                 self.retmsg.msg = holdmsg
                 return self.retmsg
         else:
@@ -496,11 +511,23 @@ class modifyrequest(eventhandler):
         isvideo = str(self.match.group(1)).strip().lower()
         if isvideo == "true":
             self.retmsg.msg = "Upgrade Video"
+            event = mapzhphrase("upgradecall", ReportScenariophrase)
         else:
             self.retmsg.msg = "Downgrade Video"
+            event = mapzhphrase("downgradecall", ReportScenariophrase)
+
+        self.retmsg.report = constructReport(type=ReportType.SCEEVENT_BASE,event=event, level=self.retmsg.msglevel)
+
         return self.retmsg
 
 
+class modifyrequestfailed(eventhandler):
+    def handler(self):
+        self.retmsg.msglevel = Msglevel.ERROR
+        self.retmsg.color = maplevel2color(self.retmsg.msglevel)
+        event=mapzhphrase("mdyfailed", ReportScenariophrase)
+        self.retmsg.report = constructReport(type=ReportType.SCEEVENT_BASE, event=event, level=self.retmsg.msglevel)
+        return self.retmsg
 
 class startcall(eventhandler):
     '''
@@ -778,6 +805,8 @@ class defaultfailed(eventhandler):
         self.retmsg.msglevel = Msglevel.ERROR
         self.retmsg.color = maplevel2color(self.retmsg.msglevel)
         self.retmsg.msg = str(self.match.group(1))
+        event = mapzhphrase("callfailed", ReportScenariophrase)
+        self.retmsg.report = constructReport(type=ReportType.SCEEVENT_BASE ,event=event, level=self.retmsg.msglevel)
         return self.retmsg
 
 class makecallstatus(eventhandler):
@@ -789,6 +818,8 @@ class makecallstatus(eventhandler):
         self.retmsg.msglevel = Msglevel.WARNING
         self.retmsg.color = maplevel2color(self.retmsg.msglevel)
         self.retmsg.msg = "Make call to " + callee
+        event = mapzhphrase("apmakecall", ReportScenariophrase, post=callee)
+        self.retmsg.report = constructReport(type=ReportType.SCEEVENT_BASE ,event=event, level=self.retmsg.msglevel)
         return self.retmsg
 
 
@@ -801,16 +832,20 @@ class akastatus(eventhandler):
     def handler(self):
         akatag = str(self.match.group(1)).strip()[:2]
         if akatag == "DB":
-            akastr = "AKA AUTH correctly"
+            akastr = "EAP-AKA AUTH correctly"
             self.retmsg.msglevel = Msglevel.INFO
             self.retmsg.color = maplevel2color(self.retmsg.msglevel)
             self.retmsg.msg = akastr
+            event = mapzhphrase("akaok", ReportScenariophrase)
+            self.retmsg.report = constructReport(type=ReportType.SCEEVENT_BASE ,event=event, level=self.retmsg.msglevel)
             return self.retmsg
         elif akatag == "DC":
-            akastr = "AKA AUTH SYNC Failure"
+            akastr = "EAP-AKA AUTH SYNC Failure"
             self.retmsg.msglevel = Msglevel.ERROR
             self.retmsg.color = maplevel2color(self.retmsg.msglevel)
             self.retmsg.msg = akastr
+            event = mapzhphrase("akafailed", ReportScenariophrase)
+            self.retmsg.report = constructReport(type=ReportType.SCEEVENT_BASE ,event=event, level=self.retmsg.msglevel)
             return self.retmsg
         else:
             return None
@@ -1211,6 +1246,15 @@ class dhcpack(eventhandler):
         return self.retmsg
 
 
+class pingfail(eventhandler):
+    def handler(self):
+        self.retmsg.msg = self.match.group(1)
+        self.retmsg.level = Msglevel.ERROR
+
+        event=mapzhphrase("pingfail", ReportScenariophrase)
+        self.retmsg.report = constructReport(type=ReportType.SCEEVENT_BASE, event=event, level=self.retmsg.level)
+        return self.retmsg
+
 class pingmsg(eventhandler):
     '''
     two pattern:  ping times, pingstring
@@ -1273,6 +1317,8 @@ class regstatewrongcallfail(eventhandler):
         self.retmsg.level = Msglevel.ERROR
         self.retmsg.color = maplevel2color(self.retmsg.level)
         self.retmsg.msg = "VoWiFi not Registered.\nEnd Call!"
+        event=mapzhphrase("unregcallfail", ReportScenariophrase)
+        self.retmsg.report = constructReport(type=ReportType.SCEEVENT_BASE, event=event, level=self.retmsg.level)
         return self.retmsg
 
 class sendsms(eventhandler):
@@ -1289,6 +1335,8 @@ class sendsms(eventhandler):
         if int(retry) >= 1:
             retrystr = "Retry: " + retry + " times"
         self.retmsg.msg = "Send Sms: " + smsmsg + '\n' + retrystr
+        event=mapzhphrase("sendsms", ReportScenariophrase)
+        self.retmsg.report = constructReport(type=ReportType.SCEEVENT_BASE, event=event, level=self.retmsg.level)
         return self.retmsg
 
 
@@ -1313,8 +1361,12 @@ class sendsmsok(eventhandler):
         self.retmsg.color = maplevel2color(self.retmsg.level)
         idstr = "ID: " + str(self.match.group(1)).strip() + '\n'
         smstype = str(self.match.group(2)).strip()
-        smsstr = "Sms Type: " + mapcode2str(smstype, ConstantSmsType) + '\n'
+        smstype = mapcode2str(smstype, ConstantSmsType)
+        smsstr = "Sms Type: " +  smstype + '\n'
         self.retmsg.msg = "Send Sms OK\n" + idstr + smsstr
+
+        event=mapzhphrase("sendsmsok", ReportScenariophrase, post=smstype)
+        self.retmsg.report = constructReport(type=ReportType.SCEEVENT_BASE, event=event, level=self.retmsg.level)
         return self.retmsg
 
 class sendsmsok2(eventhandler):
@@ -1337,9 +1389,12 @@ class sendsmsfailed(eventhandler):
         self.retmsg.color = maplevel2color(self.retmsg.level)
         idstr = "ID: " + str(self.match.group(1)).strip() + '\n'
         smstype = str(self.match.group(2)).strip()
-        smsstr = "Sms Type: " + mapcode2str(smstype, ConstantSmsType) + '\n'
+        smstype = mapcode2str(smstype, ConstantSmsType)
+        smsstr = "Sms Type: " +  smstype + '\n'
         error = str(self.match.group(3)).strip()
         errorstr = "Error State: " + error+ '-->' + mapcode2str(error, ConstantImmsg)
+        event=mapzhphrase("sendsmsfailed", ReportScenariophrase, post=smstype)
+        self.retmsg.report = constructReport(type=ReportType.SCEEVENT_BASE, event=event, level=self.retmsg.level)
         self.retmsg.msg = "Send Sms Failed!\n" + idstr + smsstr + errorstr
         return self.retmsg
 
@@ -1349,6 +1404,8 @@ class smstimeout(eventhandler):
         self.retmsg.color = maplevel2color(self.retmsg.level)
         messageRefstr = "messageRef: " + str(self.match.group(1)).strip() + '\n'
         self.retmsg.msg = "Send Sms timeout!\n" + messageRefstr
+        event=mapzhphrase("sendsmstimeout", ReportScenariophrase)
+        self.retmsg.report = constructReport(type=ReportType.SCEEVENT_BASE, event=event, level=self.retmsg.level)
         return self.retmsg
 
 class recvsms(eventhandler):
@@ -1357,6 +1414,8 @@ class recvsms(eventhandler):
         self.retmsg.color = maplevel2color(self.retmsg.level)
         idstr = "ID: " + str(self.match.group(1)).strip() + '\n'
         self.retmsg.msg = "Receive Sms \n" + idstr
+        event=mapzhphrase("recvsms", ReportScenariophrase)
+        self.retmsg.report = constructReport(type=ReportType.SCEEVENT_BASE, event=event, level=self.retmsg.level)
         return self.retmsg
 
 class recvsms2(eventhandler):
@@ -1373,6 +1432,8 @@ class smsack(eventhandler):
         self.retmsg.color = maplevel2color(self.retmsg.level)
         msgrefstr = "messageRef: " + str(self.match.group(1)).strip() + '\n'
         self.retmsg.msg = "Send Sms ACK\n" + msgrefstr
+        event=mapzhphrase("sendsmsack", ReportScenariophrase)
+        self.retmsg.report = constructReport(type=ReportType.SCEEVENT_BASE, event=event, level=self.retmsg.level)
         return self.retmsg
 
 if __name__ == '__main__':
