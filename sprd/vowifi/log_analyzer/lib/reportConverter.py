@@ -179,6 +179,10 @@ ReportHandoverphrase['videonortp'] = langBuilder(zh="没有视频数据", en="No
 ReportHandoverphrase['voicenortp'] = dict()
 ReportHandoverphrase['voicenortp'] = langBuilder(zh="没有语音数据", en="No RTP in Voice")
 
+ReportHandoverphrase['cmendcall'] = dict()
+ReportHandoverphrase['cmendcall'] = langBuilder(zh="ImsConnectionManager挂断电话", en="ImsCM hung up call")
+
+
 ReportScenariophrase = dict()
 ReportScenariophrase['startvoltecall'] = dict()
 ReportScenariophrase['startvoltecall'] = langBuilder(zh="Telephony拨打VoLTE电话", en="Telephony Start VoLTE Call")

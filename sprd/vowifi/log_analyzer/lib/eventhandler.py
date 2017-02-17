@@ -94,6 +94,14 @@ class wificonn(eventhandler):
         return self.retmsg
 
 #function only match one, but need to generate the report
+class cmendcall(eventhandler):
+    def handler(self):
+        self.retmsg.msg = self.match.group(1)
+        self.retmsg.level = Msglevel.ERROR
+        event = mapzhphrase("cmendcall", ReportHandoverphrase)
+        self.retmsg.report = constructReport(type=ReportType.PHONEEVENT_BASE, event=event, level=self.retmsg.level)
+        return self.retmsg
+
 class wifidisconn(eventhandler):
     def handler(self):
         self.retmsg.msg = self.match.group(1)

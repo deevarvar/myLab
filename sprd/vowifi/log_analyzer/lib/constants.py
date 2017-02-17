@@ -427,7 +427,7 @@ imscmEvent.addEvent("\[(Set Vowifi unavailable)\]", module_ImsCM, eventType = ev
 ###[Cancel current request]
 imscmEvent.addEvent("\[(Cancel current request)\]", module_ImsCM)
 ###[hung up Vowifi call]
-imscmEvent.addEvent("(hung up IMS call)", module_ImsCM, eventType=eventType.EDGE, color = "red")
+imscmEvent.addEvent("(hung up IMS call)", module_ImsCM, eventType=eventType.EDGE, color = "red", eventHandler=cmendcall)
 ###[popup Vowifi unavailable notification]
 imscmEvent.addEvent("(popup Vowifi unavailable notification)", module_ImsCM, eventType=eventType.EDGE, color = "blue")
 
