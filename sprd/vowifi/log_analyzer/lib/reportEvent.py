@@ -79,7 +79,7 @@ class ReportEvent():
             phonetable = dict()
             phonetable['list'] = list()
             phonetable['name'] = "phonetable"
-            phonetable['flowname'] = "phoneflowtable "
+            phonetable['flowname'] = "phoneflowtable"
             phonetable['title'] = "Phone Status Statistics"
             phonetable['flowtitle'] = "Phone Status Flow"
 
@@ -314,39 +314,38 @@ class ReportEvent():
         listr += "<li>" + content + "</li>\n"
         return listr
 
-    def genaref(self,content, href, id=''):
+    def genaref(self,content, href, id='', newtab=False):
         arefstr = ""
-        arefstr += "<a href=\""+ href +"\"" +" id=\""+str(id)+"\" >" + content + "</a>\n"
+        if newtab:
+            arefstr += "<a target=\"_blank\" href=\""+ href +"\"" +" id=\""+str(id)+"\" >" + content + "</a>\n"
+        else:
+            arefstr += "<a href=\""+ href +"\"" +" id=\""+str(id)+"\" >" + content + "</a>\n"
         return arefstr
 
     def genOverviewIndex(self):
         overviewstr = ''
-        overviewstr += self.genulopen(idstr=self.idindexes['top'])
-        listr1 = self.genli("Event Overview")
         username = self.getTname('usertable')
         phonename = self.getTname('phonetable')
         scenarioname = self.getTname('scenariotable')
         hoalgoname = self.getTname('hoalgotable')
-
-        overviewstr += self.genaref(listr1, '#' + username)
+        astr1 = self.genaref("Event Overview", '#' + username)
+        listr1 = self.genli(astr1)
+        overviewstr += listr1
 
         overviewstr += self.genulopen()
 
-        userlistr = self.genli(self.getTitle('usertable'))
         #add the id
-        overviewstr += self.genaref(userlistr, '#' + username)
+        userastr = self.genaref(self.getTitle('usertable'), '#' + username)
+        overviewstr += self.genli(userastr)
 
-        phonelistr = self.genli(self.getTitle('phonetable'))
-        #add the id
-        overviewstr += self.genaref(phonelistr, '#' + phonename)
+        phoneastr = self.genaref(self.getTitle('phonetable'), '#' + phonename)
+        overviewstr += self.genli(phoneastr)
 
-        scenariolistr = self.genli(self.getTitle('scenariotable'))
-        #add the id
-        overviewstr += self.genaref(scenariolistr, '#' + scenarioname)
+        scenarioastr = self.genaref(self.getTitle('scenariotable'), '#' + scenarioname)
+        overviewstr += self.genli(scenarioastr)
 
-        hoalgolistr = self.genli(self.getTitle('hoalgotable'))
-        #add the id
-        overviewstr += self.genaref(hoalgolistr, '#' + hoalgoname)
+        hoalgoastr = self.genaref(self.getTitle('hoalgotable'), '#' + hoalgoname)
+        overviewstr += self.genli(hoalgoastr)
 
         overviewstr += self.genulclose()
 
@@ -355,17 +354,18 @@ class ReportEvent():
     def genErrorIndex(self):
         errorindex = ''
 
-        listr2 = self.genli("Error Scenarioes")
-        errorindex += self.genaref(listr2, "")
+        astr = self.genaref("Error Scenarioes", "#ERROR_0")
+
+        errorindex += self.genli(astr)
+
         errorindex += self.genulopen()
         etable = self.getTlist('etable')
 
         for index, eventdict in enumerate(etable):
             event = eventdict['ename']
             if event in self.errorevent:
-                listr = self.genli(event)
-                errorindex += self.genaref(listr, self.getErrorIndex(index))
-
+                astrin= self.genaref(event, self.getErrorIndex(index))
+                errorindex += self.genli(astrin)
         errorindex += self.genulclose()
         return errorindex
 
@@ -377,25 +377,22 @@ class ReportEvent():
         phonename = self.getTflowname('phonetable')
         scenarioname = self.getTflowname('scenariotable')
         hoalgoname = self.getTflowname('hoalgotable')
-        listr1 = self.genli("Event Flow")
-        flowstr += self.genaref(listr1, '#' + username)
+        astr = self.genaref("Event Flow", '#' + username)
+        flowstr += self.genli(astr)
+
         flowstr += self.genulopen()
 
-        userlistr = self.genli(self.getFlowTitle('usertable'))
-        #add the id
-        flowstr += self.genaref(userlistr, '#' + username)
+        userastr = self.genaref(self.getFlowTitle('usertable'), '#' + username)
+        flowstr += self.genli(userastr)
 
-        phonelistr = self.genli(self.getFlowTitle('phonetable'))
-        #add the id
-        flowstr += self.genaref(phonelistr, '#' + phonename)
+        phoneastr = self.genaref(self.getFlowTitle('phonetable'), '#' + phonename)
+        flowstr += self.genli(phoneastr)
 
-        scenariolistr = self.genli(self.getFlowTitle('scenariotable'))
-        #add the id
-        flowstr += self.genaref(scenariolistr, '#' + scenarioname)
+        scenarioastr = self.genaref(self.getFlowTitle('scenariotable'), '#' + scenarioname)
+        flowstr += self.genli(scenarioastr)
 
-        hoalgolistr = self.genli(self.getFlowTitle('hoalgotable'))
-        #add the id
-        flowstr += self.genaref(hoalgolistr, '#' + hoalgoname)
+        hoalgoastr = self.genaref(self.getFlowTitle('hoalgotable'), '#' + hoalgoname)
+        flowstr += self.genli(hoalgoastr)
 
         flowstr += self.genulclose()
 
@@ -405,10 +402,12 @@ class ReportEvent():
         #parse the etable, generate the index and sub index
         indexstr = ""
 
-
+        #generate the top index
+        indexstr += self.genulopen(idstr=self.idindexes['top'])
         indexstr += self.genOverviewIndex()
         #if no error , the li is not used;
         #but for sprd, there will be always error.
+        #error comes first
         indexstr += self.genErrorIndex()
         indexstr += self.genFlowIndex()
 
@@ -463,6 +462,8 @@ class ReportEvent():
         #get eventlist and iterate it, wirte it in right place
 
         tablehtml = ''
+
+        tablehtml += self.genBackToTop()
         tablehtml += self.genTitle(tableid, tabletitle)
         tablehtml += self.gentableopen(caption, thlist, tableid)
 
@@ -497,7 +498,7 @@ class ReportEvent():
         caption = self.tableattr['errtable']['caption']
         thlist = self.tableattr['errtable']['thlist']
         tname = str(index)
-
+        errortablehtml += self.genBackToTop()
         errortablehtml += self.gentableopen(caption, thlist, tname)
         #["No.", "Timestamp","Error Code", 'lineno']
         for i, error in enumerate(dlist):
@@ -603,13 +604,14 @@ class ReportEvent():
 
     def genHeadPara(self):
         hpara = ''
-        elogstr = 'Trimmed log flow, please refer to ' + self.genaref("report.log", "./report.log") + "\n<br>"
-        pdfstr = "Detailed Graphic Sequence flow , please refer to " + self.genaref("main.pdf", "./main.pdf") + "\n<br>"
-        pdflogstr = 'Detailed Text log flow, please refer to ' + self.genaref("event.log", "./event.log") + "\n<br>"
+        elogstr = 'Trimmed log flow, please refer to ' + self.genaref("report.log", "./report.log", newtab=True) + "\n<br>"
+        pdfstr = "For better view and Detailed Graphic Sequence flow , please refer to " + self.genaref("main.pdf", "./main.pdf",newtab=True) + "\n<br>"
+        pdflogstr = 'Detailed Text log flow, please refer to ' + self.genaref("event.log", "./event.log",newtab=True) + "\n<br>"
         hpara += pdfstr
-        hpara += elogstr
         hpara += pdflogstr
-        contactstr = "Any Question or Suggestion, you can contact " + self.genaref("zhihua.ye@spreadtrum.com", "zhihua.ye@spreadtrum.com")
+        hpara += elogstr
+
+        contactstr = "Any Question or Suggestion, you can contact " + self.genaref("zhihua.ye@spreadtrum.com", "mailto:zhihua.ye@spreadtrum.com")
         hpara += contactstr
         return hpara
 

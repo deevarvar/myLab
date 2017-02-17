@@ -100,7 +100,7 @@ class loggergui():
             self.atmsgs = ''
 
         except (ConfigObjError, IOError) as e:
-             print 'Could not read "%s": %s' % (configfile, e)
+             print 'Could not read "%s": %s' % ('config.ini', e)
 
 
 
@@ -133,16 +133,19 @@ class loggergui():
 
             if choice == ylogstring:
 
+                takestime = 'NA'
+                realmainlog = None
 
                 folder = diropenbox()
 
                 if not folder:
                     msgbox('please relaunch and open a directory.')
-                    exit
+                    exit()
                 else:
                     helper = utils(configpath='./')
                     self.logger.logger.info('folder is ' + folder)
                     matches = helper.findlogs(folder)
+
                     '''
                     print matches
                     import time
@@ -189,7 +192,7 @@ class loggergui():
                             rp.assembleStr()
                             rp.drawAllDiag()
 
-
+                        realmainlog =  mainlog
                         fp = flowParser(logname = mainlog, atmsgs=self.atmsgs)
                         len = fp.getFlow()
                         self.msglen =  len
@@ -200,12 +203,23 @@ class loggergui():
                         #t = ThreadWithExc(target=self.popupthread,args=(currentfile,))
                         #t.start()
                         fp.parseFlow()
-                        fp.drawAllDiag()
+                        takestime = fp.drawAllDiag()
+
                         #fp.drawLemonDiag()
 
                         #t.raiseExc(SystemExit)
 
-                msgbox('Finish parsing sprd log file')
+
+                popupstr = ''
+                filestr = ''
+                if realmainlog:
+                    fsize = os.path.getsize(realmainlog)
+                    name = os.path.basename(realmainlog)
+                    filestr = "file is " + name + '\n' + "file size is " + str(self.utils.humansize(fsize)) + '\n'
+                popupstr = "Finishing parsing\n"
+                popupstr += filestr
+                popupstr += "It takes "+ takestime + " seconds"
+                msgbox(popupstr)
 
 
             elif choice == samsungfile:

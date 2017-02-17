@@ -1860,6 +1860,7 @@ class flowParser():
         self.logger.logger.info('length of all msgs is ' + str(len(self.sipmsgs)) + '  takes ' + str(self.duration) + ' seconds')
         #now need to do this
         #self.drawOneDiag(self.diagstr,'whole')
+        return str(self.duration)
 
     def drawOneDiag(self, diagstr, postfix):
         '''

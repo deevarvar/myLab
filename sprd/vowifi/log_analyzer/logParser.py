@@ -148,7 +148,7 @@ class logParser():
             self.lemonoccurnum = 50
 
         except (ConfigObjError, IOError) as e:
-             print('Could not read "%s": %s' % (configfile, e))
+             print('Could not read "%s": %s' % ('config.ini', e))
 
     '''
         the function is used to get pid from ps output
