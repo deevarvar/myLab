@@ -488,11 +488,14 @@ class logParser():
                        if self.words[process]['words'] in line:
                            self.words[process]['found'] += 1
                            #FIXME: this 'pid' can be a list
-                           self.words[process]['pids'].append(lpid)
-                           self.pids.append(lpid)
-                           self.piddb[lpid] = dict()
-                           self.piddb[lpid]['process'] = process
-                           self.piddb[lpid]['istags'] = 0
+                           if lpid not in self.words[process]['pids']:
+                                self.words[process]['pids'].append(lpid)
+
+                           if self.words[process]['found'] == 1:
+                                self.pids.append(lpid)
+                                self.piddb[lpid] = dict()
+                                self.piddb[lpid]['process'] = process
+                                self.piddb[lpid]['istags'] = 0
 
 
         with open(self.processout, 'w') as processout:
@@ -522,7 +525,7 @@ class logParser():
         for process, content in self.words.iteritems():
             self.logger.logger.info(process)
             self.logger.logger.info(content)
-            if type(content['pids']) is list and len(content['pids']) > 1:
+            if type(content['pids']) is list and len(content['pids']) >= 1:
                 pidlist = content['pids']
                 for pidindex, pid in enumerate(pidlist):
                     self.pidpair[pid] = process

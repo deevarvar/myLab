@@ -219,6 +219,7 @@ class loggergui():
                 popupstr = "Finishing parsing\n"
                 popupstr += filestr
                 popupstr += "It takes "+ takestime + " seconds"
+                self.logger.logger.info(popupstr)
                 msgbox(popupstr)
 
 

@@ -14,13 +14,15 @@
 #      #       6. add catagory to display, top occurence and timestamp (Definition of Done: DoD )
 #       6.1 user action,  phone, scenario
 #       7. add ho, call, user action
-#TODO:
+
 #
 #       8. add normal scenarioes details
 #       8.1 timestamps, etc
 #       8.2 redirect all overview log to overview.log and add a link in html, link to main.pdf
-#       9. radio log catagory
 #       10. add datarouter count
+#TODO:
+#       9. radio log catagory
+
 #       12. process duration: s2b, reg, ho, call
 #       12.1 duration
 #
