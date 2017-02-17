@@ -134,6 +134,11 @@ class ReportEvent():
             with open(self.reportpath, 'w') as rlog:
                 rlog.truncate()
 
+            #all report log
+            self.reportlog = os.path.dirname(self.reportpath) + '/report.log'
+
+            with open(self.reportlog, 'w') as rlog:
+                rlog.truncate()
 
         except (ConfigObjError, IOError) as e:
              print 'Could not read "%s": %s' % (configpath + '/config.ini', e)
@@ -434,33 +439,36 @@ class ReportEvent():
         return rowstr
 
     def genflowrow(self,eventdict, index):
+        #["No.", "Eventname","Timestamp","Error Code", 'lineno', 'line']
         rowstr = ''
         event = eventdict['ename']
-        count = str(eventdict['enamecount'])
-        detailstr = self.genEventDetails(eventdict['errorlist'])
+        timestamp = str(eventdict['timestamp'])
+        error = eventdict['errorstr']
+        lineno = str(eventdict['lineno'])
+        line = str(eventdict['line'])
         rowstr +=self.genrowopen()
         rowstr +=self.gencolumn(str(index+1))
         rowstr +=self.gencolumn(event)
-        rowstr +=self.gencolumn(count)
-        rowstr +=self.gencolumn(detailstr)
+        rowstr +=self.gencolumn(timestamp)
+        rowstr +=self.gencolumn(error)
+        rowstr += self.gencolumn(lineno)
+        rowstr += self.gencolumn(line)
         rowstr +=self.genrowclose()
         return rowstr
 
 
 
-    def genOneTableHTML(self, table, tabletitle,tableid, rowgen):
+    def genOneTableHTML(self, caption, thlist, tablelist, tabletitle,tableid, rowgen):
 
         #get eventlist and iterate it, wirte it in right place
-        testcaption = self.getEventTableCaption()
-        thlist = self.getEventTableThlist()
 
         tablehtml = ''
         tablehtml += self.genTitle(tableid, tabletitle)
-        tablehtml += self.gentableopen(testcaption, thlist, tableid)
+        tablehtml += self.gentableopen(caption, thlist, tableid)
 
         self.logger.logger.info('DEBUG----------------')
-        self.logger.logger.info(table)
-        for index, eventdict in enumerate(table):
+        self.logger.logger.info(tablelist)
+        for index, eventdict in enumerate(tablelist):
              tablehtml += rowgen(eventdict,index)
         tablehtml +=self.gentableclose()
 
@@ -471,13 +479,14 @@ class ReportEvent():
         return tablehtml
 
     def generateAllSTATSTableHTML(self):
-
+        testcaption = self.getEventTableCaption()
+        thlist = self.getEventTableThlist()
 
         etablehtml = ""
-        etablehtml += self.genOneTableHTML(self.getTlist('usertable'), tabletitle=self.getTitle('usertable'), tableid=self.getTname('usertable'), rowgen=self.genstatsrow)
-        etablehtml += self.genOneTableHTML(self.getTlist('phonetable'), tabletitle=self.getTitle('phonetable'), tableid=self.getTname('phonetable'),rowgen=self.genstatsrow)
-        etablehtml += self.genOneTableHTML(self.getTlist('scenariotable'), tabletitle=self.getTitle('scenariotable'), tableid=self.getTname('scenariotable'),rowgen=self.genstatsrow)
-        etablehtml += self.genOneTableHTML(self.getTlist('hoalgotable'), tabletitle=self.getTitle('hoalgotable'), tableid=self.getTname('hoalgotable'),rowgen=self.genstatsrow)
+        etablehtml += self.genOneTableHTML(caption=testcaption, thlist=thlist,tablelist=self.getTlist('usertable'), tabletitle=self.getTitle('usertable'), tableid=self.getTname('usertable'), rowgen=self.genstatsrow)
+        etablehtml += self.genOneTableHTML(caption=testcaption, thlist=thlist,tablelist=self.getTlist('phonetable'), tabletitle=self.getTitle('phonetable'), tableid=self.getTname('phonetable'),rowgen=self.genstatsrow)
+        etablehtml += self.genOneTableHTML(caption=testcaption, thlist=thlist,tablelist=self.getTlist('scenariotable'), tabletitle=self.getTitle('scenariotable'), tableid=self.getTname('scenariotable'),rowgen=self.genstatsrow)
+        etablehtml += self.genOneTableHTML(caption=testcaption, thlist=thlist,tablelist=self.getTlist('hoalgotable'), tabletitle=self.getTitle('hoalgotable'), tableid=self.getTname('hoalgotable'),rowgen=self.genstatsrow)
         return etablehtml
 
     def genhorizonline(self):
@@ -551,15 +560,58 @@ class ReportEvent():
         self.setTlist('phonetable', phonetable)
         self.setTlist('scenariotable',scenariotable)
 
+    def reorderdetaillist(self, table):
+        '''
+        error in errordetailslist may be not in order
+        :param table:
+        :return:
+        '''
+        errordetailslist = list()
+        for index, eventdict in enumerate(table):
+            elist = eventdict['errordetailslist']
+            errordetailslist += elist
+        #sort it, ascending
+        errordetailslist = sorted(errordetailslist, key=itemgetter('timestamp'))
+        print 'elist------'
+        print errordetailslist
+        return errordetailslist
+
+
     def genAllFlowTable(self):
         ftablestr = ''
 
-        ftablestr += self.genOneTableHTML(self.getTlist('usertable'), tabletitle=self.getFlowTitle('usertable'), tableid=self.getTflowname('usertable'), rowgen=self.genflowrow)
-        ftablestr += self.genOneTableHTML(self.getTlist('phonetable'), tabletitle=self.getFlowTitle('phonetable'), tableid=self.getTflowname('phonetable'),rowgen=self.genflowrow)
-        ftablestr += self.genOneTableHTML(self.getTlist('scenariotable'), tabletitle=self.getFlowTitle('scenariotable'), tableid=self.getTflowname('scenariotable'),rowgen=self.genflowrow)
-        ftablestr += self.genOneTableHTML(self.getTlist('hoalgotable'), tabletitle=self.getFlowTitle('hoalgotable'), tableid=self.getTflowname('hoalgotable'),rowgen=self.genflowrow)
+        #each list shoud be ordered
+        usertable = self.getTlist('usertable')
+        usertablelist = self.reorderdetaillist(usertable)
+        phonetable = self.getTlist('phonetable')
+        phonetablelist = self.reorderdetaillist(phonetable)
+        scenariotable = self.getTlist('scenariotable')
+        scenariotablelist = self.reorderdetaillist(scenariotable)
+        hoalgotable = self.getTlist('hoalgotable')
+        hoalgotablelist = self.reorderdetaillist(hoalgotable)
+        caption = "Flow Table"
+        thlist = self.tableattr['errtable']['thlist']
+        ftablestr += self.genOneTableHTML(caption=caption, thlist=thlist,tablelist=usertablelist, tabletitle=self.getFlowTitle('usertable'), tableid=self.getTflowname('usertable'), rowgen=self.genflowrow)
+
+        ftablestr += self.genOneTableHTML(caption=caption, thlist=thlist,tablelist=phonetablelist, tabletitle=self.getFlowTitle('phonetable'), tableid=self.getTflowname('phonetable'),rowgen=self.genflowrow)
+
+        ftablestr += self.genOneTableHTML(caption=caption, thlist=thlist,tablelist=scenariotablelist, tabletitle=self.getFlowTitle('scenariotable'), tableid=self.getTflowname('scenariotable'),rowgen=self.genflowrow)
+
+        ftablestr += self.genOneTableHTML(caption=caption, thlist=thlist,tablelist=hoalgotablelist, tabletitle=self.getFlowTitle('hoalgotable'), tableid=self.getTflowname('hoalgotable'),rowgen=self.genflowrow)
 
         return ftablestr
+
+    def genHeadPara(self):
+        hpara = ''
+        elogstr = 'Trimmed log flow, please refer to ' + self.genaref("report.log", "./report.log") + "\n<br>"
+        pdfstr = "Detailed Graphic Sequence flow , please refer to " + self.genaref("main.pdf", "./main.pdf") + "\n<br>"
+        pdflogstr = 'Detailed Text log flow, please refer to ' + self.genaref("event.log", "./event.log") + "\n<br>"
+        hpara += pdfstr
+        hpara += elogstr
+        hpara += pdflogstr
+        contactstr = "Any Question or Suggestion, you can contact " + self.genaref("zhihua.ye@spreadtrum.com", "zhihua.ye@spreadtrum.com")
+        hpara += contactstr
+        return hpara
 
     def generateHTML(self):
         #first of all, combine all tables
@@ -568,15 +620,20 @@ class ReportEvent():
 
         if self.isValidTable(etable) > 0 :
             self.htmlstr += self.genheaderopen()
+            self.htmlstr += self.genHeadPara()
             self.htmlstr += self.generateIndex()
             self.htmlstr += self.generateAllSTATSTableHTML()
             self.htmlstr += self.genAllErrorTable()
-            #FIXME: need to rearrange event's order
-            #self.htmlstr += self.genAllFlowTable()
+            self.htmlstr += self.genAllFlowTable()
             self.htmlstr += self.genheaderclose()
             with open(self.reportpath, 'a+') as rlog:
                 rlog.write(self.htmlstr)
 
+            etablelist = self.reorderdetaillist(etable)
+            with open(self.reportlog, 'a+') as rlog:
+                for index, event in enumerate(etablelist):
+                    line = event['line']
+                    rlog.write(line)
 
 
     def cloudpic(self):

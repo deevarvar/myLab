@@ -30,7 +30,7 @@ import re
                 {
                     "ename":
                     "timestamp":
-                    "error":
+                    "errorstr":
                     "lineno":
 
                 },
