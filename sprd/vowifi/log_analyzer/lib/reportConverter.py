@@ -20,17 +20,69 @@
 #       8.1 timestamps, etc
 #       8.2 redirect all overview log to overview.log and add a link in html, link to main.pdf
 #       10. add datarouter count
+#      8.1.2 imscm operation result
+#        OPERATION_SWITCH_TO_VOWIFI, OPERATION_SWITCH_TO_VOLTE,...... defined in ImsConnectionMangerConstants.java
+#      8.1.3 wpa_supplicant: wlan0: State: ASSOCIATED -> COMPLETED
+#       8.3 datarouter error
+#        D:\code\log\bug_log\vit_log\2017_3_2\wificalling_no_Voice_video_1082#0310a
+#        [Adapter]VoWifiCallManager: Failed to update the data router state, please check
+
 #TODO:
+#      8.1.1 call session
+
+
+
 #       9. radio log catagory
+#       9.1 FIXME: add at cmd result , log is too verboses....
+#           D:\code\iwhale2\log\cp_reject
+#       self.atmsgs, add field
+#       9.2 add CPVoiceAgent 's at parsing
+#           D:\code\log\bug_log\vit_log\2017_3_2\con_call
+#       at cmd
+#       9.3 ringtone
+#
+#
+#       9.99 wpa_supplicant: wlan0: Removing interface wlan0
+
+#       10.0  g_astMtcCliCodeMap , g_astMtcCallCodeMap
+
+#       10. add imsservice logic
+#            onReceiveHandoverEvent, onImsHandoverStateChange,onImsPdnStatusChange,
+#       imscm's logic  : "imsServiceEx"
+#       add timing calcute
+#       15. outgoing, alerting
+#       16. more bugs to analyze
+#       16.1 imswaitvoltereg D:\code\log\bug_log\vit_log\2017_2_14\644337\Fail_S2b_Attach_Data_OK_No_error_popup\AP\ylog
+#
+#       wifi call end with volte call ,volte not reg. , IMSEN=1 not send
+#       try vowifi call ,ho to volte, end call ,if reg to volte
+#       16.1.1 D:\code\iwhale2\log\cp_reject ho cp reject
+#       16.2 imscmopfailed  D:\code\log\bug_log\vit_log\2017_2_14\644735\IDLE_1\slog_20170217133643_sp9832a_2h11_4mvoltesea_userdebug\external_storage\ylog\ylog
+#       16.3 imscallend http://bugzilla.spreadtrum.com/bugzilla/show_bug.cgi?id=645833
+#       16.4 conf scenario:  http://bugzilla.spreadtrum.com/bugzilla/show_bug.cgi?id=646232
+#       16.5 camera D:\code\log\bug_log\vit_log\2017_2_14\644983\vowifi_Active Video + MT Alerting Video\1\2\external_storage\ylog\ylog
+#        Set the camera to
+#        16.6 sim card not support vowifi:  D:\code\so\juphoonlib\develop\6lib\lib\sim_not_support
+#        setCheckWifiConnectivityState: not found plmn in mAllPlmnArrayList and not Lab's card
+#
+#        add report
+#       17. predict:
+#       17.1 wifi conn
+#       17.2 callid, call state match, incoming ,talking...
+#       17.3 idle ho , ho in call
+#       17.3 stack state
+#       17.3 module owner, doc update
+#       17.8 ho success: epdg, pdn, etc
+#       17.9 call term by user/network
+#       18. supplementary service
 
 #       12. process duration: s2b, reg, ho, call
 #       12.1 duration
-#
-#
+#       13 tracing log should be deleted.
+#       14. chinese name path
+
 
 from reportEvent import *
-
-
 
 class langBuilder():
     def __init__(self, zh='', en=''):
@@ -75,7 +127,10 @@ def mapzhphrase(key, phrasemap, pre= '',post=''):
         return key
     if key in phrasemap:
         assembleen = pre + phrasemap[key].geten()+ post
-        assemblezh = pre + phrasemap[key].getzh()+ post
+        if phrasemap[key].getzh():
+            assemblezh = pre + phrasemap[key].getzh()+ post
+        else:
+            assemblezh = ''
         return assembleen + "<br>" + assemblezh
     else:
         return key
@@ -117,10 +172,10 @@ Reportregphrase['state_update'] = langBuilder(zh="VoWiFi注册状态更新", en=
 #Handover actions
 ReportHandoverphrase = dict()
 ReportHandoverphrase['wificonn'] = dict()
-ReportHandoverphrase['wificonn'] = langBuilder(zh="连上WiFi", en="WiFi is Connected")
+ReportHandoverphrase['wificonn'] = langBuilder(zh="ImsCM 连上WiFi", en="ImsCM WiFi is Connected")
 
 ReportHandoverphrase['wifidisconn'] = dict()
-ReportHandoverphrase['wifidisconn'] = langBuilder(zh="WiFi断开连接", en="WiFi is Disconnected")
+ReportHandoverphrase['wifidisconn'] = langBuilder(zh="ImsCM WiFi断开连接", en="ImsCM WiFi is Disconnected")
 
 
 ReportHandoverphrase['airon'] = dict()
@@ -182,6 +237,40 @@ ReportHandoverphrase['voicenortp'] = langBuilder(zh="没有语音数据", en="No
 ReportHandoverphrase['cmendcall'] = dict()
 ReportHandoverphrase['cmendcall'] = langBuilder(zh="ImsConnectionManager挂断电话", en="ImsCM hung up call")
 
+#OPERATION_SWITCH_TO_VOWIFI
+ReportHandoverphrase['OPERATION_SWITCH_TO_VOWIFI'] = dict()
+ReportHandoverphrase['OPERATION_SWITCH_TO_VOWIFI'] = langBuilder(en="Idle Handover to VoWiFi ")
+#OPERATION_SWITCH_TO_VOLTE
+ReportHandoverphrase['OPERATION_SWITCH_TO_VOLTE'] = dict()
+ReportHandoverphrase['OPERATION_SWITCH_TO_VOLTE'] = langBuilder(en="Idle Handover to VoLTE ")
+#OPERATION_HANDOVER_TO_VOWIFI
+ReportHandoverphrase['OPERATION_HANDOVER_TO_VOWIFI'] = dict()
+ReportHandoverphrase['OPERATION_HANDOVER_TO_VOWIFI'] = langBuilder(en="Handover to VoWiFi in Call ")
+
+#OPERATION_HANDOVER_TO_VOLTE
+ReportHandoverphrase['OPERATION_HANDOVER_TO_VOLTE'] = dict()
+ReportHandoverphrase['OPERATION_HANDOVER_TO_VOLTE'] = langBuilder(en="Handover to VoLTE in Call ")
+
+#OPERATION_SET_VOWIFI_UNAVAILABLE
+ReportHandoverphrase['OPERATION_SET_VOWIFI_UNAVAILABLE'] = dict()
+ReportHandoverphrase['OPERATION_SET_VOWIFI_UNAVAILABLE'] = langBuilder(en="Stop VoWiFi Stack ")
+
+#OPERATION_CANCEL_CURRENT_REQUEST
+ReportHandoverphrase['OPERATION_CANCEL_CURRENT_REQUEST'] = dict()
+ReportHandoverphrase['OPERATION_CANCEL_CURRENT_REQUEST'] = langBuilder(en="ImsCM Cancel Current Request ")
+
+#OPERATION_CP_REJECT_SWITCH_TO_VOWIFI
+ReportHandoverphrase['OPERATION_CP_REJECT_SWITCH_TO_VOWIFI'] = dict()
+ReportHandoverphrase['OPERATION_CP_REJECT_SWITCH_TO_VOWIFI'] = langBuilder(en="CP Reject to Idle Handover to VoWiFi ")
+
+
+#OPERATION_CP_REJECT_HANDOVER_TO_VOWIFI
+ReportHandoverphrase['OPERATION_CP_REJECT_HANDOVER_TO_VOWIFI'] = dict()
+ReportHandoverphrase['OPERATION_CP_REJECT_HANDOVER_TO_VOWIFI'] = langBuilder(en="CP Reject to Handover to VoWiFi In Call ")
+
+#OPERATION_RELEASE_WIFI_RESOURCE
+ReportHandoverphrase['OPERATION_RELEASE_WIFI_RESOURCE'] = dict()
+ReportHandoverphrase['OPERATION_RELEASE_WIFI_RESOURCE'] = langBuilder(en="Release VoWiFi Resource ")
 
 ReportScenariophrase = dict()
 ReportScenariophrase['startvoltecall'] = dict()
@@ -260,11 +349,20 @@ ReportScenariophrase['pingfail'] = langBuilder(zh="驻网ping失败", en="ping f
 
 ReportScenariophrase['wpaselect'] = dict()
 ReportScenariophrase['wpaselect'] = langBuilder(zh="选择新的WiFi AP:", en="Select New WiFi AP:")
+
+ReportScenariophrase['wpaconn'] = dict()
+ReportScenariophrase['wpaconn'] = langBuilder(zh="WCN 连接上WiFi AP", en="WCN Connected to WiFi AP")
+
 #drstatus
 ReportScenariophrase['drstatus'] = dict()
 ReportScenariophrase['drstatus'] = langBuilder(zh="更新数据路由到", en="Update data router to ")
 
 #various servicecallback phrase
+ReportScenariophrase["call_alert"] = dict()
+ReportScenariophrase["call_alert"] = langBuilder(zh="收到18x: ", en="User Alert: ")
+
+
+
 ReportScenariophrase["call_incoming"] = dict()
 ReportScenariophrase["call_incoming"] = langBuilder(zh="收到来电", en="Receive incoming Call")
 
@@ -350,6 +448,9 @@ ReportScenariophrase["conf_resume_failed"] = dict()
 ReportScenariophrase["conf_resume_failed"] = langBuilder(zh="会议电话恢复失败", en="Failed to resume Conference call")
 
 
+ReportScenariophrase["adddrerror"] = dict()
+ReportScenariophrase["adddrerror"] = langBuilder(en="Failed to Update DataRouter")
+
 
 #write a report builder
 
@@ -362,5 +463,5 @@ def constructReport(type=ReportType.PHONEEVENT_BASE, event='', level=Msglevel.WA
     errorstr = errorstr
     builder = reportBuilder(type=type, event=event, level=level, errorstr=errorstr)
     return builder.getreport()
-
+#FIXME: for this file, the msg should be arranged in a good way.
 

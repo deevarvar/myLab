@@ -2,6 +2,10 @@
 #author: zhihua.ye@spreadtrum.com
 #some event helper for searchEvent in flowParser.py
 
+#SOME NOTES here:
+#   1. key logs are defined in constants.py
+#   2. to add report , please refer to reportConverter.py,  use constructReport
+
 
 import re
 import json
@@ -777,14 +781,25 @@ class geticon(eventhandler):
         self.retmsg.color = maplevel2color(self.retmsg.level)
         return self.retmsg
 
-class imsregaddr(eventhandler):
+class setimsregaddr(eventhandler):
     '''
     set ims reg addr, one pattern
     '''
     def handler(self):
-        regaddr = self.match.group(1)
+        regaddr = self.match.group(1).strip()
         self.retmsg.msg = "SetIMSRegAddr:\n   " + regaddr
         return self.retmsg
+
+class getimsregaddr(eventhandler):
+    '''
+    set ims reg addr, one pattern
+    '''
+    def handler(self):
+        regaddr = self.match.group(1).strip()
+        self.retmsg.msg = "GetIMSRegAddr:\n   " + regaddr
+        return self.retmsg
+
+
 class turnmute(eventhandler):
     def handler(self):
         self.retmsg.msglevel = Msglevel.WARNING
@@ -898,7 +913,7 @@ class regstatus(eventhandler):
             self.retmsg.color = maplevel2color(self.retmsg.level)
             eventstr = map2phrase(eventname, Reportregphrase) + '\n'
             mappedstr = str(statecode) + '-->' + mapcode2str(str(statecode),Constantregerrcode)
-            statestr = "state: " + str(statecode) + mappedstr
+            statestr = "state: " + mappedstr
 
             event = mapzhphrase(eventname, Reportregphrase)
             self.retmsg.report = constructReport(event=event, level=self.retmsg.level, errorstr=mappedstr)
@@ -1191,6 +1206,9 @@ class imscmopfailed(eventhandler):
         operationstr = operation + " Failed\n"
         reasonstr = "Reason: " + reason
         self.retmsg.msg = operationstr + reasonstr
+        #add report
+        event = mapzhphrase(operation, ReportHandoverphrase, pre="Failed to ", post=reasonstr)
+        self.retmsg.report = constructReport(type=ReportType.PHONEEVENT_BASE, event=event, level=self.retmsg.level)
         return self.retmsg
 
 class imscmopsuccessed(eventhandler):
@@ -1203,6 +1221,9 @@ class imscmopsuccessed(eventhandler):
         operation = str(self.match.group(1)).strip()
         operationstr = operation + " Succeeded\n"
         self.retmsg.msg = operationstr
+        #add report
+        event = mapzhphrase(operation, ReportHandoverphrase, post=" Successfully")
+        self.retmsg.report = constructReport(type=ReportType.PHONEEVENT_BASE, event=event, level=self.retmsg.level)
         return self.retmsg
 
 class imswaitvoltereg(eventhandler):
@@ -1238,7 +1259,17 @@ class wpaselect(eventhandler):
         ssidstr = "Select New WiFi AP: " + ssid + '\n'
         macstr = "AP Mac: " + mac
         self.retmsg.msg =  ssidstr + macstr
-        event=mapzhphrase("wpaselect", ReportScenariophrase, post=ssid)
+        event = mapzhphrase("wpaselect", ReportScenariophrase, post=ssid)
+        self.retmsg.report = constructReport(type=ReportType.USEREVENT_BASE, event=event, level=self.retmsg.level)
+        return self.retmsg
+
+
+class wpaconn(eventhandler):
+    def handler(self):
+        self.retmsg.level = Msglevel.WARNING
+        self.retmsg.color = maplevel2color(self.retmsg.level)
+        self.retmsg.msg = "Connected to WiFi AP"
+        event = mapzhphrase("wpaconn", ReportScenariophrase)
         self.retmsg.report = constructReport(type=ReportType.USEREVENT_BASE, event=event, level=self.retmsg.level)
         return self.retmsg
 
@@ -1326,6 +1357,17 @@ class teleaction(eventhandler):
         msgtype = str(self.match.group(1)).strip()
         msgtype = mapcode2str(msgtype, Constanttelemsg)
         self.retmsg.msg = msgtype
+        return self.retmsg
+
+class adddrerror(eventhandler):
+    def handler(self):
+        self.retmsg.level = Msglevel.ERROR
+        self.retmsg.color = maplevel2color(self.retmsg.level)
+
+        drerror = "Failed to update the data router state"
+        self.retmsg.msg = drerror
+        event = mapzhphrase("adddrerror", ReportScenariophrase)
+        self.retmsg.report = constructReport(type=ReportType.SCEEVENT_BASE, event=event, level=self.retmsg.level)
         return self.retmsg
 
 class regstatewrongcallfail(eventhandler):

@@ -132,6 +132,14 @@ TODO:
 #           5. sms failed/success D:\code\log\bug_log\vit_log\2017_1_1\634707\1\01slog_20170112142706_sp9832a_sms_send_Fail_incall_142344\external_storage\ylog\ylog
                     D:\code\log\ref_log\DTAC\sms
 #           6. DTAC call scenarioes D:\code\log\ref_log\DTAC\call_scenario\
+#           7. ims hung up call : D:\code\log\bug_log\vit_log\2017_2_14\644463\long_video_fail_2
+#           8.IMS wait volte reg         imswaitvoltereg D:\code\log\bug_log\vit_log\2017_2_14\644337\Fail_S2b_Attach_Data_OK_No_error_popup\AP\ylog
+#             IMS op failed         imscmopfailed  D:\code\log\bug_log\vit_log\2017_2_14\644735\IDLE_1\slog_20170217133643_sp9832a_2h11_4mvoltesea_userdebug\external_storage\ylog\ylog
+#           9. ims op failed:D:\code\log\bug_log\vit_log\2017_3_14\5)slog_20170319213811_sp9832a_2h11_4mvolt_vowif_213657\5)slog_20170319213811_sp9832a_2h11_4mvolt_vowif_213657\external_storage\ylog\ylog
+#
+
+            #add cc people
+            #zhihao.fan@spreadtrum.com, jingxin.zhao@spreadtrum.com
 
 
 
@@ -141,4 +149,4 @@ TODO:
 
 #1. D:\code\log\bug_log\vit_log\2016_09_26\595321   ho bugs: Vowifi is registered, don't switch vowifi again
 #
-
+#Code map:

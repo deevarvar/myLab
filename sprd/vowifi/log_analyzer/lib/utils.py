@@ -15,7 +15,7 @@ from blockdiag.noderenderer import box,actor,beginpoint,circle,cloud,diamond,dot
 import blockdiag.plugins
 from blockdiag.imagedraw import png,pdf,svg
 import shutil
-
+from easygui import *
 sys.path.append('./')
 from logConf import logConf
 from configobj import ConfigObj,ConfigObjError
@@ -95,8 +95,13 @@ class utils():
                 #delete the dir tree existing
                 outputdir = root + '/' + filename.split('.')[0]
                 if os.path.isdir(outputdir):
-                    shutil.rmtree(outputdir)
-
+                    try:
+                        shutil.rmtree(outputdir)
+                    except OSError as e:
+                        errorstr = "Error Happened!\n"
+                        errorstr += str(e.strerror) + '\n' + str(e.filename)
+                        msgbox(errorstr)
+                        return -1
                 mainmatches.append(onematch)
 
         #dirty hacks , what if ylog is disabled....

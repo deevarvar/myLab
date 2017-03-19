@@ -355,7 +355,7 @@ class eventArray():
     def __init__(self):
         self.array = list()
 
-    def addEvent(self, key, module, eventType = eventType.SEPERATOR, eventHandler = matchone, color= "black", groupnum=1 ):
+    def addEvent(self, key, module, eventType = eventType.SEPERATOR, eventHandler = matchone, color= "black", groupnum=0 ):
         event = dict()
         event['key'] = key
         event['module'] = module
@@ -482,11 +482,11 @@ imscmEvent.addEvent('(handleMessage: ping unreachable, must reset noAudioRtpCoun
 imscmEvent.addEvent('(handleMessage: .* meet max counter conditions, must reset noAudioRtpCounter and noVideoRtpCounter)', module_ImsCM)
 
 ## operation Successed
-imscmEvent.addEvent('operationSuccessed: id = .*, type = "OPERATION_(.*)"', module_ImsCM, eventType = eventType.EDGE, eventHandler=imscmopsuccessed)
+imscmEvent.addEvent('operationSuccessed: id = .*, type = "(.*)"', module_ImsCM, eventType = eventType.EDGE, eventHandler=imscmopsuccessed)
 
 ##error msg
 ###operation failed
-imscmEvent.addEvent('operationFailed: id = .*, type = "OPERATION_(.*)", failed reason = (.*)', module_ImsCM, eventType = eventType.EDGE, eventHandler=imscmopfailed)
+imscmEvent.addEvent('operationFailed: id = .*, type = "(.*)", failed reason = (.*)', module_ImsCM, eventType = eventType.EDGE, eventHandler=imscmopfailed)
 ### switch vowifi error, not useful
 '''
 imscmEvent.addEvent('(switchOrHandoverVowifi: Device isn\'t in LTE environment)', module_ImsCM)
@@ -539,7 +539,10 @@ imscmEvent.addEvent("(turn on primary SIM card)", module_ImsCM,eventType = event
 ##vowifi/volte icon
 phoneEvent.addEvent("updateImsFeatures->volteEnable:(.*) wifiEnable:(.*)", module_Phone, eventType=eventType.EDGE, eventHandler=geticon,groupnum=2)
 ##ims reg addr
-phoneEvent.addEvent("setIMSRegAddress addr = (.*)", module_Phone, eventType=eventType.EDGE, eventHandler=imsregaddr)
+phoneEvent.addEvent("setIMSRegAddress addr = (.*)", module_Phone, eventType=eventType.EDGE, eventHandler=setimsregaddr)
+#get ims reg addr
+phoneEvent.addEvent("getIMSRegAddress mImsRegAddress =(.*)", module_Phone, eventType=eventType.EDGE, eventHandler=getimsregaddr)
+
 ## start vowifi/volte call
 phoneEvent.addEvent("createCallSession-> start(.*)", module_Phone, eventType=eventType.EDGE, eventHandler=startcall, color = "blue")
 
@@ -710,7 +713,8 @@ phoneEvent.addEvent("(Try to invite this call.*to the conference call.*)", modul
 
 phoneEvent.addEvent("The handler get the message: (\d+)", module_Phone, eventType=eventType.EDGE, eventHandler=teleaction)
 
-
+#some error in adapter
+phoneEvent.addEvent("(Failed to update the data router state, please check)", module_Phone,eventType=eventType.EDGE, eventHandler=adddrerror )
 
 
 ###create conf call
@@ -788,3 +792,4 @@ systemserverEvent.addEvent("DhcpClient: Received packet: .* ACK: your new IP /(.
 #wpa_supplicant part
 ## get ssid
 wpaEvent.addEvent("wpa_supplicant: wlan0:    selected BSS (.*) ssid=\'(.*)\'", module_wpasupplicant,eventType=eventType.EDGE, eventHandler=wpaselect, groupnum=2)
+wpaEvent.addEvent("(wpa_supplicant: wlan0: State: ASSOCIATED -> COMPLETED)", module_wpasupplicant,eventType=eventType.EDGE, eventHandler=wpaconn)

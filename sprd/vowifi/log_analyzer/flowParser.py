@@ -87,7 +87,7 @@ misc:
 zos_dbuf.c 3188 , print the sip msg
 pattern: process [
 '''
-
+from easygui import *
 import os
 import sys
 import glob
@@ -481,6 +481,15 @@ class flowParser():
             #still coupled logic here.
             pattern = re.compile(key)
             match = pattern.search(line)
+            '''
+            debug sample code
+            if process == "wpa_supplicant":
+                self.logger.logger.info('zhihuaye')
+                self.logger.logger.info(line)
+                self.logger.logger.info(match)
+                if match and key == "wpa_supplicant: wlan0: State: ASSOCIATED -> COMPLETED":
+                    self.logger.logger.info("wpa_supplicant match len is " + str(len(match.groups())))
+            '''
             if match:
                 #now parse the line
                 eventmsg = dict()
@@ -1854,7 +1863,14 @@ class flowParser():
 
         basename = os.path.basename(self.log)
         finalpdfname = self.diagdir + basename.split('.')[0] + '.pdf'
-        merger.write(finalpdfname)
+        try:
+            merger.write(finalpdfname)
+        except IOError as e:
+            errorstr = "Error Happened!\n"
+            errorstr += str(e.strerror) + '\n' + str(e.filename)
+            msgbox(errorstr)
+            return -1
+
         self.endtime = datetime.now()
         self.duration = self.endtime - self.starttime
         self.logger.logger.info('length of all msgs is ' + str(len(self.sipmsgs)) + '  takes ' + str(self.duration) + ' seconds')

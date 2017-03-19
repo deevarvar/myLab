@@ -204,7 +204,9 @@ class loggergui():
                         #t.start()
                         fp.parseFlow()
                         takestime = fp.drawAllDiag()
-
+                        if takestime == -1:
+                            self.logger.logger.info('exit the parser unexpectedly!')
+                            exit(-1)
                         #fp.drawLemonDiag()
 
                         #t.raiseExc(SystemExit)
@@ -227,7 +229,7 @@ class loggergui():
                 file = fileopenbox()
                 if not file:
                     msgbox('please relaunch and open a valid samsung log.')
-                    exit
+                    exit()
                 else:
                     sp = samsungParser(logname=file)
                     sp.getflow()
