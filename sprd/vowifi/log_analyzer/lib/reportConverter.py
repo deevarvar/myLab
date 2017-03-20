@@ -192,26 +192,26 @@ ReportHandoverphrase['disenwfc'] = dict()
 ReportHandoverphrase['disenwfc'] = langBuilder(zh="关闭WiFi-Calling", en="Disable WiFi-Calling")
 
 ReportHandoverphrase['idlehowifi'] = dict()
-ReportHandoverphrase['idlehowifi'] = langBuilder(zh="Idle切换到VoWiFi", en="Idle Handover to VoWiFi")
+ReportHandoverphrase['idlehowifi'] = langBuilder(zh="尝试Idle切换到VoWiFi", en="Trying to Idle Handover to VoWiFi")
 ReportHandoverphrase['idleholte'] = dict()
-ReportHandoverphrase['idleholte'] = langBuilder(zh="Idle切换到VoLTE", en="Idle Handover to VoLTE")
+ReportHandoverphrase['idleholte'] = langBuilder(zh="尝试Idle切换到VoLTE", en="Trying to Idle Handover to VoLTE")
 ReportHandoverphrase['callhowifi'] = dict()
-ReportHandoverphrase['callhowifi'] = langBuilder(zh="电话中切到VoWiFi", en="Handover to VoWiFi in Call")
+ReportHandoverphrase['callhowifi'] = langBuilder(zh="尝试电话中切到VoWiFi", en="Trying to Handover to VoWiFi in Call")
 ReportHandoverphrase['callholte'] = dict()
-ReportHandoverphrase['callholte'] = langBuilder(zh="电话中切到VoLTE", en="Handover to VoLTE in Call")
+ReportHandoverphrase['callholte'] = langBuilder(zh="尝试电话中切到VoLTE", en="Trying to Handover to VoLTE in Call")
 ReportHandoverphrase['voiceqos2lte'] = dict()
-ReportHandoverphrase['voiceqos2lte'] = langBuilder(zh="语音通话质量差切换到Volte", en="Handover to VoLTE Due to Poor Voice Quality")
+ReportHandoverphrase['voiceqos2lte'] = langBuilder(zh="尝试语音通话质量差切换到Volte", en="Trying to Handover to VoLTE Due to Poor Voice Quality")
 ReportHandoverphrase['videoqos2lte'] = dict()
-ReportHandoverphrase['videoqos2lte'] = langBuilder(zh="视频通话质量差切换到Volte", en="Handover to VoLTE Due to Poor Video Quality")
+ReportHandoverphrase['videoqos2lte'] = langBuilder(zh="尝试视频通话质量差切换到Volte", en="Trying to Handover to VoLTE Due to Poor Video Quality")
 
 ReportHandoverphrase['incallrssiho2wifi'] = dict()
-ReportHandoverphrase['incallrssiho2wifi'] = langBuilder(zh="通话中WiFi信号好切换到VoWiFi", en="Handover to VoWiFi In Call Due to Strong WiFi Signal")
+ReportHandoverphrase['incallrssiho2wifi'] = langBuilder(zh="尝试通话中WiFi信号好切换到VoWiFi", en="Trying to Handover to VoWiFi In Call Due to Strong WiFi Signal")
 
 ReportHandoverphrase['rssiho2wifi'] = dict()
-ReportHandoverphrase['rssiho2wifi'] = langBuilder(zh="WiFi信号好切换到VoWiFi", en="Handover to VoWiFi From VoLTE Due to Strong WiFi Signal")
+ReportHandoverphrase['rssiho2wifi'] = langBuilder(zh="尝试WiFi信号好切换到VoWiFi", en="Trying to Handover to VoWiFi From VoLTE Due to Strong WiFi Signal")
 
 ReportHandoverphrase['autowifi'] = dict()
-ReportHandoverphrase['autowifi'] = langBuilder(zh="WiFi信号好驻网到VoWiFi", en="Auto Attach to VoWiFi Due to Strong WiFi Signal")
+ReportHandoverphrase['autowifi'] = langBuilder(zh="尝试WiFi信号好驻网到VoWiFi", en="Trying to Auto Attach to VoWiFi Due to Strong WiFi Signal")
 
 #some error between imscm and telephony
 #defined in ImsConnectionManagerService.java

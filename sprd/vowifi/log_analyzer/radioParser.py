@@ -43,6 +43,21 @@ class radioParser():
             self.pattern['volteimspattern'] = config['radioParser']['volteimspattern']
             self.pattern['volteregaddrpattern'] = config['radioParser']['volteregaddrpattern']
 
+            #srvcc pattern
+            self.pattern['querysrvccpattern'] = config['radioParser']['querysrvccpattern']
+            self.pattern['qresultsrvccpattern'] = config['radioParser']['qresultsrvccpattern']
+
+            self.pattern['setsrvccpattern'] = config['radioParser']['setsrvccpattern']
+
+            self.pattern['setsrvccreportpattern'] = config['radioParser']['setsrvccreportpattern']
+            self.pattern['querysrvccreportpattern'] = config['radioParser']['querysrvccreportpattern']
+
+            self.pattern['qresultsrvccreportpattern'] = config['radioParser']['qresultsrvccreportpattern']
+
+            self.pattern['srvcchoinfopattern'] = config['radioParser']['srvcchoinfopattern']
+            self.pattern['callinfosyncpattern'] = config['radioParser']['callinfosyncpattern']
+            self.pattern['networksrvccpattern'] = config['radioParser']['networksrvccpattern']
+
             #there are always dirty msgs to ignroe, Orz...
             self.ignoremsg = list()
             self.ignoremsg.append("VoLTE Unregistered")
@@ -185,6 +200,61 @@ class radioParser():
         volteregaddrpattern['direct'] = '<-'
         self.keypattern.append(volteregaddrpattern)
 
+        #add srvcc part
+        querysrvccpattern = dict()
+        querysrvccpattern['pattern'] = re.compile(self.pattern['querysrvccpattern'])
+        querysrvccpattern['func'] = self.querysrvcc
+        querysrvccpattern['direct'] = '->'
+        self.keypattern.append(querysrvccpattern)
+
+        qresultsrvccpattern = dict()
+        qresultsrvccpattern['pattern'] = re.compile(self.pattern['qresultsrvccpattern'])
+        qresultsrvccpattern['func'] = self.querysrvccresult
+        qresultsrvccpattern['direct'] = '<-'
+        self.keypattern.append(qresultsrvccpattern)
+
+        setsrvccpattern = dict()
+        setsrvccpattern['pattern'] = re.compile(self.pattern['setsrvccpattern'])
+        setsrvccpattern['func'] = self.setsrvcc
+        setsrvccpattern['direct'] = '->'
+        self.keypattern.append(setsrvccpattern)
+
+        setsrvccreportpattern = dict()
+        setsrvccreportpattern['pattern'] = re.compile(self.pattern['setsrvccreportpattern'])
+        setsrvccreportpattern['func'] = self.setsrvccreport
+        setsrvccreportpattern['direct'] = '->'
+        self.keypattern.append(setsrvccreportpattern)
+
+        querysrvccreportpattern = dict()
+        querysrvccreportpattern['pattern'] = re.compile(self.pattern['querysrvccreportpattern'])
+        querysrvccreportpattern['func'] = self.qsrvccreport
+        querysrvccreportpattern['direct'] = '->'
+        self.keypattern.append(querysrvccreportpattern)
+
+        qresultsrvccreportpattern = dict()
+        qresultsrvccreportpattern['pattern'] = re.compile(self.pattern['qresultsrvccreportpattern'])
+        qresultsrvccreportpattern['func'] = self.qsrvccreportresult
+        qresultsrvccreportpattern['direct'] = '<-'
+        self.keypattern.append(qresultsrvccreportpattern)
+
+        srvcchoinfopattern = dict()
+        srvcchoinfopattern['pattern'] = re.compile(self.pattern['srvcchoinfopattern'])
+        srvcchoinfopattern['func'] = self.srvcchoinfo
+        srvcchoinfopattern['direct'] = '<-'
+        self.keypattern.append(srvcchoinfopattern)
+
+        networksrvccpattern = dict()
+        networksrvccpattern['pattern'] = re.compile(self.pattern['networksrvccpattern'])
+        networksrvccpattern['func'] = self.networksrvcc
+        networksrvccpattern['direct'] = '<-'
+        self.keypattern.append(networksrvccpattern)
+
+        callinfosyncpattern = dict()
+        callinfosyncpattern['pattern'] = re.compile(self.pattern['callinfosyncpattern'])
+        callinfosyncpattern['func'] = self.callinfosync
+        callinfosyncpattern['direct'] = '->'
+        self.keypattern.append(callinfosyncpattern)
+
     def initAtmsg(self, line):
         #common steps
         #add timestamp and atcmd
@@ -324,6 +394,143 @@ class radioParser():
 
     def getvolteaddr(self, addr):
         return "Volte Register Addr is \n" + addr
+
+    def querysrvcc(self):
+        return "Query SRVCC ability"
+
+    def querysrvccresult(self, state):
+        state = state.strip()
+        if state == "1":
+            return "SRVCC Supported"
+        elif state == "0":
+            return "Unsupported SRVCC"
+        else:
+            return "Unknown state about SRVCC ability"
+
+    def setsrvcc(self, state):
+        state = state.strip()
+        if state == "1":
+            return "Enable SRVCC"
+        elif state == "0":
+            return "Disable SRVCC"
+        else:
+            return "Unknown set option about SRVCC ability"
+
+    def setsrvccreport(self, state):
+        state = state.strip()
+        if state == "1":
+            return "Enable SRVCC report"
+        elif state == "0":
+            return "Disable SRVCC"
+        else:
+            return "Unknown set option about SRVCC report"
+
+    def qsrvccreport(self):
+        return "Query SRVCC report ability"
+
+    def qsrvccreportresult(self, state):
+        state = state.strip()
+        if state == "1":
+            return "Enable SRVCC report"
+        elif state == "0":
+            return "Disable SRVCC report"
+        else:
+            return "Unknown set option about SRVCC report ability"
+
+    def networksrvcc(self, state):
+        state = state.strip()
+        if state == '1':
+            return "Network Support SRVCC"
+        else:
+            return "Network Do not support SRVCC"
+
+    def srvcchoinfo(self, state):
+        state = state.strip()
+        if state == "0":
+            return "PS to CS SRVCC Started!"
+        elif state == "1":
+            return "PS to CS SRVCC Successfully"
+        elif state == "2":
+            return "PS to CS SRVCC Cancelled"
+        elif state == "3":
+            return "PS to CS SRVCC Failed"
+        else:
+            return "Unknown state when PS to CS SRVCC"
+
+    def callinfosync(self, string):
+        basestr = "Sync Call Info:\n"
+        finalstr = ''
+
+        #<infx>: string, "< call_id >,< dir >,< call_state >,< hold_state >,< mpty_state >, < mpty_order >,
+        #< call_type >,< num_type >,< num_str >"
+        #do not care about the multiple party, so 1,2,3,4,7,8,9 is needed
+        string = string.replace('"', '')
+        fields = string.split(',')
+        callid = fields[0]
+        direct = fields[1]
+        callstate = fields[2]
+        holdstate = fields[3]
+        calltype = fields[6]
+        numtype = fields[7]
+        num = fields[8]
+
+        callidstr =  "CallId: " + str(callid) + '\n'
+
+        directstr = ''
+        if direct == '0':
+            directstr = 'MO Call '
+        else:
+            directstr = 'MT Call '
+
+        callstatestr = ''
+        if callstate == '0':
+            callstatestr = 'Idle '
+        elif callstate == '1':
+            callstatestr = 'Dialing '
+        elif callstate == '2':
+            callstatestr = 'Outgoing '
+        elif callstate == '3':
+            callstatestr = 'Active'
+        elif callstate == '4':
+            callstatestr = "Incoming "
+        elif callstate == '5':
+            callstatestr = "Accept "
+        elif callstate == '6':
+            callstatestr = "Modify Pending "
+        elif callstate == '7':
+            callstatestr = "Release "
+        elif callstate == '8':
+            callstatestr = "CCBS Recall "
+        elif callstate == '9':
+            callstatestr = "MT wait for rsp "
+
+        holdstatestr = ''
+        if holdstate == '2':
+            holdstatestr = ",Hold"
+
+        calltypestr = ''
+        if calltype == '0':
+            calltypestr = 'Normal '
+        elif calltype == '1':
+            calltypestr = 'Emergency '
+        elif calltype == '2':
+            calltypestr = 'Video '
+
+        numtypestr = ''
+        if numtype == '1':
+            numtypestr = 'International '
+        elif numtype == '2':
+            numtypestr = "National "
+        elif numtype == '3':
+            numtypestr = "Network "
+
+
+        #callstr = numtypestr + calltypestr + directstr
+        callstr = directstr
+        finalstr =  basestr + num + ',' + callstr + ',' +  callstatestr + holdstatestr
+
+        return finalstr
+
 
     def getAtmsg(self,keypattern, line, lineno):
         '''
