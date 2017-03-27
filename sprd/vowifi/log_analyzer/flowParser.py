@@ -1109,14 +1109,18 @@ class flowParser():
         self.addElement(left)
         self.addElement(right)
 
+        eventname = atmsg['action'].eventname
+        color = atmsg['action'].color
+
         basedirect = left + ' ' + atmsg['direct'] + ' '+ right
         #only need label, note
-        label =  " [label = \"" + atmsg['action']  + "\" "
+        label =  " [label = \"" + eventname  + "\" "
+        labelcolor = ", color=" + color
         atcmd = " AtCmd: " + atmsg['atcmd'] + '\n'
         timestamp = " time: " + atmsg['timestamp'] + '\n'
         lineno = "Lineno: " + atmsg['lineno'] + '\n'
         note = ", note = \"" + atcmd + timestamp + lineno+ "\""
-        label = label + note + "];\n"
+        label = label +  labelcolor + note + "];\n"
         onestr = basedirect + label
         return onestr
 

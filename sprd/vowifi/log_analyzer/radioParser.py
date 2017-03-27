@@ -1,6 +1,9 @@
 #-*- coding=utf-8 -*-
 #author: zhihua.ye@spreadtrum.com
 
+#should add color for at cmd and add report in final html
+#the function is in self.reportevent.fillReport in flowParser.py
+
 
 import os
 import sys
@@ -15,8 +18,49 @@ from blockdiag.utils.bootstrap import create_fontmap
 from PyPDF2 import PdfFileMerger, PdfFileReader
 from lib.utils import utils
 
+from lib.sprdErrCode import *
+from lib.reportEvent import *
+
+
 
 path = os.path.dirname(os.path.realpath(__file__))
+
+#define class to build action
+class actionBuilder():
+    def __init__(self):
+        self.eventname = ''
+        self.color = "black"
+        self.msglevel = Msglevel.INFO
+
+    def setEventName(self, name):
+        if name:
+            self.eventname = name
+        else:
+            self.eventname = ''
+
+    def setMsglevel(self, level):
+        if level:
+            self.msglevel = level
+        else:
+            self.msglevel = Msglevel.INFO
+
+    def setColor(self, color):
+        if color:
+            self.color = color
+        else:
+            self.color = 'black'
+
+    def setColorByLevel(self, level):
+        if self.color == "black":
+            color = maplevel2color(level)
+            self.color = color
+
+    def setAll(self, eventname, msglevel, color):
+        self.setEventName(eventname)
+        self.setMsglevel(msglevel)
+        self.setColor(color)
+        self.setColorByLevel(msglevel)
+
 
 class radioParser():
     def __init__(self, logname, outputdir = './'):
@@ -266,198 +310,393 @@ class radioParser():
         atmsg['timestamp'] = timestamp
         atmsg['issip'] = 0
         atmsg['isat'] = 1
+        '''
+        atmsg['action'] should be a dict
+        member should be eventname, color, msglevel
+        '''
+        atmsg['action'] = actionBuilder()
+
+
         return atmsg
 
     def getPdnstate(self, state):
+        eventname = ''
+        color = 'black'
+        msglevel = Msglevel.INFO
+        action = actionBuilder()
         if state == '1':
-            return "PDN connection established"
+            eventname =  "PDN connection established"
+            color = 'green'
         elif state == '2':
-            return "PDN connection request"
+            eventname =  "PDN connection request"
         elif state == '0':
-            return "Deactivate PDN connection"
+            eventname =  "Deactivate PDN connection"
+            color = 'brown'
+            msglevel =  Msglevel.WARNING
         else:
-            return "Unknow PDN state"
-
-    #sample function
-    def getPdnAtMsg(self, pattern, line):
-        match = pattern.search(line)
-        if match:
-            self.logger.logger.debug(line)
-            atmsg = self.initAtmsg(line)
-            atmsg['atcmd'] = match.group(0).strip().replace('"', '')
-            pdnstate = match.group(1).strip()
-            atmsg['action'] = self.getPdnstate(pdnstate)
-            self.logger.logger.debug('pdn state is %s, action is %s' % (pdnstate, atmsg['action']))
-            self.atmsgs.append(atmsg)
-            return True
-        else:
-            return False
-
+            eventname = "Unknow PDN state"
+            msglevel = Msglevel.WARNING
+        action.setAll(eventname, msglevel,color)
+        return action
 
     def getWifiEnable(self, state):
+        eventname = ''
+        color = 'black'
+        msglevel = Msglevel.INFO
+        action = actionBuilder()
+
         if state == '1':
-            return "Vowifi Available"
+            eventname =  "Vowifi Available"
+            color = 'green'
         elif state == '0':
-            return "Vowifi Unavailable"
+            eventname = "Vowifi Unavailable"
+            msglevel =  Msglevel.ERROR
+
         else:
-            return "Unknow Vowifi Enable state"
+            eventname = "Unknow Vowifi Enable state"
+            msglevel =  Msglevel.WARNING
+
+        action.setAll(eventname, msglevel,color)
+
+        return action
+
 
     def getHOstate(self, state):
+        eventname = ''
+        color = 'blue'
+        msglevel = Msglevel.INFO
+        action = actionBuilder()
+
         if state == '1':
-            return "IDLE handover to VoWifi"
+            eventname = "IDLE handover to VoWifi"
         elif state == '2':
-            return "IDLE handover to VoLte"
+            eventname = "IDLE handover to VoLte"
         elif state == '3':
-            return "Handover to VoWifi in Call"
+            eventname = "Handover to VoWifi in Call"
         elif state == '4':
-            return "Handover to VoLte in Call"
+            eventname = "Handover to VoLte in Call"
+
         else:
-            return "Unknown Handover state"
+            eventname = "Unknown Handover state"
+            msglevel = Msglevel.WARNING
+
+        action.setAll(eventname, msglevel,color)
+        return action
 
     def repregstate(self, state):
+        eventname = ''
+        color = 'black'
+        msglevel = Msglevel.INFO
+        action = actionBuilder()
+
         if state == '0':
-            return "VoLTE Unregistered"
+            eventname = "VoLTE Unregistered"
+            color = 'brown'
         elif state == '1':
-            return "VoLTE Registered"
+            eventname = "VoLTE Registered"
+            color = 'green'
         elif state == '2':
-            return "VoLTE Registering"
+            eventname =  "VoLTE Registering"
         elif state == '3':
-            return "VoLTE Register fail"
+            eventname = "VoLTE Register fail"
+            msglevel = Msglevel.ERROR
+            color = 'red'
         elif state == '4':
-            return "Unknow state"
+            eventname =  "Unknow state"
         elif state == '5':
-            return "VoLTE Roaming"
+            eventname = "VoLTE Roaming"
         elif state == '6':
-            return "VoLTE De-Registering"
+            eventname = "VoLTE De-Registering"
+            color = 'brown'
         else:
-            return "Unknown VoLTE Register state"
+            eventname =  "Unknown VoLTE Register state"
+
+        action.setAll(eventname, msglevel,color)
+        return action
 
     def getregstate(self, state):
+        eventname = ''
+        color = 'black'
+        msglevel = Msglevel.INFO
+        action = actionBuilder()
+
         if state == '0':
-            return "VoLTE Unregistered"
+            eventname =  "VoLTE Unregistered"
+            color = 'brown'
         elif state == '1':
-            return "VoLTE Registered"
+            eventname = "VoLTE Registered"
+            color = 'green'
         else:
-            return "Unknown VoLTE Register state"
+            eventname = "Unknown VoLTE Register state"
+            msglevel = Msglevel.WARNING
+
+        action.setAll(eventname, msglevel, color)
+        return action
 
     def getattachstate(self,state):
+        eventname = ''
+        color = 'black'
+        msglevel = Msglevel.INFO
+        action = actionBuilder()
+
         if state == '0':
-            return "EPDG failed to attach"
+            eventname = "EPDG failed to attach"
+            color = 'red'
+            msglevel = Msglevel.ERROR
         elif state == '1':
-            return "EPDG attach successfully"
+            eventname = "EPDG attach successfully"
+            color = 'green'
         else:
-            state = "Unknown attach status"
+            eventname = "Unknown attach status"
+            msglevel = Msglevel.WARNING
+
+        action.setAll(eventname, msglevel, color)
+        return action
+
     def getqrystring(self):
-        return "Query CP Regsiter state"
+        eventname = ''
+        color = 'black'
+        msglevel = Msglevel.INFO
+        action = actionBuilder()
+        eventname  = "Query CP Regsiter state"
+        action.setAll(eventname, msglevel, color)
+        return action
 
     def getcallendstring(self):
-        return "Call End"
+        eventname = ''
+        color = 'brown'
+        msglevel = Msglevel.INFO
+        action = actionBuilder()
+        eventname  = "Call End"
+        action.setAll(eventname, msglevel, color)
+        return action
 
     def getupdatedr(self):
-        return "Update Data Router"
+        eventname = ''
+        color = 'black'
+        msglevel = Msglevel.INFO
+        action = actionBuilder()
+        eventname  = "Update Data Router"
+        action.setAll(eventname, msglevel, color)
+        return action
 
     def getwifireg(self, state):
+        eventname = ''
+        color = 'black'
+        msglevel = Msglevel.INFO
+        action = actionBuilder()
         if state == '0':
-            return "VoWiFi failed to Register"
+            eventname = "VoWiFi failed to Register"
+            color = 'red'
+            msglevel = Msglevel.ERROR
         elif state == '1':
-            return "VoWiFi Registered successfully"
+            eventname = "VoWiFi Registered successfully"
+            color = 'green'
         else:
-            state = "Unknown VoWiFi Register state"
+            eventname = "Unknown VoWiFi Register state"
+        action.setAll(eventname, msglevel, color)
+        return action
 
     def getwifiinfo(self, info):
         #"405872003c00000ec"
         #strip "
-        return "wifi info: " + info.replace('"', '')
+        eventname = ''
+        color = 'black'
+        msglevel = Msglevel.INFO
+        action = actionBuilder()
+        eventname  = "wifi info: " + info.replace('"', '')
+        action.setAll(eventname, msglevel, color)
+        return action
 
     def getlteinfo(self, info):
-
-        return "lte info: " + info.replace('"', '')
+        eventname = ''
+        color = 'black'
+        msglevel = Msglevel.INFO
+        action = actionBuilder()
+        eventname  = "lte info: " + info.replace('"', '')
+        action.setAll(eventname, msglevel, color)
+        return action
 
     def geterror(self, error):
+        eventname = ''
+        color = 'red'
+        msglevel = Msglevel.ERROR
+        action = actionBuilder()
         if error == '3':
-            return "Error: operation not allowed"
+            eventname = "Error: operation not allowed"
         else:
-            return "Error Code: " + error
+            eventname =  "Error Code: " + error
+        action.setAll(eventname, msglevel, color)
+        return action
 
     def getrtp(self, state):
+        eventname = ''
+        color = 'black'
+        msglevel = Msglevel.INFO
+        action = actionBuilder()
         if state == '0':
-            return "receive RTP data"
+            eventname = "receive RTP data"
         elif state == '1':
-            return "No RTP data!"
+            eventname = "No RTP data!"
+            msglevel = Msglevel.ERROR
+            color = 'red'
         elif state == '2':
-            return "Clear RTP state"
+            eventname = "Clear RTP state"
         else:
-            return "Unknow RTP state"
+            eventname = "Unknow RTP state"
+            msglevel = Msglevel.WARNING
+        action.setAll(eventname, msglevel, color)
+        return action
+
 
     def imsenable(self):
-        return "Enable VoLTE IMS"
+        eventname = ''
+        color = 'blue'
+        msglevel = Msglevel.INFO
+        action = actionBuilder()
+        eventname  = "Enable VoLTE IMS"
+        action.setAll(eventname, msglevel, color)
+        return action
 
     def getvolteaddr(self, addr):
-        return "Volte Register Addr is \n" + addr
+        eventname = ''
+        color = 'black'
+        msglevel = Msglevel.INFO
+        action = actionBuilder()
+        eventname = "Volte Register Addr is \n" + addr
+        action.setAll(eventname, msglevel, color)
+        return action
 
     def querysrvcc(self):
-        return "Query SRVCC ability"
+        eventname = ''
+        color = 'black'
+        msglevel = Msglevel.INFO
+        action = actionBuilder()
+        eventname  = "Query SRVCC ability"
+        action.setAll(eventname, msglevel, color)
+        return action
+
 
     def querysrvccresult(self, state):
+        eventname = ''
+        color = 'black'
+        msglevel = Msglevel.INFO
+        action = actionBuilder()
+
         state = state.strip()
         if state == "1":
-            return "SRVCC Supported"
+            eventname = "SRVCC Supported"
         elif state == "0":
-            return "Unsupported SRVCC"
+            eventname = "Unsupported SRVCC"
+            color = 'brown'
         else:
-            return "Unknown state about SRVCC ability"
+            eventname = "Unknown state about SRVCC ability"
+            msglevel = Msglevel.WARNING
+
+        action.setAll(eventname, msglevel, color)
+        return action
 
     def setsrvcc(self, state):
+        eventname = ''
+        color = 'black'
+        msglevel = Msglevel.INFO
+        action = actionBuilder()
+
         state = state.strip()
         if state == "1":
-            return "Enable SRVCC"
+            eventname = "Enable SRVCC"
         elif state == "0":
-            return "Disable SRVCC"
+            eventname = "Disable SRVCC"
+            color = 'brown'
         else:
-            return "Unknown set option about SRVCC ability"
+            eventname = "Unknown set option about SRVCC ability"
+            msglevel = Msglevel.WARNING
+
+        action.setAll(eventname, msglevel, color)
+        return action
 
     def setsrvccreport(self, state):
+        eventname = ''
+        color = 'black'
+        msglevel = Msglevel.INFO
+        action = actionBuilder()
         state = state.strip()
         if state == "1":
-            return "Enable SRVCC report"
+            eventname = "Enable SRVCC report"
         elif state == "0":
-            return "Disable SRVCC"
+            eventname = "Disable SRVCC report"
         else:
-            return "Unknown set option about SRVCC report"
+            eventname = "Unknown set option about SRVCC report"
+        action.setAll(eventname, msglevel, color)
+        return action
 
     def qsrvccreport(self):
-        return "Query SRVCC report ability"
+        eventname = ''
+        color = 'black'
+        msglevel = Msglevel.INFO
+        action = actionBuilder()
+        eventname = "Query SRVCC report ability"
+        action.setAll(eventname, msglevel, color)
+        return action
 
     def qsrvccreportresult(self, state):
+        eventname = ''
+        color = 'black'
+        msglevel = Msglevel.INFO
+        action = actionBuilder()
         state = state.strip()
         if state == "1":
-            return "Enable SRVCC report"
+            eventname = "SRVCC report ability"
         elif state == "0":
-            return "Disable SRVCC report"
+            eventname = "no SRVCC report ability"
         else:
-            return "Unknown set option about SRVCC report ability"
+            eventname = "Unknown set option about SRVCC report ability"
+        action.setAll(eventname, msglevel, color)
+        return action
 
     def networksrvcc(self, state):
+        eventname = ''
+        color = 'black'
+        msglevel = Msglevel.INFO
+        action = actionBuilder()
         state = state.strip()
         if state == '1':
-            return "Network Support SRVCC"
+            eventname = "Network Support SRVCC"
         else:
-            return "Network Do not support SRVCC"
+            eventname = "Network Do not support SRVCC"
+            color = 'brown'
+        action.setAll(eventname, msglevel, color)
+        return action
+
 
     def srvcchoinfo(self, state):
+        eventname = ''
+        color = 'black'
+        msglevel = Msglevel.INFO
+        action = actionBuilder()
         state = state.strip()
         if state == "0":
-            return "PS to CS SRVCC Started!"
+            eventname = "PS to CS SRVCC Started!"
+            color = 'brown'
         elif state == "1":
-            return "PS to CS SRVCC Successfully"
+            eventname = "PS to CS SRVCC Successfully"
+            color = 'green'
         elif state == "2":
-            return "PS to CS SRVCC Cancelled"
+            eventname = "PS to CS SRVCC Cancelled"
+            color = 'red'
         elif state == "3":
-            return "PS to CS SRVCC Failed"
+            eventname = "PS to CS SRVCC Failed"
+            color = 'red'
         else:
-            return "Unknown state when PS to CS SRVCC"
+            eventname = "Unknown state when PS to CS SRVCC"
+        action.setAll(eventname, msglevel, color)
+        return action
 
     def callinfosync(self, string):
+        eventname = ''
+        color = 'black'
+        msglevel = Msglevel.INFO
+        action = actionBuilder()
         basestr = "Sync Call Info:\n"
         finalstr = ''
 
@@ -528,8 +767,10 @@ class radioParser():
         #callstr = numtypestr + calltypestr + directstr
         callstr = directstr
         finalstr =  basestr + num + ',' + callstr + ',' +  callstatestr + holdstatestr
-
-        return finalstr
+        eventname = finalstr
+        color = 'brown'
+        action.setAll(eventname, msglevel, color)
+        return action
 
 
     def getAtmsg(self,keypattern, line, lineno):
@@ -555,9 +796,7 @@ class radioParser():
             atmsg['lineno'] = 'radio log:' + str(lineno)
             atmsg['line'] = line.strip(' \t')
             groupnum = pattern.groups
-            if not actionfunc:
-                atmsg['action'] = ''
-            else:
+            if actionfunc:
                 if groupnum >= 1:
                     state = match.group(1).strip()
                 else:
@@ -567,13 +806,14 @@ class radioParser():
                     atmsg['action'] = actionfunc()
                 else:
                     atmsg['action'] = actionfunc(state)
-
-                self.logger.logger.debug('state is %s, action is %s' % (state, atmsg['action']))
+                eventname = atmsg['action'].eventname
+                self.logger.logger.debug('state is %s, action is %s' % (state, eventname))
 
             #only if the msg is not to be ignored...
             for i,ignore in enumerate(self.ignoremsg):
-                if ignore == atmsg['action']:
-                    self.logger.logger.info('atcmd %s , action is %s ignored...' % (atmsg['atcmd'], atmsg['action']))
+                eventname = atmsg['action'].eventname
+                if ignore == eventname:
+                    self.logger.logger.info('atcmd %s , action is %s ignored...' % (atmsg['atcmd'], eventname))
                     return False
 
             self.atmsgs.append(atmsg)
@@ -690,13 +930,23 @@ class radioParser():
         for index,atmsg in enumerate(self.atmsgs):
             sector = (index + 1) / int(self.splitgate)
             basedirect = 'UE' + ' ' + atmsg['direct'] + ' '+ 'CP'
-            #only need label, note
-            label =  " [label = \"" + atmsg['action']  + "\" "
+            #only need label, note,
+            #add label color
+            eventname = atmsg['action'].eventname
+            color = atmsg['action'].color
+
+            label =  " [label = \"" + eventname  + "\" "
+            labelcolor = ", color=" + color
             atcmd = " AtCmd: " + atmsg['atcmd'] + '\n'
             timestamp = " time: " + atmsg['timestamp'] + '\n'
             lineno = "Lineno: " + atmsg['lineno'] + '\n'
             note = ", note = \"" + atcmd + timestamp + lineno+ "\""
-            label = label + note + "];\n"
+
+            #AP -> UE [label = "Module: Phone:
+            #VoWiFi RegState Update to LOGINED", color = blue,note = " log lineno: 36364
+            #Time: 12-26 13:20:08.074"];
+
+            label = label + labelcolor + note + "];\n"
             onestr = basedirect + label
             self.diagstr += onestr
             self.diagstrList[sector] += onestr

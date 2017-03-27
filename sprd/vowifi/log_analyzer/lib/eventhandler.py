@@ -18,21 +18,7 @@ from reportConverter import *
 
 
 
-def maplevel2color(level):
-    if level <= Msglevel.INFO:
-        return "black";
-    elif level == Msglevel.WARNING:
-        return "blue"
-    else:
-        return "red"
 
-def mapcode2str(code, map):
-    if type(map) is not dict:
-        return code
-    if code in map:
-        return map[code]
-    else:
-        return code
 
 class eventdict():
     def __init__(self):
@@ -922,7 +908,10 @@ class regstatus(eventhandler):
         else:
             #in service's log, -1 is default value when login_ok or refresh_ok
             #login_ok, login_failed, logouted,refresh_ok, refresh_failed
-            self.retmsg.level = Msglevel.WARNING
+            if eventname == "login_failed":
+                self.retmsg.level = Msglevel.ERROR
+            else:
+                self.retmsg.level = Msglevel.WARNING
             self.retmsg.color = maplevel2color(self.retmsg.level)
             eventstr = map2phrase(eventname, Reportregphrase)
 

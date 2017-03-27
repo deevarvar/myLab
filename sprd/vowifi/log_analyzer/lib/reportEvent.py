@@ -25,6 +25,14 @@ class Msglevel():
     WARNING = 3
     ERROR = 4
 
+def maplevel2color(level):
+    if level <= Msglevel.INFO:
+        return "black";
+    elif level == Msglevel.WARNING:
+        return "blue"
+    else:
+        return "red"
+
 #define some event types: user, phone, scenarioes, handover algo
 class ReportType():
     USEREVENT_BASE = 0x1000

@@ -26,11 +26,27 @@
 #       8.3 datarouter error
 #        D:\code\log\bug_log\vit_log\2017_3_2\wificalling_no_Voice_video_1082#0310a
 #        [Adapter]VoWifiCallManager: Failed to update the data router state, please check
+#         imscm Currently used IMS protocol stack: "VoLte IMS protocol stack"
+#      8.1.4 cp color, green, volte failed
+#     D:\code\log\bug_log\vit_log\2017_3_24\659070\Handover_to_VoLTE_Calldrop_2238\external_storage\ylog\ylog
 
 #TODO:
-#      8.1.1 call session
-
-
+#      8.2.1 call session
+#      8.2.2 ap color
+#      8.2.3 srvcc calculate
+#  01-01 09:18:14.321  1140  2496 I CPVoiceAgent: [cp_mediaset]: AT+SPRTPMEDIASET=3,1,1,1
+#      8.1.3 log more
+#         1.
+#         2. DSCI
+#         3. 504 timeout
+#        ImsReasonInfo.java, more definition
+# 03-27 15:10:06.227  1134  1134 I [VoWifiService]VoWifiSerService: Notify the event: {"event_code":105,"event_name":"call_terminate","id":1,"state_code":146}
+#         D:\code\log\srvcc\503\slog_20170327151140_sp9832a_2h11_4mvolt_vowif_userdebu\external_storage\ylog\ylog
+#
+#
+#      8.1.4 DSCI
+#      8.1.100 ipsec cmd
+#
 
 #       9. radio log catagory
 #       9.1 FIXME: add at cmd result , log is too verboses....
@@ -42,7 +58,6 @@
 #       9.3 ringtone
 #
 #
-#       9.99 wpa_supplicant: wlan0: Removing interface wlan0
 
 #       10.0  g_astMtcCliCodeMap , g_astMtcCallCodeMap
 
