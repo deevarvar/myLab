@@ -104,12 +104,36 @@ CODE_SIP_BUSY = 338
 CODE_SIP_USER_REJECTED = 361
 CODE_SIP_REDIRECTED = 321
 
+CODE_LOCAL_CALL_EXCEEDED = 141
+CODE_LOCAL_CALL_BUSY = 142
+CODE_LOCAL_CALL_DECLINE = 143
+#SRVCC is in progress
+CODE_LOCAL_CALL_VCC_ON_PROGRESSING = 144
+#Resource reservation is failed (QoS precondition)
+CODE_LOCAL_CALL_RESOURCE_RESERVATION_FAILED = 145
+#Retry CS call; VoLTE service can't be provided by the network or remote end
+#Resolve the extra code(EXTRA_CODE_CALL_RETRY_*) if the below code is set
+CODE_LOCAL_CALL_CS_RETRY_REQUIRED = 146
+#Retry VoLTE call; VoLTE service can't be provided by the network temporarily
+CODE_LOCAL_CALL_VOLTE_RETRY_REQUIRED = 147
+#IMS call is already terminated (in TERMINATED state)
+CODE_LOCAL_CALL_TERMINATED = 148
+
 CODE_USER_TERMINATED = 501
 CODE_USER_NOANSWER = 502
 CODE_USER_IGNORE = 503
 CODE_USER_DECLINE = 504
 CODE_LOW_BATTERY = 505
 CODE_BLACKLISTED_CALL_ID = 506
+
+Constantimsreason[str(CODE_LOCAL_CALL_EXCEEDED)] = "Call Exceeded"
+Constantimsreason[str(CODE_LOCAL_CALL_BUSY)] = "Call Busy"
+Constantimsreason[str(CODE_LOCAL_CALL_DECLINE)] = "Call Decline"
+Constantimsreason[str(CODE_LOCAL_CALL_VCC_ON_PROGRESSING)] = "SRVCC ONGOING"
+Constantimsreason[str(CODE_LOCAL_CALL_RESOURCE_RESERVATION_FAILED)] = "Precondition Failed"
+Constantimsreason[str(CODE_LOCAL_CALL_CS_RETRY_REQUIRED)] = "Retry CS call"
+Constantimsreason[str(CODE_LOCAL_CALL_VOLTE_RETRY_REQUIRED)] = "Retry VoLTE call"
+Constantimsreason[str(CODE_LOCAL_CALL_TERMINATED)] = "Call Termed"
 
 Constantimsreason[str(CODE_UNSPECIFIED)] = "Unspecified Code"
 Constantimsreason[str(CODE_USER_TERMINATED_BY_REMOTE)] = "Termed by Remote"

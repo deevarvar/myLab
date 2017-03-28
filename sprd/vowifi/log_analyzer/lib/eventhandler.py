@@ -77,75 +77,83 @@ class matchone(eventhandler):
 class wificonn(eventhandler):
     def handler(self):
         self.retmsg.msg = self.match.group(1)
-        self.retmsg.level = Msglevel.WARNING
-
+        self.retmsg.msglevel = Msglevel.NORMAL
+        self.retmsg.color = maplevel2color(self.retmsg.msglevel)
         event=mapzhphrase("wificonn", ReportHandoverphrase)
-        self.retmsg.report = constructReport(type=ReportType.USEREVENT_BASE, event=event, level=self.retmsg.level)
+        self.retmsg.report = constructReport(type=ReportType.USEREVENT_BASE, event=event, level=self.retmsg.msglevel)
         return self.retmsg
 
 #function only match one, but need to generate the report
 class cmendcall(eventhandler):
     def handler(self):
         self.retmsg.msg = self.match.group(1)
-        self.retmsg.level = Msglevel.ERROR
+        self.retmsg.msglevel = Msglevel.ERROR
+        self.retmsg.color = maplevel2color(self.retmsg.msglevel)
         event = mapzhphrase("cmendcall", ReportHandoverphrase)
-        self.retmsg.report = constructReport(type=ReportType.PHONEEVENT_BASE, event=event, level=self.retmsg.level)
+        self.retmsg.report = constructReport(type=ReportType.PHONEEVENT_BASE, event=event, level=self.retmsg.msglevel)
         return self.retmsg
 
 class wifidisconn(eventhandler):
     def handler(self):
         self.retmsg.msg = self.match.group(1)
-        self.retmsg.level = Msglevel.WARNING
+        self.retmsg.msglevel = Msglevel.WARNING
+        self.retmsg.color = maplevel2color(self.retmsg.msglevel)
         event = mapzhphrase("wifidisconn", ReportHandoverphrase)
-        self.retmsg.report = constructReport(type=ReportType.USEREVENT_BASE, event=event, level=self.retmsg.level)
+        self.retmsg.report = constructReport(type=ReportType.USEREVENT_BASE, event=event, level=self.retmsg.msglevel)
         return self.retmsg
 
 class airon(eventhandler):
     def handler(self):
         self.retmsg.msg = self.match.group(1)
-        self.retmsg.level = Msglevel.WARNING
+        self.retmsg.msglevel = Msglevel.WARNING
+        self.retmsg.color = maplevel2color(self.retmsg.msglevel)
         event = mapzhphrase("airon", ReportHandoverphrase)
-        self.retmsg.report = constructReport(type=ReportType.USEREVENT_BASE, event=event, level=self.retmsg.level)
+        self.retmsg.report = constructReport(type=ReportType.USEREVENT_BASE, event=event, level=self.retmsg.msglevel)
         return self.retmsg
 
 class airoff(eventhandler):
     def handler(self):
         self.retmsg.msg = self.match.group(1)
-        self.retmsg.level = Msglevel.WARNING
+        self.retmsg.msglevel = Msglevel.WARNING
+        self.retmsg.color = maplevel2color(self.retmsg.msglevel)
         event = mapzhphrase("airoff", ReportHandoverphrase)
-        self.retmsg.report = constructReport(type=ReportType.USEREVENT_BASE, event=event, level=self.retmsg.level)
+        self.retmsg.report = constructReport(type=ReportType.USEREVENT_BASE, event=event, level=self.retmsg.msglevel)
         return self.retmsg
 
 class idlehowifi(eventhandler):
     def handler(self):
         self.retmsg.msg = self.match.group(1)
-        self.retmsg.level = Msglevel.WARNING
+        self.retmsg.msglevel = Msglevel.INFO
+        self.retmsg.color = maplevel2color(self.retmsg.msglevel)
         event = mapzhphrase("idlehowifi", ReportHandoverphrase)
-        self.retmsg.report = constructReport(type=ReportType.PHONEEVENT_BASE, event=event, level=self.retmsg.level)
+        self.retmsg.report = constructReport(type=ReportType.PHONEEVENT_BASE, event=event, level=self.retmsg.msglevel)
         return self.retmsg
 
 class idleholte(eventhandler):
     def handler(self):
         self.retmsg.msg = self.match.group(1)
-        self.retmsg.level = Msglevel.WARNING
+        self.retmsg.msglevel = Msglevel.INFO
+        self.retmsg.color = maplevel2color(self.retmsg.msglevel)
         event = mapzhphrase("idleholte", ReportHandoverphrase)
-        self.retmsg.report = constructReport(type=ReportType.PHONEEVENT_BASE, event=event, level=self.retmsg.level)
+        self.retmsg.report = constructReport(type=ReportType.PHONEEVENT_BASE, event=event, level=self.retmsg.msglevel)
         return self.retmsg
 
 class callhowifi(eventhandler):
     def handler(self):
         self.retmsg.msg = self.match.group(1)
-        self.retmsg.level = Msglevel.WARNING
+        self.retmsg.msglevel = Msglevel.INFO
+        self.retmsg.color = maplevel2color(self.retmsg.msglevel)
         event = mapzhphrase("callhowifi", ReportHandoverphrase)
-        self.retmsg.report = constructReport(type=ReportType.PHONEEVENT_BASE, event=event, level=self.retmsg.level)
+        self.retmsg.report = constructReport(type=ReportType.PHONEEVENT_BASE, event=event, level=self.retmsg.msglevel)
         return self.retmsg
 
 class callholte(eventhandler):
     def handler(self):
         self.retmsg.msg = self.match.group(1)
-        self.retmsg.level = Msglevel.WARNING
+        self.retmsg.msglevel = Msglevel.INFO
+        self.retmsg.color = maplevel2color(self.retmsg.msglevel)
         event = mapzhphrase("callholte", ReportHandoverphrase)
-        self.retmsg.report = constructReport(type=ReportType.PHONEEVENT_BASE, event=event, level=self.retmsg.level)
+        self.retmsg.report = constructReport(type=ReportType.PHONEEVENT_BASE, event=event, level=self.retmsg.msglevel)
         return self.retmsg
 
 class oneclickconf(eventhandler):
@@ -155,6 +163,8 @@ class oneclickconf(eventhandler):
     def handler(self):
         partner = str(self.match.group(1)).strip()
         self.retmsg.msg = "Start Conf with " + partner
+        self.retmsg.msglevel = Msglevel.INFO
+        self.retmsg.color = maplevel2color(self.retmsg.msglevel)
         return self.retmsg
 
 class acceptcall(eventhandler):
@@ -178,6 +188,8 @@ class rejectcall(eventhandler):
     def handler(self):
         rejectreason = str(self.match.group(1).strip())
         rejectreason = mapcode2str(rejectreason,Constantimsreason)
+        self.retmsg.msglevel = Msglevel.WARNING
+        self.retmsg.color = maplevel2color(self.retmsg.msglevel)
         self.retmsg.msg = "Reject As :" + rejectreason
         event = mapzhphrase("rejectcall", ReportScenariophrase, post=rejectreason)
         self.retmsg.report = constructReport(type=ReportType.SCEEVENT_BASE, event=event, level=self.retmsg.msglevel)
@@ -191,7 +203,7 @@ class termcall(eventhandler):
         reasonstr = str(self.match.group(1)).strip()
         reasonstr = mapcode2str(reasonstr, Constantimsreason)
         self.retmsg.msglevel = Msglevel.WARNING
-        self.retmsg.msg = maplevel2color(self.retmsg.msglevel)
+        self.retmsg.color = maplevel2color(self.retmsg.msglevel)
         self.retmsg.msg = "Term Call As :" + reasonstr
         event = mapzhphrase("termcall", ReportScenariophrase, post=reasonstr)
         self.retmsg.report = constructReport(type=ReportType.SCEEVENT_BASE, event=event, level=self.retmsg.msglevel)
@@ -287,7 +299,7 @@ class resumecall(eventhandler):
 
 class removepart(eventhandler):
     def handler(self):
-        self.retmsg.msglevel = Msglevel.INFO
+        self.retmsg.msglevel = Msglevel.WARNING
         self.retmsg.color = maplevel2color(self.retmsg.msglevel)
         part = self.match.group(1)
         self.retmsg.msg = "Remove " + part + " From ConfCall"
@@ -295,7 +307,7 @@ class removepart(eventhandler):
 
 class dtmf(eventhandler):
     def handler(self):
-        self.retmsg.msglevel = Msglevel.WARNING
+        self.retmsg.msglevel = Msglevel.INFO
         self.retmsg.color = maplevel2color(self.retmsg.msglevel)
         code = str(self.match.group(1)).strip()
         self.retmsg.msg = "Press DTMF " + code
@@ -303,7 +315,7 @@ class dtmf(eventhandler):
 
 class ussd(eventhandler):
     def handler(self):
-        self.retmsg.msglevel = Msglevel.WARNING
+        self.retmsg.msglevel = Msglevel.INFO
         self.retmsg.color = maplevel2color(self.retmsg.msglevel)
         ussdmsg = str(self.match.group(1)).strip()
         self.retmsg.msg = "Send USSD " + ussdmsg
@@ -482,6 +494,7 @@ class rotatelocalrenderfailed(eventhandler):
         fmsg += "Callid : " + callid
         self.retmsg.msg = fmsg
         return self.retmsg
+
 class rotateremoterender(eventhandler):
     def handler(self):
         self.retmsg.msglevel = Msglevel.INFO
@@ -519,12 +532,25 @@ class modifyrequest(eventhandler):
         return self.retmsg
 
 
+class invite2conf(eventhandler):
+    def handler(self):
+        self.retmsg.msglevel = Msglevel.WARNING
+        self.retmsg.color = maplevel2color(self.retmsg.msglevel)
+        callid = str(self.match.group(1).strip())
+        confid = str(self.match.group(2).strip())
+        callidstr = "Callid: " + callid + "\n"
+        confidstr = "Confid: " + confid
+        self.retmsg.msg = "Invite Call to Conference\n" + callidstr + confidstr
+        return self.retmsg
+
 class modifyrequestfailed(eventhandler):
     def handler(self):
         self.retmsg.msglevel = Msglevel.ERROR
         self.retmsg.color = maplevel2color(self.retmsg.msglevel)
         event=mapzhphrase("mdyfailed", ReportScenariophrase)
         self.retmsg.report = constructReport(type=ReportType.SCEEVENT_BASE, event=event, level=self.retmsg.msglevel)
+        msg = str(self.match.group(1).strip())
+        self.retmsg.msg = msg
         return self.retmsg
 
 class startcall(eventhandler):
@@ -535,6 +561,9 @@ class startcall(eventhandler):
     def handler(self):
         callbearer = self.match.group(1)
         self.retmsg.msg = "start " + callbearer
+        self.retmsg.msglevel = Msglevel.INFO
+        self.retmsg.color = maplevel2color(self.retmsg.msglevel)
+
         if callbearer == "VoWifiCall":
             event = mapzhphrase("startvowificall", ReportScenariophrase)
         else:
@@ -566,7 +595,7 @@ class servicecallback(eventhandler):
         #there will event skipped, which means other key will have better phrase
         skipevent = list()
         skipevent.append('call_terminate')
-        skipevent.append('call_rtp_received')
+
 
         #event to be ignored, like rtcp changed
         ignoreevent = list()
@@ -597,7 +626,20 @@ class servicecallback(eventhandler):
         infoevent.append("conf_resume_ok")
         infoevent.append("conf_hold_received")
         infoevent.append("conf_resume_received")
+        infoevent.append("conf_outgoing")
+        infoevent.append("call_outgoing")
+        infoevent.append("call_rtp_received")
+        infoevent.append("conf_rtp_received")
 
+        #some browncolor, other infoevent will be green
+        browncolor = list()
+        browncolor.append("call_incoming")
+        browncolor.append("call_add_video_request")
+        browncolor.append("call_add_video_cancel")
+        browncolor.append("conf_disconnected")
+        browncolor.append("conf_outgoing")
+        browncolor.append("call_outgoing")
+        browncolor.append("conf_part_update")
         #event should be colored red
         errevent = list()
         errevent.append("call_hold_failed")
@@ -609,6 +651,9 @@ class servicecallback(eventhandler):
         errevent.append("conf_hold_failed")
         errevent.append("conf_resume_failed")
 
+        self.retmsg.msglevel = Msglevel.INFO
+        self.retmsg.color = maplevel2color(self.retmsg.msglevel)
+
         if 'event_name' in servicejson:
             curevent = str(servicejson['event_name']).strip()
             #rtcp changed is too verbose , so ignore it.
@@ -619,8 +664,12 @@ class servicecallback(eventhandler):
                 #some event should be highlighted
                 #just change the color here, phrase is not converted.
                 if curevent in infoevent:
-                    self.retmsg.msglevel = Msglevel.WARNING
-                    self.retmsg.color = maplevel2color(self.retmsg.msglevel)
+                    if curevent in browncolor:
+                        self.retmsg.msglevel = Msglevel.WARNING
+                        self.retmsg.color = maplevel2color(self.retmsg.msglevel)
+                    else:
+                        self.retmsg.msglevel = Msglevel.NORMAL
+                        self.retmsg.color = maplevel2color(self.retmsg.msglevel)
                     event = mapzhphrase(curevent, ReportScenariophrase)
                     self.retmsg.report = constructReport(type=ReportType.SCEEVENT_BASE,event=event, level=self.retmsg.msglevel)
                 elif curevent in errevent:
@@ -635,6 +684,7 @@ class servicecallback(eventhandler):
                     termreason = 'Term Call: ' + mapcode2str(str(servicejson['state_code']), Constantimsreason) + '\n'
                     self.retmsg.msglevel = Msglevel.WARNING
                     self.retmsg.color = maplevel2color(self.retmsg.msglevel)
+                    #FIXME: add report
 
             if servicejson['event_name'] == "call_rtp_received":
                 if 'rtp_received' in servicejson:
@@ -642,6 +692,8 @@ class servicecallback(eventhandler):
                     rtpstate = str(servicejson['rtp_received']).lower()
                     if rtpstate == 'true':
                         rtprecv = "RTP received\n"
+                        self.retmsg.msglevel = Msglevel.NORMAL
+                        self.retmsg.color = maplevel2color(self.retmsg.msglevel)
                     else:
                         #show error msg.
                         self.retmsg.msglevel = Msglevel.ERROR
@@ -687,6 +739,8 @@ class loginstatus(eventhandler):
         pcscfip = self.match.group(2).strip()
         ipstr = "IP: " + ip + '\n'
         pcscfipstr = "P-CSCF: " + pcscfip + '\n'
+        self.retmsg.msglevel = Msglevel.INFO
+        self.retmsg.color = maplevel2color(self.retmsg.msglevel)
         self.retmsg.msg = 'Login \n' + ipstr + pcscfipstr
         return self.retmsg
 
@@ -732,7 +786,7 @@ class wfcstatus(eventhandler):
             wfcstr = "Disable WiFi-Calling"
             event = mapzhphrase("disenwfc", ReportHandoverphrase)
 
-        self.retmsg.msglevel = Msglevel.WARNING
+        self.retmsg.msglevel = Msglevel.INFO
         self.retmsg.color = maplevel2color(self.retmsg.msglevel)
         self.retmsg.msg = wfcstr
 
@@ -753,18 +807,18 @@ class geticon(eventhandler):
                 level = Msglevel.ERROR
             else:
                 iconstr = "show VoLTE signal icon"
-                level = Msglevel.WARNING
+                level = Msglevel.NORMAL
 
         else:
             if wifistr == "true":
                 iconstr = "show VoWiFi signal icon"
-                level = Msglevel.WARNING
+                level = Msglevel.NORMAL
             else:
                 iconstr = "No VoLTE/VoWiFi signal icon"
                 level = Msglevel.WARNING
         self.retmsg.msg = iconstr
-        self.retmsg.level = level
-        self.retmsg.color = maplevel2color(self.retmsg.level)
+        self.retmsg.msglevel = level
+        self.retmsg.color = maplevel2color(self.retmsg.msglevel)
         return self.retmsg
 
 class setimsregaddr(eventhandler):
@@ -774,6 +828,8 @@ class setimsregaddr(eventhandler):
     def handler(self):
         regaddr = self.match.group(1).strip()
         self.retmsg.msg = "SetIMSRegAddr:\n   " + regaddr
+        self.retmsg.msglevel = Msglevel.INFO
+        self.retmsg.color = maplevel2color(self.retmsg.msglevel)
         return self.retmsg
 
 class getimsregaddr(eventhandler):
@@ -848,7 +904,7 @@ class akastatus(eventhandler):
         akatag = str(self.match.group(1)).strip()[:2]
         if akatag == "DB":
             akastr = "EAP-AKA AUTH correctly"
-            self.retmsg.msglevel = Msglevel.INFO
+            self.retmsg.msglevel = Msglevel.NORMAL
             self.retmsg.color = maplevel2color(self.retmsg.msglevel)
             self.retmsg.msg = akastr
             event = mapzhphrase("akaok", ReportScenariophrase)
@@ -874,7 +930,7 @@ class reregstatus(eventhandler):
         acctype = str(self.match.group(1).strip())
         acctype = mapcode2str(acctype, Constantaccnettype)
         accinfo = self.match.group(2)
-        self.retmsg.msglevel = Msglevel.WARNING
+        self.retmsg.msglevel = Msglevel.INFO
         self.retmsg.color = maplevel2color(self.retmsg.msglevel)
         acctypestr = "Access Type:" + acctype + '\n'
         accinfostr =  "Access Info:" + accinfo + '\n'
@@ -895,24 +951,26 @@ class regstatus(eventhandler):
 
         #seems MTC_CLI_REG_BASE+16: other error is not error,
         if isRegError(statecode):
-            self.retmsg.level = Msglevel.ERROR
-            self.retmsg.color = maplevel2color(self.retmsg.level)
+            self.retmsg.msglevel = Msglevel.ERROR
+            self.retmsg.color = maplevel2color(self.retmsg.msglevel)
             eventstr = map2phrase(eventname, Reportregphrase) + '\n'
             mappedstr = str(statecode) + '-->' + mapcode2str(str(statecode),Constantregerrcode)
             statestr = "state: " + mappedstr
 
             event = mapzhphrase(eventname, Reportregphrase)
-            self.retmsg.report = constructReport(event=event, level=self.retmsg.level, errorstr=mappedstr)
+            self.retmsg.report = constructReport(event=event, level=self.retmsg.msglevel, errorstr=mappedstr)
             self.retmsg.msg = eventstr + statestr
             return self.retmsg
         else:
             #in service's log, -1 is default value when login_ok or refresh_ok
             #login_ok, login_failed, logouted,refresh_ok, refresh_failed
-            if eventname == "login_failed":
-                self.retmsg.level = Msglevel.ERROR
+            if eventname == "login_failed" or eventname == "refresh_failed":
+                self.retmsg.msglevel = Msglevel.ERROR
+            elif eventname == "login_ok" or eventname == "refresh_ok":
+                self.retmsg.msglevel = Msglevel.NORMAL
             else:
-                self.retmsg.level = Msglevel.WARNING
-            self.retmsg.color = maplevel2color(self.retmsg.level)
+                self.retmsg.msglevel = Msglevel.INFO
+            self.retmsg.color = maplevel2color(self.retmsg.msglevel)
             eventstr = map2phrase(eventname, Reportregphrase)
 
             if eventname == "state_update":
@@ -920,7 +978,7 @@ class regstatus(eventhandler):
             else:
                 #state_update event is some kind of verbose, will not be included in report
                 event = mapzhphrase(eventname, Reportregphrase)
-                self.retmsg.report = constructReport(event=event, level=self.retmsg.level)
+                self.retmsg.report = constructReport(event=event, level=self.retmsg.msglevel)
 
             self.retmsg.msg = eventstr
             return self.retmsg
@@ -946,12 +1004,12 @@ class s2bstatus(eventhandler):
             mappedstr = str(errorcode) + '-->' + mapcode2str(str(errorcode), Constants2berrcode)
             errorstr = "   stateCode: " +  mappedstr
 
-            self.retmsg.level = Msglevel.ERROR
-            self.retmsg.color = maplevel2color(self.retmsg.level)
+            self.retmsg.msglevel = Msglevel.ERROR
+            self.retmsg.color = maplevel2color(self.retmsg.msglevel)
             self.retmsg.msg = statestr + errorstr
 
             event = mapzhphrase("failed", Reports2bphrase)
-            self.retmsg.report = constructReport(event=event, level=self.retmsg.level, errorstr=mappedstr)
+            self.retmsg.report = constructReport(event=event, level=self.retmsg.msglevel, errorstr=mappedstr)
         elif action == "security_json_action_s2b_stopped":
             errorcode = s2bjson['security_json_param_error_code']
             ishandover = s2bjson['security_json_param_handover']
@@ -963,15 +1021,15 @@ class s2bstatus(eventhandler):
 
             #in s2b stopped, the statecode should be checked
             if isS2bError(errorcode):
-                self.retmsg.level = Msglevel.ERROR
+                self.retmsg.msglevel = Msglevel.ERROR
                 event = mapzhphrase("stopped_abnormally", Reports2bphrase)
-                self.retmsg.report = constructReport(event=event, level=self.retmsg.level, errorstr=mappedstr)
+                self.retmsg.report = constructReport(event=event, level=self.retmsg.msglevel, errorstr=mappedstr)
             else:
-                self.retmsg.level = Msglevel.WARNING
+                self.retmsg.msglevel = Msglevel.INFO
                 event = mapzhphrase("stopped", Reports2bphrase)
-                self.retmsg.report = constructReport(event=event, level=self.retmsg.level, errorstr=mappedstr)
+                self.retmsg.report = constructReport(event=event, level=self.retmsg.msglevel, errorstr=mappedstr)
 
-            self.retmsg.color = maplevel2color(self.retmsg.level)
+            self.retmsg.color = maplevel2color(self.retmsg.msglevel)
             self.retmsg.msg = statestr + hostr + errorstr
 
         elif action == "security_json_action_s2b_successed":
@@ -989,11 +1047,11 @@ class s2bstatus(eventhandler):
                 dnsv4str = "   DNS IPv4: " + s2bjson['security_json_param_dns_ip4'] + '\n'
             if 'security_json_param_dns_ip6' in s2bjson:
                 dnsv6str = "   DNS IPv6: " + s2bjson['security_json_param_dns_ip6'] + '\n'
-            self.retmsg.level = Msglevel.WARNING
-            self.retmsg.color = maplevel2color(self.retmsg.level)
+            self.retmsg.msglevel = Msglevel.NORMAL
+            self.retmsg.color = maplevel2color(self.retmsg.msglevel)
             self.retmsg.msg = statestr + ipv4str + ipv6str + pcscfv4str + pcscfv6str + dnsv4str + dnsv6str
             event = mapzhphrase("successed", Reports2bphrase)
-            self.retmsg.report = constructReport(event=event, level=self.retmsg.level)
+            self.retmsg.report = constructReport(event=event, level=self.retmsg.msglevel)
         else:
             return None
 
@@ -1008,8 +1066,8 @@ class simstatus(eventhandler):
     def handler(self):
         simaction = str(self.match.group(1)).strip()
         plmn = str(self.match.group(2)).strip()
-        self.retmsg.level = Msglevel.WARNING
-        self.retmsg.color = maplevel2color(self.retmsg.level)
+        self.retmsg.msglevel = Msglevel.INFO
+        self.retmsg.color = maplevel2color(self.retmsg.msglevel)
 
         if simaction == "get":
             simstr = "Get Primary Sim Card\n"
@@ -1036,8 +1094,8 @@ class simchanged7(eventhandler):
     just to match android 7.0's sim changed logic in ImsCM
     '''
     def handler(self):
-        self.retmsg.level = Msglevel.WARNING
-        self.retmsg.color = maplevel2color(self.retmsg.level)
+        self.retmsg.msglevel = Msglevel.WARNING
+        self.retmsg.color = maplevel2color(self.retmsg.msglevel)
         self.retmsg.msg = "Primary Sim Card Changed."
         return self.retmsg
 
@@ -1046,8 +1104,8 @@ class slotstatus(eventhandler):
     two pattern: slot id,  status str
     '''
     def handler(self):
-        self.retmsg.level = Msglevel.WARNING
-        self.retmsg.color = maplevel2color(self.retmsg.level)
+        self.retmsg.msglevel = Msglevel.INFO
+        self.retmsg.color = maplevel2color(self.retmsg.msglevel)
         slot = str(self.match.group(1)).strip()
         #simstatus may contain "
         simstatus = str(self.match.group(2)).strip().replace('"','').replace("'", '')
@@ -1058,8 +1116,8 @@ class slotstatus(eventhandler):
 
 class imscmpending(eventhandler):
     def handler(self):
-        self.retmsg.level = Msglevel.WARNING
-        self.retmsg.color = maplevel2color(self.retmsg.level)
+        self.retmsg.msglevel = Msglevel.WARNING
+        self.retmsg.color = maplevel2color(self.retmsg.msglevel)
         curreq = str(self.match.group(1)).strip().replace('"', '').replace("'",'')
         pendreq = str(self.match.group(2)).strip().replace('"', '').replace("'",'')
         curreq = mapcode2str(curreq, ConstantImsReq)
@@ -1078,8 +1136,8 @@ class qos2volte(eventhandler):
     '''
     def handler(self):
         calltype = str(self.match.group(1)).strip()
-        self.retmsg.level = Msglevel.WARNING
-        self.retmsg.color = maplevel2color(self.retmsg.level)
+        self.retmsg.msglevel = Msglevel.INFO
+        self.retmsg.color = maplevel2color(self.retmsg.msglevel)
         hostr = "Poor " + calltype + " Qos\n" #" or Strong LTE signal\n"
         hostr += calltype + " Call Handover to VoLTE\n"
         if calltype == "Video":
@@ -1087,7 +1145,7 @@ class qos2volte(eventhandler):
         else:
             event=mapzhphrase("voiceqos2lte", ReportHandoverphrase)
 
-        self.retmsg.report = constructReport(type=ReportType.HOALGO_BASE, event=event, level=self.retmsg.level)
+        self.retmsg.report = constructReport(type=ReportType.HOALGO_BASE, event=event, level=self.retmsg.msglevel)
         self.retmsg.msg = hostr
         return self.retmsg
 
@@ -1103,12 +1161,12 @@ class callthreshholdho(eventhandler):
         calltype = str(self.match.group(1)).strip()
         hodirect = str(self.match.group(2)).strip()
         hostr = ''
-        self.retmsg.level = Msglevel.WARNING
-        self.retmsg.color = maplevel2color(self.retmsg.level)
+        self.retmsg.msglevel = Msglevel.INFO
+        self.retmsg.color = maplevel2color(self.retmsg.msglevel)
         if hodirect == "Vowifi":
             hostr = "Strong WiFi signal\n"
             event=mapzhphrase("incallrssiho2wifi", ReportHandoverphrase)
-            self.retmsg.report = constructReport(type=ReportType.HOALGO_BASE, event=event, level=self.retmsg.level)
+            self.retmsg.report = constructReport(type=ReportType.HOALGO_BASE, event=event, level=self.retmsg.msglevel)
         else:
             hostr = "Weak WiFi signal\n"
 
@@ -1124,13 +1182,13 @@ class idlethreshholdho(eventhandler):
     '''
     def handler(self):
         hodirect = str(self.match.group(1)).strip()
-        self.retmsg.level = Msglevel.WARNING
-        self.retmsg.color = maplevel2color(self.retmsg.level)
+        self.retmsg.msglevel = Msglevel.INFO
+        self.retmsg.color = maplevel2color(self.retmsg.msglevel)
         hostr = ''
         if hodirect == "Vowifi":
             hostr = "Strong WiFi signal\n"
             event=mapzhphrase("rssiho2wifi", ReportHandoverphrase)
-            self.retmsg.report = constructReport(type=ReportType.HOALGO_BASE, event=event, level=self.retmsg.level)
+            self.retmsg.report = constructReport(type=ReportType.HOALGO_BASE, event=event, level=self.retmsg.msglevel)
         else:
             hostr = "Weak WiFi signal\n"
         hostr +=  " Idle Handover to " + hodirect
@@ -1139,11 +1197,11 @@ class idlethreshholdho(eventhandler):
 
 class idleautovowifi(eventhandler):
     def handler(self):
-        self.retmsg.level = Msglevel.WARNING
-        self.retmsg.color = maplevel2color(self.retmsg.level)
+        self.retmsg.msglevel = Msglevel.INFO
+        self.retmsg.color = maplevel2color(self.retmsg.msglevel)
         hostr = "Idle switch to VoWiFi"
         event=mapzhphrase("autowifi", ReportHandoverphrase)
-        self.retmsg.report = constructReport(type=ReportType.HOALGO_BASE, event=event, level=self.retmsg.level)
+        self.retmsg.report = constructReport(type=ReportType.HOALGO_BASE, event=event, level=self.retmsg.msglevel)
         self.retmsg.msg = hostr
         return self.retmsg
 
@@ -1153,11 +1211,11 @@ class imscmhandlemsgerror(eventhandler):
     '''
     def handler(self):
         errorstr = str(self.match.group(1)).strip()
-        self.retmsg.level = Msglevel.ERROR
-        self.retmsg.color = maplevel2color(self.retmsg.level)
+        self.retmsg.msglevel = Msglevel.ERROR
+        self.retmsg.color = maplevel2color(self.retmsg.msglevel)
         self.retmsg.msg = "Error happened when " + errorstr
         event=mapzhphrase(errorstr, ReportHandoverphrase)
-        self.retmsg.report = constructReport(type=ReportType.PHONEEVENT_BASE, event=event, level=self.retmsg.level)
+        self.retmsg.report = constructReport(type=ReportType.PHONEEVENT_BASE, event=event, level=self.retmsg.msglevel)
         return self.retmsg
 
 class imscmnortp(eventhandler):
@@ -1176,10 +1234,10 @@ class imscmnortp(eventhandler):
             event = mapzhphrase("voicenortp", ReportHandoverphrase)
 
         nortpstr = "No " + nortp  + " in " + calltype
-        self.retmsg.level = Msglevel.ERROR
-        self.retmsg.color = maplevel2color(self.retmsg.level)
+        self.retmsg.msglevel = Msglevel.ERROR
+        self.retmsg.color = maplevel2color(self.retmsg.msglevel)
         self.retmsg.msg = nortpstr
-        self.retmsg.report = constructReport(type=ReportType.PHONEEVENT_BASE, event=event, level=self.retmsg.level)
+        self.retmsg.report = constructReport(type=ReportType.PHONEEVENT_BASE, event=event, level=self.retmsg.msglevel)
         return self.retmsg
 
 class imscmopfailed(eventhandler):
@@ -1188,8 +1246,8 @@ class imscmopfailed(eventhandler):
     operationFailed: id = 1, type = "OPERATION_HANDOVER_TO_VOLTE", failed reason = VOLTE pdn failed
     '''
     def handler(self):
-        self.retmsg.level = Msglevel.ERROR
-        self.retmsg.color = maplevel2color(self.retmsg.level)
+        self.retmsg.msglevel = Msglevel.ERROR
+        self.retmsg.color = maplevel2color(self.retmsg.msglevel)
         operation = str(self.match.group(1)).strip()
         reason = str(self.match.group(2)).strip()
         operationstr = operation + " Failed\n"
@@ -1197,7 +1255,7 @@ class imscmopfailed(eventhandler):
         self.retmsg.msg = operationstr + reasonstr
         #add report
         event = mapzhphrase(operation, ReportHandoverphrase, pre="Failed to ", post=reasonstr)
-        self.retmsg.report = constructReport(type=ReportType.PHONEEVENT_BASE, event=event, level=self.retmsg.level)
+        self.retmsg.report = constructReport(type=ReportType.PHONEEVENT_BASE, event=event, level=self.retmsg.msglevel)
         return self.retmsg
 
 class imscmopsuccessed(eventhandler):
@@ -1205,34 +1263,34 @@ class imscmopsuccessed(eventhandler):
     one pattern: operation
     '''
     def handler(self):
-        self.retmsg.level = Msglevel.WARNING
-        self.retmsg.color = maplevel2color(self.retmsg.level)
+        self.retmsg.msglevel = Msglevel.NORMAL
+        self.retmsg.color = maplevel2color(self.retmsg.msglevel)
         operation = str(self.match.group(1)).strip()
         operationstr = operation + " Succeeded\n"
         self.retmsg.msg = operationstr
         #add report
         event = mapzhphrase(operation, ReportHandoverphrase, post=" Successfully")
-        self.retmsg.report = constructReport(type=ReportType.PHONEEVENT_BASE, event=event, level=self.retmsg.level)
+        self.retmsg.report = constructReport(type=ReportType.PHONEEVENT_BASE, event=event, level=self.retmsg.msglevel)
         return self.retmsg
 
 class imswaitvoltereg(eventhandler):
     def handler(self):
-        self.retmsg.level = Msglevel.ERROR
-        self.retmsg.color = maplevel2color(self.retmsg.level)
+        self.retmsg.msglevel = Msglevel.ERROR
+        self.retmsg.color = maplevel2color(self.retmsg.msglevel)
         self.retmsg.msg = "After VoLte Call End\nWait for Volte to register\nBlock HO to VoWiFi"
         return self.retmsg
 
 class imsrepeatvolte(eventhandler):
     def handler(self):
-        self.retmsg.level = Msglevel.WARNING
-        self.retmsg.color = maplevel2color(self.retmsg.level)
+        self.retmsg.msglevel = Msglevel.WARNING
+        self.retmsg.color = maplevel2color(self.retmsg.msglevel)
         self.retmsg.msg = "VoLTE already registered\n Not HO to VoLTE"
         return self.retmsg
 
 class imsrepeatvowifi(eventhandler):
     def handler(self):
-        self.retmsg.level = Msglevel.WARNING
-        self.retmsg.color = maplevel2color(self.retmsg.level)
+        self.retmsg.msglevel = Msglevel.WARNING
+        self.retmsg.color = maplevel2color(self.retmsg.msglevel)
         self.retmsg.msg = "VoWiFi already registered\n Not HO to VoWiFi"
         return self.retmsg
 
@@ -1241,31 +1299,31 @@ class wpaselect(eventhandler):
     two patterns: wifi mac, ssid
     '''
     def handler(self):
-        self.retmsg.level = Msglevel.WARNING
-        self.retmsg.color = maplevel2color(self.retmsg.level)
+        self.retmsg.msglevel = Msglevel.INFO
+        self.retmsg.color = maplevel2color(self.retmsg.msglevel)
         mac = str(self.match.group(1)).strip()
         ssid = str(self.match.group(2)).strip()
         ssidstr = "Select New WiFi AP: " + ssid + '\n'
         macstr = "AP Mac: " + mac
         self.retmsg.msg =  ssidstr + macstr
         event = mapzhphrase("wpaselect", ReportScenariophrase, post=ssid)
-        self.retmsg.report = constructReport(type=ReportType.USEREVENT_BASE, event=event, level=self.retmsg.level)
+        self.retmsg.report = constructReport(type=ReportType.USEREVENT_BASE, event=event, level=self.retmsg.msglevel)
         return self.retmsg
 
 
 class wpaconn(eventhandler):
     def handler(self):
-        self.retmsg.level = Msglevel.WARNING
-        self.retmsg.color = maplevel2color(self.retmsg.level)
+        self.retmsg.msglevel = Msglevel.INFO
+        self.retmsg.color = maplevel2color(self.retmsg.msglevel)
         self.retmsg.msg = "Connected to WiFi AP"
         event = mapzhphrase("wpaconn", ReportScenariophrase)
-        self.retmsg.report = constructReport(type=ReportType.USEREVENT_BASE, event=event, level=self.retmsg.level)
+        self.retmsg.report = constructReport(type=ReportType.USEREVENT_BASE, event=event, level=self.retmsg.msglevel)
         return self.retmsg
 
 class dhcpdiscover(eventhandler):
     def handler(self):
-        self.retmsg.level = Msglevel.WARNING
-        self.retmsg.color = maplevel2color(self.retmsg.level)
+        self.retmsg.msglevel = Msglevel.DEBUG
+        self.retmsg.color = maplevel2color(self.retmsg.msglevel)
         self.retmsg.msg = "DHCP Discover"
         return self.retmsg
 
@@ -1276,8 +1334,8 @@ class dhcpack(eventhandler):
     '''
     def handler(self):
         ip = str(self.match.group(1)).strip()
-        self.retmsg.level = Msglevel.WARNING
-        self.retmsg.color = maplevel2color(self.retmsg.level)
+        self.retmsg.msglevel = Msglevel.INFO
+        self.retmsg.color = maplevel2color(self.retmsg.msglevel)
         self.retmsg.msg = "DHCP Get new IP: " + ip
         return self.retmsg
 
@@ -1285,10 +1343,10 @@ class dhcpack(eventhandler):
 class pingfail(eventhandler):
     def handler(self):
         self.retmsg.msg = self.match.group(1)
-        self.retmsg.level = Msglevel.ERROR
+        self.retmsg.msglevel = Msglevel.ERROR
 
         event=mapzhphrase("pingfail", ReportScenariophrase)
-        self.retmsg.report = constructReport(type=ReportType.SCEEVENT_BASE, event=event, level=self.retmsg.level)
+        self.retmsg.report = constructReport(type=ReportType.SCEEVENT_BASE, event=event, level=self.retmsg.msglevel)
         return self.retmsg
 
 class pingmsg(eventhandler):
@@ -1299,8 +1357,8 @@ class pingmsg(eventhandler):
     def handler(self):
         pingcount = str(int(self.match.group(1))+1).strip()
         pingstring = str(self.match.group(2)).strip()
-        self.retmsg.level = Msglevel.WARNING
-        self.retmsg.color = maplevel2color(self.retmsg.level)
+        self.retmsg.msglevel = Msglevel.INFO
+        self.retmsg.color = maplevel2color(self.retmsg.msglevel)
         index = "th"
         if pingcount == "1":
             index = "st"
@@ -1321,8 +1379,8 @@ class ikeroaming(eventhandler):
         hplmn = str(self.match.group(2)).strip()
         vplmn = str(self.match.group(3)).strip()
         static = str(self.match.group(4)).strip()
-        self.retmsg.level = Msglevel.WARNING
-        self.retmsg.color = maplevel2color(self.retmsg.level)
+        self.retmsg.msglevel = Msglevel.INFO
+        self.retmsg.color = maplevel2color(self.retmsg.msglevel)
         roamstr = "Roaming Type: " + roamingtype + '\n'
         hplmnstr = "HPLMN: " + hplmn + '\n'
         vplmnstr = "VPLMN: " + vplmn + '\n'
@@ -1332,8 +1390,8 @@ class ikeroaming(eventhandler):
 
 class networktype(eventhandler):
     def handler(self):
-        self.retmsg.level = Msglevel.WARNING
-        self.retmsg.color = maplevel2color(self.retmsg.level)
+        self.retmsg.msglevel = Msglevel.DEBUG
+        self.retmsg.color = maplevel2color(self.retmsg.msglevel)
         networktype = str(self.match.group(1)).strip()
         networktype = mapcode2str(networktype, ConstantNetworkType)
         self.retmsg.msg = "Network Type: " + networktype
@@ -1341,8 +1399,8 @@ class networktype(eventhandler):
 
 class teleaction(eventhandler):
     def handler(self):
-        self.retmsg.level = Msglevel.WARNING
-        self.retmsg.color = maplevel2color(self.retmsg.level)
+        self.retmsg.msglevel = Msglevel.INFO
+        self.retmsg.color = maplevel2color(self.retmsg.msglevel)
         msgtype = str(self.match.group(1)).strip()
         msgtype = mapcode2str(msgtype, Constanttelemsg)
         self.retmsg.msg = msgtype
@@ -1350,22 +1408,22 @@ class teleaction(eventhandler):
 
 class adddrerror(eventhandler):
     def handler(self):
-        self.retmsg.level = Msglevel.ERROR
-        self.retmsg.color = maplevel2color(self.retmsg.level)
+        self.retmsg.msglevel = Msglevel.ERROR
+        self.retmsg.color = maplevel2color(self.retmsg.msglevel)
 
         drerror = "Failed to update the data router state"
         self.retmsg.msg = drerror
         event = mapzhphrase("adddrerror", ReportScenariophrase)
-        self.retmsg.report = constructReport(type=ReportType.SCEEVENT_BASE, event=event, level=self.retmsg.level)
+        self.retmsg.report = constructReport(type=ReportType.SCEEVENT_BASE, event=event, level=self.retmsg.msglevel)
         return self.retmsg
 
 class regstatewrongcallfail(eventhandler):
     def handler(self):
-        self.retmsg.level = Msglevel.ERROR
-        self.retmsg.color = maplevel2color(self.retmsg.level)
+        self.retmsg.msglevel = Msglevel.ERROR
+        self.retmsg.color = maplevel2color(self.retmsg.msglevel)
         self.retmsg.msg = "VoWiFi not Registered.\nEnd Call!"
         event=mapzhphrase("unregcallfail", ReportScenariophrase)
-        self.retmsg.report = constructReport(type=ReportType.SCEEVENT_BASE, event=event, level=self.retmsg.level)
+        self.retmsg.report = constructReport(type=ReportType.SCEEVENT_BASE, event=event, level=self.retmsg.msglevel)
         return self.retmsg
 
 class sendsms(eventhandler):
@@ -1373,8 +1431,8 @@ class sendsms(eventhandler):
     retry times , messageref, smsmsg
     '''
     def handler(self):
-        self.retmsg.level = Msglevel.WARNING
-        self.retmsg.color = maplevel2color(self.retmsg.level)
+        self.retmsg.msglevel = Msglevel.INFO
+        self.retmsg.color = maplevel2color(self.retmsg.msglevel)
         retry = str(self.match.group(1)).strip()
         #idstr = "messageRef: " + str(self.match.group(2)).strip() + '\n'
         smsmsg = str(self.match.group(2)).strip()
@@ -1383,7 +1441,7 @@ class sendsms(eventhandler):
             retrystr = "Retry: " + retry + " times"
         self.retmsg.msg = "Send Sms: " + smsmsg + '\n' + retrystr
         event=mapzhphrase("sendsms", ReportScenariophrase)
-        self.retmsg.report = constructReport(type=ReportType.SCEEVENT_BASE, event=event, level=self.retmsg.level)
+        self.retmsg.report = constructReport(type=ReportType.SCEEVENT_BASE, event=event, level=self.retmsg.msglevel)
         return self.retmsg
 
 
@@ -1392,8 +1450,8 @@ class smspair(eventhandler):
     messageref, id
     '''
     def handler(self):
-        self.retmsg.level = Msglevel.WARNING
-        self.retmsg.color = maplevel2color(self.retmsg.level)
+        self.retmsg.msglevel = Msglevel.INFO
+        self.retmsg.color = maplevel2color(self.retmsg.msglevel)
         messageRefstr = "messageRef: " + str(self.match.group(1)).strip() + '\n'
         idstr = "ID: " + str(self.match.group(2)).strip() + '\n'
         self.retmsg.msg = messageRefstr + idstr
@@ -1404,8 +1462,8 @@ class sendsmsok(eventhandler):
     id, smstype
     '''
     def handler(self):
-        self.retmsg.level = Msglevel.WARNING
-        self.retmsg.color = maplevel2color(self.retmsg.level)
+        self.retmsg.msglevel = Msglevel.NORMAL
+        self.retmsg.color = maplevel2color(self.retmsg.msglevel)
         idstr = "ID: " + str(self.match.group(1)).strip() + '\n'
         smstype = str(self.match.group(2)).strip()
         smstype = mapcode2str(smstype, ConstantSmsType)
@@ -1413,7 +1471,7 @@ class sendsmsok(eventhandler):
         self.retmsg.msg = "Send Sms OK\n" + idstr + smsstr
 
         event=mapzhphrase("sendsmsok", ReportScenariophrase, post=smstype)
-        self.retmsg.report = constructReport(type=ReportType.SCEEVENT_BASE, event=event, level=self.retmsg.level)
+        self.retmsg.report = constructReport(type=ReportType.SCEEVENT_BASE, event=event, level=self.retmsg.msglevel)
         return self.retmsg
 
 class sendsmsok2(eventhandler):
@@ -1421,8 +1479,8 @@ class sendsmsok2(eventhandler):
     msgref
     '''
     def handler(self):
-        self.retmsg.level = Msglevel.WARNING
-        self.retmsg.color = maplevel2color(self.retmsg.level)
+        self.retmsg.msglevel = Msglevel.NORMAL
+        self.retmsg.color = maplevel2color(self.retmsg.msglevel)
         msgrefstr = "messageRef: " + str(self.match.group(1)).strip() + '\n'
         self.retmsg.msg = "Send Sms OK\n" + msgrefstr
         return self.retmsg
@@ -1432,8 +1490,8 @@ class sendsmsfailed(eventhandler):
     messageRef, smstype, errorcode
     '''
     def handler(self):
-        self.retmsg.level = Msglevel.ERROR
-        self.retmsg.color = maplevel2color(self.retmsg.level)
+        self.retmsg.msglevel = Msglevel.ERROR
+        self.retmsg.color = maplevel2color(self.retmsg.msglevel)
         idstr = "ID: " + str(self.match.group(1)).strip() + '\n'
         smstype = str(self.match.group(2)).strip()
         smstype = mapcode2str(smstype, ConstantSmsType)
@@ -1441,46 +1499,46 @@ class sendsmsfailed(eventhandler):
         error = str(self.match.group(3)).strip()
         errorstr = "Error State: " + error+ '-->' + mapcode2str(error, ConstantImmsg)
         event=mapzhphrase("sendsmsfailed", ReportScenariophrase, post=smstype)
-        self.retmsg.report = constructReport(type=ReportType.SCEEVENT_BASE, event=event, level=self.retmsg.level)
+        self.retmsg.report = constructReport(type=ReportType.SCEEVENT_BASE, event=event, level=self.retmsg.msglevel)
         self.retmsg.msg = "Send Sms Failed!\n" + idstr + smsstr + errorstr
         return self.retmsg
 
 class smstimeout(eventhandler):
     def handler(self):
-        self.retmsg.level = Msglevel.ERROR
-        self.retmsg.color = maplevel2color(self.retmsg.level)
+        self.retmsg.msglevel = Msglevel.ERROR
+        self.retmsg.color = maplevel2color(self.retmsg.msglevel)
         messageRefstr = "messageRef: " + str(self.match.group(1)).strip() + '\n'
         self.retmsg.msg = "Send Sms timeout!\n" + messageRefstr
         event=mapzhphrase("sendsmstimeout", ReportScenariophrase)
-        self.retmsg.report = constructReport(type=ReportType.SCEEVENT_BASE, event=event, level=self.retmsg.level)
+        self.retmsg.report = constructReport(type=ReportType.SCEEVENT_BASE, event=event, level=self.retmsg.msglevel)
         return self.retmsg
 
 class recvsms(eventhandler):
     def handler(self):
-        self.retmsg.level = Msglevel.WARNING
-        self.retmsg.color = maplevel2color(self.retmsg.level)
+        self.retmsg.msglevel = Msglevel.INFO
+        self.retmsg.color = maplevel2color(self.retmsg.msglevel)
         idstr = "ID: " + str(self.match.group(1)).strip() + '\n'
         self.retmsg.msg = "Receive Sms \n" + idstr
         event=mapzhphrase("recvsms", ReportScenariophrase)
-        self.retmsg.report = constructReport(type=ReportType.SCEEVENT_BASE, event=event, level=self.retmsg.level)
+        self.retmsg.report = constructReport(type=ReportType.SCEEVENT_BASE, event=event, level=self.retmsg.msglevel)
         return self.retmsg
 
 class recvsms2(eventhandler):
     def handler(self):
-        self.retmsg.level = Msglevel.WARNING
-        self.retmsg.color = maplevel2color(self.retmsg.level)
+        self.retmsg.msglevel = Msglevel.INFO
+        self.retmsg.color = maplevel2color(self.retmsg.msglevel)
         msgrefstr = "messageRef: " + str(self.match.group(1)).strip() + '\n'
         self.retmsg.msg = "Receive Sms \n" + msgrefstr
         return self.retmsg
 
 class smsack(eventhandler):
     def handler(self):
-        self.retmsg.level = Msglevel.WARNING
-        self.retmsg.color = maplevel2color(self.retmsg.level)
+        self.retmsg.msglevel = Msglevel.INFO
+        self.retmsg.color = maplevel2color(self.retmsg.msglevel)
         msgrefstr = "messageRef: " + str(self.match.group(1)).strip() + '\n'
         self.retmsg.msg = "Send Sms ACK\n" + msgrefstr
         event=mapzhphrase("sendsmsack", ReportScenariophrase)
-        self.retmsg.report = constructReport(type=ReportType.SCEEVENT_BASE, event=event, level=self.retmsg.level)
+        self.retmsg.report = constructReport(type=ReportType.SCEEVENT_BASE, event=event, level=self.retmsg.msglevel)
         return self.retmsg
 
 if __name__ == '__main__':

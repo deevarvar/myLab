@@ -709,7 +709,7 @@ phoneEvent.addEvent("(Failed to send the modify request) for the call", module_P
 ###TODO: set pause image, not common function
 phoneEvent.addEvent("Set the pause image to.*", module_Phone)
 ###invite conf call
-phoneEvent.addEvent("(Try to invite this call.*to the conference call.*)", module_Phone)
+phoneEvent.addEvent("Try to invite this call(.*)to the conference call(.*)", module_Phone, eventType=eventType.EDGE, eventHandler=invite2conf)
 
 phoneEvent.addEvent("The handler get the message: (\d+)", module_Phone, eventType=eventType.EDGE, eventHandler=teleaction)
 

@@ -22,16 +22,21 @@ from operator import itemgetter
 class Msglevel():
     DEBUG = 1
     INFO = 2
-    WARNING = 3
-    ERROR = 4
+    NORMAL = 3
+    WARNING = 4
+    ERROR = 5
 
 def maplevel2color(level):
-    if level <= Msglevel.INFO:
-        return "black";
-    elif level == Msglevel.WARNING:
+    if level == Msglevel.INFO:
         return "blue"
-    else:
+    elif level == Msglevel.WARNING:
+        return "brown"
+    elif level == Msglevel.ERROR:
         return "red"
+    elif level == Msglevel.NORMAL:
+        return "green"
+    else:
+        return "black"
 
 #define some event types: user, phone, scenarioes, handover algo
 class ReportType():
