@@ -616,12 +616,14 @@ phoneEvent.addEvent("Accept an incoming call with call type is (.*)", module_Pho
 ### lemon async send answer msg, so always right.
 #phoneEvent.addEvent("(Native accept the incoming call failed)", module_Phone, eventType=eventType.EDGE, eventHandler=defaultfailed)
 
+#seems Notify the event: {"event_code":105,"event_name":"call_terminate","id":3,"state_code":335}
+#will conver most cases.
 ###reject
-phoneEvent.addEvent("Reject an incoming call as the reason is (.*)", module_Phone, eventType=eventType.EDGE, eventHandler=rejectcall)
+#phoneEvent.addEvent("Reject an incoming call as the reason is (.*)", module_Phone, eventType=eventType.EDGE, eventHandler=rejectcall)
 #phoneEvent.addEvent("(Native reject the incoming call failed)", module_Phone, eventType=eventType.EDGE, eventHandler=defaultfailed)
 
 ###terminate
-phoneEvent.addEvent("Terminate a call as the reason is (.*)", module_Phone, eventType=eventType.EDGE, eventHandler=termcall)
+#phoneEvent.addEvent("Terminate a call as the reason is (.*)", module_Phone, eventType=eventType.EDGE, eventHandler=termcall)
 #term failed will not come here, lemon async
 #phoneEvent.addEvent("(Native terminate a call failed)", module_Phone, eventType=eventType.EDGE, eventHandler=defaultfailed)
 

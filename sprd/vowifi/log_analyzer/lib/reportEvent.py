@@ -276,6 +276,7 @@ class ReportEvent():
                         if report['level'] == Msglevel.WARNING and event not in self.warnevent:
                             self.warnevent.append(event)
 
+
                         #there will three kinds of tables
                         if rtype == ReportType.USEREVENT_BASE:
                             self.genEventTable(report, self.getTlist('usertable'))
@@ -334,6 +335,11 @@ class ReportEvent():
         elif content in self.normalevent:
             bgcolor = "green"
 
+        '''
+        color debug...
+        if 'TermCall' in content:
+            self.logger.logger.info('zhihuaye' + content + '  ' + bgcolor)
+        '''
         columnstr = ""
         columnstr += "<td style=\"background-color:" + bgcolor + "\">" + content + "</td>"
         return columnstr

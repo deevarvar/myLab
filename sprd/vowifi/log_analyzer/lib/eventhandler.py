@@ -595,6 +595,8 @@ class servicecallback(eventhandler):
         #there will event skipped, which means other key will have better phrase
         skipevent = list()
         skipevent.append('call_terminate')
+        skipevent.append("call_rtp_received")
+        skipevent.append("conf_rtp_received")
 
 
         #event to be ignored, like rtcp changed
@@ -629,8 +631,6 @@ class servicecallback(eventhandler):
 
         infoevent.append("conf_outgoing")
         infoevent.append("call_outgoing")
-        infoevent.append("call_rtp_received")
-        infoevent.append("conf_rtp_received")
 
         #some browncolor, other infoevent will be green
         browncolor = list()
@@ -680,27 +680,42 @@ class servicecallback(eventhandler):
                     self.retmsg.report = constructReport(type=ReportType.SCEEVENT_BASE,event=event, level=self.retmsg.msglevel)
 
                 eventstr = 'Event: ' + curevent + '\n'
-            if servicejson['event_name'] == "call_terminate":
+            if curevent == "call_terminate":
                 if 'state_code' in servicejson:
-                    termreason = 'Term Call: ' + mapcode2str(str(servicejson['state_code']), Constantimsreason) + '\n'
+                    imsreason =  mapcode2str(str(servicejson['state_code']), Constantimsreason)
+                    termreason = 'Term Call: ' + imsreason + '\n'
                     self.retmsg.msglevel = Msglevel.WARNING
                     self.retmsg.color = maplevel2color(self.retmsg.msglevel)
-                    #FIXME: add report
+                    event = mapzhphrase("call_terminate", ReportScenariophrase, post=imsreason)
+                    self.retmsg.report = constructReport(type=ReportType.SCEEVENT_BASE,event=event, level=self.retmsg.msglevel)
 
-            if servicejson['event_name'] == "call_rtp_received":
+            if curevent == "call_rtp_received" or curevent == "conf_rtp_received":
                 if 'rtp_received' in servicejson:
                     #python will convert true to True, false to False
                     rtpstate = str(servicejson['rtp_received']).lower()
                     if rtpstate == 'true':
-                        rtprecv = "RTP received\n"
+
                         self.retmsg.msglevel = Msglevel.NORMAL
                         self.retmsg.color = maplevel2color(self.retmsg.msglevel)
+                        if curevent == "call_rtp_received":
+                            rtprecv = "RTP received\n"
+                            event = mapzhphrase("callrtp", ReportScenariophrase)
+                        else:
+                            rtprecv = "Conf RTP received\n"
+                            event = mapzhphrase("confrtp", ReportScenariophrase)
+                        self.retmsg.report = constructReport(type=ReportType.SCEEVENT_BASE,event=event, level=self.retmsg.msglevel)
                     else:
                         #show error msg.
-                        self.retmsg.msglevel = Msglevel.ERROR
+                        #service no rtp ,but need ImsCM confirm
+                        self.retmsg.msglevel = Msglevel.WARNING
                         self.retmsg.color = maplevel2color(self.retmsg.msglevel)
-                        rtprecv = "No RTP received\n"
-
+                        if curevent == "call_rtp_received":
+                            rtprecv = "No RTP received\n"
+                            event = mapzhphrase("callnortp", ReportScenariophrase)
+                        else:
+                            rtprecv = "Conf No RTP received\n"
+                            event = mapzhphrase("confnortp", ReportScenariophrase)
+                        self.retmsg.report = constructReport(type=ReportType.SCEEVENT_BASE,event=event, level=self.retmsg.msglevel)
 
         if 'id' in servicejson:
             callidstr = "Callid: " + str(servicejson['id']) + '\n'

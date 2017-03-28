@@ -33,10 +33,13 @@
 #        ImsReasonInfo.java, more definition
 # 03-27 15:10:06.227  1134  1134 I [VoWifiService]VoWifiSerService: Notify the event: {"event_code":105,"event_name":"call_terminate","id":1,"state_code":146}
 #         D:\code\log\srvcc\503\slog_20170327151140_sp9832a_2h11_4mvolt_vowif_userdebu\external_storage\ylog\ylog
-##      8.2.2 ap color, servicecallback : talking, ok should be green
+##      8.1.6 ap color, servicecallback : talking, ok should be green
+#       8.1.7 srvcc report
+#      8.1.8 call_terminate report
 #TODO:
 #      8.2.1 call session
-#      8.2.2 srvcc report, call_terminate report
+
+#      8.2.3 all success/failed event, only care about handover, register,call
 
 #      8.2.300 regstatus add refresh failed
 
@@ -467,15 +470,25 @@ ReportScenariophrase["conf_outgoing"] = langBuilder(zh="播出会议电话", en=
 ReportScenariophrase["call_outgoing"] = dict()
 ReportScenariophrase["call_outgoing"] = langBuilder(zh="播出电话", en="Call Outgoing")
 
-ReportScenariophrase["call_rtp_received"] = dict()
-ReportScenariophrase["call_rtp_received"] = langBuilder(zh="电话收到语音", en="RTP Received")
+ReportScenariophrase["callrtp"] = dict()
+ReportScenariophrase["callrtp"] = langBuilder(zh="电话收到语音", en="RTP Received")
 
-ReportScenariophrase["conf_rtp_received"] = dict()
-ReportScenariophrase["conf_rtp_received"] = langBuilder(zh="会议电话收到语音", en="Conf RTP Received")
+ReportScenariophrase["confrtp"] = dict()
+ReportScenariophrase["confrtp"] = langBuilder(zh="会议电话收到语音", en="Conf RTP Received")
+
+ReportScenariophrase["callnortp"] = dict()
+ReportScenariophrase["callnortp"] = langBuilder(zh="电话没收到语音", en="No RTP Received")
+
+ReportScenariophrase["confnortp"] = dict()
+ReportScenariophrase["confnortp"] = langBuilder(zh="会议电话没收到语音", en="No Conf RTP Received")
 
 
 ReportScenariophrase["adddrerror"] = dict()
 ReportScenariophrase["adddrerror"] = langBuilder(en="Failed to Update DataRouter")
+
+ReportScenariophrase["call_terminate"] = dict()
+ReportScenariophrase["call_terminate"] = langBuilder(zh="电话挂断因为 ", en="TermCall As ")
+
 
 ReportCpphrase = dict()
 ReportCpphrase["PDN connection established"] = dict()
