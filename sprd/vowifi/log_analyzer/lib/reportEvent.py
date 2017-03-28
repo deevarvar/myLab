@@ -26,6 +26,7 @@ class Msglevel():
     WARNING = 4
     ERROR = 5
 
+
 def maplevel2color(level):
     if level == Msglevel.INFO:
         return "blue"
@@ -41,9 +42,10 @@ def maplevel2color(level):
 #define some event types: user, phone, scenarioes, handover algo
 class ReportType():
     USEREVENT_BASE = 0x1000
-    PHONEEVENT_BASE = 0x2000
-    SCEEVENT_BASE = 0x3000
-    HOALGO_BASE = 0x4000
+    CPEVENT_BASE = 0x2000
+    PHONEEVENT_BASE = 0x3000
+    SCEEVENT_BASE = 0x4000
+    HOALGO_BASE = 0x5000
 
 #1. these types are added in eventhandler.py
 #2. constructReport will build the report
@@ -67,6 +69,14 @@ class ReportEvent():
             #error event need to be marked red
             #use Msglevel.ERROR to indicate
             self.errorevent = list()
+
+            #Msglevel.INFO ,blue
+            self.infoevent = list()
+            #Msglevel.WARNING, brown
+            self.warnevent = list()
+            #Msglevel.NORMAL, green
+            self.normalevent = list()
+
 
             #record every report, the Raw Data
             self.reportlist = list()
@@ -110,6 +120,12 @@ class ReportEvent():
             hoalgotable['title'] = "Handover Strategy Statistics"
             hoalgotable['flowtitle'] = "Handover Strategy Flow"
 
+            cptable = dict()
+            cptable['list'] = list()
+            cptable['name'] = 'cptable'
+            cptable['flowname'] = 'cpflowtable'
+            cptable['title'] = 'CP Action Statistics'
+            cptable['flowtitle'] = 'CP Action Flow'
 
             etable = dict()
             etable['list'] = list()
@@ -121,6 +137,7 @@ class ReportEvent():
             self.tables['scenariotable'] = scenariotable
             self.tables['etable'] = etable
             self.tables['hoalgotable'] = hoalgotable
+            self.tables['cptable'] = cptable
 
             self.tableattr = dict()
             #for event table
@@ -247,8 +264,17 @@ class ReportEvent():
                         '''
                         event = report['event'].strip('\n')
                         #record error event
-                        if report['level'] == Msglevel.ERROR:
+                        if report['level'] == Msglevel.ERROR and event not in self.errorevent:
                             self.errorevent.append(event)
+
+                        if report['level'] == Msglevel.NORMAL and event not in self.normalevent:
+                            self.normalevent.append(event)
+
+                        if report['level'] == Msglevel.INFO and event not in self.infoevent:
+                            self.infoevent.append(event)
+
+                        if report['level'] == Msglevel.WARNING and event not in self.warnevent:
+                            self.warnevent.append(event)
 
                         #there will three kinds of tables
                         if rtype == ReportType.USEREVENT_BASE:
@@ -259,6 +285,8 @@ class ReportEvent():
                             self.genEventTable(report, self.getTlist('scenariotable'))
                         elif rtype ==  ReportType.HOALGO_BASE:
                             self.genEventTable(report, self.getTlist('hoalgotable'))
+                        elif rtype == ReportType.CPEVENT_BASE:
+                            self.genEventTable(report, self.getTlist('cptable'))
 
 
     def genheaderopen(self):
@@ -299,6 +327,12 @@ class ReportEvent():
         bgcolor = "white"
         if content in self.errorevent:
             bgcolor = "red"
+        elif content in self.warnevent:
+            bgcolor = "brown"
+        elif content in self.infoevent:
+            bgcolor = "blue"
+        elif content in self.normalevent:
+            bgcolor = "green"
 
         columnstr = ""
         columnstr += "<td style=\"background-color:" + bgcolor + "\">" + content + "</td>"
@@ -338,6 +372,7 @@ class ReportEvent():
     def genOverviewIndex(self):
         overviewstr = ''
         username = self.getTname('usertable')
+        cpname = self.getTname('cptable')
         phonename = self.getTname('phonetable')
         scenarioname = self.getTname('scenariotable')
         hoalgoname = self.getTname('hoalgotable')
@@ -350,6 +385,9 @@ class ReportEvent():
         #add the id
         userastr = self.genaref(self.getTitle('usertable'), '#' + username)
         overviewstr += self.genli(userastr)
+
+        cpastr = self.genaref(self.getTitle('cptable'), '#' + cpname)
+        overviewstr += self.genli(cpastr)
 
         phoneastr = self.genaref(self.getTitle('phonetable'), '#' + phonename)
         overviewstr += self.genli(phoneastr)
@@ -498,9 +536,11 @@ class ReportEvent():
 
         etablehtml = ""
         etablehtml += self.genOneTableHTML(caption=testcaption, thlist=thlist,tablelist=self.getTlist('usertable'), tabletitle=self.getTitle('usertable'), tableid=self.getTname('usertable'), rowgen=self.genstatsrow)
+        etablehtml += self.genOneTableHTML(caption=testcaption, thlist=thlist,tablelist=self.getTlist('cptable'), tabletitle=self.getTitle('cptable'), tableid=self.getTname('cptable'),rowgen=self.genstatsrow)
         etablehtml += self.genOneTableHTML(caption=testcaption, thlist=thlist,tablelist=self.getTlist('phonetable'), tabletitle=self.getTitle('phonetable'), tableid=self.getTname('phonetable'),rowgen=self.genstatsrow)
         etablehtml += self.genOneTableHTML(caption=testcaption, thlist=thlist,tablelist=self.getTlist('scenariotable'), tabletitle=self.getTitle('scenariotable'), tableid=self.getTname('scenariotable'),rowgen=self.genstatsrow)
         etablehtml += self.genOneTableHTML(caption=testcaption, thlist=thlist,tablelist=self.getTlist('hoalgotable'), tabletitle=self.getTitle('hoalgotable'), tableid=self.getTname('hoalgotable'),rowgen=self.genstatsrow)
+
         return etablehtml
 
     def genhorizonline(self):
@@ -560,12 +600,14 @@ class ReportEvent():
         phonetable = self.getTlist('phonetable')
         scenariotable = self.getTlist('scenariotable')
         hoalgotable  = self.getTlist('hoalgotable')
+        cptable = self.getTlist('cptable')
 
-        etable = usertable + phonetable + scenariotable + hoalgotable
+        etable = usertable + phonetable + scenariotable + hoalgotable + cptable
 
         #sort the output by occurence descending
         usertable = sorted(usertable, key=itemgetter('enamecount'),  reverse=True)
         phonetable = sorted(phonetable, key=itemgetter('enamecount'),  reverse=True)
+        cptable = sorted(cptable, key=itemgetter('enamecount'),  reverse=True)
         scenariotable = sorted(scenariotable, key=itemgetter('enamecount'),  reverse=True)
         etable = sorted(etable, key=itemgetter('enamecount'),  reverse=True)
 
@@ -573,6 +615,7 @@ class ReportEvent():
         self.setTlist('usertable',usertable)
         self.setTlist('phonetable', phonetable)
         self.setTlist('scenariotable',scenariotable)
+        self.setTlist('cptable', cptable)
 
     def reorderdetaillist(self, table):
         '''
@@ -603,9 +646,15 @@ class ReportEvent():
         scenariotablelist = self.reorderdetaillist(scenariotable)
         hoalgotable = self.getTlist('hoalgotable')
         hoalgotablelist = self.reorderdetaillist(hoalgotable)
+
+        cptable = self.getTlist('cptable')
+        cptablelist = self.reorderdetaillist(cptable)
+
         caption = "Flow Table"
         thlist = self.tableattr['errtable']['thlist']
         ftablestr += self.genOneTableHTML(caption=caption, thlist=thlist,tablelist=usertablelist, tabletitle=self.getFlowTitle('usertable'), tableid=self.getTflowname('usertable'), rowgen=self.genflowrow)
+
+        ftablestr += self.genOneTableHTML(caption=caption, thlist=thlist,tablelist=cptablelist, tabletitle=self.getFlowTitle('cptable'), tableid=self.getTflowname('cptable'), rowgen=self.genflowrow)
 
         ftablestr += self.genOneTableHTML(caption=caption, thlist=thlist,tablelist=phonetablelist, tabletitle=self.getFlowTitle('phonetable'), tableid=self.getTflowname('phonetable'),rowgen=self.genflowrow)
 

@@ -626,6 +626,7 @@ class servicecallback(eventhandler):
         infoevent.append("conf_resume_ok")
         infoevent.append("conf_hold_received")
         infoevent.append("conf_resume_received")
+
         infoevent.append("conf_outgoing")
         infoevent.append("call_outgoing")
         infoevent.append("call_rtp_received")
@@ -1025,7 +1026,7 @@ class s2bstatus(eventhandler):
                 event = mapzhphrase("stopped_abnormally", Reports2bphrase)
                 self.retmsg.report = constructReport(event=event, level=self.retmsg.msglevel, errorstr=mappedstr)
             else:
-                self.retmsg.msglevel = Msglevel.INFO
+                self.retmsg.msglevel = Msglevel.WARNING
                 event = mapzhphrase("stopped", Reports2bphrase)
                 self.retmsg.report = constructReport(event=event, level=self.retmsg.msglevel, errorstr=mappedstr)
 

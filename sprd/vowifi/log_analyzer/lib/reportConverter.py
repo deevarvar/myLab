@@ -461,9 +461,62 @@ ReportScenariophrase["conf_hold_failed"] = langBuilder(zh="会议电话保持失
 ReportScenariophrase["conf_resume_failed"] = dict()
 ReportScenariophrase["conf_resume_failed"] = langBuilder(zh="会议电话恢复失败", en="Failed to resume Conference call")
 
+ReportScenariophrase["conf_outgoing"] = dict()
+ReportScenariophrase["conf_outgoing"] = langBuilder(zh="播出会议电话", en="Conf Call Outgoing")
+
+ReportScenariophrase["call_outgoing"] = dict()
+ReportScenariophrase["call_outgoing"] = langBuilder(zh="播出电话", en="Call Outgoing")
+
+ReportScenariophrase["call_rtp_received"] = dict()
+ReportScenariophrase["call_rtp_received"] = langBuilder(zh="电话收到语音", en="RTP Received")
+
+ReportScenariophrase["conf_rtp_received"] = dict()
+ReportScenariophrase["conf_rtp_received"] = langBuilder(zh="会议电话收到语音", en="Conf RTP Received")
+
 
 ReportScenariophrase["adddrerror"] = dict()
 ReportScenariophrase["adddrerror"] = langBuilder(en="Failed to Update DataRouter")
+
+ReportCpphrase = dict()
+ReportCpphrase["PDN connection established"] = dict()
+ReportCpphrase["PDN connection established"] = langBuilder(zh="PDN激活", en="PDN connection established")
+
+ReportCpphrase["PDN connection request"] = dict()
+ReportCpphrase["PDN connection request"] = langBuilder(zh="发起PDN请求", en="PDN connection request")
+
+ReportCpphrase["Deactivate PDN connection"] = dict()
+ReportCpphrase["Deactivate PDN connection"] = langBuilder(zh="PDN去激活", en="Deactivate PDN connection")
+
+ReportCpphrase["VoLTE Unregistered"] = dict()
+ReportCpphrase["VoLTE Unregistered"] = langBuilder(zh="VoLTE去注册", en="VoLTE Unregistered")
+
+ReportCpphrase["VoLTE Registered"] = dict()
+ReportCpphrase["VoLTE Registered"] = langBuilder(zh="VoLTE注册成功", en="VoLTE Registeredd")
+
+ReportCpphrase["VoLTE Register fail"] = dict()
+ReportCpphrase["VoLTE Register fail"] = langBuilder(zh="VoLTE注册失败", en="VoLTE Register fail")
+
+ReportCpphrase["VoLTE De-Registering"] = dict()
+ReportCpphrase["VoLTE De-Registering"] = langBuilder(zh="VoLTE正在去注册", en="VoLTE De-Registering")
+
+ReportCpphrase["No RTP data!"] = dict()
+ReportCpphrase["No RTP data!"] = langBuilder(en="No RTP data!")
+
+ReportCpphrase["Enable VoLTE IMS"] = dict()
+ReportCpphrase["Enable VoLTE IMS"] = langBuilder(en="Enable VoLTE IMS")
+
+ReportCpphrase["PS to CS SRVCC Started"] = dict()
+ReportCpphrase["PS to CS SRVCC Started"] = langBuilder(zh="SRVCC开始", en="SRVCC Started")
+
+ReportCpphrase["PS to CS SRVCC Successfully"] = dict()
+ReportCpphrase["PS to CS SRVCC Successfully"] = langBuilder(zh="SRVCC成功", en="SRVCC Successfully")
+
+ReportCpphrase["PS to CS SRVCC Cancelled"] = dict()
+ReportCpphrase["PS to CS SRVCC Cancelled"] = langBuilder(zh="SRVCC取消", en="SRVCC Cancelled")
+
+ReportCpphrase["PS to CS SRVCC Failed"] = dict()
+ReportCpphrase["PS to CS SRVCC Failed"] = langBuilder(zh="SRVCC失败", en="SRVCC Failed")
+
 
 
 #write a report builder

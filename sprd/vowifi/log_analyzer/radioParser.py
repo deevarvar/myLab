@@ -20,7 +20,7 @@ from lib.utils import utils
 
 from lib.sprdErrCode import *
 from lib.reportEvent import *
-
+from lib.reportConverter import *
 
 
 path = os.path.dirname(os.path.realpath(__file__))
@@ -31,6 +31,16 @@ class actionBuilder():
         self.eventname = ''
         self.color = "black"
         self.msglevel = Msglevel.INFO
+
+        self.report = dict()
+        self.report['type'] = None
+        self.report['event'] = None
+        self.report['level'] = Msglevel.INFO
+        self.report['errorstr'] = None
+        self.report['lineno'] = None
+        self.report['line'] =  None
+        self.report['timestamp'] = None
+
 
     def setEventName(self, name):
         if name:
@@ -54,6 +64,10 @@ class actionBuilder():
         if self.color == "black":
             color = maplevel2color(level)
             self.color = color
+
+    def setReport(self, report):
+        if report:
+            self.report = report
 
     def setAll(self, eventname, msglevel, color):
         self.setEventName(eventname)
@@ -315,7 +329,7 @@ class radioParser():
         member should be eventname, color, msglevel
         '''
         atmsg['action'] = actionBuilder()
-
+        atmsg['report'] = None
 
         return atmsg
 
@@ -327,6 +341,7 @@ class radioParser():
         if state == '1':
             eventname =  "PDN connection established"
             color = 'green'
+            msglevel =  Msglevel.NORMAL
         elif state == '2':
             eventname =  "PDN connection request"
         elif state == '0':
@@ -336,6 +351,9 @@ class radioParser():
         else:
             eventname = "Unknow PDN state"
             msglevel = Msglevel.WARNING
+
+        event = mapzhphrase(eventname, ReportCpphrase)
+        action.report = constructReport(type=ReportType.CPEVENT_BASE, event=event, level=msglevel)
         action.setAll(eventname, msglevel,color)
         return action
 
@@ -392,15 +410,23 @@ class radioParser():
         if state == '0':
             eventname = "VoLTE Unregistered"
             color = 'brown'
+            msglevel = Msglevel.WARNING
+            event = mapzhphrase(eventname, ReportCpphrase)
+            action.report = constructReport(type=ReportType.CPEVENT_BASE, event=event, level=msglevel)
         elif state == '1':
             eventname = "VoLTE Registered"
             color = 'green'
+            msglevel = Msglevel.NORMAL
+            event = mapzhphrase(eventname, ReportCpphrase)
+            action.report = constructReport(type=ReportType.CPEVENT_BASE, event=event, level=msglevel)
         elif state == '2':
             eventname =  "VoLTE Registering"
         elif state == '3':
             eventname = "VoLTE Register fail"
             msglevel = Msglevel.ERROR
             color = 'red'
+            event = mapzhphrase(eventname, ReportCpphrase)
+            action.report = constructReport(type=ReportType.CPEVENT_BASE, event=event, level=msglevel)
         elif state == '4':
             eventname =  "Unknow state"
         elif state == '5':
@@ -408,6 +434,9 @@ class radioParser():
         elif state == '6':
             eventname = "VoLTE De-Registering"
             color = 'brown'
+            msglevel = Msglevel.WARNING
+            event = mapzhphrase(eventname, ReportCpphrase)
+            action.report = constructReport(type=ReportType.CPEVENT_BASE, event=event, level=msglevel)
         else:
             eventname =  "Unknown VoLTE Register state"
 
@@ -538,8 +567,10 @@ class radioParser():
             eventname = "receive RTP data"
         elif state == '1':
             eventname = "No RTP data!"
-            msglevel = Msglevel.ERROR
             color = 'red'
+            msglevel = Msglevel.ERROR
+            event = mapzhphrase(eventname, ReportCpphrase)
+            action.report = constructReport(type=ReportType.CPEVENT_BASE, event=event, level=msglevel)
         elif state == '2':
             eventname = "Clear RTP state"
         else:
@@ -552,9 +583,11 @@ class radioParser():
     def imsenable(self):
         eventname = ''
         color = 'blue'
-        msglevel = Msglevel.INFO
         action = actionBuilder()
         eventname  = "Enable VoLTE IMS"
+        msglevel = Msglevel.WARNING
+        event = mapzhphrase(eventname, ReportCpphrase)
+        action.report = constructReport(type=ReportType.CPEVENT_BASE, event=event, level=msglevel)
         action.setAll(eventname, msglevel, color)
         return action
 
@@ -676,26 +709,34 @@ class radioParser():
         action = actionBuilder()
         state = state.strip()
         if state == "0":
-            eventname = "PS to CS SRVCC Started!"
+            eventname = "PS to CS SRVCC Started"
             color = 'brown'
+            msglevel = Msglevel.WARNING
         elif state == "1":
             eventname = "PS to CS SRVCC Successfully"
+            msglevel = Msglevel.NORMAL
             color = 'green'
         elif state == "2":
             eventname = "PS to CS SRVCC Cancelled"
             color = 'red'
+            msglevel = Msglevel.ERROR
         elif state == "3":
             eventname = "PS to CS SRVCC Failed"
+            msglevel = Msglevel.ERROR
             color = 'red'
         else:
             eventname = "Unknown state when PS to CS SRVCC"
+
+        event = mapzhphrase(eventname, ReportCpphrase)
+        action.report = constructReport(type=ReportType.CPEVENT_BASE, event=event, level=msglevel)
+
         action.setAll(eventname, msglevel, color)
         return action
 
     def callinfosync(self, string):
         eventname = ''
         color = 'black'
-        msglevel = Msglevel.INFO
+        msglevel = Msglevel.WARNING
         action = actionBuilder()
         basestr = "Sync Call Info:\n"
         finalstr = ''
@@ -768,6 +809,10 @@ class radioParser():
         callstr = directstr
         finalstr =  basestr + num + ',' + callstr + ',' +  callstatestr + holdstatestr
         eventname = finalstr
+
+        event = mapzhphrase(eventname, ReportCpphrase)
+        action.report = constructReport(type=ReportType.CPEVENT_BASE, event=event, level=msglevel)
+
         color = 'brown'
         action.setAll(eventname, msglevel, color)
         return action
@@ -807,6 +852,7 @@ class radioParser():
                 else:
                     atmsg['action'] = actionfunc(state)
                 eventname = atmsg['action'].eventname
+                atmsg['report'] = atmsg['action'].report
                 self.logger.logger.debug('state is %s, action is %s' % (state, eventname))
 
             #only if the msg is not to be ignored...
