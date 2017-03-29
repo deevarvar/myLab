@@ -36,6 +36,10 @@
 ##      8.1.6 ap color, servicecallback : talking, ok should be green
 #       8.1.7 srvcc report
 #      8.1.8 call_terminate report
+#       9. radio log catagory
+#       9.1 FIXME: add at cmd result , log is too verboses....
+#           D:\code\iwhale2\log\cp_reject
+#       self.atmsgs, add field
 #TODO:
 #      8.2.1 call session
 
@@ -49,11 +53,6 @@
 #         2. DSCI
 #      8.1.100 ipsec cmd
 #
-
-#       9. radio log catagory
-#       9.1 FIXME: add at cmd result , log is too verboses....
-#           D:\code\iwhale2\log\cp_reject
-#       self.atmsgs, add field
 #       9.2 add CPVoiceAgent 's at parsing
 #           D:\code\log\bug_log\vit_log\2017_3_2\con_call
 #       at cmd
@@ -470,18 +469,26 @@ ReportScenariophrase["conf_outgoing"] = langBuilder(zh="播出会议电话", en=
 ReportScenariophrase["call_outgoing"] = dict()
 ReportScenariophrase["call_outgoing"] = langBuilder(zh="播出电话", en="Call Outgoing")
 
-ReportScenariophrase["callrtp"] = dict()
-ReportScenariophrase["callrtp"] = langBuilder(zh="电话收到语音", en="RTP Received")
+ReportScenariophrase["voicecallrtp"] = dict()
+ReportScenariophrase["voicecallrtp"] = langBuilder(zh="电话收到语音", en="Voice RTP Received")
+ReportScenariophrase["videocallrtp"] = dict()
+ReportScenariophrase["videocallrtp"] = langBuilder(zh="电话收到视频", en="Video RTP Received")
 
-ReportScenariophrase["confrtp"] = dict()
-ReportScenariophrase["confrtp"] = langBuilder(zh="会议电话收到语音", en="Conf RTP Received")
+ReportScenariophrase["voiceconfrtp"] = dict()
+ReportScenariophrase["voiceconfrtp"] = langBuilder(zh="会议电话收到语音", en="Conf Voice RTP Received")
+ReportScenariophrase["videoconfrtp"] = dict()
+ReportScenariophrase["videoconfrtp"] = langBuilder(zh="会议电话收到视频", en="Conf Video RTP Received")
 
-ReportScenariophrase["callnortp"] = dict()
-ReportScenariophrase["callnortp"] = langBuilder(zh="电话没收到语音", en="No RTP Received")
+ReportScenariophrase["voicecallnortp"] = dict()
+ReportScenariophrase["voicecallnortp"] = langBuilder(zh="电话没收到语音", en="No Voice RTP Received")
+ReportScenariophrase["videocallnortp"] = dict()
+ReportScenariophrase["videocallnortp"] = langBuilder(zh="电话没收到视频", en="No Video RTP Received")
 
-ReportScenariophrase["confnortp"] = dict()
-ReportScenariophrase["confnortp"] = langBuilder(zh="会议电话没收到语音", en="No Conf RTP Received")
+ReportScenariophrase["voiceconfnortp"] = dict()
+ReportScenariophrase["voiceconfnortp"] = langBuilder(zh="会议电话没收到语音", en="No Conf Voice RTP Received")
 
+ReportScenariophrase["videoconfnortp"] = dict()
+ReportScenariophrase["videoconfnortp"] = langBuilder(zh="会议电话没收到视频", en="No Conf Video RTP Received")
 
 ReportScenariophrase["adddrerror"] = dict()
 ReportScenariophrase["adddrerror"] = langBuilder(en="Failed to Update DataRouter")

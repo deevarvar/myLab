@@ -434,6 +434,7 @@ class ReportEvent():
         phonename = self.getTflowname('phonetable')
         scenarioname = self.getTflowname('scenariotable')
         hoalgoname = self.getTflowname('hoalgotable')
+        cpname = self.getTflowname('cptable')
         astr = self.genaref("Event Flow", '#' + username)
         flowstr += self.genli(astr)
 
@@ -441,6 +442,9 @@ class ReportEvent():
 
         userastr = self.genaref(self.getFlowTitle('usertable'), '#' + username)
         flowstr += self.genli(userastr)
+
+        cpastr = self.genaref(self.getFlowTitle('cptable'), '#' + username)
+        flowstr += self.genli(cpastr)
 
         phoneastr = self.genaref(self.getFlowTitle('phonetable'), '#' + phonename)
         flowstr += self.genli(phoneastr)

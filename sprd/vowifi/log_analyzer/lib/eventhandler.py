@@ -690,19 +690,28 @@ class servicecallback(eventhandler):
                     self.retmsg.report = constructReport(type=ReportType.SCEEVENT_BASE,event=event, level=self.retmsg.msglevel)
 
             if curevent == "call_rtp_received" or curevent == "conf_rtp_received":
-                if 'rtp_received' in servicejson:
+                if 'rtp_received' in servicejson and 'is_video' in servicejson:
                     #python will convert true to True, false to False
                     rtpstate = str(servicejson['rtp_received']).lower()
+                    isvideo = str(servicejson['is_video']).lower()
                     if rtpstate == 'true':
 
                         self.retmsg.msglevel = Msglevel.NORMAL
                         self.retmsg.color = maplevel2color(self.retmsg.msglevel)
-                        if curevent == "call_rtp_received":
-                            rtprecv = "RTP received\n"
-                            event = mapzhphrase("callrtp", ReportScenariophrase)
+                        if curevent == "call_rtp_received" :
+                            if isvideo == 'false':
+                                rtprecv = "Voice RTP received\n"
+                                event = mapzhphrase("voicecallrtp", ReportScenariophrase)
+                            else:
+                                rtprecv = "Video RTP received\n"
+                                event = mapzhphrase("videocallrtp", ReportScenariophrase)
                         else:
-                            rtprecv = "Conf RTP received\n"
-                            event = mapzhphrase("confrtp", ReportScenariophrase)
+                            if isvideo == 'false':
+                                rtprecv = "Conf Voice RTP received\n"
+                                event = mapzhphrase("voiceconfrtp", ReportScenariophrase)
+                            else:
+                                rtprecv = "Conf Video RTP received\n"
+                                event = mapzhphrase("videoconfrtp", ReportScenariophrase)
                         self.retmsg.report = constructReport(type=ReportType.SCEEVENT_BASE,event=event, level=self.retmsg.msglevel)
                     else:
                         #show error msg.
@@ -710,11 +719,19 @@ class servicecallback(eventhandler):
                         self.retmsg.msglevel = Msglevel.WARNING
                         self.retmsg.color = maplevel2color(self.retmsg.msglevel)
                         if curevent == "call_rtp_received":
-                            rtprecv = "No RTP received\n"
-                            event = mapzhphrase("callnortp", ReportScenariophrase)
+                            if isvideo == 'false':
+                                rtprecv = "No Voice RTP received\n"
+                                event = mapzhphrase("voicecallnortp", ReportScenariophrase)
+                            else:
+                                rtprecv = "No Video RTP received\n"
+                                event = mapzhphrase("video", ReportScenariophrase)
                         else:
-                            rtprecv = "Conf No RTP received\n"
-                            event = mapzhphrase("confnortp", ReportScenariophrase)
+                            if isvideo == "false":
+                                rtprecv = "Conf No Voice RTP received\n"
+                                event = mapzhphrase("voiceconfnortp", ReportScenariophrase)
+                            else:
+                                rtprecv = "Conf No Video RTP received\n"
+                                event = mapzhphrase("videoconfnortp", ReportScenariophrase)
                         self.retmsg.report = constructReport(type=ReportType.SCEEVENT_BASE,event=event, level=self.retmsg.msglevel)
 
         if 'id' in servicejson:
