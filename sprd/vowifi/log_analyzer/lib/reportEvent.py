@@ -443,7 +443,7 @@ class ReportEvent():
         userastr = self.genaref(self.getFlowTitle('usertable'), '#' + username)
         flowstr += self.genli(userastr)
 
-        cpastr = self.genaref(self.getFlowTitle('cptable'), '#' + username)
+        cpastr = self.genaref(self.getFlowTitle('cptable'), '#' + cpname)
         flowstr += self.genli(cpastr)
 
         phoneastr = self.genaref(self.getFlowTitle('phonetable'), '#' + phonename)
