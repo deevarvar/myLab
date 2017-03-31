@@ -444,7 +444,8 @@ class logParser():
                     if len(lineinfo) < 6:
                         self.logger.logger.error("line " + str(lineno) + " is incorrect")
                         continue
-
+                    #FIXME: this logic is not correct any more after stephen refactor
+                    # the ltag is like "[ImsCM] ImsConnectionManagerMonitor:" instead of ImsConnectionManagerMonitor:
                     ltag = lineinfo[5].replace(":", "")
                     #self.logger.logger.error('ltag is ' +ltag)
                     lpid = lineinfo[2]

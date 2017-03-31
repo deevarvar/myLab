@@ -368,6 +368,8 @@ class eventArray():
 
     def getarray(self):
         return self.array
+    def addWholeEvent(self, event):
+        self.array.append(event)
 
 dialerEvent = eventArray()
 imscmEvent = eventArray()
@@ -795,3 +797,9 @@ systemserverEvent.addEvent("DhcpClient: Received packet: .* ACK: your new IP /(.
 ## get ssid
 wpaEvent.addEvent("wpa_supplicant: wlan0:    selected BSS (.*) ssid=\'(.*)\'", module_wpasupplicant,eventType=eventType.EDGE, eventHandler=wpaselect, groupnum=2)
 wpaEvent.addEvent("(wpa_supplicant: wlan0: State: ASSOCIATED -> COMPLETED)", module_wpasupplicant,eventType=eventType.EDGE, eventHandler=wpaconn)
+
+
+#imscm is inside phone process
+imscmEventArray = imscmEvent.getarray()
+for i, event in enumerate(imscmEventArray):
+    phoneEvent.addWholeEvent(event)

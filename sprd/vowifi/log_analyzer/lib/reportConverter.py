@@ -41,17 +41,28 @@
 #           D:\code\iwhale2\log\cp_reject
 #       self.atmsgs, add field
 #TODO:
-#      8.2.1 call session
-
+#     8.1.9  search pattern by pid and tid
+            #change pidpair
+#     8.2.0 http://bugzilla.spreadtrum.com/bugzilla/show_bug.cgi?id=659089
+#      my comments
+#       8.2.1 call session
+#
 #      8.2.3 all success/failed event, only care about handover, register,call
+#      8.2.4 owner display : too aggressive
 
 #      8.2.300 regstatus add refresh failed
 
-#
+#https://SHTEMP832PC.spreadtrum.com:444/svn/Vowifi_Log_Tool/
+#log tool
+#一般人就用user账户下载，不需要密码
+#你用admin:admin上传
+#renlong.he 2296206
 #      8.1.3  log more
 #         1. 01-01 09:18:14.321  1140  2496 I CPVoiceAgent: [cp_mediaset]: AT+SPRTPMEDIASET=3,1,1,1
 #         2. DSCI
-#      8.1.100 ipsec cmd
+#
+# 8.1.100 ipsec cmd
+#
 #
 #       9.2 add CPVoiceAgent 's at parsing
 #           D:\code\log\bug_log\vit_log\2017_3_2\con_call
