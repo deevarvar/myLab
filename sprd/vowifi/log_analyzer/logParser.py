@@ -312,7 +312,9 @@ class logParser():
                             break
 
                         lpid = lineinfo[2]
+
                         ltag = lineinfo[5].replace(":", "")
+
 
                         if (lpid is None) or (ltag is None):
                             self.logger.logger.error("lpid or ltag is none")
@@ -389,16 +391,105 @@ class logParser():
             self.logger.logger.info(process)
             self.logger.logger.info(tag)
 
+    #some helper for getPidsByTagsAndWords
+    def newWord(self, tidword, modulename=''):
+        oneword = dict()
+        oneword['tidword'] = tidword
+        oneword['modulename'] = modulename
+        return oneword
+
+    def newpidInfo(self, pid):
+        #  {
+        #   "pid": 123,
+        #   "tidinfos": [
+        #        "tid1": ImsCm
+        #        "tid2": Adapter
+        #   ]
+        #  }
+        pidinfo = dict()
+        pidinfo['pid'] = pid
+        pidinfo['tids'] = list()
+        return pidinfo
+
+    def settidinfo(self, tid, modulename, pidinfo):
+        tidinfo = dict()
+        tidinfo[tid] = modulename
+        pidinfo['tids'].append(tidinfo)
+
+    #check if pid is in the pidinfos
+    def pidInpidinfos(self, pid, pidinfos):
+        #pidinfos is a list
+        for i, pidinfo in enumerate(pidinfos):
+            if pid == pidinfo['pid']:
+                return True
+
+        return False
+
+    def tidinpidinfo(self,tid, modulename, pidinfo):
+        tids = pidinfo['tids']
+        tiddict = dict()
+        tiddict[tid] = modulename
+        for i, onetid in enumerate(tids):
+            if tiddict == onetid:
+                return True
+        return False
+
+    def updateTidByPid(self, tid, modulename, pid, pidinfos):
+        for i, pidinfo in enumerate(pidinfos):
+            if pid == pidinfo['pid']:
+                if self.tidinpidinfo(tid,modulename,pidinfo) is False:
+                    self.settidinfo(tid=tid, modulename=modulename, pidinfo=pidinfo)
+                    self.logger.logger.info('pid:'+ pid +',tid: ' + str(tid) + ', moname: ' + modulename)
+
+
+    def newProcess(self, process, tidsinfo=None):
+        processdict = dict()
+        processdict['name'] = process
+        processdict['tidsinfo'] = tidsinfo
+        return processdict
 
     def getPidsByTagsAndWords(self):
         #lemon log is not so good
         wordssection = self.config['words']
         for process in wordssection:
             self.words[process] = dict()
-            self.words[process]['words'] = wordssection[process]
             self.words[process]['found'] = 0
             #some process wpa_supplicant not only have one pid
-            self.words[process]['pids'] = list()
+            #NOTICE, wordssection[process] can be a list
+                #pidinfos' member should be a dict
+                #  {
+                #   "pid": 123,
+                #   "tids": [
+                #        "ImsCM" : tid1,
+                #        "Phone" : tid2
+                #   ]
+                #  }
+            self.words[process]['pidinfos'] = list()
+
+            #self.words[process]['words'] should be a list of dict too
+            self.words[process]['words'] = list()
+
+            processstr = wordssection[process]
+            if type(processstr) is list:
+                #it is a list
+                #meanwhile we will add logic to record tid in in one pid
+                #so each pid is a dict...
+
+                for i, words in enumerate(processstr):
+                    #words format is wordpattern;modulename
+                    wlist = words.split(';')
+                    wpattern = wlist[0]
+                    mname = wlist[1]
+                    oneword = self.newWord(tidword=wpattern, modulename=mname)
+                    self.words[process]['words'].append(oneword)
+            else:
+                prolist = processstr.split(';')
+                pname = prolist[0]
+                mname = prolist[1]
+                oneword = self.newWord(tidword=pname, modulename=mname)
+                self.words[process]['words'].append(oneword)
+
+
 
         tagsection = self.config['tags']
         for process in tagsection:
@@ -446,9 +537,15 @@ class logParser():
                         continue
                     #FIXME: this logic is not correct any more after stephen refactor
                     # the ltag is like "[ImsCM] ImsConnectionManagerMonitor:" instead of ImsConnectionManagerMonitor:
+
                     ltag = lineinfo[5].replace(":", "")
                     #self.logger.logger.error('ltag is ' +ltag)
+
+                    #tidtag, we still need tid
+                    #adapter, Imscm is inside phone process
                     lpid = lineinfo[2]
+                    tid = lineinfo[3]
+
                     #print ltag + ' '+ str(lpid)
                     #need to add priority to check if foundnumnum
                     for process in tagsection:
@@ -486,18 +583,34 @@ class logParser():
 
                     #FIXME: add logic to track service and security
                     for process in wordssection:
-                       if self.words[process]['words'] in line:
-                           self.words[process]['found'] += 1
-                           #FIXME: this 'pid' can be a list
-                           if lpid not in self.words[process]['pids']:
-                                self.words[process]['pids'].append(lpid)
+                        #self.words[process]['words'] is a  list
+                       for index, words in enumerate(self.words[process]['words']):
 
-                           if self.words[process]['found'] == 1:
-                                self.pids.append(lpid)
-                                self.piddb[lpid] = dict()
-                                self.piddb[lpid]['process'] = process
-                                self.piddb[lpid]['istags'] = 0
+                           tidword = words['tidword']
+                           modulename = words['modulename']
 
+                           if tidword in line:
+                               self.words[process]['found'] += 1
+
+                               pidinfos = self.words[process]['pidinfos']
+
+                               if self.pidInpidinfos(lpid, pidinfos) == False:
+                                    #so we add a new one
+                                    pidinfo = self.newpidInfo(lpid)
+                                    self.settidinfo(tid=tid, modulename=modulename,pidinfo=pidinfo)
+                                    self.words[process]['pidinfos'].append(pidinfo)
+                               else:
+                                   #so we should update exist, if tid changes.
+                                    self.updateTidByPid(tid=tid, modulename=modulename, pid=lpid, pidinfos=pidinfos)
+
+                               if self.words[process]['found'] == 1:
+                                    self.pids.append(lpid)
+                                    self.piddb[lpid] = dict()
+                                    self.piddb[lpid]['process'] = process
+                                    self.piddb[lpid]['istags'] = 0
+
+                               #actually, event it is a loop, only one tid will match
+                               break
 
         with open(self.processout, 'w') as processout:
             processout.truncate()
@@ -516,7 +629,8 @@ class logParser():
                 if process == 'com.sprd.ImsConnectionManager' and not lpid:
                     self.errorpattern['imscm'] = str(lpid) + ' .* E '
 
-                self.pidpair[lpid] = process
+                pdict = self.newProcess(process=process)
+                self.pidpair[lpid] = pdict
                 with open(self.processout, 'a+') as processout:
                     linfo = process + ':' + str(lpid) + '\n'
                     processout.write(linfo)
@@ -526,13 +640,16 @@ class logParser():
         for process, content in self.words.iteritems():
             self.logger.logger.info(process)
             self.logger.logger.info(content)
-            if type(content['pids']) is list and len(content['pids']) >= 1:
-                pidlist = content['pids']
-                for pidindex, pid in enumerate(pidlist):
-                    self.pidpair[pid] = process
-                    self.logger.logger.info(process + ' pid is '+ str(pid))
+            if type(content['pidinfos']) is list and len(content['pidinfos']) >= 1:
+                pidinfos = content['pidinfos']
+                for pidindex, pidinfo in enumerate(pidinfos):
+                    onepid = pidinfo['pid']
+                    onetids = pidinfo['tids']
+                    pdict = self.newProcess(process=process, tidsinfo=onetids)
+                    self.pidpair[onepid] = pdict
+                    self.logger.logger.info(process + ' pid is '+ str(onepid))
                     with open(self.processout, 'a+') as processout:
-                        linfo = process + ':' + str(pid) + '\n'
+                        linfo = process + ':' + str(onepid) + '\n'
                         processout.write(linfo)
 
     def getTagsNum(self):
@@ -544,7 +661,7 @@ class logParser():
 
 
 if __name__ == '__main__':
-    lp = logParser(logname='./0-main-06-23-13-20-22.log', filterlevel='high', outputdir='./')
+    lp = logParser(logname='./main.ylog', filterlevel='high', outputdir='./')
 
     lp.getflow(has_ps=False)
     print('done')

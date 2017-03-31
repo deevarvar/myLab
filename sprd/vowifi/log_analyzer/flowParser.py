@@ -449,6 +449,17 @@ class flowParser():
 
         self.sipmsgs.append(ikemsg)
 
+    def getmodulename(self, ltid, tidsinfo, process):
+        if not tidsinfo:
+            #ugly code, only by tags searched ones
+            return None
+
+        for index, tidinfo in enumerate(tidsinfo):
+            if ltid in tidinfo:
+                return tidinfo[ltid]
+        return pnameMap2mname(process)
+
+
     #FIXME: need to optimize the speed!!
     def searchEvent(self, line, lineno):
         #get pid first
@@ -457,68 +468,77 @@ class flowParser():
         if len(lineinfo) < 6:
             self.logger.logger.error(line + ' is not valid log line')
             return
+        #pid, tid
         lpid = lineinfo[2]
+
+        ltid = lineinfo[3]
 
         if lpid not in self.pidpair:
             #add some exceptional event like dhcp event
             return
 
-        process = self.pidpair[lpid]
+        processdict = self.pidpair[lpid]
+        process = processdict['name']
 
         if process not in processmap:
             self.logger.logger.error('process is not in processmap.')
             return
 
+        tidsinfo = processdict['tidsinfo']
         eventarray = processmap[process]
-
+        #the logic is wrong here, ims and adapter will have the same tid!!!!
+        targetname = self.getmodulename(ltid, tidsinfo, process)
         for index, event in enumerate(eventarray):
-            key = event['key']
-            modulename = event['module']
-            eventType = event['eventType']
-            eventHandler = event['eventHandler']
-            defaultcolor = event['color']
-            groupnum = event['groupnum']
-            #still coupled logic here.
-            pattern = re.compile(key)
-            match = pattern.search(line)
-            '''
-            debug sample code
-            if process == "wpa_supplicant":
-                self.logger.logger.info('zhihuaye')
-                self.logger.logger.info(line)
-                self.logger.logger.info(match)
-                if match and key == "wpa_supplicant: wlan0: State: ASSOCIATED -> COMPLETED":
-                    self.logger.logger.info("wpa_supplicant match len is " + str(len(match.groups())))
-            '''
-            if match:
-                #now parse the line
-                eventmsg = dict()
-                fields = line.strip(' \t').split(' ')
-                #04-17 23:21:24.420
-                timestamp = fields[0] + ' ' + fields[1]
-                eventmsg['timestamp'] = timestamp
-                eventmsg['msg'] = line.strip(' \t')
-                eventdict = dict()
-                handlerobj =  eventHandler(match, defaultcolor, groupnum)
-                eventdict = handlerobj.getret()
-                if eventdict:
+            #module name is the key
+             modulename = event['module']
+             if not targetname or targetname == modulename:
+                key = event['key']
+                eventType = event['eventType']
+                eventHandler = event['eventHandler']
+                defaultcolor = event['color']
+                groupnum = event['groupnum']
+                #still coupled logic here.
+                pattern = re.compile(key)
+                match = pattern.search(line)
+                '''
+                debug sample code
+                if process == "wpa_supplicant":
+                    self.logger.logger.info('zhihuaye')
+                    self.logger.logger.info(line)
+                    self.logger.logger.info(match)
+                    if match and key == "wpa_supplicant: wlan0: State: ASSOCIATED -> COMPLETED":
+                        self.logger.logger.info("wpa_supplicant match len is " + str(len(match.groups())))
+                '''
+                if match:
+                    #now parse the line
+                    eventmsg = dict()
+                    fields = line.strip(' \t').split(' ')
+                    #04-17 23:21:24.420
+                    timestamp = fields[0] + ' ' + fields[1]
+                    eventmsg['timestamp'] = timestamp
+                    eventmsg['msg'] = line.strip(' \t')
+                    eventdict = dict()
+                    handlerobj =  eventHandler(match, defaultcolor, groupnum)
+                    eventdict = handlerobj.getret()
+                    if eventdict:
 
-                    eventmsg['event'] = eventdict.msg
-                    eventmsg['color'] = eventdict.color
-                    eventmsg['msglevel'] = eventdict.msglevel
-                    #self.logger.logger.error('the target event is ' + eventmsg['event'])
-                    eventmsg['lineno'] = lineno
-                    eventmsg['issip'] = 0
-                    eventmsg['isevent'] = 1
-                    eventmsg['eventtype'] = eventType
-                    eventmsg['modulename'] = modulename
-                    #store the match line
-                    eventmsg['line'] = line
-                    eventmsg['report'] = eventdict.report
-                    self.sipmsgs.append(eventmsg)
-                else:
-                    self.logger.logger.error("event is invalid or not needed in lineno " + str(lineno))
-                break
+                        eventmsg['event'] = eventdict.msg
+                        eventmsg['color'] = eventdict.color
+                        eventmsg['msglevel'] = eventdict.msglevel
+                        #self.logger.logger.error('the target event is ' + eventmsg['event'])
+                        eventmsg['lineno'] = lineno
+                        eventmsg['issip'] = 0
+                        eventmsg['isevent'] = 1
+                        eventmsg['eventtype'] = eventType
+                        eventmsg['modulename'] = modulename
+                        #store the match line
+                        eventmsg['line'] = line
+                        eventmsg['report'] = eventdict.report
+                        self.sipmsgs.append(eventmsg)
+                    else:
+                        self.logger.logger.error("event is invalid or not needed in lineno " + str(lineno))
+                    break #break the for loop
+
 
 
     def getFlow(self):
