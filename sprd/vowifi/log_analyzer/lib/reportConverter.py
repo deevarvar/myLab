@@ -42,17 +42,9 @@
 #       self.atmsgs, add field
 #TODO:
 #     8.1.9  search pattern by pid and tid
-#     1. getPidsByTagsAndWords , change words logic
-#     2. finally set:  self.pidpair[lpid] = process
-#     3. so add member in process
-#       two phrase:  all adapter, imscm will search; then per tid
-
-#     8.1.9.1 relogin logic in onLoginFinished
-#     D:\code\log\bug_log\vit_log\2017_3_24\660071\
+            #change pidpair
 #     8.2.0 http://bugzilla.spreadtrum.com/bugzilla/show_bug.cgi?id=659089
-#     my comments, add tele
-#
-#
+#      my comments
 #       8.2.1 call session
 #
 #      8.2.3 all success/failed event, only care about handover, register,call
