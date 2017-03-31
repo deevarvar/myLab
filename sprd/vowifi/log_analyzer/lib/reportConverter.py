@@ -41,8 +41,9 @@
 #           D:\code\iwhale2\log\cp_reject
 #       self.atmsgs, add field
 #TODO:
-#     8.1.9  search pattern by pid and tid
-            #change pidpair
+#     8.1.9  search pattern , add logic to handle subprocess
+#     8.1.10 onLoginFinished
+#D:\code\log\bug_log\vit_log\2017_3_24\660071\ylog
 #     8.2.0 http://bugzilla.spreadtrum.com/bugzilla/show_bug.cgi?id=659089
 #      my comments
 #       8.2.1 call session

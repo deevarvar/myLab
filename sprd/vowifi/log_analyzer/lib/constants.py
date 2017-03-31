@@ -333,7 +333,8 @@ mypayloadtype = [
 #bug 580143, MT_Call_Deattach can be a good example
 
 from eventhandler import *
-
+#CAUSTION: the name must be same as the java tag, example listed below:
+#private static final String TAG = "[ImsCM] "
 module_UE="UE"
 module_ImsCM="ImsCM"
 module_Phone="Phone"
@@ -352,9 +353,12 @@ class eventType():
     EDGE = 3      # normal edge
 
 
-class eventArray():
+class eventObj():
     def __init__(self):
         self.array = list()
+        #define subprocess, list of string
+        self.subprocess = list()
+        self.name = ''
 
     def addEvent(self, key, module, eventType = eventType.SEPERATOR, eventHandler = matchone, color= "black", groupnum=0 ):
         event = dict()
@@ -369,34 +373,55 @@ class eventArray():
 
     def getarray(self):
         return self.array
+
+    def getsubprocess(self):
+        return self.subprocess
+
     def addWholeEvent(self, event):
         self.array.append(event)
 
-dialerEvent = eventArray()
-imscmEvent = eventArray()
-phoneEvent = eventArray()
-securityEvent = eventArray()
-serviceEvent = eventArray()
-systemserverEvent = eventArray()
-wpaEvent = eventArray()
+    def addsubprocess(self,process):
+        self.subprocess.append(process)
 
+    def setName(self,name):
+        self.name = name
+
+    def getName(self):
+        return self.name
+
+dialerEvent = eventObj()
+dialerEvent.setName(module_dialer)
+imscmEvent = eventObj()
+imscmEvent.setName(module_ImsCM)
+phoneEvent = eventObj()
+phoneEvent.addsubprocess('[ImsCM]')
+phoneEvent.addsubprocess('[Adapter]')
+phoneEvent.setName(module_Phone)
+
+securityEvent = eventObj()
+securityEvent.setName(module_Security)
+serviceEvent = eventObj()
+serviceEvent.setName(module_Service)
+systemserverEvent = eventObj()
+systemserverEvent.setName(module_systemserver)
+wpaEvent = eventObj()
+wpaEvent.setName(module_wpasupplicant)
 
 
 processmap = dict()
-processmap['com.sprd.ImsConnectionManager'] = imscmEvent.getarray()
-processmap['com.android.phone'] = phoneEvent.getarray()
-processmap['com.android.dialer'] = dialerEvent.getarray()
-processmap['com.sprd.vowifi.security'] = securityEvent.getarray()
-processmap['com.spreadtrum.vowifi'] = serviceEvent.getarray()
-processmap['system_server'] = systemserverEvent.getarray()
-processmap['wpa_supplicant'] = wpaEvent.getarray()
+processmap['com.sprd.ImsConnectionManager'] = imscmEvent
+processmap['com.android.phone'] = phoneEvent
+processmap['com.android.dialer'] = dialerEvent
+processmap['com.sprd.vowifi.security'] = securityEvent
+processmap['com.spreadtrum.vowifi'] = serviceEvent
+processmap['system_server'] = systemserverEvent
+processmap['wpa_supplicant'] = wpaEvent
 
-def pnameMap2mname(pname):
-    if pname == "com.android.phone":
-        return module_Phone
-    else:
-        #FIXME: only phone need the default mname
-        return None
+
+#we should add sub-process handler
+
+
+
 #dialer part
 ### hold
 #FIXME: later should add more phrase to indicate

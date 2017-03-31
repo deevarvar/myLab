@@ -449,6 +449,21 @@ class flowParser():
 
         self.sipmsgs.append(ikemsg)
 
+    def getTargetName(self,event, line):
+        targetname = None
+        subprocs = event.getsubprocess()
+        if len(subprocs) >= 1:
+            for index, subp in enumerate(subprocs):
+                if subp in line:
+                    #[ImsCM] to get ImsCM
+                    targetname = subp.strip('[|]')
+                    return targetname
+            #not found, use default
+            targetname = event.getName()
+            return targetname
+        else:
+            return None
+
     #FIXME: need to optimize the speed!!
     def searchEvent(self, line, lineno):
         #get pid first
@@ -469,56 +484,58 @@ class flowParser():
             self.logger.logger.error('process is not in processmap.')
             return
 
-        eventarray = processmap[process]
-
+        event = processmap[process]
+        eventarray = event.getarray()
+        targetname = self.getTargetName(event, line)
         for index, event in enumerate(eventarray):
             key = event['key']
             modulename = event['module']
-            eventType = event['eventType']
-            eventHandler = event['eventHandler']
-            defaultcolor = event['color']
-            groupnum = event['groupnum']
-            #still coupled logic here.
-            pattern = re.compile(key)
-            match = pattern.search(line)
-            '''
-            debug sample code
-            if process == "wpa_supplicant":
-                self.logger.logger.info('zhihuaye')
-                self.logger.logger.info(line)
-                self.logger.logger.info(match)
-                if match and key == "wpa_supplicant: wlan0: State: ASSOCIATED -> COMPLETED":
-                    self.logger.logger.info("wpa_supplicant match len is " + str(len(match.groups())))
-            '''
-            if match:
-                #now parse the line
-                eventmsg = dict()
-                fields = line.strip(' \t').split(' ')
-                #04-17 23:21:24.420
-                timestamp = fields[0] + ' ' + fields[1]
-                eventmsg['timestamp'] = timestamp
-                eventmsg['msg'] = line.strip(' \t')
-                eventdict = dict()
-                handlerobj =  eventHandler(match, defaultcolor, groupnum)
-                eventdict = handlerobj.getret()
-                if eventdict:
+            if not targetname or targetname == modulename:
+                eventType = event['eventType']
+                eventHandler = event['eventHandler']
+                defaultcolor = event['color']
+                groupnum = event['groupnum']
+                #still coupled logic here.
+                pattern = re.compile(key)
+                match = pattern.search(line)
+                '''
+                debug sample code
+                if process == "wpa_supplicant":
+                    self.logger.logger.info('zhihuaye')
+                    self.logger.logger.info(line)
+                    self.logger.logger.info(match)
+                    if match and key == "wpa_supplicant: wlan0: State: ASSOCIATED -> COMPLETED":
+                        self.logger.logger.info("wpa_supplicant match len is " + str(len(match.groups())))
+                '''
+                if match:
+                    #now parse the line
+                    eventmsg = dict()
+                    fields = line.strip(' \t').split(' ')
+                    #04-17 23:21:24.420
+                    timestamp = fields[0] + ' ' + fields[1]
+                    eventmsg['timestamp'] = timestamp
+                    eventmsg['msg'] = line.strip(' \t')
+                    eventdict = dict()
+                    handlerobj =  eventHandler(match, defaultcolor, groupnum)
+                    eventdict = handlerobj.getret()
+                    if eventdict:
 
-                    eventmsg['event'] = eventdict.msg
-                    eventmsg['color'] = eventdict.color
-                    eventmsg['msglevel'] = eventdict.msglevel
-                    #self.logger.logger.error('the target event is ' + eventmsg['event'])
-                    eventmsg['lineno'] = lineno
-                    eventmsg['issip'] = 0
-                    eventmsg['isevent'] = 1
-                    eventmsg['eventtype'] = eventType
-                    eventmsg['modulename'] = modulename
-                    #store the match line
-                    eventmsg['line'] = line
-                    eventmsg['report'] = eventdict.report
-                    self.sipmsgs.append(eventmsg)
-                else:
-                    self.logger.logger.error("event is invalid or not needed in lineno " + str(lineno))
-                break
+                        eventmsg['event'] = eventdict.msg
+                        eventmsg['color'] = eventdict.color
+                        eventmsg['msglevel'] = eventdict.msglevel
+                        #self.logger.logger.error('the target event is ' + eventmsg['event'])
+                        eventmsg['lineno'] = lineno
+                        eventmsg['issip'] = 0
+                        eventmsg['isevent'] = 1
+                        eventmsg['eventtype'] = eventType
+                        eventmsg['modulename'] = modulename
+                        #store the match line
+                        eventmsg['line'] = line
+                        eventmsg['report'] = eventdict.report
+                        self.sipmsgs.append(eventmsg)
+                    else:
+                        self.logger.logger.error("event is invalid or not needed in lineno " + str(lineno))
+                    break
 
 
     def getFlow(self):
