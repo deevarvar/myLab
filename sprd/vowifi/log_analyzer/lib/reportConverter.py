@@ -40,8 +40,13 @@
 #       9.1 FIXME: add at cmd result , log is too verboses....
 #           D:\code\iwhale2\log\cp_reject
 #       self.atmsgs, add field
-#TODO:
 #     8.1.9  search pattern , add logic to handle subprocess
+#TODO:
+#     8.1.11 ImsCM code changed.
+#     8.1.12  ims code ACTION_SWITCH_IMS_FEATURE
+#     8.1.13 dialer
+#          CallCardPresenter
+#     aidl: vendor/sprd/platform/frameworks/
 #     8.1.10 onLoginFinished
 #D:\code\log\bug_log\vit_log\2017_3_24\660071\ylog
 #     8.2.0 http://bugzilla.spreadtrum.com/bugzilla/show_bug.cgi?id=659089

@@ -336,6 +336,7 @@ from eventhandler import *
 #CAUSTION: the name must be same as the java tag, example listed below:
 #private static final String TAG = "[ImsCM] "
 module_UE="UE"
+module_Ims="Ims"
 module_ImsCM="ImsCM"
 module_Phone="Phone"
 module_Adapter="Adapter"
@@ -389,13 +390,60 @@ class eventObj():
     def getName(self):
         return self.name
 
+class searchType():
+    WORDINLINE = 0
+    TAGMATCH = 1
+    TAGPARTIALMATCH = 2
+
+
+
+class newSubproc():
+    def __init__(self, key='key', search=None):
+        self.subproc = dict()
+        self.subproc['key'] = key
+        self.subproc['search'] = search
+
+    def getsubproc(self):
+        return self.subproc
+
+    def getKey(self):
+        return self.subproc['key']
+
+    def getSearch(self):
+        return self.subproc['search']
+
+def wordInline(word, line):
+    if word in line:
+        return True
+    else:
+        return False
+
+import re
+def tagInline(word, tag, partial=False):
+    if partial == True:
+        regex = re.compile(r"^" + word)
+        if regex.match(tag):
+            return True
+        else:
+            return False
+    else:
+        if word == tag:
+            return True
+        else:
+            return False
+
+
 dialerEvent = eventObj()
 dialerEvent.setName(module_dialer)
 imscmEvent = eventObj()
 imscmEvent.setName(module_ImsCM)
 phoneEvent = eventObj()
-phoneEvent.addsubprocess('[ImsCM]')
-phoneEvent.addsubprocess('[Adapter]')
+imscmsubproc = newSubproc(key='[ImsCM]', search=searchType.WORDINLINE)
+phoneEvent.addsubprocess(imscmsubproc)
+adaptersubproc = newSubproc(key='[Adapter]', search=searchType.WORDINLINE)
+phoneEvent.addsubprocess(adaptersubproc)
+imssubproc = newSubproc(key=module_Ims, search=searchType.TAGPARTIALMATCH)
+phoneEvent.addsubprocess(imssubproc)
 phoneEvent.setName(module_Phone)
 
 securityEvent = eventObj()
@@ -434,7 +482,7 @@ dialerEvent.addEvent("(Putting the call on hold)", module_dialer, eventType = ev
 dialerEvent.addEvent("(Removing the call from hold)", module_dialer, eventType = eventType.EDGE)
 dialerEvent.addEvent("(Swapping call to foreground)", module_dialer, eventType = eventType.EDGE)
 #
-dialerEvent.addEvent("CallButtonPresenter - turning on mute: (.*)", module_Phone, eventType=eventType.EDGE, eventHandler=turnmute)
+dialerEvent.addEvent("CallButtonPresenter - turning on mute: (.*)", module_dialer, eventType=eventType.EDGE, eventHandler=turnmute)
 #pause video, no correct keyword?
 
 
@@ -571,14 +619,14 @@ imscmEvent.addEvent("(turn on primary SIM card)", module_ImsCM,eventType = event
 
 #phone imsservice logic
 ##vowifi/volte icon
-phoneEvent.addEvent("updateImsFeatures->volteEnable:(.*) wifiEnable:(.*)", module_Phone, eventType=eventType.EDGE, eventHandler=geticon,groupnum=2)
+phoneEvent.addEvent("updateImsFeatures->volteEnable:(.*) wifiEnable:(.*)", module_Ims, eventType=eventType.EDGE, eventHandler=geticon,groupnum=2)
 ##ims reg addr
-phoneEvent.addEvent("setIMSRegAddress addr = (.*)", module_Phone, eventType=eventType.EDGE, eventHandler=setimsregaddr)
+phoneEvent.addEvent("setIMSRegAddress addr = (.*)", module_Ims, eventType=eventType.EDGE, eventHandler=setimsregaddr)
 #get ims reg addr
-phoneEvent.addEvent("getIMSRegAddress mImsRegAddress =(.*)", module_Phone, eventType=eventType.EDGE, eventHandler=getimsregaddr)
+phoneEvent.addEvent("getIMSRegAddress mImsRegAddress =(.*)", module_Ims, eventType=eventType.EDGE, eventHandler=getimsregaddr)
 
 ## start vowifi/volte call
-phoneEvent.addEvent("createCallSession-> start(.*)", module_Phone, eventType=eventType.EDGE, eventHandler=startcall, color = "blue")
+phoneEvent.addEvent("createCallSession-> start(.*)", module_Ims, eventType=eventType.EDGE, eventHandler=startcall, color = "blue")
 
 #Adapter Part
 ##VoWifiSecurityManager

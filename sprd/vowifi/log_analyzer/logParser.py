@@ -432,7 +432,7 @@ class logParser():
         if self.log:
             with open(self.log, 'rb') as logfile:
                 for lineno,line in enumerate(logfile):
-                    line = line.strip(' \t')
+                    #line = line.strip(' \t')
                     lineinfo = line.split()
 
                     #for debug to scan only range

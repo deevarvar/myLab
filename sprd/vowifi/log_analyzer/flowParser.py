@@ -453,13 +453,37 @@ class flowParser():
         targetname = None
         subprocs = event.getsubprocess()
         if len(subprocs) >= 1:
-            for index, subp in enumerate(subprocs):
-                if subp in line:
-                    #[ImsCM] to get ImsCM
-                    targetname = subp.strip('[|]')
-                    return targetname
             #not found, use default
             targetname = event.getName()
+            for index, subp in enumerate(subprocs):
+                key = subp.getKey()
+                search = subp.getSearch()
+                if search == searchType.WORDINLINE:
+                    if wordInline(key, line):
+                        #[ImsCM] to get ImsCM
+                        targetname = key.strip('[|]')
+                        return targetname
+
+                elif search == searchType.TAGPARTIALMATCH:
+                    #line = line.strip(' \t')
+                    lineinfo = line.split()
+                    if len(lineinfo) < 6:
+                        return targetname
+                    #03-30 21:44:28.186   927   927 D ImsRegister: [ImsRegister1] --notifyImsStateChanged
+                    ltag = lineinfo[5]
+                    if tagInline(key, ltag, partial=True):
+                        targetname = key.strip('[|]')
+                        return targetname
+                elif search == searchType.TAGMATCH:
+                    #line = line.strip(' \t')
+                    lineinfo = line.split()
+                    if len(lineinfo) < 6:
+                        return targetname
+                    #03-30 21:44:28.186   927   927 D ImsRegister: [ImsRegister1] --notifyImsStateChanged
+                    ltag = lineinfo[5]
+                    if tagInline(key, ltag, partial=False):
+                        targetname = key.strip('[|]')
+                        return targetname
             return targetname
         else:
             return None
@@ -467,7 +491,7 @@ class flowParser():
     #FIXME: need to optimize the speed!!
     def searchEvent(self, line, lineno):
         #get pid first
-        line = line.strip(' \t')
+        #line = line.strip(' \t')
         lineinfo = line.split()
         if len(lineinfo) < 6:
             self.logger.logger.error(line + ' is not valid log line')
@@ -567,7 +591,8 @@ class flowParser():
         with open(self.log, 'rb') as logfile:
             for lineno, line in enumerate(logfile):
                 line = line.strip(' \t')
-                self.getRegType(line)
+                if self.switch['searchsip'] == "enabled":
+                    self.getRegType(line)
 
                 if self.switch['searchsip'] == "enabled":
                     if sprdPattern.search(line):
@@ -733,11 +758,11 @@ class flowParser():
             if timeretags in waterline:
                 self.logger.logger.info(start, "retransmit previous non-invite request")
                 self.diagstr += "UE -> NETWORK [label = \"retrans non-invite req" + " No." + str(lineno)+"\"];\n"
-                break;
+                break
             if timeratags in waterline:
                 self.logger.logger.info(start, "retransmit previous invite request")
                 self.diagstr += "UE -> NETWORK [label = \"retrans invite req" + " No." + str(lineno)+"\"];\n"
-                break;
+                break
 
             if requesttags in waterline:
                 #is request
