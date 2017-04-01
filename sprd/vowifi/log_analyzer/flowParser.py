@@ -458,30 +458,31 @@ class flowParser():
             for index, subp in enumerate(subprocs):
                 key = subp.getKey()
                 search = subp.getSearch()
-                if search == searchType.WORDINLINE:
+                stype = search['type']
+                field = search['field']
+                if stype == searchType.WORDINLINE:
                     if wordInline(key, line):
                         #[ImsCM] to get ImsCM
                         targetname = key.strip('[|]')
                         return targetname
 
-                elif search == searchType.TAGPARTIALMATCH:
+                elif stype == searchType.TAGPARTIALMATCH:
                     #line = line.strip(' \t')
                     lineinfo = line.split()
-                    if len(lineinfo) < 6:
+                    if len(lineinfo) < 8:
                         return targetname
                     #03-30 21:44:28.186   927   927 D ImsRegister: [ImsRegister1] --notifyImsStateChanged
-                    ltag = lineinfo[5]
-                    if tagInline(key, ltag, partial=True):
+                    if tagInline(key, lineinfo, field, partial=True):
                         targetname = key.strip('[|]')
                         return targetname
-                elif search == searchType.TAGMATCH:
+                elif stype == searchType.TAGMATCH:
                     #line = line.strip(' \t')
                     lineinfo = line.split()
-                    if len(lineinfo) < 6:
+                    if len(lineinfo) < 8:
                         return targetname
                     #03-30 21:44:28.186   927   927 D ImsRegister: [ImsRegister1] --notifyImsStateChanged
-                    ltag = lineinfo[5]
-                    if tagInline(key, ltag, partial=False):
+
+                    if tagInline(key, lineinfo, field, partial=False):
                         targetname = key.strip('[|]')
                         return targetname
             return targetname
@@ -518,6 +519,7 @@ class flowParser():
                 eventType = event['eventType']
                 eventHandler = event['eventHandler']
                 defaultcolor = event['color']
+                display = event['display']
                 groupnum = event['groupnum']
                 #still coupled logic here.
                 pattern = re.compile(key)
@@ -556,6 +558,8 @@ class flowParser():
                         #store the match line
                         eventmsg['line'] = line
                         eventmsg['report'] = eventdict.report
+                        #if the msg will be displayed
+                        eventmsg['display'] = display
                         self.sipmsgs.append(eventmsg)
                     else:
                         self.logger.logger.error("event is invalid or not needed in lineno " + str(lineno))
@@ -1241,9 +1245,14 @@ class flowParser():
         for sipindex, sip in enumerate(self.diagsips):
 
             sector = (sipindex + 1) / int(self.splitgate)
+
+            if 'display' in sip and sip['display'] == False:
+                self.logger.logger.info('lineno ' + str(sip['lineno']) + ' is skipped')
+                continue
+
             if sip['issip']:
                 self.logger.logger.info('index is '+str(sipindex)+ ', callid is ' + callid)
-                onestr = self.assembleSipStr(sip, elements)
+                onestr = self.xx(sip, elements)
             else:
                 if 'isevent' in sip:
                     onestr = self.assembleEventStr(sip)
@@ -1830,7 +1839,7 @@ class flowParser():
         diaginfo['modulename'] = eventobj['modulename']
         diaginfo['line'] = eventobj['line']
         diaginfo['report'] = eventobj['report']
-
+        diaginfo['display'] = eventobj['display']
         self.diagsips.append(diaginfo)
 
 

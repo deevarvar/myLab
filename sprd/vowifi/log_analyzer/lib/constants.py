@@ -336,15 +336,19 @@ from eventhandler import *
 #CAUSTION: the name must be same as the java tag, example listed below:
 #private static final String TAG = "[ImsCM] "
 module_UE="UE"
+
+module_Phone="Phone"
 module_Ims="Ims"
 module_ImsCM="ImsCM"
-module_Phone="Phone"
 module_Adapter="Adapter"
+
 module_Service="Service"
 module_Security="Security"
 #module_Lemon="Sip Stack"
 module_CP="CP"
 module_dialer="Dialer"
+module_CallCardPresenter="CallCardPresenter"
+module_CallButtonPresenter="CallButtonPresenter"
 module_systemserver="systemserver"
 module_wpasupplicant="wpasupplicant"
 
@@ -361,7 +365,7 @@ class eventObj():
         self.subprocess = list()
         self.name = ''
 
-    def addEvent(self, key, module, eventType = eventType.SEPERATOR, eventHandler = matchone, color= "black", groupnum=0 ):
+    def addEvent(self, key, module, eventType = eventType.SEPERATOR, eventHandler = matchone, color= "black", groupnum=0, display=True):
         event = dict()
         event['key'] = key
         event['module'] = module
@@ -369,6 +373,7 @@ class eventObj():
         event['eventHandler'] = eventHandler
         event['color'] = color
         event['groupnum'] = groupnum
+        event['display'] = display
 
         self.array.append(event)
 
@@ -419,7 +424,8 @@ def wordInline(word, line):
         return False
 
 import re
-def tagInline(word, tag, partial=False):
+def tagInline(word, lineinfo, field,partial=False):
+    tag = lineinfo[field]
     if partial == True:
         regex = re.compile(r"^" + word)
         if regex.match(tag):
@@ -435,14 +441,43 @@ def tagInline(word, tag, partial=False):
 
 dialerEvent = eventObj()
 dialerEvent.setName(module_dialer)
+cbpsearch = dict()
+cbpsearch['type'] = searchType.TAGMATCH
+#03-30 21:46:40.263  1638  1638 I InCall  : CallCardPresenter
+cbpsearch['field'] = 7
+CallButtonPresentersubproc = newSubproc(key=module_CallButtonPresenter, search=cbpsearch)
+
+ccpsearch = dict()
+ccpsearch['type'] = searchType.TAGMATCH
+#03-30 21:46:40.263  1638  1638 I InCall  : CallCardPresenter
+ccpsearch['field'] = 7
+CallCardPresentersubproc = newSubproc(key=module_CallCardPresenter, search=ccpsearch)
+
+dialerEvent.addsubprocess(CallButtonPresentersubproc)
+dialerEvent.addsubprocess(CallCardPresentersubproc)
+
 imscmEvent = eventObj()
 imscmEvent.setName(module_ImsCM)
+
 phoneEvent = eventObj()
-imscmsubproc = newSubproc(key='[ImsCM]', search=searchType.WORDINLINE)
+imssearch = dict()
+imssearch['type'] = searchType.WORDINLINE
+#03-30 21:46:40.380   927   927 D [ImsCM] ImsConnectionManagerService:
+imssearch['field'] = None
+imscmsubproc = newSubproc(key='[ImsCM]', search=imssearch)
 phoneEvent.addsubprocess(imscmsubproc)
-adaptersubproc = newSubproc(key='[Adapter]', search=searchType.WORDINLINE)
+
+adaptersearch = dict()
+adaptersearch['type'] = searchType.WORDINLINE
+adaptersearch['field'] = None
+adaptersubproc = newSubproc(key='[Adapter]', search=adaptersearch)
 phoneEvent.addsubprocess(adaptersubproc)
-imssubproc = newSubproc(key=module_Ims, search=searchType.TAGPARTIALMATCH)
+
+imssearch = dict()
+imssearch['type'] = searchType.TAGPARTIALMATCH
+#03-30 21:43:48.030   927   927 D ImsRegister: [ImsRegister0]
+imssearch['field'] = 5
+imssubproc = newSubproc(key=module_Ims, search=imssearch)
 phoneEvent.addsubprocess(imssubproc)
 phoneEvent.setName(module_Phone)
 
@@ -475,15 +510,25 @@ processmap['wpa_supplicant'] = wpaEvent
 #FIXME: later should add more phrase to indicate
 
 
+#hold
+dialerEvent.addEvent("(Putting the call on hold)", module_CallButtonPresenter, eventType = eventType.EDGE)
+# resume
+dialerEvent.addEvent("(Removing the call from hold)", module_CallButtonPresenter, eventType = eventType.EDGE)
+#mute
+dialerEvent.addEvent("CallButtonPresenter - turning on mute: (.*)", module_CallButtonPresenter, eventType=eventType.EDGE, eventHandler=turnmute)
 
-dialerEvent.addEvent("(Putting the call on hold)", module_dialer, eventType = eventType.EDGE)
+dialerEvent.addEvent("(Swapping the call)", module_CallButtonPresenter, eventType = eventType.EDGE)
 
-### resume
-dialerEvent.addEvent("(Removing the call from hold)", module_dialer, eventType = eventType.EDGE)
-dialerEvent.addEvent("(Swapping call to foreground)", module_dialer, eventType = eventType.EDGE)
-#
-dialerEvent.addEvent("CallButtonPresenter - turning on mute: (.*)", module_dialer, eventType=eventType.EDGE, eventHandler=turnmute)
-#pause video, no correct keyword?
+dialerEvent.addEvent("(switchCameraClicked - useFrontFacingCamera)", module_CallButtonPresenter, eventType = eventType.EDGE)
+
+#TODO: add more default about the call info
+dialerEvent.addEvent("(Disconnecting call):.*Call_(\d+), (.*), \[Capabilities", module_CallCardPresenter, groupnum=3,eventType = eventType.EDGE , eventHandler=callcard, display=True)
+dialerEvent.addEvent("(Swapping call to foreground):.*Call_(\d+), (.*), \[Capabilities", module_CallCardPresenter, groupnum=3, eventType = eventType.EDGE,eventHandler=callcard, display=True)
+
+dialerEvent.addEvent("(Primary call):.*Call_(\d+), (.*), \[Capabilities", module_CallCardPresenter, groupnum=3, eventType = eventType.EDGE,eventHandler=callcard, display=False)
+dialerEvent.addEvent("(Secondary call):.*Call_(\d+), (.*), \[Capabilities", module_CallCardPresenter, groupnum=3, eventType = eventType.EDGE,eventHandler=callcard, display=False)
+
+
 
 
 #------------------------------------------------------------------------------------
@@ -493,6 +538,9 @@ dialerEvent.addEvent("CallButtonPresenter - turning on mute: (.*)", module_diale
 #imscmEvent.addEvent("(Wifi-calling is.*)", module_ImsCM)
 ###bind service
 imscmEvent.addEvent("(\[bind.*)", module_ImsCM, eventType = eventType.EDGE)
+
+imscmEvent.addEvent("(mPrimaryOperatorId value is invalid, please check)", module_ImsCM, eventType=eventType.EDGE, eventHandler=invalidSimCard)
+
 ##Utils
 ###switch to wifi
 imscmEvent.addEvent("\[(Switch to Vowifi)\]", module_ImsCM, eventType = eventType.EDGE, color = "blue", eventHandler=idlehowifi)
@@ -540,17 +588,17 @@ imscmEvent.addEvent('handleMessage.*: \"(.*)\", mCurPendingProcessMsgId = (.*)' 
 #no need to add ImsServiceListenerEx, all release action will be recorded.
 
 ##audio/video qos and threshhold, vowifi call
-imscmEvent.addEvent('loop(\w+)CallQos: Vowifi handover to Volte' , module_ImsCM, eventType = eventType.EDGE, eventHandler=qos2volte)
+imscmEvent.addEvent('loop(\w+)CallQos.*: Vowifi handover to Volte' , module_ImsCM, eventType = eventType.EDGE, eventHandler=qos2volte)
 
 
 ##audio/video rssi threshhold, volte call
-imscmEvent.addEvent('loop(\w+)CallThreshold: Volte handover to (\w+)' , module_ImsCM, eventType = eventType.EDGE, eventHandler=callthreshholdho, groupnum=2)
+imscmEvent.addEvent('loop(\w+)CallThreshold.*: Volte handover to (\w+)' , module_ImsCM, eventType = eventType.EDGE, eventHandler=callthreshholdho, groupnum=2)
 
 
 ##idle , reged than handover
-imscmEvent.addEvent('loopProcessIdleThreshold: Volte switch to (\w+)' , module_ImsCM, eventType = eventType.EDGE, eventHandler=idlethreshholdho)
+imscmEvent.addEvent('loopProcessIdleThreshold.*: Volte switch to (\w+)' , module_ImsCM, eventType = eventType.EDGE, eventHandler=idlethreshholdho)
 ##idle non-reg attach
-imscmEvent.addEvent('(loopProcessIdleThreshold: Auto attach Vowifi)' , module_ImsCM, eventType = eventType.EDGE, eventHandler=idleautovowifi)
+imscmEvent.addEvent('(loopProcessIdleThreshold.*: Auto attach Vowifi)' , module_ImsCM, eventType = eventType.EDGE, eventHandler=idleautovowifi)
 
 ##imscm error pattern
 imscmEvent.addEvent('\[(.*)\] error, mRequestId =' , module_ImsCM, eventType = eventType.EDGE, eventHandler=imscmhandlemsgerror)

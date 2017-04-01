@@ -33,7 +33,7 @@
 #        ImsReasonInfo.java, more definition
 # 03-27 15:10:06.227  1134  1134 I [VoWifiService]VoWifiSerService: Notify the event: {"event_code":105,"event_name":"call_terminate","id":1,"state_code":146}
 #         D:\code\log\srvcc\503\slog_20170327151140_sp9832a_2h11_4mvolt_vowif_userdebu\external_storage\ylog\ylog
-##      8.1.6 ap color, servicecallback : talking, ok should be green
+#     8.1.6 ap color, servicecallback : talking, ok should be green
 #       8.1.7 srvcc report
 #      8.1.8 call_terminate report
 #       9. radio log catagory
@@ -41,14 +41,28 @@
 #           D:\code\iwhale2\log\cp_reject
 #       self.atmsgs, add field
 #     8.1.9  search pattern , add logic to handle subprocess
-#TODO:
+
 #     8.1.11 ImsCM code changed.
-#     8.1.12  ims code ACTION_SWITCH_IMS_FEATURE
-#     8.1.13 dialer
-#          CallCardPresenter
+#       #temporary add some logs.
+#      1. card is not enabled.
+#      2. audioqos: D:\code\log\bug_log\vit_log\2017_3_24\659089\ylog
+#
+#TODO:
+
+#     8.1.12  ims code ACTION_SWITCH_IMS_FEATURE,
+#     EVENT_WIFI_ATTACH_FAILED, add
 #     aidl: vendor/sprd/platform/frameworks/
+#     8.1.13 dialer
+#          CallCardPresenter.java, CallButtonPresenter.java
+#    add more decode about call and profile
+# InCall  : CallCardPresenter - Disconnecting call: [Call_2, ACTIVE, [Capabilities: CAPABILITY_HOLD CAPABILITY_SUPPORT_HOLD CAPABILITY_MUTE CAPABILITY_SUPPORTS_VT_LOCAL_RX CAPABILITY_SUPPORTS_VT_LOCAL_TX CAPABILITY_SUPPORTS_VT_LOCAL_BIDIRECTIONAL CAPABILITY_SUPPORTS_VT_REMOTE_RX CAPABILITY_SUPPORTS_VT_REMOTE_TX CAPABILITY_SUPPORTS_VT_REMOTE_BIDIRECTIONAL CAPABILITY_CAN_PAUSE_VIDEO], children:[], parent:null, conferenceable:[], videoState:Audio Only, mSessionModificationState:0, VideoSettings:(CameraDir:-1)
+#    packages/apps/Dialer/InCallUI/src/com/android/incallui
+#
+#
+
 #     8.1.10 onLoginFinished
 #D:\code\log\bug_log\vit_log\2017_3_24\660071\ylog
+
 #     8.2.0 http://bugzilla.spreadtrum.com/bugzilla/show_bug.cgi?id=659089
 #      my comments
 #       8.2.1 call session
@@ -223,6 +237,9 @@ ReportHandoverphrase['enwfc'] = langBuilder(zh="打开WiFi-Calling", en="Enable 
 
 ReportHandoverphrase['disenwfc'] = dict()
 ReportHandoverphrase['disenwfc'] = langBuilder(zh="关闭WiFi-Calling", en="Disable WiFi-Calling")
+
+ReportHandoverphrase['invalidsim'] = dict()
+ReportHandoverphrase['invalidsim'] = langBuilder(zh="Sim卡不在白名单，禁用VoWiFi", en="SimCard is not in VoWiFi whitelist")
 
 ReportHandoverphrase['idlehowifi'] = dict()
 ReportHandoverphrase['idlehowifi'] = langBuilder(zh="尝试Idle切换到VoWiFi", en="Trying to Idle Handover to VoWiFi")

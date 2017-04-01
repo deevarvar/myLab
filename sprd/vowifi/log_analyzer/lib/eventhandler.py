@@ -120,6 +120,31 @@ class airoff(eventhandler):
         self.retmsg.report = constructReport(type=ReportType.USEREVENT_BASE, event=event, level=self.retmsg.msglevel)
         return self.retmsg
 
+class callcard(eventhandler):
+    def handler(self):
+        #
+        action = self.match.group(1)
+        callid = str(self.match.group(2))
+        state = self.match.group(3).strip()
+
+        fmsg = action + '\n'
+        fmsg += "TeleCallid : " + callid  + '\n'
+        fmsg +=  "CallState: " + state
+        self.retmsg.msglevel = Msglevel.WARNING
+        self.retmsg.color = maplevel2color(self.retmsg.msglevel)
+        self.retmsg.msg = fmsg
+        #TODO: add report according to different action
+        return self.retmsg
+
+class invalidSimCard(eventhandler):
+    def handler(self):
+        self.retmsg.msglevel = Msglevel.ERROR
+        self.retmsg.color = maplevel2color(self.retmsg.msglevel)
+        self.retmsg.msg = "SimCard is not in VoWiFi whitelist"
+        event = mapzhphrase("invalidsim", ReportHandoverphrase)
+        self.retmsg.report = constructReport(type=ReportType.PHONEEVENT_BASE, event=event, level=self.retmsg.msglevel)
+        return self.retmsg
+
 class idlehowifi(eventhandler):
     def handler(self):
         self.retmsg.msg = self.match.group(1)
@@ -146,6 +171,8 @@ class callhowifi(eventhandler):
         event = mapzhphrase("callhowifi", ReportHandoverphrase)
         self.retmsg.report = constructReport(type=ReportType.PHONEEVENT_BASE, event=event, level=self.retmsg.msglevel)
         return self.retmsg
+
+
 
 class callholte(eventhandler):
     def handler(self):
@@ -333,7 +360,7 @@ class startcamera(eventhandler):
         callid = str(self.match.group(2)).strip()
         fmsg = "Start Camera\n"
         fmsg += "Cameraid : " + cameraid+ '\n'
-        fmsg += "Callid : " + callid
+        fmsg += "StackCallid : " + callid
         self.retmsg.msg = fmsg
         return self.retmsg
 
@@ -353,7 +380,7 @@ class stopcamera(eventhandler):
         self.retmsg.color = maplevel2color(self.retmsg.msglevel)
         callid = str(self.match.group(1)).strip()
         fmsg = "Stop Camera\n"
-        fmsg += "Callid : " + callid
+        fmsg += "StackCallid : " + callid
         self.retmsg.msg = fmsg
         return self.retmsg
 
@@ -373,7 +400,7 @@ class startlocalrender(eventhandler):
         self.retmsg.color = maplevel2color(self.retmsg.msglevel)
         callid = str(self.match.group(1)).strip()
         fmsg = "Start localrender\n"
-        fmsg += "Callid : " + callid
+        fmsg += "StackCallid : " + callid
         self.retmsg.msg = fmsg
         return self.retmsg
 
@@ -383,7 +410,7 @@ class stoplocalrender(eventhandler):
         self.retmsg.color = maplevel2color(self.retmsg.msglevel)
         callid = str(self.match.group(1)).strip()
         fmsg = "Stop localrender\n"
-        fmsg += "Callid : " + callid
+        fmsg += "StackCallid : " + callid
         self.retmsg.msg = fmsg
         return self.retmsg
 
@@ -393,7 +420,7 @@ class startremoterender(eventhandler):
         self.retmsg.color = maplevel2color(self.retmsg.msglevel)
         callid = str(self.match.group(1)).strip()
         fmsg = "Start remoterender\n"
-        fmsg += "Callid : " + callid
+        fmsg += "StackCallid : " + callid
         self.retmsg.msg = fmsg
         return self.retmsg
 
@@ -403,7 +430,7 @@ class stopremoterender(eventhandler):
         self.retmsg.color = maplevel2color(self.retmsg.msglevel)
         callid = str(self.match.group(1)).strip()
         fmsg = "Stop remoterender\n"
-        fmsg += "Callid : " + callid
+        fmsg += "StackCallid : " + callid
         self.retmsg.msg = fmsg
         return self.retmsg
 
@@ -418,7 +445,7 @@ class startcapture(eventhandler):
         qualitystr = mapcode2str(qualityid,ConstantVTResolution)
         fmsg = "Start Capture\n"
         fmsg += "Resolution: " + qualitystr + '\n'
-        fmsg += "Callid: " + callid + '\n'
+        fmsg += "StackCallid: " + callid + '\n'
         fmsg += "Cameraid: " + cameraid + '\n'
         self.retmsg.msglevel = Msglevel.INFO
         self.retmsg.color = maplevel2color(self.retmsg.msglevel)
@@ -431,7 +458,7 @@ class stopcapture(eventhandler):
         self.retmsg.color = maplevel2color(self.retmsg.msglevel)
         callid = str(self.match.group(1)).strip()
         fmsg = "Stop Capture\n"
-        fmsg += "Callid : " + callid
+        fmsg += "StackCallid : " + callid
         self.retmsg.msg = fmsg
         return self.retmsg
 
@@ -441,7 +468,7 @@ class startvideo(eventhandler):
         self.retmsg.color = maplevel2color(self.retmsg.msglevel)
         callid = str(self.match.group(1)).strip()
         fmsg = "Start Video\n"
-        fmsg += "Callid : " + callid
+        fmsg += "StackCallid : " + callid
         self.retmsg.msg = fmsg
         return self.retmsg
 
@@ -451,7 +478,7 @@ class startvideofailed(eventhandler):
         self.retmsg.color = maplevel2color(self.retmsg.msglevel)
         callid = str(self.match.group(1)).strip()
         fmsg = "Start Video Failed\n"
-        fmsg += "Callid : " + callid
+        fmsg += "StackCallid : " + callid
         self.retmsg.msg = fmsg
         return self.retmsg
 
@@ -461,7 +488,7 @@ class stopvideo(eventhandler):
         self.retmsg.color = maplevel2color(self.retmsg.msglevel)
         callid = str(self.match.group(1)).strip()
         fmsg = "Stop Video\n"
-        fmsg += "Callid : " + callid
+        fmsg += "StackCallid : " + callid
         self.retmsg.msg = fmsg
         return self.retmsg
 
@@ -471,7 +498,7 @@ class stopvideofailed(eventhandler):
         self.retmsg.color = maplevel2color(self.retmsg.msglevel)
         callid = str(self.match.group(1)).strip()
         fmsg = "Stop Video Failed\n"
-        fmsg += "Callid : " + callid
+        fmsg += "StackCallid : " + callid
         self.retmsg.msg = fmsg
         return self.retmsg
 
@@ -481,7 +508,7 @@ class rotatelocalrender(eventhandler):
         self.retmsg.color = maplevel2color(self.retmsg.msglevel)
         callid = str(self.match.group(1)).strip()
         fmsg = "Rotate local render\n"
-        fmsg += "Callid : " + callid
+        fmsg += "StackCallid : " + callid
         self.retmsg.msg = fmsg
         return self.retmsg
 
@@ -491,7 +518,7 @@ class rotatelocalrenderfailed(eventhandler):
         self.retmsg.color = maplevel2color(self.retmsg.msglevel)
         callid = str(self.match.group(1)).strip()
         fmsg = "Rotate local Failed\n"
-        fmsg += "Callid : " + callid
+        fmsg += "StackCallid : " + callid
         self.retmsg.msg = fmsg
         return self.retmsg
 
@@ -501,7 +528,7 @@ class rotateremoterender(eventhandler):
         self.retmsg.color = maplevel2color(self.retmsg.msglevel)
         callid = str(self.match.group(1)).strip()
         fmsg = "Rotate remote render \n"
-        fmsg += "Callid : " + callid
+        fmsg += "StackCallid : " + callid
         self.retmsg.msg = fmsg
         return self.retmsg
 
@@ -511,7 +538,7 @@ class rotateremoterenderfailed(eventhandler):
         self.retmsg.color = maplevel2color(self.retmsg.msglevel)
         callid = str(self.match.group(1)).strip()
         fmsg = "Rotate remote Failed\n"
-        fmsg += "Callid : " + callid
+        fmsg += "StackCallid : " + callid
         self.retmsg.msg = fmsg
         return self.retmsg
 
@@ -538,7 +565,7 @@ class invite2conf(eventhandler):
         self.retmsg.color = maplevel2color(self.retmsg.msglevel)
         callid = str(self.match.group(1).strip())
         confid = str(self.match.group(2).strip())
-        callidstr = "Callid: " + callid + "\n"
+        callidstr = "StackCallid: " + callid + "\n"
         confidstr = "Confid: " + confid
         self.retmsg.msg = "Invite Call to Conference\n" + callidstr + confidstr
         return self.retmsg
@@ -735,7 +762,7 @@ class servicecallback(eventhandler):
                         self.retmsg.report = constructReport(type=ReportType.SCEEVENT_BASE,event=event, level=self.retmsg.msglevel)
 
         if 'id' in servicejson:
-            callidstr = "Callid: " + str(servicejson['id']) + '\n'
+            callidstr = "StackCallid: " + str(servicejson['id']) + '\n'
         if 'alert_type' in servicejson:
             alertstr = "User Alert: " + mapcode2str(str(servicejson['alert_type']), Constantcallcode) + '\n'
         if 'is_video' in servicejson:

@@ -395,7 +395,12 @@ class logParser():
         wordssection = self.config['words']
         for process in wordssection:
             self.words[process] = dict()
-            self.words[process]['words'] = wordssection[process]
+            #wordssection can be list
+            wordlist = wordssection[process]
+            if type(wordssection[process]) is str:
+                wordlist = wordlist.split()
+
+            self.words[process]['words'] = wordlist
             self.words[process]['found'] = 0
             #some process wpa_supplicant not only have one pid
             self.words[process]['pids'] = list()
@@ -442,7 +447,7 @@ class logParser():
 
                     #error check
                     if len(lineinfo) < 6:
-                        self.logger.logger.error("line " + str(lineno) + " is incorrect")
+                        self.logger.logger.debug("line " + str(lineno) + " is incorrect")
                         continue
                     #FIXME: this logic is not correct any more after stephen refactor
                     # the ltag is like "[ImsCM] ImsConnectionManagerMonitor:" instead of ImsConnectionManagerMonitor:
@@ -486,17 +491,19 @@ class logParser():
 
                     #FIXME: add logic to track service and security
                     for process in wordssection:
-                       if self.words[process]['words'] in line:
-                           self.words[process]['found'] += 1
-                           #FIXME: this 'pid' can be a list
-                           if lpid not in self.words[process]['pids']:
-                                self.words[process]['pids'].append(lpid)
+                       wordlist = self.words[process]['words']
+                       for index, word in enumerate(wordlist):
+                           if word in line:
+                               self.words[process]['found'] += 1
+                               #FIXME: this 'pid' can be a list
+                               if lpid not in self.words[process]['pids']:
+                                    self.words[process]['pids'].append(lpid)
 
-                           if self.words[process]['found'] == 1:
-                                self.pids.append(lpid)
-                                self.piddb[lpid] = dict()
-                                self.piddb[lpid]['process'] = process
-                                self.piddb[lpid]['istags'] = 0
+                               if self.words[process]['found'] == 1:
+                                    self.pids.append(lpid)
+                                    self.piddb[lpid] = dict()
+                                    self.piddb[lpid]['process'] = process
+                                    self.piddb[lpid]['istags'] = 0
 
 
         with open(self.processout, 'w') as processout:
