@@ -846,7 +846,7 @@ class wfcstatus(eventhandler):
             wfcstr = "Disable WiFi-Calling"
             event = mapzhphrase("disenwfc", ReportHandoverphrase)
 
-        self.retmsg.msglevel = Msglevel.INFO
+        self.retmsg.msglevel = Msglevel.WARNING
         self.retmsg.color = maplevel2color(self.retmsg.msglevel)
         self.retmsg.msg = wfcstr
 
@@ -1310,6 +1310,24 @@ class imscmopfailed(eventhandler):
         self.retmsg.color = maplevel2color(self.retmsg.msglevel)
         operation = str(self.match.group(1)).strip()
         reason = str(self.match.group(2)).strip()
+        operationstr = operation + " Failed\n"
+        reasonstr = "Reason: " + reason
+        self.retmsg.msg = operationstr + reasonstr
+        #add report
+        event = mapzhphrase(operation, ReportHandoverphrase, pre="Failed to ", post=reasonstr)
+        self.retmsg.report = constructReport(type=ReportType.PHONEEVENT_BASE, event=event, level=self.retmsg.msglevel)
+        return self.retmsg
+
+class imscmopfailed2(eventhandler):
+    '''
+    two pattern: operation, reason
+    operationFailed: id = 1, type = "OPERATION_HANDOVER_TO_VOLTE", failed reason = VOLTE pdn failed
+    '''
+    def handler(self):
+        self.retmsg.msglevel = Msglevel.ERROR
+        self.retmsg.color = maplevel2color(self.retmsg.msglevel)
+        operation = str(self.match.group(2)).strip()
+        reason = str(self.match.group(1)).strip()
         operationstr = operation + " Failed\n"
         reasonstr = "Reason: " + reason
         self.retmsg.msg = operationstr + reasonstr

@@ -601,7 +601,7 @@ imscmEvent.addEvent('loopProcessIdleThreshold.*: Volte switch to (\w+)' , module
 imscmEvent.addEvent('(loopProcessIdleThreshold.*: Auto attach Vowifi)' , module_ImsCM, eventType = eventType.EDGE, eventHandler=idleautovowifi)
 
 ##imscm error pattern
-imscmEvent.addEvent('\[(.*)\] error, mRequestId =' , module_ImsCM, eventType = eventType.EDGE, eventHandler=imscmhandlemsgerror)
+imscmEvent.addEvent(':.*\[(.*)\] error, mRequestId =' , module_ImsCM, eventType = eventType.EDGE, eventHandler=imscmhandlemsgerror)
 
 ## imscm no rtp received
 imscmEvent.addEvent('handleMessage: \"MSG_RECEIVE_NO_RTP\", \"(.*)\", isVideoPacket = (.*)' , module_ImsCM, eventType = eventType.EDGE, eventHandler=imscmnortp)
@@ -617,6 +617,9 @@ imscmEvent.addEvent('operationSuccessed: id = .*, type = "(.*)"', module_ImsCM, 
 ##error msg
 ###operation failed
 imscmEvent.addEvent('operationFailed: id = .*, type = "(.*)", failed reason = (.*)', module_ImsCM, eventType = eventType.EDGE, eventHandler=imscmopfailed)
+#code refatored
+imscmEvent.addEvent('operationFailed: id = .*, failed reason = (.*), type = "(.*)"', module_ImsCM, eventType = eventType.EDGE, eventHandler=imscmopfailed2)
+
 ### switch vowifi error, not useful
 '''
 imscmEvent.addEvent('(switchOrHandoverVowifi: Device isn\'t in LTE environment)', module_ImsCM)
@@ -650,6 +653,8 @@ imscmEvent.addEvent('Lte network, networkType = (.*)', module_ImsCM, eventType =
 imscmEvent.addEvent('(wifi is disconnected)', module_ImsCM, eventType = eventType.EDGE, color="blue", eventHandler=wifidisconn)
 ##wifi calling
 imscmEvent.addEvent('database has changed, mIsWifiCallingEnabled = (.*)', module_ImsCM, eventType = eventType.EDGE, eventHandler=wfcstatus)
+imscmEvent.addEvent('database has changed, isWfcEnabled = (.*)', module_ImsCM, eventType = eventType.EDGE, eventHandler=wfcstatus)
+
 ##default wifi calling
 imscmEvent.addEvent('(Wifi-calling is .*)', module_ImsCM, eventType = eventType.EDGE, color = "blue")
 

@@ -66,7 +66,7 @@
 #     8.2.0 http://bugzilla.spreadtrum.com/bugzilla/show_bug.cgi?id=659089
 #      my comments
 #       8.2.1 call session
-#
+#       event.log /main.pdf diffs
 #      8.2.3 all success/failed event, only care about handover, register,call
 #      8.2.4 owner display : too aggressive
 
