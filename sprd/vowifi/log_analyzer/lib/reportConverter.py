@@ -48,10 +48,19 @@
 #      2. audioqos: D:\code\log\bug_log\vit_log\2017_3_24\659089\ylog
 #
 #TODO:
-
+#      8.1.3  log more
+#         1. 01-01 09:18:14.321  1140  2496 I CPVoiceAgent: [cp_mediaset]: AT+SPRTPMEDIASET=3,1,1,1
+#         2. DSCI
+#       http://bugzilla.spreadtrum.com/bugzilla/show_bug.cgi?id=660061
+#      8.1.3.1 REGISTER display , not easy to do
+#      8.1.4 D:\code\log\ref_log\instruments\Anritsu\error_sample  error sample
+#     8.1.11 add crash report
+#     8.1.12 rssi, Qos jquery chart.
 #     8.1.12  ims code ACTION_SWITCH_IMS_FEATURE,
 #     EVENT_WIFI_ATTACH_FAILED, add
 #     aidl: vendor/sprd/platform/frameworks/
+
+#http://bugzilla.spreadtrum.com/bugzilla/show_bug.cgi?id=663113
 #     8.1.13 dialer
 #          CallCardPresenter.java, CallButtonPresenter.java
 #    add more decode about call and profile
@@ -77,9 +86,7 @@
 #一般人就用user账户下载，不需要密码
 #你用admin:admin上传
 #renlong.he 2296206
-#      8.1.3  log more
-#         1. 01-01 09:18:14.321  1140  2496 I CPVoiceAgent: [cp_mediaset]: AT+SPRTPMEDIASET=3,1,1,1
-#         2. DSCI
+
 #
 # 8.1.100 ipsec cmd
 #

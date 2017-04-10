@@ -313,7 +313,9 @@ class flowParser():
                 else:
                     start = searchstart
                     #record the timestamp
-                    fields = self.loglines[searchstart].split(' ')
+                    #timestamp line is 3 backword
+                    backwardline = searchstart - 3
+                    fields = self.loglines[backwardline].split(' ')
                     #04-17 23:21:24.420
                     timestamp = fields[0] + ' ' + fields[1]
                     break
@@ -372,7 +374,9 @@ class flowParser():
                 else:
                     end = searchstart
                     #record the timestamp
-                    fields = self.loglines[searchstart].split(' ')
+                    #forward line
+                    forwardline = searchstart + 1
+                    fields = self.loglines[forwardline].split(' ')
                     #04-17 23:21:24.420
                     timestamp = fields[0] + ' ' + fields[1]
                     #if we found two siptags then break
@@ -1252,7 +1256,7 @@ class flowParser():
 
             if sip['issip']:
                 self.logger.logger.info('index is '+str(sipindex)+ ', callid is ' + callid)
-                onestr = self.xx(sip, elements)
+                onestr = self.assembleSipStr(sip, elements)
             else:
                 if 'isevent' in sip:
                     onestr = self.assembleEventStr(sip)
@@ -1450,12 +1454,22 @@ class flowParser():
             if not sip['issip']:
                 continue
 
+            print sip['cseq']
 
+            if 'fromnum' in sip:
+                fromnum = sip['fromnum']
+            else:
+                fromnum = 'UE'
 
+            if 'tonum' in sip:
+                tonum = sip['tonum']
+            else:
+                tonum = 'UE'
 
-            fromnum = sip['fromnum']
-            tonum = sip['tonum']
-            callid = sip['callid']
+            if 'callid' in sip:
+                callid = sip['callid']
+            else:
+                callid = ''
 
             #f:<sip:10.56.4.9>;tag=6cV1ACafY7ic..fA
             #from can be ip
@@ -1478,21 +1492,22 @@ class flowParser():
 
             #all 100 Trying/200OK/ACK about B2BUA, change its b2bua flag
             if callid == b2buarecord['callid']:
-                if sip['cseq'] == b2buarecord['cseq']:
-                    sip['b2bua'] = True
-                else:
-
-                    #FIXME: this logic is not correct here, there can be later ACK which is not about b2bua
-                    '''
-                    #NOTE: sometimes B2BUA's ACK not including "P-Com.Nokia.B2BUA-Involved"
-                    cseqnum = b2buarecord['cseq'].split(' ')[0]
-                    cseqack = cseqnum + ' ACK'
-
-
-                    if sip['cseq'] == cseqack:
-                        self.logger.logger.error('weird B2BUA\'s ACK not including P-Com.Nokia.B2BUA-Involved')
+                if 'cseq' in sip:
+                    if sip['cseq'] == b2buarecord['cseq']:
                         sip['b2bua'] = True
-                    '''
+                    else:
+
+                        #FIXME: this logic is not correct here, there can be later ACK which is not about b2bua
+                        '''
+                        #NOTE: sometimes B2BUA's ACK not including "P-Com.Nokia.B2BUA-Involved"
+                        cseqnum = b2buarecord['cseq'].split(' ')[0]
+                        cseqack = cseqnum + ' ACK'
+
+
+                        if sip['cseq'] == cseqack:
+                            self.logger.logger.error('weird B2BUA\'s ACK not including P-Com.Nokia.B2BUA-Involved')
+                            sip['b2bua'] = True
+                        '''
 
             #FIXME: add logic to fix following b2buarecord
             if callid not in self.callidmapmomt or sip['b2bua']:
@@ -1600,7 +1615,7 @@ class flowParser():
         diaginfo['send'] = sipobj['send']
         diaginfo['sdp'] = list()
         diaginfo['issip'] = 1
-
+        diaginfo['cseq'] = ''
         #add codec info
         diaginfo['codec'] = dict()
 
@@ -1625,7 +1640,7 @@ class flowParser():
 
         diaginfo['hascause'] = False
         diaginfo['cause'] = dict()
-
+        diaginfo['callid'] = ''
         #sdp record
         sdpstartindex = 0
 
@@ -1638,6 +1653,7 @@ class flowParser():
                 diaginfo['lineno'] = lineno
                 diaginfo['label'] =  method
                 diaginfo['timestamp'] = timestamp
+
                 #if method is INVITE, check Call-ID and From, to
                 #OPTIONS/UPDATE/INFO/REFER/MESSAGE behaviour follow Invite's From/To
                 if method == 'INVITE':
@@ -1892,6 +1908,8 @@ class flowParser():
         #atmsgs are already diaged.
         if self.atmsgs:
             self.diagsips = self.diagsips + self.atmsgs
+
+        self.dumpDiagsip()
         self.diagsips = self.utils.mergelistbykey(self.diagsips, 'timestamp')
 
         #add function output radio/event log to event.log
@@ -1899,7 +1917,7 @@ class flowParser():
 
         self.reportevent.generateHTML()
         #dump the trim sip, no need to dump
-        #self.dumpDiagsip()
+
 
         if self.diagsips:
             self.assembleDiagStr()
