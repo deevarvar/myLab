@@ -463,3 +463,32 @@ EN_MTC_SMS_CONT_RPSMMA = EN_MTC_SMS_CONT_RPACK + 1# /**< @brief sms rp-smma cont
 ConstantSmsType[str(EN_MTC_SMS_CONT_RPSMMA)] = "RP-SMMA content"
 EN_MTC_SMS_CONT_RPERROR = EN_MTC_SMS_CONT_RPSMMA + 1#/**< @brief sms rp-error content */
 ConstantSmsType[str(EN_MTC_SMS_CONT_RPERROR)] = "RP-ERROR content"
+
+
+#ImsConfig.java
+FEATURE_TYPE_UNKNOWN=-1
+FEATURE_TYPE_VOICE_OVER_LTE=0
+FEATURE_TYPE_VIDEO_OVER_LTE=1
+FEATURE_TYPE_VOICE_OVER_WIFI=2
+FEATURE_TYPE_VIDEO_OVER_WIFI=3
+FEATURE_TYPE_UT_OVER_LTE=4
+FEATURE_TYPE_UT_OVER_WIFI=5
+ConstantFeatureType = dict()
+ConstantFeatureType[str(FEATURE_TYPE_UNKNOWN)] = "Unknown Feature"
+ConstantFeatureType[str(FEATURE_TYPE_VOICE_OVER_LTE)] = "VoLTE"
+ConstantFeatureType[str(FEATURE_TYPE_VIDEO_OVER_LTE)] = "Video Over LTE"
+ConstantFeatureType[str(FEATURE_TYPE_VOICE_OVER_WIFI)] = "VoWiFi"
+ConstantFeatureType[str(FEATURE_TYPE_VIDEO_OVER_WIFI)] = "Video Over WiFi"
+ConstantFeatureType[str(FEATURE_TYPE_UT_OVER_LTE)] = "Ut Over LTE"
+ConstantFeatureType[str(FEATURE_TYPE_UT_OVER_WIFI)] = "Ut Over WiFi"
+
+# S2bType
+NORMAL=1
+SOS=2
+XCAP=3
+MMS=4
+ConstantS2bType = dict()
+ConstantS2bType[str(NORMAL)] = "Normal"
+ConstantS2bType[str(SOS)] = "Sos"
+ConstantS2bType[str(XCAP)] = "XCAP"
+ConstantS2bType[str(MMS)] = "MMS"

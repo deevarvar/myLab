@@ -46,27 +46,42 @@
 #       #temporary add some logs.
 #      1. card is not enabled.
 #      2. audioqos: D:\code\log\bug_log\vit_log\2017_3_24\659089\ylog
-#
+
+##    8.1.12  ims code ACTION_SWITCH_IMS_FEATURE,
+#     , add
+#     aidl: vendor/sprd/platform/frameworks/
+#     case:
+#          1. EVENT_WIFI_ATTACH_SUCCESSED, EVENT_WIFI_ATTACH_FAILED, ACTION_NOTIFY_VOWIFI_UNAVAILABLE
+#          2. ImsService: Needn't switch to type 2 as it already registed.
+#          3. OPERATION_HANDOVER_TO_VOWIFI in ImsCM is the same in tele's IMS_OPERATION_HANDOVER_TO_VOWIFI
+#          4. tele's log.w, log.e
+#D:\code\log\ref_log\instruments\Anritsu\call_scenarioes\merge_test\log4
+#http://bugzilla.spreadtrum.com/bugzilla/show_bug.cgi?id=663113
+#http://bugzilla.spreadtrum.com/bugzilla/show_bug.cgi?id=659089
+#D:\code\log\bug_log\vit_log\2017_3_24\659089\ylog
+#      8.1.3.4 new imscm : D:\code\log\ref_log\EE\poweroff_dereg
+
 #TODO:
 #      8.1.3  log more
 #         1. 01-01 09:18:14.321  1140  2496 I CPVoiceAgent: [cp_mediaset]: AT+SPRTPMEDIASET=3,1,1,1
 #         2. DSCI
 #       http://bugzilla.spreadtrum.com/bugzilla/show_bug.cgi?id=660061
 #      8.1.3.1 REGISTER display , not easy to do
+#      8.1.3.2 new ike error code
+#      high prio
+#      8.1.3.3 new s2b code C:\Users\Zhihua.Ye\Documents\MyJabberFiles\yingying.fan@spreadtrum.com\s2b_new\ylog\
+#       1. display flag on handler
 #      8.1.4 D:\code\log\ref_log\instruments\Anritsu\error_sample  error sample
-#     8.1.11 add crash report
+#     8.1.4.1 add crash report
 #     8.1.12 rssi, Qos jquery chart.
-#     8.1.12  ims code ACTION_SWITCH_IMS_FEATURE,
-#     EVENT_WIFI_ATTACH_FAILED, add
-#     aidl: vendor/sprd/platform/frameworks/
 
-#http://bugzilla.spreadtrum.com/bugzilla/show_bug.cgi?id=663113
+
 #     8.1.13 dialer
 #          CallCardPresenter.java, CallButtonPresenter.java
 #    add more decode about call and profile
 # InCall  : CallCardPresenter - Disconnecting call: [Call_2, ACTIVE, [Capabilities: CAPABILITY_HOLD CAPABILITY_SUPPORT_HOLD CAPABILITY_MUTE CAPABILITY_SUPPORTS_VT_LOCAL_RX CAPABILITY_SUPPORTS_VT_LOCAL_TX CAPABILITY_SUPPORTS_VT_LOCAL_BIDIRECTIONAL CAPABILITY_SUPPORTS_VT_REMOTE_RX CAPABILITY_SUPPORTS_VT_REMOTE_TX CAPABILITY_SUPPORTS_VT_REMOTE_BIDIRECTIONAL CAPABILITY_CAN_PAUSE_VIDEO], children:[], parent:null, conferenceable:[], videoState:Audio Only, mSessionModificationState:0, VideoSettings:(CameraDir:-1)
 #    packages/apps/Dialer/InCallUI/src/com/android/incallui
-#
+#    from callcard to try the call duration
 #
 
 #     8.1.10 onLoginFinished
@@ -578,7 +593,9 @@ ReportCpphrase["PS to CS SRVCC Cancelled"] = langBuilder(zh="SRVCC取消", en="S
 ReportCpphrase["PS to CS SRVCC Failed"] = dict()
 ReportCpphrase["PS to CS SRVCC Failed"] = langBuilder(zh="SRVCC失败", en="SRVCC Failed")
 
-
+ReportTelphrase = dict()
+ReportTelphrase['attachexception'] = dict()
+ReportTelphrase['attachexception'] = langBuilder(zh="手动点击S2b驻网", en="Start S2b Attach without switch request")
 
 #write a report builder
 

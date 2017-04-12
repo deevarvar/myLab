@@ -575,6 +575,8 @@ imscmEvent.addEvent('card (\d) status :(.*)' , module_ImsCM, eventType = eventTy
 #android 7.0 logic
 #sim card plmn
 imscmEvent.addEvent(': updateSubscriptionInfo: (\w+) primary USIM card plmn, mPrimaryPlmn = (\w+)' , module_ImsCM, eventType = eventType.EDGE, eventHandler=simstatus, groupnum=2)
+imscmEvent.addEvent('getPrimaryPlmn: get primary PLMN from getSimOperatorNumericForPhone.*: (\d+)' , module_ImsCM, eventType = eventType.EDGE, eventHandler=newsimstatus)
+
 #slot status
 imscmEvent.addEvent('updateSimState: Slot (\d) status is (.*)' , module_ImsCM, eventType = eventType.EDGE, eventHandler=slotstatus, groupnum=2)
 imscmEvent.addEvent('updateSimState: Slot (\d) simState = (.*)' , module_ImsCM, eventType = eventType.EDGE, eventHandler=slotstatus, groupnum=2)
@@ -640,10 +642,11 @@ imscmEvent.addEvent('(wifi is connected)', module_ImsCM, eventType = eventType.E
 
 
 ##airplane open
-imscmEvent.addEvent('(open airplane mode)', module_ImsCM , eventType = eventType.EDGE, color="blue", eventHandler=airon)
+imscmEvent.addEvent('(.*pen airplane mode)', module_ImsCM , eventType = eventType.EDGE, color="blue", eventHandler=airon)
 ##airplaneclose
-imscmEvent.addEvent('(close airplane mode)', module_ImsCM,eventType = eventType.EDGE, color="blue", eventHandler=airoff)
-
+imscmEvent.addEvent('(.*lose airplane mode)', module_ImsCM,eventType = eventType.EDGE, color="blue", eventHandler=airoff)
+##receive INTENT ACTION_SHUTDOWN
+imscmEvent.addEvent('(.*hut down device)', module_ImsCM,eventType = eventType.EDGE, color="red", eventHandler=poweroff)
 ##lte network
 
 
@@ -681,6 +684,16 @@ phoneEvent.addEvent("getIMSRegAddress mImsRegAddress =(.*)", module_Ims, eventTy
 ## start vowifi/volte call
 phoneEvent.addEvent("createCallSession-> start(.*)", module_Ims, eventType=eventType.EDGE, eventHandler=startcall, color = "blue")
 
+#some status event
+phoneEvent.addEvent("EVENT_WIFI_ATTACH_FAILED-> mFeatureSwitchRequest:.* mAttachVowifiSuccess:.*", module_Ims, eventType=eventType.EDGE, eventHandler=telepdgfail)
+
+phoneEvent.addEvent("EVENT_WIFI_ATTACH_SUCCESSED-> mFeatureSwitchRequest:(.*) mIsCalling:.*" , module_Ims, eventType=eventType.EDGE, eventHandler=telepdgsuccess)
+
+phoneEvent.addEvent("ACTION_NOTIFY_VOWIFI_UNAVAILABLE->.* mIsCPImsPdnActived:(\w+)" , module_Ims, eventType=eventType.EDGE, eventHandler=telvowifiunavail)
+
+
+
+phoneEvent.addEvent("Needn't switch to type (\d+) as it already registed", module_Ims, eventType=eventType.EDGE, eventHandler=switcherror)
 #Adapter Part
 ##VoWifiSecurityManager
 
@@ -716,10 +729,12 @@ phoneEvent.addEvent("Try to logout from the ims, current register state: (.*)", 
 ###force stop, no need to track
 #phoneEvent.addEvent("(Stop current register process. registerState:.*)", module_Phone)
 
-### security callback
-phoneEvent.addEvent("Get the security callback:(.*)", module_Adapter, eventType=eventType.EDGE, eventHandler=s2bstatus)
+### security callback, this is old callback
+phoneEvent.addEvent("Get the security callback:.*({\"security_json_action\":.*)", module_Adapter, eventType=eventType.EDGE, eventHandler=olds2bstatus)
+phoneEvent.addEvent("Get the security callback:.*({\"event_code\":.*)", module_Adapter, eventType=eventType.EDGE, eventHandler=news2bstatus)
 ### register callback
 phoneEvent.addEvent("Get the register state changed callback: {\"event_code\":.*,\"event_name\":\"(.*)\",\"state_code\":(.*)}" , module_Adapter, eventType=eventType.EDGE, eventHandler=regstatus, groupnum=2)
+
 
 ###call related event
 #phoneEvent.addEvent("(Handle the event.*for the call.*)", module_Phone)
@@ -862,8 +877,9 @@ phoneEvent.addEvent("(Failed to update the data router state, please check)", mo
 #phoneEvent.addEvent("(Update the call state to data router. state: .*)", module_Phone)
 #------------------------------------------------------------------------------------
 #Service part
+#Security Service
+serviceEvent.addEvent("Start the attach process as type: (.*), subId: .*, imsi: (.*), hplmn: (.*), vplmn: (.*)" , module_Service, eventType=eventType.EDGE, eventHandler=s2binfo, groupnum=4)
 ##RegisterService
-
 #aka response
 serviceEvent.addEvent("Get the challenge response: TAG = (.*),.*", module_Service, eventType=eventType.EDGE, eventHandler=akastatus)
 
@@ -880,7 +896,8 @@ serviceEvent.addEvent("Notify the event: (.*)", module_Service, eventType=eventT
 #reg status code comes here
 #only care about the adapter's log
 #serviceEvent.addEvent("(RegisterService.*Get the register state changed callback.*)", module_Service)
-
+#for status_update, we use service
+serviceEvent.addEvent("Get the register state changed callback, register state: (\w+), code:.*", module_Service, eventType=eventType.EDGE, eventHandler=regupdate)
 
 #------------------------------------------------------------------------------------
 #lemon part

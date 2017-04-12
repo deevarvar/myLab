@@ -120,6 +120,13 @@ class airoff(eventhandler):
         self.retmsg.report = constructReport(type=ReportType.USEREVENT_BASE, event=event, level=self.retmsg.msglevel)
         return self.retmsg
 
+class poweroff(eventhandler):
+    def handler(self):
+        self.retmsg.msg = "Phone is shutting down"
+        self.retmsg.msglevel = Msglevel.WARNING
+        self.retmsg.color = maplevel2color(self.retmsg.msglevel)
+        return self.retmsg
+
 class callcard(eventhandler):
     def handler(self):
         #
@@ -598,6 +605,15 @@ class startcall(eventhandler):
         self.retmsg.report = constructReport(type=ReportType.SCEEVENT_BASE,event=event, level=self.retmsg.msglevel)
         return self.retmsg
 
+class regupdate(eventhandler):
+    def handler(self):
+        self.retmsg.msglevel = Msglevel.INFO
+        self.retmsg.color = maplevel2color(self.retmsg.msglevel)
+        clistate = self.match.group(1)
+        eventstr = " VoWiFi Status Update to " + mapcode2str(str(clistate), Constantregstatecode)
+        self.retmsg.msg = eventstr
+        return self.retmsg
+
 class servicecallback(eventhandler):
     '''
     complex handler to parse #####Vowifiserservice.java######
@@ -1034,7 +1050,12 @@ class regstatus(eventhandler):
             eventstr = map2phrase(eventname, Reportregphrase)
 
             if eventname == "state_update":
+                #this code is not working here, mtc_cli.h
+                #[VoWifiService]RegisterService: Get the register state changed callback, register state: 1, code: 57600
+                #[Adapter]VoWifiRegisterManager: Get the register state changed callback: {"event_code":6,"event_name":"state_update","state_code":1}
                 eventstr += " to " + mapcode2str(str(statecode), Constantregstatecode)
+                #hard code here, we use service to track
+                return None
             else:
                 #state_update event is some kind of verbose, will not be included in report
                 event = mapzhphrase(eventname, Reportregphrase)
@@ -1044,7 +1065,101 @@ class regstatus(eventhandler):
             return self.retmsg
 
 
-class s2bstatus(eventhandler):
+class news2bstatus(eventhandler):
+    def handler(self):
+        s2bstr = self.match.group(1).strip()
+        s2bjson = json.loads(s2bstr)
+        #notifyS2bAttachSuccess, notifyS2bResult
+        #we only care about attach_successed, attach_stopped, attach_failed
+        # {"event_code":1,"event_name":"attach_successed","session_id":1,"local_ip4":"10.135.191.151","local_ip6":"2404:8d00:80b:8156:7bab:a1e2:cd9e:2f50","pcscf_ip4":"10.34.129.240;10.34.193.240","pcscf_ip6":"2407:ed00:1200:1000::1;2407:ed00:2200:1000::1","pref_ip4":false,"is_sos":false}
+	    # {"event_code":4,"event_name":"attach_stopped","session_id":1,"state_code":53760}
+        action = s2bjson['event_name']
+        if action == "attach_successed":
+            statestr = "epdg attach successfully\n"
+            ipv4str = ipv6str = pcscfv4str = pcscfv6str = prefipv4str = issosstr = sessidstr = ''
+            ipv4str = "     IPv4: " + s2bjson['local_ip4'] + '\n'
+            if 'local_ip6' in s2bjson:
+                ipv6str = "     IPv6: " + s2bjson['local_ip6'] + '\n'
+            if 'pcscf_ip4' in s2bjson:
+                pcscfv4str = "   PCSCF IPv4: " + s2bjson['pcscf_ip4'] + '\n'
+            if 'pcscf_ip6' in s2bjson:
+                pcscfv6str = "   PCSCF IPv6: " + s2bjson['pcscf_ip6'] + '\n'
+            if 'pref_ip4' in s2bjson:
+                prefipv4str = "Prefered IPv4: " + str(s2bjson['pref_ip4']) + '\n'
+            if 'is_sos' in s2bjson:
+                issosstr = " Tunnel For Sos: " + str(s2bjson['is_sos']) + '\n'
+            if 'session_id' in s2bjson:
+                sessidstr = " Session id: " + str(s2bjson['session_id']) + '\n'
+            self.retmsg.msglevel = Msglevel.NORMAL
+            self.retmsg.color = maplevel2color(self.retmsg.msglevel)
+            self.retmsg.msg = statestr + ipv4str + ipv6str + pcscfv4str + pcscfv6str + prefipv4str + issosstr + sessidstr
+            event = mapzhphrase("successed", Reports2bphrase)
+            self.retmsg.report = constructReport(event=event, level=self.retmsg.msglevel)
+
+        elif action == "attach_stopped":
+            sessidstr = ''
+            errorcode = ''
+            if 'state_code' in s2bjson:
+                errorcode = str(s2bjson['state_code'])
+            if 'session_id' in s2bjson:
+                sessidstr = " Session id: " + str(s2bjson['session_id']) + '\n'
+            statestr = "epdg attach stopped\n"
+            #add three spaces for alignment, not working...Orz...
+            mappedstr = str(errorcode) + '-->' + mapcode2str(str(errorcode), Constants2berrcode)
+            errorstr = " StateCode: " + mappedstr + '\n'
+
+            #in s2b stopped, the statecode should be checked
+            if isS2bError(errorcode):
+                self.retmsg.msglevel = Msglevel.ERROR
+                event = mapzhphrase("stopped_abnormally", Reports2bphrase)
+                self.retmsg.report = constructReport(event=event, level=self.retmsg.msglevel, errorstr=mappedstr)
+            else:
+                self.retmsg.msglevel = Msglevel.WARNING
+                event = mapzhphrase("stopped", Reports2bphrase)
+                self.retmsg.report = constructReport(event=event, level=self.retmsg.msglevel, errorstr=mappedstr)
+
+            self.retmsg.color = maplevel2color(self.retmsg.msglevel)
+            self.retmsg.msg = statestr + errorstr + sessidstr
+
+        elif action == "attach_failed":
+            sessidstr = ''
+            errorcode = ''
+            if 'state_code' in s2bjson:
+                errorcode = str(s2bjson['state_code'])
+            if 'session_id' in s2bjson:
+                sessidstr = " Session id: " + str(s2bjson['session_id']) + '\n'
+            statestr = "epdg attach failed\n"
+            mappedstr = str(errorcode) + '-->' + mapcode2str(str(errorcode), Constants2berrcode)
+            errorstr = "   stateCode: " +  mappedstr + '\n'
+
+            self.retmsg.msglevel = Msglevel.ERROR
+            self.retmsg.color = maplevel2color(self.retmsg.msglevel)
+            self.retmsg.msg = statestr + errorstr + sessidstr
+
+            event = mapzhphrase("failed", Reports2bphrase)
+            self.retmsg.report = constructReport(event=event, level=self.retmsg.msglevel, errorstr=mappedstr)
+
+        else:
+            return None
+        return self.retmsg
+
+class s2binfo(eventhandler):
+    def handler(self):
+        s2btype = mapcode2str(str(self.match.group(1).strip()), ConstantS2bType)
+        imsi = str(self.match.group(2).strip())
+        hplmn = str(self.match.group(3).strip())
+        vplmn = str(self.match.group(4).strip())
+        s2btypestr = "S2b Type: " + s2btype + '\n'
+        imsistr = "imsi: " + imsi + '\n'
+        hplmnstr = "HPLMN: " + hplmn + '\n'
+        vplmnstr = "VPLMN: " + vplmn + '\n'
+        statestr = "Start Epdg with:\n"
+        self.retmsg.msglevel = Msglevel.INFO
+        self.retmsg.color = maplevel2color(self.retmsg.msglevel)
+        self.retmsg.msg = statestr + s2btypestr + imsistr + hplmnstr + vplmnstr
+        return self.retmsg
+
+class olds2bstatus(eventhandler):
     '''
     s2b status check
     three kinds:
@@ -1149,6 +1264,31 @@ class simstatus(eventhandler):
         self.retmsg.msg = simstr + plmnstr + operatorstr
         return self.retmsg
 
+class newsimstatus(eventhandler):
+    '''
+    Note: *HEAVILY* rely on definition
+    two patterns, one is sim action(get/update), two is plmn
+    updateSimState: get primary USIM card plmn = 001010
+    '''
+    def handler(self):
+        plmn = str(self.match.group(1)).strip()
+        self.retmsg.msglevel = Msglevel.INFO
+        self.retmsg.color = maplevel2color(self.retmsg.msglevel)
+
+        plmnstr = "PLMN: " + plmn + '\n'
+        operatorstr = ""
+        if len(plmn) >= 5:
+            mnc = plmn[0:3]
+            mcc = plmn[3:]
+            try:
+                mcode = mobile_codes.mcc_mnc(mnc, mcc)
+                operator = mcode.operator
+                operatorstr = "Operator: " + operator + '\n'
+            except KeyError,e:
+                operatorstr = ""
+        self.retmsg.msg = plmnstr + operatorstr
+        return self.retmsg
+
 class simchanged7(eventhandler):
     '''
     just to match android 7.0's sim changed logic in ImsCM
@@ -1157,6 +1297,47 @@ class simchanged7(eventhandler):
         self.retmsg.msglevel = Msglevel.WARNING
         self.retmsg.color = maplevel2color(self.retmsg.msglevel)
         self.retmsg.msg = "Primary Sim Card Changed."
+        return self.retmsg
+
+class telepdgfail(eventhandler):
+    def handler(self):
+        self.retmsg.msglevel = Msglevel.ERROR
+        self.retmsg.color = maplevel2color(self.retmsg.msglevel)
+        self.retmsg.msg = "Epdg Attach Failed"
+        return self.retmsg
+
+class telepdgsuccess(eventhandler):
+    def handler(self):
+        self.retmsg.msglevel = Msglevel.NORMAL
+        self.retmsg.msg = "Epdg Attach Successfully"
+        switchrequest = str(self.match.group(1)).strip()
+        if switchrequest == "null":
+            self.retmsg.msglevel = Msglevel.ERROR
+            self.retmsg.msg = "Epdg Attached\n but No FeatureSwitchRequest"
+            event = mapzhphrase("attachexception", ReportTelphrase)
+            self.retmsg.report = constructReport(event=event, level=self.retmsg.msglevel)
+        self.retmsg.color = maplevel2color(self.retmsg.msglevel)
+        return self.retmsg
+
+class telvowifiunavail(eventhandler):
+    def handler(self):
+        pdnstate = str(self.match.group(1)).strip()
+        if pdnstate == "false":
+            pdnstatestr = "PDN Deactived"
+        else:
+            pdnstatestr = "PDN Actived"
+        self.retmsg.msglevel = Msglevel.ERROR
+        self.retmsg.color = maplevel2color(self.retmsg.msglevel)
+        self.retmsg.msg = "VoWiFi Unavailable\n" +pdnstatestr
+        return self.retmsg
+
+class switcherror(eventhandler):
+    def handler(self):
+        self.retmsg.msglevel = Msglevel.ERROR
+        self.retmsg.color = maplevel2color(self.retmsg.msglevel)
+        regtype = str(self.match.group(1)).strip()
+        regtypestr = mapcode2str(regtype, ConstantFeatureType)
+        self.retmsg.msg = "Don't switch to " + regtypestr
         return self.retmsg
 
 class slotstatus(eventhandler):
