@@ -31,6 +31,7 @@
 #     D:\code\log\bug_log\vit_log\2017_3_24\659070\Handover_to_VoLTE_Calldrop_2238\external_storage\ylog\ylog
 #        8.1.5 504 timeout
 #        ImsReasonInfo.java, more definition
+#        D:\code\log\srvcc\wei_504
 # 03-27 15:10:06.227  1134  1134 I [VoWifiService]VoWifiSerService: Notify the event: {"event_code":105,"event_name":"call_terminate","id":1,"state_code":146}
 #         D:\code\log\srvcc\503\slog_20170327151140_sp9832a_2h11_4mvolt_vowif_userdebu\external_storage\ylog\ylog
 #     8.1.6 ap color, servicecallback : talking, ok should be green

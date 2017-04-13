@@ -102,6 +102,19 @@ class wifidisconn(eventhandler):
         self.retmsg.report = constructReport(type=ReportType.USEREVENT_BASE, event=event, level=self.retmsg.msglevel)
         return self.retmsg
 
+class wifipreclose(eventhandler):
+    def handler(self):
+        pdnstate = str(self.match.group(1).lower())
+        if pdnstate == 'false':
+            pdnstatestr = "PDN is Actived"
+        else:
+            pdnstatestr = "PDN is DeActived"
+        self.retmsg.msg = "WiFi PreClose\n" + pdnstatestr
+        self.retmsg.msglevel = Msglevel.WARNING
+        self.retmsg.color = maplevel2color(self.retmsg.msglevel)
+        return self.retmsg
+
+
 class airon(eventhandler):
     def handler(self):
         self.retmsg.msg = self.match.group(1)
@@ -251,7 +264,6 @@ def parsemprofile(mprofile):
 
         if match:
             mlen = len(match.groups())
-            print 'abc ' + str(mlen)
             if mlen == 4:
                 aq = str(match.group(1)).strip()
                 ad = str(match.group(2)).strip()
@@ -1064,6 +1076,12 @@ class regstatus(eventhandler):
             self.retmsg.msg = eventstr
             return self.retmsg
 
+class subs504(eventhandler):
+    def handler(self):
+        self.retmsg.msglevel = Msglevel.ERROR
+        self.retmsg.color = maplevel2color(self.retmsg.msglevel)
+        self.retmsg.msg = "Server send 504 Timeout, Re-Register"
+        return self.retmsg
 
 class news2bstatus(eventhandler):
     def handler(self):
@@ -1077,7 +1095,8 @@ class news2bstatus(eventhandler):
         if action == "attach_successed":
             statestr = "epdg attach successfully\n"
             ipv4str = ipv6str = pcscfv4str = pcscfv6str = prefipv4str = issosstr = sessidstr = ''
-            ipv4str = "     IPv4: " + s2bjson['local_ip4'] + '\n'
+            if 'local_ipv4' in s2bjson:
+                ipv4str = "     IPv4: " + s2bjson['local_ip4'] + '\n'
             if 'local_ip6' in s2bjson:
                 ipv6str = "     IPv6: " + s2bjson['local_ip6'] + '\n'
             if 'pcscf_ip4' in s2bjson:
@@ -1100,7 +1119,7 @@ class news2bstatus(eventhandler):
             sessidstr = ''
             errorcode = ''
             if 'state_code' in s2bjson:
-                errorcode = str(s2bjson['state_code'])
+                errorcode = s2bjson['state_code']
             if 'session_id' in s2bjson:
                 sessidstr = " Session id: " + str(s2bjson['session_id']) + '\n'
             statestr = "epdg attach stopped\n"

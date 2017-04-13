@@ -642,9 +642,9 @@ imscmEvent.addEvent('(wifi is connected)', module_ImsCM, eventType = eventType.E
 
 
 ##airplane open
-imscmEvent.addEvent('(.*pen airplane mode)', module_ImsCM , eventType = eventType.EDGE, color="blue", eventHandler=airon)
+imscmEvent.addEvent(': (.*pen airplane mode)', module_ImsCM , eventType = eventType.EDGE, color="blue", eventHandler=airon)
 ##airplaneclose
-imscmEvent.addEvent('(.*lose airplane mode)', module_ImsCM,eventType = eventType.EDGE, color="blue", eventHandler=airoff)
+imscmEvent.addEvent(': (.*lose airplane mode)', module_ImsCM,eventType = eventType.EDGE, color="blue", eventHandler=airoff)
 ##receive INTENT ACTION_SHUTDOWN
 imscmEvent.addEvent('(.*hut down device)', module_ImsCM,eventType = eventType.EDGE, color="red", eventHandler=poweroff)
 ##lte network
@@ -664,6 +664,8 @@ imscmEvent.addEvent('(Wifi-calling is .*)', module_ImsCM, eventType = eventType.
 ### sim card only used in android 6
 imscmEvent.addEvent("(turn off primary SIM card)", module_ImsCM,eventType = eventType.EDGE, color="red")
 imscmEvent.addEvent("(turn on primary SIM card)", module_ImsCM,eventType = eventType.EDGE, color="red")
+
+imscmEvent.addEvent("onWifiPreClose: mIsImsPdnDeactive = (\w+)", module_ImsCM, eventType = eventType.EDGE, eventHandler=wifipreclose)
 
 ##msg pending
 # ImsConnectionManagerService: handleMessageHandoverToVowifi: mIsPendingProcess
@@ -869,6 +871,9 @@ phoneEvent.addEvent("The handler get the message: (\d+)", module_Adapter, eventT
 phoneEvent.addEvent("(Failed to update the data router state, please check)", module_Adapter,eventType=eventType.EDGE, eventHandler=adddrerror )
 
 
+#some exception
+phoneEvent.addEvent("(and server response 504. state code:)", module_Adapter,eventType=eventType.EDGE, eventHandler=subs504)
+
 ###create conf call
 #TODO: Try to create the conference call
 
@@ -879,6 +884,7 @@ phoneEvent.addEvent("(Failed to update the data router state, please check)", mo
 #Service part
 #Security Service
 serviceEvent.addEvent("Start the attach process as type: (.*), subId: .*, imsi: (.*), hplmn: (.*), vplmn: (.*)" , module_Service, eventType=eventType.EDGE, eventHandler=s2binfo, groupnum=4)
+serviceEvent.addEvent("(Can not get the net id), start attach process failed.", module_Service,eventType=eventType.EDGE, color='red')
 ##RegisterService
 #aka response
 serviceEvent.addEvent("Get the challenge response: TAG = (.*),.*", module_Service, eventType=eventType.EDGE, eventHandler=akastatus)

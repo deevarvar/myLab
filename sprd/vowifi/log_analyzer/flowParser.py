@@ -360,7 +360,7 @@ class flowParser():
 
         if dataindex == len(self.loglines):
             self.logger.logger.error("not sip msg for line " + line + ' , lineno  is '+ str(lineno))
-            return;
+            return
 
 
         searchstart = dataindex
@@ -599,10 +599,12 @@ class flowParser():
         with open(self.log, 'rb') as logfile:
             for lineno, line in enumerate(logfile):
                 line = line.strip(' \t')
+                '''
                 if self.switch['searchsip'] == "enabled":
                     self.getRegType(line)
+                '''
 
-                if self.switch['searchsip'] == "enabled":
+                if self.switch['searchsip'] == "enabled" or self.switch['searchsip'] == "backward":
                     if sprdPattern.search(line):
                         with open(self.lemonlog, 'a+') as llog:
                             llog.write(line)
@@ -610,12 +612,12 @@ class flowParser():
                 #FIXME: there may be race condition
                 #the data print can be different.
                 #if it is receivertags, search forward
-                if self.switch['searchsip'] == "enabled" and receiverpattern.search(line):
+                if (self.switch['searchsip'] == "enabled"  or self.switch['searchsip'] == "backward") and receiverpattern.search(line):
                     with open(self.lemonlog, 'a+') as llog:
                         llog.write(line)
                     self.getRecvSip(line, lineno)
                 #if it is sendertags, search backward
-                elif self.switch['searchsip'] == "enabled" and senderpattern.search(line):
+                elif (self.switch['searchsip'] == "enabled" or self.switch['searchsip'] == "backward") and senderpattern.search(line):
                     self.getSendSip(line, lineno)
                     with open(self.lemonlog, 'a+') as llog:
                         llog.write(line)
@@ -859,6 +861,10 @@ class flowParser():
 
     def findUE(self):
         #first find the 200 OK for REGISTER
+        if self.switch['searchsip'] == "enabled":
+            self.uenum = 'UE'
+            return
+
         for sipindex, sip in enumerate(self.diagsips):
             if sip['issip']:
                 if 'REGISTER' in sip['cseq']:
@@ -890,37 +896,44 @@ class flowParser():
             self.elements.append(element)
 
     def assembleSipStr(self, sip, elements):
-        callid = sip['callid']
-        momt = ''
+        if self.switch['searchsip'] == "backward":
+            callid = sip['callid']
+            momt = ''
 
-        momtlist = self.callidmapmomt[callid]
-        if sip['b2bua']:
-            momt = momtlist[1]
-        else:
-            momt = momtlist[0]
+            momtlist = self.callidmapmomt[callid]
+            if sip['b2bua']:
+                momt = momtlist[1]
+            else:
+                momt = momtlist[0]
 
 
         if sip['send']:
             #NOTE: space is important
             direct = ' -> '
             #find left/right by callid
-
-            leftnum = momt['mo']
-            rightnum = momt['mt']
-            left = elements[leftnum]
-            right = elements[rightnum]
-        else:
-            #FIXME: if the msg has cause, only if the network send it to UE
-            direct = ' <- '
-            if sip['hascause']:
-                left = elements[self.uenum]
-                right = 'NETWORK'
-            else:
+            if self.switch['searchsip'] == "backward":
                 leftnum = momt['mo']
                 rightnum = momt['mt']
                 left = elements[leftnum]
                 right = elements[rightnum]
-
+            else:
+                left = 'UE'
+                right = 'NETWORK'
+        else:
+            #FIXME: if the msg has cause, only if the network send it to UE
+            direct = ' <- '
+            if self.switch['searchsip'] == "backward":
+                if sip['hascause']:
+                    left = elements[self.uenum]
+                    right = 'NETWORK'
+                else:
+                    leftnum = momt['mo']
+                    rightnum = momt['mt']
+                    left = elements[leftnum]
+                    right = elements[rightnum]
+            else:
+                left = 'UE'
+                right = 'NETWORK'
         '''
         when we get new left, right, we check and added it in the self.elements
         '''
@@ -933,45 +946,50 @@ class flowParser():
         sdpstring = ""
         action = ''
         mediadirection = ''
-        labelcolor = ""
+        if sip['iserrorrsp']:
+            labelcolor = ", color=red"
+        else:
+            labelcolor = ", color=blue"
         notecolor =  ""
 
         basedirect =  left + direct + right
         label =  " [label = \"" + sip['label'] + "\""
 
         timestamp = "Time: " + sip['timestamp'] + "\n"
-        if sip['issdp'] and sip['isinvite'] :
-            action = "Action: " +  sip['action'] + '\n'
-
-        #some critical msg should be marked as red
-        if sip['b2bua'] or sip['hascause'] or sip['iserrorrsp']:
-            labelcolor = ", color=red"
 
         sdpinfo = ''
-        if sip['issdp']:
-            sdpstring = " with sdp"
-            self.logger.logger.error('error lineno is ' + str(sip['lineno']))
-            if sip['isvideo'] and sip['vport'] != 0:
-                if not sip['vdirect']:
-                    sip['vdirect'] = 'sendrecv'
-                mediadirection += "video: " + sip['vdirect'] + ', port: '+ str(sip['vport']) +';'
+        if self.switch['searchsip'] == "backward":
+            if sip['issdp'] and sip['isinvite'] :
+                action = "Action: " +  sip['action'] + '\n'
 
-            if sip['aport'] and not sip['adirect']:
-                sip['adirect'] = 'sendrecv'
+            #some critical msg should be marked as red
+            if sip['b2bua'] or sip['hascause'] or sip['iserrorrsp']:
+                labelcolor = ", color=red"
 
-            if sip['adirect']:
-                mediadirection += 'audio: ' + sip['adirect'] + ', port: '+ str(sip['aport']) +'\n'
+            if sip['issdp']:
+                sdpstring = " with sdp"
+                self.logger.logger.error('error lineno is ' + str(sip['lineno']))
+                if sip['isvideo'] and sip['vport'] != 0:
+                    if not sip['vdirect']:
+                        sip['vdirect'] = 'sendrecv'
+                    mediadirection += "video: " + sip['vdirect'] + ', port: '+ str(sip['vport']) +';'
 
-            if sip['codec']:
-                for codec, codecvalue in sip['codec'].iteritems():
-                    for sdpparam, value in codecvalue.iteritems():
-                        sdpinfo += 'Codec ' + str(codec) + ': ' + sdpparam + ' ' + value  + '\n'
+                if sip['aport'] and not sip['adirect']:
+                    sip['adirect'] = 'sendrecv'
+
+                if sip['adirect']:
+                    mediadirection += 'audio: ' + sip['adirect'] + ', port: '+ str(sip['aport']) +'\n'
+
+                if sip['codec']:
+                    for codec, codecvalue in sip['codec'].iteritems():
+                        for sdpparam, value in codecvalue.iteritems():
+                            sdpinfo += 'Codec ' + str(codec) + ': ' + sdpparam + ' ' + value  + '\n'
 
 
 
-        elif sip['b2bua'] and sip['isinvite']:
-            sdpstring = " without sdp"
-            #B2BUA's request will be marked
+            elif sip['b2bua'] and sip['isinvite']:
+                sdpstring = " without sdp"
+                #B2BUA's request will be marked
 
         if sip['cause']:
             cause = ',' + str(sip['cause']['code']) + '/' + sip['cause']['isdn']
@@ -1017,11 +1035,25 @@ class flowParser():
 
 
         note = " Note: " + sdpstring + cause + '\n'
-        cseq = " CSeq: " + sip['cseq'] + '\n'
+        if sip['cseq']:
+            cseq = " CSeq: " + sip['cseq'] + '\n'
+        else:
+            cseq = ''
+
         #callid = " Call-ID: "+ sip['callid'] + '\n'
-        fromtag = " From: " + sip['fromnum'] + '\n'
-        totag = " To: " + sip['tonum'] + '\n'
-        callid = " Call-ID: " + sip['callid'] + '\n'
+        if 'fromnum' in sip:
+            fromtag = " From: " + sip['fromnum'] + '\n'
+        else:
+            fromtag = ''
+        if 'tonum' in sip:
+            totag = " To: " + sip['tonum'] + '\n'
+        else:
+            totag = ''
+
+        if sip['callid']:
+            callid = " Call-ID: " + sip['callid'] + '\n'
+        else:
+            callid = ''
         lineno = " log lineno: " + str(sip['lineno'])
 
         referto = ''
@@ -1212,16 +1244,18 @@ class flowParser():
         elements['NETWORK'] = 'NETWORK'
         self.findUE()
 
-        for index, entity in enumerate(self.entities):
-            if entity == self.uenum:
-                #seqdial's title do not support + char??!!
-                elements[self.uenum] = entity.strip('+')
-            else:
-                elements[entity] = entity.strip('+')
+        if self.switch['searchsip'] == "backward":
+            for index, entity in enumerate(self.entities):
+                if entity == self.uenum:
+                    #seqdial's title do not support + char??!!
+                    elements[self.uenum] = entity.strip('+')
+                else:
+                    elements[entity] = entity.strip('+')
+        else:
+            elements[self.uenum] = 'UE'
 
-
-        if self.uenum:
-            self.logger.logger.info('ue name is '+ elements[self.uenum])
+            if self.uenum:
+                self.logger.logger.info('ue name is '+ elements[self.uenum])
 
 
         #1. element order
@@ -1231,15 +1265,15 @@ class flowParser():
         right = ''
         direct = ''
 
-
-        #add one more loop to fix REGISTER req/rsp's mo and mt
-        for sipindex, sip in enumerate(self.diagsips):
-            if sip['issip']:
-                callid = sip['callid']
-                momtlist = self.callidmapmomt[callid]
-                if 'REGISTER' in sip['cseq'] and sip['pasonum']:
-                    self.logger.logger.info('use P-Associate-URI'+ str(sip['pasonum']) + ' for register ' + sip['fromnum'])
-                    momtlist[0]['mo'] = sip['pasonum']
+        if self.switch['searchsip'] == "backward":
+            #add one more loop to fix REGISTER req/rsp's mo and mt
+            for sipindex, sip in enumerate(self.diagsips):
+                if sip['issip']:
+                    callid = sip['callid']
+                    momtlist = self.callidmapmomt[callid]
+                    if 'REGISTER' in sip['cseq'] and sip['pasonum']:
+                        self.logger.logger.info('use P-Associate-URI'+ str(sip['pasonum']) + ' for register ' + sip['fromnum'])
+                        momtlist[0]['mo'] = sip['pasonum']
 
         splitnum = len(self.diagsips) / int(self.splitgate) + 1
         self.logger.logger.info('the diagsips will be divided into %d ' % splitnum)
@@ -1255,7 +1289,11 @@ class flowParser():
                 continue
 
             if sip['issip']:
-                self.logger.logger.info('index is '+str(sipindex)+ ', callid is ' + callid)
+                self.logger.logger.info('index is '+str(sipindex))
+                if self.switch['searchsip'] == "backward":
+                    self.logger.logger.info('index is '+str(sipindex) + ', callid is ' + callid)
+                else:
+                    self.logger.logger.info('index is '+str(sipindex))
                 onestr = self.assembleSipStr(sip, elements)
             else:
                 if 'isevent' in sip:
@@ -1901,7 +1939,8 @@ class flowParser():
 
 
         #analyze the trim sip
-        self.analyzeSip()
+        if self.switch['searchsip'] == "backward":
+            self.analyzeSip()
 
 
         ## merge atmsgs and kernelmsgs.
