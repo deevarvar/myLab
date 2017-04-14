@@ -273,6 +273,14 @@ Q850map['609'] = dict()
 Q850map['609']['isdn'] = "GATEWAY_DOWN"
 Q850map['609']['sip'] = ""
 
+
+def getQ850isdn(cause):
+    if cause in Q850map:
+        if 'isdn' in Q850map[cause]:
+            return Q850map[cause]['isdn']
+    else:
+        return cause
+
 #ike notify error type
 ikenotifyerror = [
 "UNSUPPORTED_CRITICAL_PAYLOAD",

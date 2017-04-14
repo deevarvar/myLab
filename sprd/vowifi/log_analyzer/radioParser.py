@@ -21,7 +21,7 @@ from lib.utils import utils
 from lib.sprdErrCode import *
 from lib.reportEvent import *
 from lib.reportConverter import *
-
+from lib.constants import * #we need Q850map
 
 path = os.path.dirname(os.path.realpath(__file__))
 
@@ -116,6 +116,8 @@ class radioParser():
             self.pattern['callinfosyncpattern'] = config['radioParser']['callinfosyncpattern']
             self.pattern['networksrvccpattern'] = config['radioParser']['networksrvccpattern']
 
+            self.pattern['mestatepattern'] = config['radioParser']['mestatepattern']
+
             #there are always dirty msgs to ignroe, Orz...
             self.ignoremsg = list()
             self.ignoremsg.append("VoLTE Unregistered")
@@ -152,9 +154,11 @@ class radioParser():
         except (ConfigObjError, IOError) as e:
              print 'Could not read "%s": %s' % (configfile, e)
 
+    
     def initkeypattern(self):
         #define the pattern and pattern helper
         self.keypattern = list()
+
         pdnpattern = dict()
         pdnpattern['pattern'] = re.compile(self.pattern['pdnpattern'])
         pdnpattern['func'] = self.getPdnstate
@@ -312,6 +316,12 @@ class radioParser():
         callinfosyncpattern['func'] = self.callinfosync
         callinfosyncpattern['direct'] = '->'
         self.keypattern.append(callinfosyncpattern)
+
+        mestatepattern = dict()
+        mestatepattern['pattern'] = re.compile(self.pattern['mestatepattern'])
+        mestatepattern['func'] = self.mestate
+        mestatepattern['direct'] = '<-'
+        self.keypattern.append(mestatepattern)
 
     def initAtmsg(self, line):
         #common steps
@@ -817,6 +827,60 @@ class radioParser():
         action.setAll(eventname, msglevel, color)
         return action
 
+    def mestate(self, string):
+        eventname = ''
+        color = 'black'
+        msglevel = Msglevel.INFO
+        action = actionBuilder()
+        #<id>,<dir>,<stat>,<type>,<mpty>,<number>,<num_type>,[<bs_type>][,cause]
+        string = string.strip()
+        fields = string.split(',')
+        calldir = fields[1]
+        callstat = fields[2]
+        calltype = fields[3]
+        number = fields[5]
+        cause = ''
+        if len(fields) >= 8:
+            cause = fields[8]
+
+        #useless
+        calldirstr = ''
+        if calldir == '0':
+            calldirstr = "user Initiated"
+        else:
+            calldirstr = "User Hung up"
+
+        calltypestr = ''
+        if calltype == '0':
+            calltypestr = 'Voice Call'
+        else:
+            calltypestr = "CS Data Call"
+
+
+        callstatstr = 'CallState: '
+        if  callstat == '0':
+            callstatstr += 'Active'
+        elif callstat == '1':
+            callstatstr += 'Hang up'
+        elif callstat == '2':
+            callstatstr += 'Dialing'
+        elif callstat == '3':
+            callstatstr += 'Alerting'
+        elif callstat == '4':
+            callstatstr += 'Incoming'
+        elif callstat == '5':
+            callstatstr += "Waiting"
+        elif callstat == '6':
+            callstatstr += 'Stop'
+
+        numberstr = "No: " + number
+        causestr = ''
+        if cause:
+            causestr = "Cause: " + getQ850isdn(cause)
+        eventname = calltypestr + '\n' + callstatstr + '\n' + numberstr + '\n' + causestr
+
+        action.setAll(eventname, msglevel, color)
+        return action
 
     def getAtmsg(self,keypattern, line, lineno):
         '''
