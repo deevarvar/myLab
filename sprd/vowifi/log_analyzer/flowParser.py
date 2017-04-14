@@ -236,6 +236,10 @@ class flowParser():
             #record recompiled sip msg, which include more important msg
             self.diagsips = list()
 
+            #record msgs which will be displayed
+            self.displayedmsgs = list()
+
+
             #record all entity UE or Network
             self.entities = list()
 
@@ -1237,6 +1241,14 @@ class flowParser():
             onestr = ' === ' + words + '=== \n'
         return onestr
 
+    def getdisplaymsgs(self):
+        for index, sip in enumerate(self.diagsips):
+            if 'display' in sip and sip['display'] == False:
+                continue
+            else:
+                self.displayedmsgs.append(sip)
+
+
     def assembleDiagStr(self):
         #first define all UE and network name
         elements = dict()
@@ -1275,18 +1287,20 @@ class flowParser():
                         self.logger.logger.info('use P-Associate-URI'+ str(sip['pasonum']) + ' for register ' + sip['fromnum'])
                         momtlist[0]['mo'] = sip['pasonum']
 
-        splitnum = len(self.diagsips) / int(self.splitgate) + 1
+        self.getdisplaymsgs()
+        splitnum = len(self.displayedmsgs) / int(self.splitgate) + 1
         self.logger.logger.info('the diagsips will be divided into %d ' % splitnum)
         self.diagstrList = [''] * splitnum
 
 
-        for sipindex, sip in enumerate(self.diagsips):
+        for sipindex, sip in enumerate(self.displayedmsgs):
 
             sector = (sipindex + 1) / int(self.splitgate)
-
             if 'display' in sip and sip['display'] == False:
                 self.logger.logger.info('lineno ' + str(sip['lineno']) + ' is skipped')
                 continue
+
+
 
             if sip['issip']:
                 self.logger.logger.info('index is '+str(sipindex))
@@ -1948,7 +1962,7 @@ class flowParser():
         if self.atmsgs:
             self.diagsips = self.diagsips + self.atmsgs
 
-        self.dumpDiagsip()
+        #self.dumpDiagsip()
         self.diagsips = self.utils.mergelistbykey(self.diagsips, 'timestamp')
 
         #add function output radio/event log to event.log

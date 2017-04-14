@@ -61,16 +61,22 @@
 #http://bugzilla.spreadtrum.com/bugzilla/show_bug.cgi?id=659089
 #D:\code\log\bug_log\vit_log\2017_3_24\659089\ylog
 #      8.1.3.4 new imscm : D:\code\log\ref_log\EE\poweroff_dereg
+#      8.1.3.1 REGISTER display add backward option for searchsip
+##     8.1.3.3 new s2b code C:\Users\Zhihua.Ye\Documents\MyJabberFiles\yingying.fan@spreadtrum.com\s2b_new\ylog\
+#     8.1.10 onLoginFinished
+#D:\code\log\bug_log\vit_log\2017_3_24\660071\ylog
 
 #TODO:
-#      8.1.3  log more
+#   8.1.4 call optimization
+#    add call number D:\code\log\bug_log\vit_log\2017_4_14\665355
+#   8.1.3  log more
 #         1. 01-01 09:18:14.321  1140  2496 I CPVoiceAgent: [cp_mediaset]: AT+SPRTPMEDIASET=3,1,1,1
-#         2. DSCI
-#       http://bugzilla.spreadtrum.com/bugzilla/show_bug.cgi?id=660061
-#      8.1.3.1 REGISTER display , not easy to do
+#         2. DSCI D:\code\log\bug_log\vit_log\2017_4_14\660061\ylog2
+#         page blank
+
 #      8.1.3.2 new ike error code
 #      high prio
-#      8.1.3.3 new s2b code C:\Users\Zhihua.Ye\Documents\MyJabberFiles\yingying.fan@spreadtrum.com\s2b_new\ylog\
+
 #       1. display flag on handler
 #      8.1.4 D:\code\log\ref_log\instruments\Anritsu\error_sample  error sample
 #     8.1.4.1 add crash report
@@ -85,8 +91,6 @@
 #    from callcard to try the call duration
 #
 
-#     8.1.10 onLoginFinished
-#D:\code\log\bug_log\vit_log\2017_3_24\660071\ylog
 
 #     8.2.0 http://bugzilla.spreadtrum.com/bugzilla/show_bug.cgi?id=659089
 #      my comments

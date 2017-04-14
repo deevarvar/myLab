@@ -865,7 +865,7 @@ phoneEvent.addEvent("Set the pause image to.*", module_Adapter)
 ###invite conf call
 phoneEvent.addEvent("Try to invite this call(.*)to the conference call(.*)", module_Adapter, eventType=eventType.EDGE, eventHandler=invite2conf)
 
-phoneEvent.addEvent("The handler get the message: (\d+)", module_Adapter, eventType=eventType.EDGE, eventHandler=teleaction)
+phoneEvent.addEvent("The handler get the message: (\d+)", module_Adapter, eventType=eventType.EDGE, eventHandler=teleaction, display=False)
 
 #some error in adapter
 phoneEvent.addEvent("(Failed to update the data router state, please check)", module_Adapter,eventType=eventType.EDGE, eventHandler=adddrerror )
