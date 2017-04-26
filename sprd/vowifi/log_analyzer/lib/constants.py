@@ -607,14 +607,22 @@ imscmEvent.addEvent('loop(\w+)CallThreshold.*: Volte handover to (\w+)' , module
 
 ##idle , reged than handover
 imscmEvent.addEvent('loopProcessIdleThreshold.*: Volte switch to (\w+)' , module_ImsCM, eventType = eventType.EDGE, eventHandler=idlethreshholdho)
+
 ##idle non-reg attach
 imscmEvent.addEvent('(loopProcessIdleThreshold.*: Auto attach Vowifi)' , module_ImsCM, eventType = eventType.EDGE, eventHandler=idleautovowifi)
 
+#TOOD: add new log
+#ImsConnectionManagerDefaultPolicy: loopIdleThresholdForCellularPreferred: Vowifi switch to Volte !!!!!
+#loopIdleThresholdForWifiPreferred: Volte switch to Vowifi
+imscmEvent.addEvent('loopIdleThreshold.*: Volte switch to (\w+)' , module_ImsCM, eventType = eventType.EDGE, eventHandler=idlethreshholdho)
+imscmEvent.addEvent('loopIdleThreshold.*: Vowifi switch to (\w+)' , module_ImsCM, eventType = eventType.EDGE, eventHandler=idlethreshholdho)
 ##imscm error pattern
 imscmEvent.addEvent(':.*\[(.*)\] error, mRequestId =' , module_ImsCM, eventType = eventType.EDGE, eventHandler=imscmhandlemsgerror)
 
+#ImsConnectionManagerService: Rtp_handleMessage: "MSG_RECEIVE_NO_RTP", "Volte Call", "AUDIO CALL", isVideoPacket = false
+imscmEvent.addEvent('handleMessage: \"MSG_RECEIVE_NO_RTP\", \"(.*)\", \"(.*)\", isVideoPacket = (.*)' , module_ImsCM, eventType = eventType.EDGE, eventHandler=imscmnortp2, groupnum=3)
 ## imscm no rtp received
-imscmEvent.addEvent('handleMessage: \"MSG_RECEIVE_NO_RTP\", \"(.*)\", isVideoPacket = (.*)' , module_ImsCM, eventType = eventType.EDGE, eventHandler=imscmnortp)
+imscmEvent.addEvent('handleMessage: \"MSG_RECEIVE_NO_RTP\", \"(.*)\", isVideoPacket = (.*)' , module_ImsCM, eventType = eventType.EDGE, eventHandler=imscmnortp, groupnum=2)
 
 ## imscm ping unreachable, seems no need to draw
 imscmEvent.addEvent('(handleMessage: ping unreachable, must reset noAudioRtpCounter and noVideoRtpCounter)', module_ImsCM)
@@ -626,6 +634,9 @@ imscmEvent.addEvent('operationSuccessed: id = .*, type = "(.*)"', module_ImsCM, 
 
 ##error msg
 ###operation failed
+#VoWifiRegisterManager report reg state
+#VoWifiSecurityManager report s2b error code
+
 imscmEvent.addEvent('operationFailed: id = .*, type = "(.*)", failed reason = (.*)', module_ImsCM, eventType = eventType.EDGE, eventHandler=imscmopfailed)
 #code refatored
 imscmEvent.addEvent('operationFailed: id = .*, failed reason = (.*), type = "(.*)"', module_ImsCM, eventType = eventType.EDGE, eventHandler=imscmopfailed2)
@@ -932,6 +943,19 @@ serviceEvent.addEvent("SmsService: Received message, get the rpMessageRef: (.*)"
 serviceEvent.addEvent("Get the native callback, message send failed: id = (.*), type = (.*), stateCode = (.*)", module_Service, eventType=eventType.EDGE, eventHandler=sendsmsfailed, groupnum = 3)
 serviceEvent.addEvent("Handle the timeout message, rpMessageRef: (.*)", module_Service, eventType=eventType.EDGE, eventHandler=smstimeout)
 serviceEvent.addEvent("Send SMS ack for rpMessageRef: (.*)", module_Service, eventType=eventType.EDGE, eventHandler=smsack)
+
+
+#Media At cmd, default is not displayed
+serviceEvent.addEvent("CPVoiceAgent: AT> AT\+SPRTPMEDIASET=(.*)", module_Service, eventType=eventType.EDGE, eventHandler=cpmediaset, display=False)
+
+
+#some lemon keywords
+#conn, sess<.*>，　notify conn event
+#FIXME:　conn termed by user is not reported to user
+#EN_MTFE_CONN_STAT_TERMED not reported
+#EN_RSE_EVNT_SESS_TERMING  is not used in Mtc_SprocOnCallEvnt
+#conf, conf<.*>, notify conf event
+
 
 
 ### MTC_EBASE_S2B , MTC_EBASE_REG

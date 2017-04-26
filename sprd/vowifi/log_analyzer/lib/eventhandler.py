@@ -106,9 +106,9 @@ class wifipreclose(eventhandler):
     def handler(self):
         pdnstate = str(self.match.group(1).lower())
         if pdnstate == 'false':
-            pdnstatestr = "PDN is Actived"
+            pdnstatestr = "PDN State: Actived"
         else:
-            pdnstatestr = "PDN is DeActived"
+            pdnstatestr = "PDN State: DeActived"
         self.retmsg.msg = "WiFi PreClose\n" + pdnstatestr
         self.retmsg.msglevel = Msglevel.WARNING
         self.retmsg.color = maplevel2color(self.retmsg.msglevel)
@@ -1500,6 +1500,29 @@ class imscmnortp(eventhandler):
         self.retmsg.report = constructReport(type=ReportType.PHONEEVENT_BASE, event=event, level=self.retmsg.msglevel)
         return self.retmsg
 
+class imscmnortp2(eventhandler):
+    '''
+    two pattern: call type, isvideo
+
+    '''
+    def handler(self):
+        callmode = str(self.match.group(1)).strip()
+        calltype = str(self.match.group(2)).strip()
+        isvideo = str(self.match.group(3)).strip().lower()
+        if isvideo == "true":
+            nortp = "Video"
+            event = mapzhphrase("videonortp", ReportHandoverphrase)
+        else:
+            nortp = "Audio"
+            event = mapzhphrase("voicenortp", ReportHandoverphrase)
+
+        nortpstr = callmode + " No " + nortp  + " in " + calltype
+        self.retmsg.msglevel = Msglevel.ERROR
+        self.retmsg.color = maplevel2color(self.retmsg.msglevel)
+        self.retmsg.msg = nortpstr
+        self.retmsg.report = constructReport(type=ReportType.PHONEEVENT_BASE, event=event, level=self.retmsg.msglevel)
+        return self.retmsg
+
 class imscmopfailed(eventhandler):
     '''
     two pattern: operation, reason
@@ -1511,7 +1534,7 @@ class imscmopfailed(eventhandler):
         operation = str(self.match.group(1)).strip()
         reason = str(self.match.group(2)).strip()
         operationstr = operation + " Failed\n"
-        reasonstr = "Reason: " + reason
+        reasonstr = "Reason: " + mapcode2str(reason,Constants2berrcode)
         self.retmsg.msg = operationstr + reasonstr
         #add report
         event = mapzhphrase(operation, ReportHandoverphrase, pre="Failed to ", post=reasonstr)
@@ -1529,7 +1552,7 @@ class imscmopfailed2(eventhandler):
         operation = str(self.match.group(2)).strip()
         reason = str(self.match.group(1)).strip()
         operationstr = operation + " Failed\n"
-        reasonstr = "Reason: " + reason
+        reasonstr = "Reason: " + mapcode2str(reason,Constants2berrcode)
         self.retmsg.msg = operationstr + reasonstr
         #add report
         event = mapzhphrase(operation, ReportHandoverphrase, pre="Failed to ", post=reasonstr)
@@ -1816,8 +1839,44 @@ class smsack(eventhandler):
         msgrefstr = "messageRef: " + str(self.match.group(1)).strip() + '\n'
         self.retmsg.msg = "Send Sms ACK\n" + msgrefstr
         event=mapzhphrase("sendsmsack", ReportScenariophrase)
+        event=mapzhphrase("sendsmsack", ReportScenariophrase)
         self.retmsg.report = constructReport(type=ReportType.SCEEVENT_BASE, event=event, level=self.retmsg.msglevel)
         return self.retmsg
+
+class cpmediaset(eventhandler):
+    def handler(self):
+        self.retmsg.msglevel = Msglevel.INFO
+        self.retmsg.color = maplevel2color(self.retmsg.msglevel)
+        atcmd = str(self.match.group(1)).strip()
+        #format is operation, channel_id, state, enable_ipv6
+        fields = atcmd.split(',')
+        op = str(fields[0])
+        cid = str(fields[1])
+        state = str(fields[2])
+        opstr = "Media Operation: "
+        if op == '1':
+            opstr += 'Start'
+        elif op == '2':
+            opstr += 'Stop'
+        elif op == '3':
+            opstr += 'Change'
+
+        cidstr = "Channel id: " + cid
+        statestr = "Media Direct: "
+        if state == '0':
+            statestr += "none"
+        elif state == '1':
+            statestr += 'recvonly'
+        elif state == '2':
+            statestr += 'sendonly'
+        elif state == '3':
+            statestr += 'sendrecv'
+
+        msg = "CP Media AT CMD"
+        self.retmsg.msg = msg + '\n' + cidstr + '\n' + opstr + '\n' + statestr
+
+        return self.retmsg
+
 
 if __name__ == '__main__':
     key = 'abc'

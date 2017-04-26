@@ -3,6 +3,15 @@
 # analyzed result may be changed due to different ui result
 # in the main.pdf or in the report
 
+
+
+
+
+
+
+
+
+
 #Done:
 #      1. done: epdg stop/failed analysis, add detailed cause
 #      2. done: error table list, td with color
@@ -65,15 +74,21 @@
 ##     8.1.3.3 new s2b code C:\Users\Zhihua.Ye\Documents\MyJabberFiles\yingying.fan@spreadtrum.com\s2b_new\ylog\
 #     8.1.10 onLoginFinished
 #D:\code\log\bug_log\vit_log\2017_3_24\660071\ylog
-
-#TODO:
-#   8.1.4 call optimization
-#    add call number D:\code\log\bug_log\vit_log\2017_4_14\665355
 #   8.1.3  log more
 #         1. 01-01 09:18:14.321  1140  2496 I CPVoiceAgent: [cp_mediaset]: AT+SPRTPMEDIASET=3,1,1,1
 #         2. DSCI D:\code\log\bug_log\vit_log\2017_4_14\660061\ylog2
-#         page blank
-
+#TODO:
+#   new ho no rtp
+# D:\code\log\bug_log\vit_log\2017_4_14\piclab_4_17\HO_connection\ylog
+#   8.2.1 ImcM Qos
+#    http://bugzilla.spreadtrum.com/bugzilla/show_bug.cgi?id=666173
+#   8.2.2 call optimization
+#    add call number D:\code\log\bug_log\vit_log\2017_4_14\665355
+#   8.2.3 more media AT parsing., SPRTPCHANNEL
+#   CPVoiceAgent: AT> AT+SPRTPCHANNEL="01018D9009AA8C9008AA010A0F200600000000000000000000000001647CDFCB000000000000000000000000"
+#   8.3 add pending warning, s2b not return
+#  D:\code\log\bug_log\vit_log\2017_4_14\668339\ylog
+#
 #      8.1.3.2 new ike error code
 #      high prio
 
@@ -97,6 +112,11 @@
 #       8.2.1 call session
 #       event.log /main.pdf diffs
 #      8.2.3 all success/failed event, only care about handover, register,call
+#      handover errors:
+#      volte register fail: D:\code\log\bug_log\vit_log\2017_3_24\659089\13slog_20170325222251_sp9832a_2h11_ho_VoWIFI_dropcall_2220-2222\external_storage\ylog
+#      vowifi register faile: D:\code\log\bug_log\vit_log\2017_4_1\spirent_rereg\ylog
+#      s2b failed: D:\code\log\bug_log\vit_log\2017_4_14\666137\ylog1\
+#
 #      8.2.4 owner display : too aggressive
 
 #      8.2.300 regstatus add refresh failed
@@ -154,6 +174,9 @@
 #       12.1 duration
 #       13 tracing log should be deleted.
 #       14. chinese name path
+
+# ppt prepare:
+#   1. scenarioes: D:\code\log\bug_log\vit_log\2017_4_14\668542
 
 
 from reportEvent import *

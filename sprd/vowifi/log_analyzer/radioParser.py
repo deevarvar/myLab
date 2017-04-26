@@ -117,6 +117,7 @@ class radioParser():
             self.pattern['networksrvccpattern'] = config['radioParser']['networksrvccpattern']
 
             self.pattern['mestatepattern'] = config['radioParser']['mestatepattern']
+            self.pattern['horegupdatepattern'] = config['radioParser']['horegupdatepattern']
 
             #there are always dirty msgs to ignroe, Orz...
             self.ignoremsg = list()
@@ -154,7 +155,6 @@ class radioParser():
         except (ConfigObjError, IOError) as e:
              print 'Could not read "%s": %s' % (configfile, e)
 
-    
     def initkeypattern(self):
         #define the pattern and pattern helper
         self.keypattern = list()
@@ -322,6 +322,13 @@ class radioParser():
         mestatepattern['func'] = self.mestate
         mestatepattern['direct'] = '<-'
         self.keypattern.append(mestatepattern)
+
+
+        horegupdatepattern = dict()
+        horegupdatepattern['pattern'] = re.compile(self.pattern['horegupdatepattern'])
+        horegupdatepattern['func'] = self.horegupdate
+        horegupdatepattern['direct'] = '<-'
+        self.keypattern.append(horegupdatepattern)
 
     def initAtmsg(self, line):
         #common steps
@@ -501,12 +508,17 @@ class radioParser():
         action.setAll(eventname, msglevel, color)
         return action
 
-    def getcallendstring(self):
+    def getcallendstring(self, calltype):
         eventname = ''
         color = 'brown'
         msglevel = Msglevel.INFO
         action = actionBuilder()
-        eventname  = "Call End"
+        if calltype == '1':
+            callstr = "VoWiFi"
+        else:
+            callstr = "VoLTE"
+
+        eventname  = callstr + " Call End"
         action.setAll(eventname, msglevel, color)
         return action
 
@@ -882,6 +894,26 @@ class radioParser():
         action.setAll(eventname, msglevel, color)
         return action
 
+    def horegupdate(self, state):
+        eventname = ''
+        color = 'black'
+        msglevel = Msglevel.INFO
+        action = actionBuilder()
+        state = state.strip()
+        if state == "1":
+            #reged , need not report
+            return
+        elif state == "4":
+            eventname = "VoLTE Re-Register Successfully"
+            msglevel = Msglevel.NORMAL
+            color = 'green'
+        elif state == "5":
+            eventname = "VoLTE Re-Register Failed"
+            msglevel = Msglevel.ERROR
+            color = 'red'
+        action.setAll(eventname, msglevel, color)
+        return action
+
     def getAtmsg(self,keypattern, line, lineno):
         '''
         :param pattern:  all kinds of pattern
@@ -915,6 +947,9 @@ class radioParser():
                     atmsg['action'] = actionfunc()
                 else:
                     atmsg['action'] = actionfunc(state)
+                if not atmsg['action']:
+                    return False
+
                 eventname = atmsg['action'].eventname
                 atmsg['report'] = atmsg['action'].report
                 self.logger.logger.debug('state is %s, action is %s' % (state, eventname))

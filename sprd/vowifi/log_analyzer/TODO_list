@@ -136,7 +136,11 @@ TODO:
 #           8.IMS wait volte reg         imswaitvoltereg D:\code\log\bug_log\vit_log\2017_2_14\644337\Fail_S2b_Attach_Data_OK_No_error_popup\AP\ylog
 #             IMS op failed         imscmopfailed  D:\code\log\bug_log\vit_log\2017_2_14\644735\IDLE_1\slog_20170217133643_sp9832a_2h11_4mvoltesea_userdebug\external_storage\ylog\ylog
 #           9. ims op failed:D:\code\log\bug_log\vit_log\2017_3_14\5)slog_20170319213811_sp9832a_2h11_4mvolt_vowif_213657\5)slog_20170319213811_sp9832a_2h11_4mvolt_vowif_213657\external_storage\ylog\ylog
-#
+#           10.
+#      handover errors:
+#      volte register fail: D:\code\log\bug_log\vit_log\2017_3_24\659089\13slog_20170325222251_sp9832a_2h11_ho_VoWIFI_dropcall_2220-2222\external_storage\ylog
+#      vowifi register faile: D:\code\log\bug_log\vit_log\2017_4_1\spirent_rereg\ylog
+#      s2b failed: D:\code\log\bug_log\vit_log\2017_4_14\666137\ylog1\
 
             #add cc people
             #zhihao.fan@spreadtrum.com, jingxin.zhao@spreadtrum.com
