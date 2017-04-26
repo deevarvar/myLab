@@ -858,6 +858,14 @@ class drstatus(eventhandler):
         self.retmsg.report = constructReport(type=ReportType.SCEEVENT_BASE,event=event, level=self.retmsg.msglevel)
         return self.retmsg
 
+class wfcmode(eventhandler):
+    def handler(self):
+        mode = str(self.match.group(1))
+        modestr = "WiFi-Calling Mode: " + mode
+        self.retmsg.msglevel = Msglevel.WARNING
+        self.retmsg.color = maplevel2color(self.retmsg.msglevel)
+        self.retmsg.msg = modestr
+        return self.retmsg
 
 class wfcstatus(eventhandler):
     '''
@@ -1839,7 +1847,6 @@ class smsack(eventhandler):
         msgrefstr = "messageRef: " + str(self.match.group(1)).strip() + '\n'
         self.retmsg.msg = "Send Sms ACK\n" + msgrefstr
         event=mapzhphrase("sendsmsack", ReportScenariophrase)
-        event=mapzhphrase("sendsmsack", ReportScenariophrase)
         self.retmsg.report = constructReport(type=ReportType.SCEEVENT_BASE, event=event, level=self.retmsg.msglevel)
         return self.retmsg
 
@@ -1877,6 +1884,14 @@ class cpmediaset(eventhandler):
 
         return self.retmsg
 
+class nonceerror(eventhandler):
+    def handler(self):
+        self.retmsg.msglevel = Msglevel.ERROR
+        self.retmsg.color = maplevel2color(self.retmsg.msglevel)
+        self.retmsg.msg = "Auth Nonce is null"
+        event=mapzhphrase("nonceerror", ReportScenariophrase)
+        self.retmsg.report = constructReport(type=ReportType.SCEEVENT_BASE, event=event, level=self.retmsg.msglevel)
+        return self.retmsg
 
 if __name__ == '__main__':
     key = 'abc'

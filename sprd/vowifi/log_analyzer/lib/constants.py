@@ -548,6 +548,38 @@ dialerEvent.addEvent("(Secondary call):.*Call_(\d+), (.*), \[Capabilities", modu
 imscmEvent.addEvent("(\[bind.*)", module_ImsCM, eventType = eventType.EDGE)
 
 imscmEvent.addEvent("(mPrimaryOperatorId value is invalid, please check)", module_ImsCM, eventType=eventType.EDGE, eventHandler=invalidSimCard)
+#post-ping
+##wifi connected
+imscmEvent.addEvent('(wifi is connected)', module_ImsCM, eventType = eventType.EDGE, color="blue", eventHandler=wificonn)
+#imscmEvent.addEvent("NetworkUtils: (Local IP address is:.*)", module_ImsCM)
+
+
+##airplane open
+imscmEvent.addEvent(': (.*pen airplane mode)', module_ImsCM , eventType = eventType.EDGE, color="blue", eventHandler=airon)
+##airplaneclose
+imscmEvent.addEvent(': (.*lose airplane mode)', module_ImsCM,eventType = eventType.EDGE, color="blue", eventHandler=airoff)
+##receive INTENT ACTION_SHUTDOWN
+imscmEvent.addEvent('(.*hut down device)', module_ImsCM,eventType = eventType.EDGE, color="red", eventHandler=poweroff)
+##lte network
+
+
+imscmEvent.addEvent('Lte network, networkType = (.*)', module_ImsCM, eventType = eventType.EDGE, eventHandler=networktype)
+
+##wifi disconnected
+imscmEvent.addEvent('(wifi is disconnected)', module_ImsCM, eventType = eventType.EDGE, color="blue", eventHandler=wifidisconn)
+##wifi calling
+imscmEvent.addEvent('database has changed, mIsWifiCallingEnabled = (.*)', module_ImsCM, eventType = eventType.EDGE, eventHandler=wfcstatus)
+imscmEvent.addEvent('database has changed, isWfcEnabled = (.*)', module_ImsCM, eventType = eventType.EDGE, eventHandler=wfcstatus)
+
+##default wifi calling
+imscmEvent.addEvent('(Wifi-calling is .*)', module_ImsCM, eventType = eventType.EDGE, color = "blue")
+
+imscmEvent.addEvent('Wifi-calling mode is \"(.*)\"', module_ImsCM, eventType = eventType.EDGE,  eventHandler=wfcmode)
+### sim card only used in android 6
+imscmEvent.addEvent("(turn off primary SIM card)", module_ImsCM,eventType = eventType.EDGE, color="red")
+imscmEvent.addEvent("(turn on primary SIM card)", module_ImsCM,eventType = eventType.EDGE, color="red")
+
+imscmEvent.addEvent("onWifiPreClose: mIsImsPdnDeactive = (\w+)", module_ImsCM, eventType = eventType.EDGE, eventHandler=wifipreclose)
 
 ##Utils
 ###switch to wifi
@@ -654,38 +686,7 @@ imscmEvent.addEvent('(Waiting for Volte registered for Volte call end)', module_
 imscmEvent.addEvent('(Volte is registered, don\'t)', module_ImsCM, eventType = eventType.EDGE, eventHandler=imsrepeatvolte)
 imscmEvent.addEvent('(Vowifi is registered, don\'t)', module_ImsCM, eventType = eventType.EDGE, eventHandler=imsrepeatvowifi)
 
-##post-ping
-##wifi connected
-imscmEvent.addEvent('(wifi is connected)', module_ImsCM, eventType = eventType.EDGE, color="blue", eventHandler=wificonn)
-#imscmEvent.addEvent("NetworkUtils: (Local IP address is:.*)", module_ImsCM)
-
-
-##airplane open
-imscmEvent.addEvent(': (.*pen airplane mode)', module_ImsCM , eventType = eventType.EDGE, color="blue", eventHandler=airon)
-##airplaneclose
-imscmEvent.addEvent(': (.*lose airplane mode)', module_ImsCM,eventType = eventType.EDGE, color="blue", eventHandler=airoff)
-##receive INTENT ACTION_SHUTDOWN
-imscmEvent.addEvent('(.*hut down device)', module_ImsCM,eventType = eventType.EDGE, color="red", eventHandler=poweroff)
-##lte network
-
-
-imscmEvent.addEvent('Lte network, networkType = (.*)', module_ImsCM, eventType = eventType.EDGE, eventHandler=networktype)
-
-##wifi disconnected
-imscmEvent.addEvent('(wifi is disconnected)', module_ImsCM, eventType = eventType.EDGE, color="blue", eventHandler=wifidisconn)
-##wifi calling
-imscmEvent.addEvent('database has changed, mIsWifiCallingEnabled = (.*)', module_ImsCM, eventType = eventType.EDGE, eventHandler=wfcstatus)
-imscmEvent.addEvent('database has changed, isWfcEnabled = (.*)', module_ImsCM, eventType = eventType.EDGE, eventHandler=wfcstatus)
-
-##default wifi calling
-imscmEvent.addEvent('(Wifi-calling is .*)', module_ImsCM, eventType = eventType.EDGE, color = "blue")
-
-### sim card only used in android 6
-imscmEvent.addEvent("(turn off primary SIM card)", module_ImsCM,eventType = eventType.EDGE, color="red")
-imscmEvent.addEvent("(turn on primary SIM card)", module_ImsCM,eventType = eventType.EDGE, color="red")
-
-imscmEvent.addEvent("onWifiPreClose: mIsImsPdnDeactive = (\w+)", module_ImsCM, eventType = eventType.EDGE, eventHandler=wifipreclose)
-
+#
 ##msg pending
 # ImsConnectionManagerService: handleMessageHandoverToVowifi: mIsPendingProcess
 #D:\code\log\bug_log\vit_log\2016_10_25\modem_log-0650-vowifiregisterfail-2
@@ -944,10 +945,11 @@ serviceEvent.addEvent("Get the native callback, message send failed: id = (.*), 
 serviceEvent.addEvent("Handle the timeout message, rpMessageRef: (.*)", module_Service, eventType=eventType.EDGE, eventHandler=smstimeout)
 serviceEvent.addEvent("Send SMS ack for rpMessageRef: (.*)", module_Service, eventType=eventType.EDGE, eventHandler=smsack)
 
-
 #Media At cmd, default is not displayed
 serviceEvent.addEvent("CPVoiceAgent: AT> AT\+SPRTPMEDIASET=(.*)", module_Service, eventType=eventType.EDGE, eventHandler=cpmediaset, display=False)
 
+#nonce error
+serviceEvent.addEvent("(Can not get data from the nonce as it is null)", module_Service, eventType=eventType.EDGE, eventHandler=nonceerror)
 
 #some lemon keywords
 #conn, sess<.*>，　notify conn event

@@ -77,8 +77,15 @@
 #   8.1.3  log more
 #         1. 01-01 09:18:14.321  1140  2496 I CPVoiceAgent: [cp_mediaset]: AT+SPRTPMEDIASET=3,1,1,1
 #         2. DSCI D:\code\log\bug_log\vit_log\2017_4_14\660061\ylog2
+
+##   new ho no rtp
+#  8.2.0 add calling mode
+#  Wifi-calling mode is "Cellular preferred"
 #TODO:
-#   new ho no rtp
+#   8.2.01  D:\code\log\ref_log\instruments\sprient\newversion2\nonce_null
+#   1. add error:Can not get data from the nonce as it is null
+#   2. impu, impi
+#   3. crash log findings
 # D:\code\log\bug_log\vit_log\2017_4_14\piclab_4_17\HO_connection\ylog
 #   8.2.1 ImcM Qos
 #    http://bugzilla.spreadtrum.com/bugzilla/show_bug.cgi?id=666173
@@ -580,6 +587,8 @@ ReportScenariophrase["adddrerror"] = langBuilder(en="Failed to Update DataRouter
 ReportScenariophrase["call_terminate"] = dict()
 ReportScenariophrase["call_terminate"] = langBuilder(zh="电话挂断因为 ", en="TermCall As ")
 
+ReportScenariophrase["nonceerror"] = dict()
+ReportScenariophrase["nonceerror"] = langBuilder(zh="服务器没回复nonce值", en="Auth Nonce is null")
 
 ReportCpphrase = dict()
 ReportCpphrase["PDN connection established"] = dict()
