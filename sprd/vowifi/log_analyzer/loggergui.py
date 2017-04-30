@@ -193,6 +193,8 @@ class loggergui():
                             rp.drawAllDiag()
 
                         realmainlog =  mainlog
+                        #add other log's parsing, like crash
+
                         fp = flowParser(logname = mainlog, atmsgs=self.atmsgs)
                         len = fp.getFlow()
                         self.msglen =  len

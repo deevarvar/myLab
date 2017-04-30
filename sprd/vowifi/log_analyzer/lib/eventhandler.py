@@ -1102,11 +1102,15 @@ class news2bstatus(eventhandler):
         action = s2bjson['event_name']
         if action == "attach_successed":
             statestr = "epdg attach successfully\n"
-            ipv4str = ipv6str = pcscfv4str = pcscfv6str = prefipv4str = issosstr = sessidstr = ''
-            if 'local_ipv4' in s2bjson:
+            ipv4str = ipv6str = pcscfv4str = dnsv4str = dnsv6str= pcscfv6str = prefipv4str = issosstr = sessidstr = ''
+            if 'local_ip4' in s2bjson:
                 ipv4str = "     IPv4: " + s2bjson['local_ip4'] + '\n'
             if 'local_ip6' in s2bjson:
                 ipv6str = "     IPv6: " + s2bjson['local_ip6'] + '\n'
+            if 'dns_ip4' in s2bjson:
+                dnsv4str = "DNS IPv4: " + s2bjson['dns_ip4'] + '\n'
+            if 'dns_ip6' in s2bjson:
+                dnsv6str = "DNS IPv6: " + s2bjson['dns_ip6'] + '\n'
             if 'pcscf_ip4' in s2bjson:
                 pcscfv4str = "   PCSCF IPv4: " + s2bjson['pcscf_ip4'] + '\n'
             if 'pcscf_ip6' in s2bjson:
@@ -1119,7 +1123,7 @@ class news2bstatus(eventhandler):
                 sessidstr = " Session id: " + str(s2bjson['session_id']) + '\n'
             self.retmsg.msglevel = Msglevel.NORMAL
             self.retmsg.color = maplevel2color(self.retmsg.msglevel)
-            self.retmsg.msg = statestr + ipv4str + ipv6str + pcscfv4str + pcscfv6str + prefipv4str + issosstr + sessidstr
+            self.retmsg.msg = statestr + ipv4str + ipv6str + dnsv4str+ dnsv6str +pcscfv4str + pcscfv6str + prefipv4str + issosstr + sessidstr
             event = mapzhphrase("successed", Reports2bphrase)
             self.retmsg.report = constructReport(event=event, level=self.retmsg.msglevel)
 
@@ -1436,7 +1440,7 @@ class callthreshholdho(eventhandler):
             event=mapzhphrase("incallrssiho2wifi", ReportHandoverphrase)
             self.retmsg.report = constructReport(type=ReportType.HOALGO_BASE, event=event, level=self.retmsg.msglevel)
         else:
-            hostr = "Weak WiFi signal\n"
+            hostr = "Strong LTE signal\n"
 
         hostr += calltype + " Call Handover to " + hodirect
         self.retmsg.msg = hostr

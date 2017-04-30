@@ -86,6 +86,12 @@
 #   1. add error:Can not get data from the nonce as it is null
 #   2. impu, impi
 #   3. crash log findings
+#    native crash :  D:\code\log\ref_log\instruments\sprient\newversion2\nonce_null
+#       04-15 16:28:38.234  6114  6114 F DEBUG   : pid: 4663, tid: 4686, name: Thread-4  >>> com.sprd.vowifi.security <<<
+#    app crash:      D:\code\log\bug_log\vit_log\2017_4_14\665551\vowifiservice\log_sp9861e_1h10_vm_userdebu\external_storage\ylog
+#       04-13 19:53:25.953  3814  3814 E AndroidRuntime: Process: com.spreadtrum.vowifi, PID: 3814
+
+
 # D:\code\log\bug_log\vit_log\2017_4_14\piclab_4_17\HO_connection\ylog
 #   8.2.1 ImcM Qos
 #    http://bugzilla.spreadtrum.com/bugzilla/show_bug.cgi?id=666173
