@@ -1959,8 +1959,16 @@ class flowParser():
 
         ## merge atmsgs and kernelmsgs.
         #atmsgs are already diaged.
+
+
         if self.atmsgs:
             self.diagsips = self.diagsips + self.atmsgs
+
+        #add double check if there is no timestamp, so delete it.
+        #FIXME: in diagSip , if no method, the timestamp and lineno will not set!!!
+        for listindex, element in enumerate(self.diagsips):
+            if 'timestamp' not in element:
+                del self.diagsips[listindex]
 
         #self.dumpDiagsip()
         self.diagsips = self.utils.mergelistbykey(self.diagsips, 'timestamp')

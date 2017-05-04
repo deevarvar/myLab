@@ -702,6 +702,8 @@ phoneEvent.addEvent("updateImsFeatures->volteEnable:(.*) wifiEnable:(.*)", modul
 phoneEvent.addEvent("setIMSRegAddress addr = (.*)", module_Ims, eventType=eventType.EDGE, eventHandler=setimsregaddr)
 #get ims reg addr
 phoneEvent.addEvent("getIMSRegAddress mImsRegAddress =(.*)", module_Ims, eventType=eventType.EDGE, eventHandler=getimsregaddr)
+#get pcscf addr
+phoneEvent.addEvent("getImsPcscfAddress mImsPscfAddress =(.*)", module_Ims, eventType=eventType.EDGE, eventHandler=getpcscfregaddr)
 
 ## start vowifi/volte call
 phoneEvent.addEvent("createCallSession-> start(.*)", module_Ims, eventType=eventType.EDGE, eventHandler=startcall, color = "blue")

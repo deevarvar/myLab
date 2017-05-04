@@ -81,7 +81,31 @@
 ##   new ho no rtp
 #  8.2.0 add calling mode
 #  Wifi-calling mode is "Cellular preferred"
+#   8.2.a.3  CEREG add too verbose, FIXME: not to added
+
+#   8.2.a    pcscf passing
+#   8.2.a.1 ap to cp: AT+VOWIFIPCSCF
+#Parameter:
+#< type>: 0, FQDN
+#        1, IPV4
+#        2, IPV6
+#<addr> string
+#       AT+VOWIFIPCSCF=1,"10.15.0.26"
+#   8.2.a.2 cp to ap: ImsServiceImpl: getImsPcscfAddress mImsPscfAddress = \\10.0.0.166\Logs\From_Taipei\Taipei_Logs\VoWiFiPowerTest\Indonisa\0503
+#    D:\code\log\ref_log\smartfren\smart_volte_idle_ho_vowifi\android
+
 #TODO:
+#    full function open, error grep
+#    D:\code\merge\isharkl2 do_ip failed
+#
+#    8.2.00  imscm ho stragtegy
+#   new imscm logs D:\code\merge\dtac
+#   1. createPolicyTimerTask: don't create timer task during Vowifi and 2/3G or UNKNOWN network
+#    D:\code\merge\indonisia\can'tregistervowifi2\ylog\android
+#   8.2.b optimize lemonlog in flowParser.py
+
+#   8.2.a.4 parse tw logs failed, no sip D:\code\merge\tw\672534\volte_ho_vowifi
+#   8.2.02 onsrvccfailed http://bugzilla.spreadtrum.com/bugzilla/show_bug.cgi?id=666546
 #   8.2.01  D:\code\log\ref_log\instruments\sprient\newversion2\nonce_null
 #   1. add error:Can not get data from the nonce as it is null
 #   2. impu, impi

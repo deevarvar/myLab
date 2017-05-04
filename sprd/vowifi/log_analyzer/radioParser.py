@@ -118,6 +118,7 @@ class radioParser():
 
             self.pattern['mestatepattern'] = config['radioParser']['mestatepattern']
             self.pattern['horegupdatepattern'] = config['radioParser']['horegupdatepattern']
+            self.pattern['appcscfpattern'] = config['radioParser']['appcscfpattern']
 
             #there are always dirty msgs to ignroe, Orz...
             self.ignoremsg = list()
@@ -329,6 +330,14 @@ class radioParser():
         horegupdatepattern['func'] = self.horegupdate
         horegupdatepattern['direct'] = '<-'
         self.keypattern.append(horegupdatepattern)
+
+
+        appcscfpattern = dict()
+        appcscfpattern['pattern'] = re.compile(self.pattern['appcscfpattern'])
+        appcscfpattern['func'] = self.setappcscf
+        appcscfpattern['direct'] = '->'
+        self.keypattern.append(appcscfpattern)
+
 
     def initAtmsg(self, line):
         #common steps
@@ -913,6 +922,21 @@ class radioParser():
             color = 'red'
         action.setAll(eventname, msglevel, color)
         return action
+
+    def setappcscf(self, setcmd):
+        eventname = ''
+        color = 'blue'
+        msglevel = Msglevel.INFO
+        action = actionBuilder()
+        setcmdlist = setcmd.strip().split(',')
+        if len(setcmdlist) >= 2:
+            ptype = setcmdlist[0]
+            ip = setcmdlist[1].strip('"')
+            eventname = "Set PCSCF Address: \n" + ip
+            action.setAll(eventname, msglevel, color)
+            return action
+        else:
+            return None
 
     def getAtmsg(self,keypattern, line, lineno):
         '''

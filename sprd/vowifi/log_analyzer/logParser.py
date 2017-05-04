@@ -198,9 +198,10 @@ class logParser():
             with open(self.elog, 'a+') as elog:
                 elog.write(str(lineno) + ' ' + line)
             #just copy log to
+            '''
             with open(self.keylog, 'a+') as klog:
                 klog.write(str(lineno) + ' ' + line)
-
+            '''
 
     #get key words log
 
@@ -291,8 +292,9 @@ class logParser():
                     line = line.strip(' \t')
                     #try to get key log
                     self.geterrorlog(lineno, line)
-                    self.getkeylog(lineno,line)
 
+                    '''these key log findings are not so good
+                    self.getkeylog(lineno,line)
                     allkeywords= self.utils.getPattern(self.keywords)
                     #self.logger.logger.info('allkeywords is ' + allkeywords)
                     if not allkeywords:
@@ -333,10 +335,10 @@ class logParser():
                                     self.piddb[pid]['tags'][ltag] = 1
                                 else:
                                     self.piddb[pid]['tags'][ltag] += 1
-
+                    '''
                 #self.genflowdiag()
                 #self.drawDiag()
-        self.logger.logger.info("total " + str(matchindex) + " lines.")
+        #self.logger.logger.info("total " + str(matchindex) + " lines.")
         #no need to return
         #return self.log
 

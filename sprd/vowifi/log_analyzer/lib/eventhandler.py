@@ -934,7 +934,20 @@ class getimsregaddr(eventhandler):
     '''
     def handler(self):
         regaddr = self.match.group(1).strip()
+        self.retmsg.msglevel = Msglevel.INFO
+        self.retmsg.color = maplevel2color(self.retmsg.msglevel)
         self.retmsg.msg = "GetIMSRegAddr:\n   " + regaddr
+        return self.retmsg
+
+class getpcscfregaddr(eventhandler):
+    '''
+    set ims reg addr, one pattern
+    '''
+    def handler(self):
+        pcscfaddr = self.match.group(1).strip()
+        self.retmsg.msglevel = Msglevel.INFO
+        self.retmsg.color = maplevel2color(self.retmsg.msglevel)
+        self.retmsg.msg = "GetPCSCFAddr:\n   " + pcscfaddr
         return self.retmsg
 
 
