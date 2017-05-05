@@ -93,11 +93,12 @@
 #       AT+VOWIFIPCSCF=1,"10.15.0.26"
 #   8.2.a.2 cp to ap: ImsServiceImpl: getImsPcscfAddress mImsPscfAddress = \\10.0.0.166\Logs\From_Taipei\Taipei_Logs\VoWiFiPowerTest\Indonisa\0503
 #    D:\code\log\ref_log\smartfren\smart_volte_idle_ho_vowifi\android
-
-#TODO:
 #    full function open, error grep
 #    D:\code\merge\isharkl2 do_ip failed
+#    add zxsocket grep...
 #
+#TODO:
+#    8.1.99 save some json file
 #    8.2.00  imscm ho stragtegy
 #   new imscm logs D:\code\merge\dtac
 #   1. createPolicyTimerTask: don't create timer task during Vowifi and 2/3G or UNKNOWN network
