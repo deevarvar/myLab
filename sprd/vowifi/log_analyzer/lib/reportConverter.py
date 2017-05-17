@@ -96,17 +96,28 @@
 #    full function open, error grep
 #    D:\code\merge\isharkl2 do_ip failed
 #    add zxsocket grep...
-#
-#TODO:
-#    8.1.99 save some json file
+##   8.2.a.4 parse tw logs failed, no sip D:\code\merge\tw\672534\volte_ho_vowifi
+#    8.0.111 Authentication: Failed to get the challenge response. D:\code\so\juphoonlib\develop\7lib\sos\1
 #    8.2.00  imscm ho stragtegy
+
 #   new imscm logs D:\code\merge\dtac
 #   1. createPolicyTimerTask: don't create timer task during Vowifi and 2/3G or UNKNOWN network
+#   add all task "Conditions are not satisfied" , warning
 #    D:\code\merge\indonisia\can'tregistervowifi2\ylog\android
-#   8.2.b optimize lemonlog in flowParser.py
+#   8.3 add pending warning, s2b not return
+#  D:\code\log\bug_log\vit_log\2017_4_14\668339\ylog
+#   handleMessageSwitchToVowifi: "MSG_SWITCH_TO_VOWIFI", mCurPendingMsgId = "MSG_RELEASE_VOWIFI_RES",
 
-#   8.2.a.4 parse tw logs failed, no sip D:\code\merge\tw\672534\volte_ho_vowifi
+#TODO:
+
+#    8.0 simplify error output.
+#
+#    7.9 emergency call
+#    8.1.99 save some json file
+
+#   8.2.b optimize lemonlog in flowParser.py
 #   8.2.02 onsrvccfailed http://bugzilla.spreadtrum.com/bugzilla/show_bug.cgi?id=666546
+#   8.2.002 deactive-pdn failed http://bugzilla.spreadtrum.com/bugzilla/show_bug.cgi?id=673148
 #   8.2.01  D:\code\log\ref_log\instruments\sprient\newversion2\nonce_null
 #   1. add error:Can not get data from the nonce as it is null
 #   2. impu, impi
@@ -124,8 +135,7 @@
 #    add call number D:\code\log\bug_log\vit_log\2017_4_14\665355
 #   8.2.3 more media AT parsing., SPRTPCHANNEL
 #   CPVoiceAgent: AT> AT+SPRTPCHANNEL="01018D9009AA8C9008AA010A0F200600000000000000000000000001647CDFCB000000000000000000000000"
-#   8.3 add pending warning, s2b not return
-#  D:\code\log\bug_log\vit_log\2017_4_14\668339\ylog
+
 #
 #      8.1.3.2 new ike error code
 #      high prio
@@ -620,6 +630,9 @@ ReportScenariophrase["call_terminate"] = langBuilder(zh="电话挂断因为 ", e
 
 ReportScenariophrase["nonceerror"] = dict()
 ReportScenariophrase["nonceerror"] = langBuilder(zh="服务器没回复nonce值", en="Auth Nonce is null")
+
+ReportScenariophrase["akaerror"] = dict()
+ReportScenariophrase["akaerror"] = langBuilder(zh="AKA计算失败", en="Failed to Caculate AKA response.")
 
 ReportCpphrase = dict()
 ReportCpphrase["PDN connection established"] = dict()

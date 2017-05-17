@@ -624,8 +624,16 @@ imscmEvent.addEvent('updateSimState: Slot (\d) simState = (.*)' , module_ImsCM, 
 imscmEvent.addEvent('(primary card id has changed)' , module_ImsCM, eventType = eventType.EDGE, eventHandler=simchanged7)
 
 
+#ims task policy
+imscmEvent.addEvent("createPolicyTimerTask: Conditions are not satisfied, don't create timer task, isWfcEnabled = (.*), isWifiConnected = (.*), isLteCellularNetwork = (.*)", module_ImsCM, eventType = eventType.EDGE, eventHandler=notmeetpolicy )
+imscmEvent.addEvent("create.*Conditions are not satisfied, release \[(.*)\]", module_ImsCM, eventType = eventType.EDGE, eventHandler=notmeetpolicy2)
+imscmEvent.addEvent("(don't create timer task during Vowifi and 2/3G or UNKNOWN network)", module_ImsCM, eventType = eventType.EDGE, eventHandler=notask)
+imscmEvent.addEvent("wifi isConnected\(\): (.*)", module_ImsCM, eventType = eventType.EDGE, eventHandler=wificonn2 )
+
 #pending logic
+imscmEvent.addEvent('handleMessage.*: \"(.*)\", mCurPendingMsgId = \"(.*)\",' , module_ImsCM, eventType = eventType.EDGE, eventHandler=imscmpending)
 imscmEvent.addEvent('handleMessage.*: \"(.*)\", mCurPendingProcessMsgId = (.*)' , module_ImsCM, eventType = eventType.EDGE, eventHandler=imscmpending)
+
 #no need to add clearLoopMsgQueue
 #no need to add ImsServiceListenerEx, all release action will be recorded.
 
@@ -952,7 +960,7 @@ serviceEvent.addEvent("CPVoiceAgent: AT> AT\+SPRTPMEDIASET=(.*)", module_Service
 
 #nonce error
 serviceEvent.addEvent("(Can not get data from the nonce as it is null)", module_Service, eventType=eventType.EDGE, eventHandler=nonceerror)
-
+serviceEvent.addEvent("(Failed to get the challenge response.)", module_Service, eventType=eventType.EDGE, eventHandler=akaerror)
 #some lemon keywords
 #conn, sess<.*>，　notify conn event
 #FIXME:　conn termed by user is not reported to user

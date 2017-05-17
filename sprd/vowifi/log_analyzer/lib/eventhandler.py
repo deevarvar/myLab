@@ -83,6 +83,18 @@ class wificonn(eventhandler):
         self.retmsg.report = constructReport(type=ReportType.USEREVENT_BASE, event=event, level=self.retmsg.msglevel)
         return self.retmsg
 
+class wificonn2(eventhandler):
+     def handler(self):
+        wifi = str(self.match.group(1)).strip()
+        if wifi == 'true':
+            wifistr = "Connected"
+        else:
+            wifistr = "Disconnected"
+
+        self.retmsg.msg = "WiFi is " + wifistr
+        self.retmsg.msglevel = Msglevel.NORMAL
+        self.retmsg.color = maplevel2color(self.retmsg.msglevel)
+        return self.retmsg
 #function only match one, but need to generate the report
 class cmendcall(eventhandler):
     def handler(self):
@@ -1908,6 +1920,55 @@ class nonceerror(eventhandler):
         self.retmsg.msg = "Auth Nonce is null"
         event=mapzhphrase("nonceerror", ReportScenariophrase)
         self.retmsg.report = constructReport(type=ReportType.SCEEVENT_BASE, event=event, level=self.retmsg.msglevel)
+        return self.retmsg
+
+class akaerror(eventhandler):
+    def handler(self):
+        self.retmsg.msglevel = Msglevel.ERROR
+        self.retmsg.color = maplevel2color(self.retmsg.msglevel)
+        self.retmsg.msg = str(self.match.group(1)).strip()
+        event=mapzhphrase("akaerror", ReportScenariophrase)
+        self.retmsg.report = constructReport(type=ReportType.SCEEVENT_BASE, event=event, level=self.retmsg.msglevel)
+        return self.retmsg
+
+class notmeetpolicy(eventhandler):
+    def handler(self):
+        self.retmsg.msglevel = Msglevel.WARNING
+        self.retmsg.color = maplevel2color(self.retmsg.msglevel)
+        wfc = str(self.match.group(1)).strip()
+        wifi = str(self.match.group(2)).strip()
+        lte = str(self.match.group(3)).strip()
+        if wfc == "true":
+            wfcstr = "Enabled"
+        else:
+            wfcstr = "Disabled"
+        if wifi == "true":
+            wifistr = "Connected"
+        else:
+            wifistr = "Disconnected"
+
+        msgstr = "ImsCM Policy Not started:\n"
+        msgstr += "WiFi-Calling: " + wfcstr + '\n'
+        msgstr += "WiFi:" + wifistr + '\n'
+        msgstr += "LTE Network: " + lte
+        self.retmsg.msg = msgstr
+        return self.retmsg
+
+class notmeetpolicy2(eventhandler):
+    def handler(self):
+        task = str(self.match.group(1)).strip()
+        self.retmsg.msglevel = Msglevel.WARNING
+        self.retmsg.color = maplevel2color(self.retmsg.msglevel)
+        msgstr = "ImsCM Release Task: " + task + '\n'
+        msgstr += "Due to condition not satisfied."
+        self.retmsg.msg = msgstr
+        return self.retmsg
+
+class notask(eventhandler):
+    def handler(self):
+        self.retmsg.msglevel = Msglevel.WARNING
+        self.retmsg.color = maplevel2color(self.retmsg.msglevel)
+        self.retmsg.msg = "2G/3G Network, Do not start VoWiFi"
         return self.retmsg
 
 if __name__ == '__main__':
