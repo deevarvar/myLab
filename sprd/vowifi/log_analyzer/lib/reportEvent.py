@@ -606,7 +606,7 @@ class ReportEvent():
                 oneline = str(i+1) + '. '+  event.split('<br>',1)[0] + ',' + timestamp + ',' + errorstr
                 elog.write(oneline + '\n')
                 #second line is line
-                elog.write(line + '\n')
+                elog.write(line)
 
             errortablehtml += self.genrowopen()
             errortablehtml +=self.gencolumn(str(no+1))
@@ -640,8 +640,9 @@ class ReportEvent():
                 occurcount = len(detaillist)
                 #split by <br>, EAP-AKA AUTH correctly<br>EAP-AKA校验成功
                 summary = event.split('<br>',1)[0] + ' : '+str(occurcount) + " Times"
+
                 with open(self.errorlog, 'a+') as elog:
-                    elog.write(summary + '\n')
+                    elog.write('\n' + summary + '\n')
                 #generate one error table
                 allerrortable += self.genTitle(etableid, event)
                 allerrortable += self.genOneErrorTable(detaillist, etableid)
