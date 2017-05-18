@@ -121,14 +121,14 @@ path = os.path.dirname(os.path.realpath(__file__))
 
 
 class flowParser():
-    def __init__(self, logname, atmsgs = None, kernelmsgs = None):
-
+    def __init__(self, logname, atmsgs = None, crashmsgs=None, kernelmsgs = None):
+        configfile = path + '/config.ini'
         try:
 
             #self.timestamp = strftime("%Y_%m_%d_%H_%M_%S", gmtime())
             #self.logpath = './' + str(self.timestamp) + '.log'
 
-            configfile = path + '/config.ini'
+
             config = ConfigObj(configfile, file_error=True)
             self.config = config
             self.lemontags = config['sprd']['lemontags']
@@ -226,7 +226,7 @@ class flowParser():
 
             self.atmsgs = atmsgs
             self.kernelmsgs = kernelmsgs
-
+            self.crashmsgs = crashmsgs
 
             #reg type
             self.regtype = 'udp'
@@ -1210,6 +1210,22 @@ class flowParser():
         onestr = basedirect + label
         return onestr
 
+    def assembleCrashstr(self, crashmsg):
+        left = "AP"
+        right = "UE"
+        eventname = crashmsg['action'].eventname
+        color = crashmsg['action'].color
+
+        basedirect = left + ' ' + crashmsg['direct'] + ' '+ right
+        #only need label, note
+        label =  " [label = \"" + eventname  + "\" "
+        labelcolor = ", color=" + color
+        timestamp = " time: " + crashmsg['timestamp'] + '\n'
+        note = ", note = \"" +  timestamp + "\""
+        label = label +  labelcolor + note + "];\n"
+        onestr = basedirect + label
+        return onestr
+
 
     def assembleEventStr(self, event):
         #quite simple
@@ -1318,6 +1334,8 @@ class flowParser():
                     onestr = self.assembleIkeStr(sip, elements)
                 elif 'isat' in sip:
                     onestr = self.assembleAtstr(sip, elements)
+                elif 'iscrash' in sip:
+                    onestr = self.assembleCrashstr(sip)
 
             self.diagstr += onestr
             self.diagstrList[sector] += onestr
@@ -1924,12 +1942,13 @@ class flowParser():
             with open(self.eventlog, 'a+') as elog:
 
                 for index, msg in enumerate(msglist):
-                    if 'isevent' in msg:
+                    if 'isevent' in msg and msg['isevent']:
                         elog.write( "main log:"+ str(msg['lineno']) + ':'+ msg['line'])
-                    elif 'isat' in msg:
+                    elif 'isat' in msg and msg['isat']:
                         #radio log already add the prefix
                         elog.write(str(msg['lineno']) + ':'+ msg['line'])
-
+                    elif 'iscrash' in msg and msg['iscrash']:
+                        elog.write(msg['line'])
                     #add logic to generate the report
                     self.reportevent.fillReport(msg)
 
@@ -1964,6 +1983,8 @@ class flowParser():
         if self.atmsgs:
             self.diagsips = self.diagsips + self.atmsgs
 
+        if self.crashmsgs:
+            self.diagsips = self.diagsips + self.crashmsgs
         #add double check if there is no timestamp, so delete it.
         #FIXME: in diagSip , if no method, the timestamp and lineno will not set!!!
         for listindex, element in enumerate(self.diagsips):

@@ -9,6 +9,7 @@ import logging
 from flowParser import flowParser
 from radioParser import radioParser
 from samsungParser import samsungParser
+from crashParser import *
 from parseImsbr import *
 from threading import Thread,Event
 import multiprocessing
@@ -195,7 +196,13 @@ class loggergui():
                         realmainlog =  mainlog
                         #add other log's parsing, like crash
 
-                        fp = flowParser(logname = mainlog, atmsgs=self.atmsgs)
+                        #try to add crash log,
+                        crashlog = os.path.dirname(mainlog) + '/crash.log'
+                        crashp = crashParser(logname=crashlog)
+                        crashp.parselog()
+                        cmsgs = crashp.getmsgs()
+
+                        fp = flowParser(logname = mainlog, atmsgs=self.atmsgs, crashmsgs=cmsgs)
                         len = fp.getFlow()
                         self.msglen =  len
                         self.logger.logger.info('sip msgs len is ' + str(len))

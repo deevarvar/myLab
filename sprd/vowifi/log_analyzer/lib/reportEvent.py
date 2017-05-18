@@ -53,6 +53,21 @@ class ReportType():
 #4. genEventTable will generate the table
 
 
+#define function to build report
+#FIXME: there is reportBuilder which is not adding the line, lineno, timestamp
+class reportObj():
+    def __init__(self):
+        self.report = dict()
+        self.report['type'] = None
+        self.report['event'] = None
+        self.report['level'] = Msglevel.INFO
+        self.report['errorstr'] = None
+        self.report['lineno'] = None
+        self.report['line'] =  None
+        self.report['timestamp'] = None
+    def getreport(self):
+        return self.report
+
 
 #TODO: add detailed event description: process, result
 
@@ -170,6 +185,14 @@ class ReportEvent():
             with open(self.reportlog, 'w') as rlog:
                 rlog.truncate()
 
+            #FIXME: add error redirect log
+            #all error log
+            self.errorlog = os.path.dirname(self.reportpath) + '/error.log'
+
+            with open(self.errorlog, 'w') as elog:
+                elog.truncate()
+
+
         except (ConfigObjError, IOError) as e:
              print 'Could not read "%s": %s' % (configpath + '/config.ini', e)
 
@@ -260,6 +283,8 @@ class ReportEvent():
                            'timestamp':
                            'line':
                            'lineno':
+                           'type':
+                           'level':
                         }
                         '''
                         event = report['event'].strip('\n')
@@ -331,7 +356,7 @@ class ReportEvent():
         elif content in self.warnevent:
             bgcolor = "brown"
         elif content in self.infoevent:
-            bgcolor = "blue"
+            bgcolor = "cyan"
         elif content in self.normalevent:
             bgcolor = "green"
 
@@ -421,6 +446,9 @@ class ReportEvent():
         for index, eventdict in enumerate(etable):
             event = eventdict['ename']
             if event in self.errorevent:
+                #add occurrence times:
+                occurcount = len(eventdict['errordetailslist'])
+                event = str(occurcount) + " times, " + event
                 astrin= self.genaref(event, self.getErrorIndex(index))
                 errorindex += self.genli(astrin)
         errorindex += self.genulclose()
@@ -571,10 +599,19 @@ class ReportEvent():
             lineno = str(error['lineno'])
             line = str(error['line'])
             event = str(error['ename'])
+
+            #append errorlog
+            with open(self.errorlog, 'a+') as elog:
+                #first line is event, timestamp, errorstr
+                oneline = str(i+1) + '. '+  event.split('<br>',1)[0] + ',' + timestamp + ',' + errorstr
+                elog.write(oneline + '\n')
+                #second line is line
+                elog.write(line + '\n')
+
             errortablehtml += self.genrowopen()
             errortablehtml +=self.gencolumn(str(no+1))
-            errortablehtml +=self.gencolumn(timestamp)
             errortablehtml +=self.gencolumn(event)
+            errortablehtml +=self.gencolumn(timestamp)
             errortablehtml +=self.gencolumn(errorstr)
             errortablehtml +=self.gencolumn(lineno)
             errortablehtml +=self.gencolumn(line)
@@ -599,6 +636,12 @@ class ReportEvent():
             etableid =  self.getErrorId(index)
 
             if event in self.errorevent:
+                #redirect error log here
+                occurcount = len(detaillist)
+                #split by <br>, EAP-AKA AUTH correctly<br>EAP-AKA校验成功
+                summary = event.split('<br>',1)[0] + ' : '+str(occurcount) + " Times"
+                with open(self.errorlog, 'a+') as elog:
+                    elog.write(summary + '\n')
                 #generate one error table
                 allerrortable += self.genTitle(etableid, event)
                 allerrortable += self.genOneErrorTable(detaillist, etableid)

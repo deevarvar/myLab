@@ -111,6 +111,7 @@
 #TODO:
 
 #    8.0 simplify error output.
+#     eventname/timestamp in html is not correct
 #
 #    7.9 emergency call
 #    8.1.99 save some json file

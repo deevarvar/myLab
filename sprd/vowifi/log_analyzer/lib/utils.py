@@ -82,6 +82,7 @@ class utils():
             self.mlogpattern = self.config['files']['log']
             self.rlogpattern = self.config['files']['radiolog']
             self.klogpattern = self.config['files']['kernellog']
+        self.clogpattern = self.config['files']['crashlog']
 
         for root, dirnames, filenames in os.walk(dirname):
             #print root

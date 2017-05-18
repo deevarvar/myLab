@@ -31,15 +31,8 @@ class actionBuilder():
         self.eventname = ''
         self.color = "black"
         self.msglevel = Msglevel.INFO
-
-        self.report = dict()
-        self.report['type'] = None
-        self.report['event'] = None
-        self.report['level'] = Msglevel.INFO
-        self.report['errorstr'] = None
-        self.report['lineno'] = None
-        self.report['line'] =  None
-        self.report['timestamp'] = None
+        report = reportObj()
+        self.report = report.getreport()
 
 
     def setEventName(self, name):
