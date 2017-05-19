@@ -108,17 +108,8 @@
 #  D:\code\log\bug_log\vit_log\2017_4_14\668339\ylog
 #   handleMessageSwitchToVowifi: "MSG_SWITCH_TO_VOWIFI", mCurPendingMsgId = "MSG_RELEASE_VOWIFI_RES",
 
-#TODO:
-
 #    8.0 simplify error output.
 #     eventname/timestamp in html is not correct
-#
-#    7.9 emergency call
-#    8.1.99 save some json file
-
-#   8.2.b optimize lemonlog in flowParser.py
-#   8.2.02 onsrvccfailed http://bugzilla.spreadtrum.com/bugzilla/show_bug.cgi?id=666546
-#   8.2.002 deactive-pdn failed http://bugzilla.spreadtrum.com/bugzilla/show_bug.cgi?id=673148
 #   8.2.01  D:\code\log\ref_log\instruments\sprient\newversion2\nonce_null
 #   1. add error:Can not get data from the nonce as it is null
 #   2. impu, impi
@@ -127,6 +118,19 @@
 #       04-15 16:28:38.234  6114  6114 F DEBUG   : pid: 4663, tid: 4686, name: Thread-4  >>> com.sprd.vowifi.security <<<
 #    app crash:      D:\code\log\bug_log\vit_log\2017_4_14\665551\vowifiservice\log_sp9861e_1h10_vm_userdebu\external_storage\ylog
 #       04-13 19:53:25.953  3814  3814 E AndroidRuntime: Process: com.spreadtrum.vowifi, PID: 3814
+#      http://bugzilla.spreadtrum.com/bugzilla/show_bug.cgi?id=678093
+
+#TODO:
+#    7.9.0 impu, impi
+#    7.9.1  imscm
+#    rssi = ,  loss =, audioLoss =, videoLoss =
+#    D:\code\log\bug_log\vit_log\2017_5_1\677097\ylog
+#    7.9 emergency call
+#    8.1.99 save some json file
+
+#   8.2.b optimize lemonlog in flowParser.py
+#   8.2.02 onsrvccfailed http://bugzilla.spreadtrum.com/bugzilla/show_bug.cgi?id=666546
+#   8.2.002 deactive-pdn failed http://bugzilla.spreadtrum.com/bugzilla/show_bug.cgi?id=673148
 
 
 # D:\code\log\bug_log\vit_log\2017_4_14\piclab_4_17\HO_connection\ylog

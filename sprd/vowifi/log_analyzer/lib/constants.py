@@ -637,6 +637,14 @@ imscmEvent.addEvent('handleMessage.*: \"(.*)\", mCurPendingProcessMsgId = (.*)' 
 #no need to add clearLoopMsgQueue
 #no need to add ImsServiceListenerEx, all release action will be recorded.
 
+#add rssi
+# ImsConnectionManagerEEPolicy: loopAudioCallQosForWifiPreferred: rssi = -86, rsrp = -103
+imscmEvent.addEvent('rssi = (.*), rsrp = (.*)' , module_ImsCM, eventType = eventType.EDGE, eventHandler=hosignal, groupnum=2)
+#add audio qos
+imscmEvent.addEvent('loss = (.*), jitter = (.*), rtt = (.*)' , module_ImsCM, eventType = eventType.EDGE, eventHandler=audioqos, groupnum=3)
+#add video qos
+imscmEvent.addEvent('audioLoss = (.*), audioJitter = (.*), audioRtt = (.*)' , module_ImsCM, eventType = eventType.EDGE, eventHandler=audioqosinvideo, groupnum=3)
+imscmEvent.addEvent('videoLoss = (.*), videoJitter = (.*), videoRtt = (.*)' , module_ImsCM, eventType = eventType.EDGE, eventHandler=videoqosinvideo, groupnum=3)
 ##audio/video qos and threshhold, vowifi call
 imscmEvent.addEvent('loop(\w+)CallQos.*: Vowifi handover to Volte' , module_ImsCM, eventType = eventType.EDGE, eventHandler=qos2volte)
 

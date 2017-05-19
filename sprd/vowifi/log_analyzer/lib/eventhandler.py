@@ -1971,6 +1971,58 @@ class notask(eventhandler):
         self.retmsg.msg = "2G/3G Network, Do not start VoWiFi"
         return self.retmsg
 
+class hosignal(eventhandler):
+    def handler(self):
+        self.retmsg.msglevel = Msglevel.INFO
+        self.retmsg.color = maplevel2color(self.retmsg.msglevel)
+        rssi = str(self.match.group(1)).strip()
+        rsrp = str(self.match.group(2)).strip()
+        msg = "WIFI Rssi: " + rssi + '\n'
+        msg += "LTE Rsrp: " + rsrp
+        self.retmsg.msg = msg
+        return self.retmsg
+
+
+class audioqos(eventhandler):
+    def handler(self):
+        self.retmsg.msglevel = Msglevel.INFO
+        self.retmsg.color = maplevel2color(self.retmsg.msglevel)
+        loss = str(self.match.group(1)).strip()
+        jitter = str(self.match.group(2)).strip()
+        rtt = str(self.match.group(3)).strip()
+        msg = "Audio Loss: " + loss + '\n'
+        msg += "Audio Jitter: " + jitter + '\n'
+        msg+= "Audio Rtt: " + rtt
+        self.retmsg.msg = msg
+        return self.retmsg
+
+class audioqosinvideo(eventhandler):
+    def handler(self):
+        self.retmsg.msglevel = Msglevel.INFO
+        self.retmsg.color = maplevel2color(self.retmsg.msglevel)
+        loss = str(self.match.group(1)).strip()
+        jitter = str(self.match.group(2)).strip()
+        rtt = str(self.match.group(3)).strip()
+        msg = "Audio Loss: " + loss + '\n'
+        msg += "Audio Jitter: " + jitter + '\n'
+        msg+= "Audio Rtt: " + rtt
+        self.retmsg.msg = msg
+        return self.retmsg
+
+
+class videoqosinvideo(eventhandler):
+    def handler(self):
+        self.retmsg.msglevel = Msglevel.INFO
+        self.retmsg.color = maplevel2color(self.retmsg.msglevel)
+        loss = str(self.match.group(1)).strip()
+        jitter = str(self.match.group(2)).strip()
+        rtt = str(self.match.group(3)).strip()
+        msg = "Video Loss: " + loss + '\n'
+        msg += "Video Jitter: " + jitter + '\n'
+        msg+= "Video Rtt: " + rtt
+        self.retmsg.msg = msg
+        return self.retmsg
+
 if __name__ == '__main__':
     key = 'abc'
     line = "abc"
