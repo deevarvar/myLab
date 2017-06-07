@@ -2,7 +2,7 @@
 # author: zhihua.ye@spreadtrum.com
 # analyzed result may be changed due to different ui result
 # in the main.pdf or in the report
-
+#123@SXsx
 
 
 
@@ -119,12 +119,19 @@
 #    app crash:      D:\code\log\bug_log\vit_log\2017_4_14\665551\vowifiservice\log_sp9861e_1h10_vm_userdebu\external_storage\ylog
 #       04-13 19:53:25.953  3814  3814 E AndroidRuntime: Process: com.spreadtrum.vowifi, PID: 3814
 #      http://bugzilla.spreadtrum.com/bugzilla/show_bug.cgi?id=678093
-
-#TODO:
-#    7.9.0 impu, impi
 #    7.9.1  imscm
 #    rssi = ,  loss =, audioLoss =, videoLoss =
 #    D:\code\log\bug_log\vit_log\2017_5_1\677097\ylog
+#TODO:
+#    7.7. ScreenStateReceiver SCREEN_OFF, SCREEN_ON - not useful
+
+#    7.6 sip searching , should add
+#    process request
+#    process response
+#    D:\code\merge\ee\sip_error
+#    7.8.x cp tuple issue
+#    D:\code\merge\vdf\TCP syn no response
+#    7.9.0 impu, impi
 #    7.9 emergency call
 #    8.1.99 save some json file
 

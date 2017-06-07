@@ -296,14 +296,20 @@ class flowParser():
         #NOTE: need to find pattern 'data length: 400' first
         datalenanchor = self.datalentags + str(senddatalen)
 
-        while dataindex >= 0:
+        #sometimes there may be same datalentag!!
+        #here is the workaround, datalentag should be searched within 50 lines~
+        endrange = dataindex - 50
+        if endrange < 0:
+            endrange = 0
+
+        while dataindex >= endrange:
             if datalenanchor not in self.loglines[dataindex]:
                 dataindex = dataindex - 1
             else:
                 break
         self.logger.logger.debug('data anchor is ' + datalenanchor + ' , lineno is ' + str(dataindex))
 
-        if dataindex < 0:
+        if dataindex < endrange:
             self.logger.logger.error('no sip msg for line ' + line + ', lineno is '+ str(lineno))
             return
 
@@ -356,15 +362,22 @@ class flowParser():
         #NOTE: need to find pattern 'data length: 400' first
         datalenanchor = self.datalentags + str(recvdatalen)
         self.logger.logger.error('data anchor is ' + datalenanchor)
-        while dataindex >= 0 and dataindex < len(self.loglines):
+
+        endrange = dataindex + 50
+        if endrange > len(self.loglines):
+            endrange = len(self.loglines)
+        while dataindex >= 0 and dataindex < endrange:
             if datalenanchor not in self.loglines[dataindex]:
                 dataindex = dataindex + 1
             else:
                 break
 
-        if dataindex == len(self.loglines):
+        #in tcp, recv may happen twice, so not match
+
+        if dataindex == endrange:
             self.logger.logger.error("not sip msg for line " + line + ' , lineno  is '+ str(lineno))
             return
+
 
 
         searchstart = dataindex
