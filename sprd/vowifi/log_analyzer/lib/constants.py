@@ -771,10 +771,11 @@ phoneEvent.addEvent("Try to logout from the ims, current register state: (.*)", 
 
 ### security callback, this is old callback
 phoneEvent.addEvent("Get the security callback:.*({\"security_json_action\":.*)", module_Adapter, eventType=eventType.EDGE, eventHandler=olds2bstatus)
-phoneEvent.addEvent("Get the security callback:.*({\"event_code\":.*)", module_Adapter, eventType=eventType.EDGE, eventHandler=news2bstatus)
+phoneEvent.addEvent("Get the security callback:.*({.*})", module_Adapter, eventType=eventType.EDGE, eventHandler=news2bstatus)
 ### register callback
-phoneEvent.addEvent("Get the register state changed callback: {\"event_code\":.*,\"event_name\":\"(.*)\",\"state_code\":(.*)}" , module_Adapter, eventType=eventType.EDGE, eventHandler=regstatus, groupnum=2)
-
+#in 4.4, json order is not the same as 6.0/7.0
+#phoneEvent.addEvent("Get the register state changed callback: {\"event_code\":.*,\"event_name\":\"(.*)\",\"state_code\":(.*)}" , module_Adapter, eventType=eventType.EDGE, eventHandler=regstatus, groupnum=2)
+phoneEvent.addEvent("Get the register state changed callback:.*({.*})" , module_Adapter, eventType=eventType.EDGE, eventHandler=regstatus)
 
 ###call related event
 #phoneEvent.addEvent("(Handle the event.*for the call.*)", module_Phone)

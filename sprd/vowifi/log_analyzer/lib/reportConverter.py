@@ -125,9 +125,12 @@
 #TODO:
 #    7.7. ScreenStateReceiver SCREEN_OFF, SCREEN_ON - not useful
 
+#   7.7.1 at cmd:  CGDCONT
+
 #    7.6 sip searching , should add
 #    process request
 #    process response
+#    gui notify
 #    D:\code\merge\ee\sip_error
 #    7.8.x cp tuple issue
 #    D:\code\merge\vdf\TCP syn no response

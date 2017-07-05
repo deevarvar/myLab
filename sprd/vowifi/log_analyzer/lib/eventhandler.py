@@ -1065,9 +1065,11 @@ class regstatus(eventhandler):
     event name , state code
     '''
     def handler(self):
-        eventname = self.match.group(1)
-        statecode = int(self.match.group(2))
 
+        regstr = self.match.group(1).strip()
+        regjson = json.loads(regstr)
+        eventname = regjson['event_name']
+        statecode = regjson['state_code']
         #only return when statecode >= 0xE100 or -1
 
         #seems MTC_CLI_REG_BASE+16: other error is not error,
