@@ -14,7 +14,7 @@ from datetime import datetime
 #Note: AT> will have a rsp: AT< OK, if not OK we will display it.
 
 
-#      0. androido's timestamp is changing.
+#      0. fixed  androido's timestamp is changing.
 #      C:\Users\Zhihua.Ye\Documents\MyJabberFiles\cindy.xie@spreadtrum.com\SOS_APN_ECALL\SOS_APN_ECALL\SOS_APN_ECALL\ap\current\00-0823_195345
 #      1. imsbr, ciregu D:\code\log\bug_log\vit_log\2017_8_15\mingzhe_last\12
 #       D:\code\log\bug_log\vit_log\2017_8_24\729634\ylog
@@ -459,6 +459,7 @@ class radioParser():
         msglevel = Msglevel.INFO
         action = actionBuilder()
 
+        state = state[0]
         if state == '0':
             eventname = "VoLTE Unregistered"
             color = 'brown'
