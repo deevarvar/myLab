@@ -63,7 +63,8 @@ Constants2berrcode[str(int(MTC_S2B_BASE+2))] = "fqdn error"
 Constants2berrcode[str(int(MTC_S2B_BASE+3))] = "sainit error"
 Constants2berrcode[str(int(MTC_S2B_BASE+4))] = "auth error"
 Constants2berrcode[str(int(MTC_S2B_BASE+5))] = "eap error"
-Constants2berrcode[str(int(MTC_S2B_BASE+6))] = "auth finish error"
+#in real network, it is internal address
+Constants2berrcode[str(int(MTC_S2B_BASE+6))] = "internal address error"
 Constants2berrcode[str(int(MTC_S2B_BASE+7))] = "auth resend error"
 Constants2berrcode[str(int(MTC_S2B_BASE+8))] = "enter aka error"
 Constants2berrcode[str(int(MTC_S2B_BASE+9))] = "resend timeout error"
@@ -87,7 +88,7 @@ def isS2bError(statecode):
 
 #some alert definition in  MtcCallConstants.java
 #Note, do not enumate every error code here
-#because seems service will do the convertion and we only care about the code which is not converted.
+#because seems service will do the convertion and we only care about the cautode which is not converted.
 Constantcallcode = dict()
 MTC_CALL_BASE = 0xE200
 Constantcallcode[str(int(MTC_CALL_BASE+41))] = "180 Ringing"

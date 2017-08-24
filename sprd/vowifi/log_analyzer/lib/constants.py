@@ -637,6 +637,10 @@ imscmEvent.addEvent('handleMessage.*: \"(.*)\", mCurPendingProcessMsgId = (.*)' 
 #no need to add clearLoopMsgQueue
 #no need to add ImsServiceListenerEx, all release action will be recorded.
 
+#add regstate report
+#ImsConnectionManagerService: [onVoLteServiceStateChanged], currentImsFeature = "VoWifi", cpRegState = "VOLTE INACTIVE"
+imscmEvent.addEvent('currentImsFeature = \"(.*)\".*,.*cpRegState = \"(.*)\"' , module_ImsCM, eventType = eventType.EDGE, eventHandler=cmregstat, groupnum=2)
+
 #add rssi
 # ImsConnectionManagerEEPolicy: loopAudioCallQosForWifiPreferred: rssi = -86, rsrp = -103
 imscmEvent.addEvent('rssi = (.*), rsrp = (.*)' , module_ImsCM, eventType = eventType.EDGE, eventHandler=hosignal, groupnum=2)
@@ -698,7 +702,7 @@ imscmEvent.addEvent('(switchOrHandoverVowifi: invalid vowifi rssi)', module_ImsC
 '''
 
 ### some ho exception
-imscmEvent.addEvent('(Waiting for Volte registered for Volte call end)', module_ImsCM, eventType = eventType.EDGE, eventHandler=imswaitvoltereg)
+imscmEvent.addEvent('(Waiting for Volte registered.*Volte call end)', module_ImsCM, eventType = eventType.EDGE, eventHandler=imswaitvoltereg)
 imscmEvent.addEvent('(Volte is registered, don\'t)', module_ImsCM, eventType = eventType.EDGE, eventHandler=imsrepeatvolte)
 imscmEvent.addEvent('(Vowifi is registered, don\'t)', module_ImsCM, eventType = eventType.EDGE, eventHandler=imsrepeatvowifi)
 

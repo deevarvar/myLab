@@ -13,6 +13,21 @@ from configobj import ConfigObj,ConfigObjError
 from datetime import datetime
 #Note: AT> will have a rsp: AT< OK, if not OK we will display it.
 
+
+#      0. androido's timestamp is changing.
+#      C:\Users\Zhihua.Ye\Documents\MyJabberFiles\cindy.xie@spreadtrum.com\SOS_APN_ECALL\SOS_APN_ECALL\SOS_APN_ECALL\ap\current\00-0823_195345
+#      1. imsbr, ciregu D:\code\log\bug_log\vit_log\2017_8_15\mingzhe_last\12
+#       D:\code\log\bug_log\vit_log\2017_8_24\729634\ylog
+#TODO: add parser for CGCONTRDP, PDN connection, v4, v6
+#      v4: D:\code\log\bug_log\vit_log\2017_8_15\727817\MO\2017-08-19-15-28-06\android
+#      v4: 726983
+#      v6: D:\code\merge\vdf\0523_onsite_ho_401
+#      v6:
+#      D:\code\log\ref_log\instruments\Anritsu\9820a_handover\9820a_handover\external_storage\2017-06-21-18-16-20\android
+#      add parser CCED D:\code\log\bug_log\vit_log\2017_8_7\mingzhe_issue\android
+#      add parser , CREG is better D:\code\log\bug_log\vit_log\2017_8_7\727815\2\android
+#      NO NEED: CIREG get the real result!
+
 from seqdiag import parser, builder, drawer
 from blockdiag.utils.bootstrap import create_fontmap
 from PyPDF2 import PdfFileMerger, PdfFileReader
@@ -112,6 +127,9 @@ class radioParser():
             self.pattern['mestatepattern'] = config['radioParser']['mestatepattern']
             self.pattern['horegupdatepattern'] = config['radioParser']['horegupdatepattern']
             self.pattern['appcscfpattern'] = config['radioParser']['appcscfpattern']
+            self.pattern['ccedpattern'] = config['radioParser']['ccedpattern']
+            self.pattern['ccedpattern'] = config['radioParser']['ccedpattern']
+            self.pattern['cregpattern'] = config['radioParser']['cregpattern']
 
             #there are always dirty msgs to ignroe, Orz...
             self.ignoremsg = list()
@@ -330,6 +348,20 @@ class radioParser():
         appcscfpattern['func'] = self.setappcscf
         appcscfpattern['direct'] = '->'
         self.keypattern.append(appcscfpattern)
+
+        #we use imscm's state to check the reg state
+        '''
+        ccedpattern = dict()
+        ccedpattern['pattern'] = re.compile(self.pattern['ccedpattern'])
+        ccedpattern['func'] = self.setcced
+        ccedpattern['direct'] = '->'
+        self.keypattern.append(ccedpattern)
+        '''
+        cregpattern = dict()
+        cregpattern['pattern'] = re.compile(self.pattern['cregpattern'])
+        cregpattern['func'] = self.cellchange
+        cregpattern['direct'] = '<-'
+        self.keypattern.append(cregpattern)
 
 
     def initAtmsg(self, line):
@@ -620,9 +652,17 @@ class radioParser():
         color = 'black'
         msglevel = Msglevel.INFO
         action = actionBuilder()
-        eventname = "Volte Register Addr is \n" + addr
-        action.setAll(eventname, msglevel, color)
-        return action
+        #FIXME: sometimes addr is messy code.
+
+        try:
+            addr.decode('utf-8')
+            eventname = "Volte Register Addr is \n" + addr
+            action.setAll(eventname, msglevel, color)
+            return action
+        except UnicodeError:
+            print 'err addr is ' + str(addr.decode('utf8',errors='replace'))
+            return None
+
 
     def querysrvcc(self):
         eventname = ''
@@ -931,6 +971,85 @@ class radioParser():
         else:
             return None
 
+    def setcced(self, string):
+        #<report_type>,[<oper_type>]
+        color = 'brown'
+        msglevel =  Msglevel.WARNING
+        action = actionBuilder()
+        string = string.strip()
+        fields = string.split(',')
+        reporttype = fields[0]
+        opertype = fields[1]
+        #opertype seems not clear
+
+        if reporttype == '0':
+            eventname = "Enable Report Cell Info Once"
+        elif reporttype == '1':
+            eventname = "Enable Report Cell Info"
+        elif reporttype == '2':
+            eventname = "Disable Report Cell Info"
+        else:
+            return None
+        action.setAll(eventname, msglevel, color)
+        return action
+
+    def cellchange(self, string):
+        color = 'blue'
+        msglevel =  Msglevel.INFO
+        action = actionBuilder()
+        string = string.strip()
+        fields = string.split(',')
+        if len(fields) == 4:
+            state = fields[0]
+            lac = fields[1]
+            ci = fields[2]
+            act = fields[3]
+        else:
+            #fields can be 5 part, no need to report
+            return None
+
+        statestr = ""
+        lacstr = ""
+        cistr = ""
+        actstr = "Access Tech:"
+        if state == '0':
+            statestr = "Non-Registered, not search new network"
+        elif state == '1':
+            statestr = "Regisered Home Network"
+        elif state == '2':
+            statestr = "Non-Registered, searching new network"
+        elif state == '3':
+            statestr = "Registration is Denied"
+            color = 'red'
+            msglevel =  Msglevel.ERROR
+        elif state == '4':
+            statestr = "Unknow state"
+            color = 'red'
+            msglevel =  Msglevel.ERROR
+        elif state == '5':
+            statestr = "Regisered Roaming Network"
+        elif state == '8':
+            statestr = "Emergency Registered"
+
+        lacstr =  "Location of Cell: " + str(lac).replace('"', '')
+        cistr =   "Cell id:" + str(ci).replace('"', '')
+        if act == '0' or act == '1':
+            actstr += "GSM"
+        elif act == '2' or act == '4' or act == '5' or act == '6':
+            actstr += "UTRAN"
+        elif act == '3':
+            actstr += 'EDGE'
+        elif act == '15':
+            actstr += 'HSPA+'
+        elif act == '7':
+            actstr += 'EUTRAN'
+
+        eventname = actstr +'\n' + statestr + '\n' + lacstr + '\n' + cistr
+
+        action.setAll(eventname, msglevel, color)
+
+        return action
+
     def getAtmsg(self,keypattern, line, lineno):
         '''
         :param pattern:  all kinds of pattern
@@ -1031,7 +1150,7 @@ class radioParser():
         elementstr = "UE; CP;"
         diagram_definition +=elementstr + '\n'
         diagram_definition += '\n'
-
+        print diagstr
         diagram_definition += diagstr
         diagram_definition += u""" }\n"""
         # generate the diag string and draw it

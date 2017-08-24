@@ -519,7 +519,6 @@ class flowParser():
             self.logger.logger.error(line + ' is not valid log line')
             return
         lpid = lineinfo[2]
-
         if lpid not in self.pidpair:
             #add some exceptional event like dhcp event
             return

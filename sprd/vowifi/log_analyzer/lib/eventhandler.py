@@ -653,182 +653,185 @@ class servicecallback(eventhandler):
     '''
     def handler(self):
         servicestr = self.match.group(1).strip()
-        servicejson = json.loads(servicestr)
-        #event_name is must
-        #enumerate the key in Constants.java
-        eventstr = termreason = callidstr = alertstr = isvideostr = phonenumstr = sipuristr = ''
-        videohight = videowidth = videoorient = rtprecv = confpartstatus = ''
-        msgstr = ''
-        #there will event skipped, which means other key will have better phrase
-        skipevent = list()
-        skipevent.append('call_terminate')
-        skipevent.append("call_rtp_received")
-        skipevent.append("conf_rtp_received")
+        try:
+            servicejson = json.loads(servicestr)
+            #event_name is must
+            #enumerate the key in Constants.java
+            eventstr = termreason = callidstr = alertstr = isvideostr = phonenumstr = sipuristr = ''
+            videohight = videowidth = videoorient = rtprecv = confpartstatus = ''
+            msgstr = ''
+            #there will event skipped, which means other key will have better phrase
+            skipevent = list()
+            skipevent.append('call_terminate')
+            skipevent.append("call_rtp_received")
+            skipevent.append("conf_rtp_received")
 
 
-        #event to be ignored, like rtcp changed
-        ignoreevent = list()
-        ignoreevent.append('call_rtcp_changed')
-        ignoreevent.append('conf_rtcp_changed')
+            #event to be ignored, like rtcp changed
+            ignoreevent = list()
+            ignoreevent.append('call_rtcp_changed')
+            ignoreevent.append('conf_rtcp_changed')
 
-        #event should be colored blue
-        infoevent = list()
-        infoevent.append("call_incoming")
-        infoevent.append("call_talking")
-        infoevent.append("call_terminate") #actually it is skipped
-        infoevent.append("call_hold_ok")
-        infoevent.append("call_resume_ok")
-        infoevent.append("call_hold_received")
-        infoevent.append("call_resume_received")
-        infoevent.append("call_add_video_ok")
-        infoevent.append("call_remove_video_ok")
-        infoevent.append("call_add_video_request")
-        infoevent.append("call_add_video_cancel")
-        infoevent.append("call_rtp_received") #actually it is skipped
-        infoevent.append("call_is_focus")
-        infoevent.append("conf_connected")
-        infoevent.append("conf_disconnected")
-        infoevent.append("conf_invite_accept")
-        infoevent.append("conf_kick_accept")
-        infoevent.append("conf_part_update")
-        infoevent.append("conf_hold_ok")
-        infoevent.append("conf_resume_ok")
-        infoevent.append("conf_hold_received")
-        infoevent.append("conf_resume_received")
+            #event should be colored blue
+            infoevent = list()
+            infoevent.append("call_incoming")
+            infoevent.append("call_talking")
+            infoevent.append("call_terminate") #actually it is skipped
+            infoevent.append("call_hold_ok")
+            infoevent.append("call_resume_ok")
+            infoevent.append("call_hold_received")
+            infoevent.append("call_resume_received")
+            infoevent.append("call_add_video_ok")
+            infoevent.append("call_remove_video_ok")
+            infoevent.append("call_add_video_request")
+            infoevent.append("call_add_video_cancel")
+            infoevent.append("call_rtp_received") #actually it is skipped
+            infoevent.append("call_is_focus")
+            infoevent.append("conf_connected")
+            infoevent.append("conf_disconnected")
+            infoevent.append("conf_invite_accept")
+            infoevent.append("conf_kick_accept")
+            infoevent.append("conf_part_update")
+            infoevent.append("conf_hold_ok")
+            infoevent.append("conf_resume_ok")
+            infoevent.append("conf_hold_received")
+            infoevent.append("conf_resume_received")
 
-        infoevent.append("conf_outgoing")
-        infoevent.append("call_outgoing")
+            infoevent.append("conf_outgoing")
+            infoevent.append("call_outgoing")
 
-        #some browncolor, other infoevent will be green
-        browncolor = list()
-        browncolor.append("call_incoming")
-        browncolor.append("call_add_video_request")
-        browncolor.append("call_add_video_cancel")
-        browncolor.append("conf_disconnected")
-        browncolor.append("conf_outgoing")
-        browncolor.append("call_outgoing")
-        browncolor.append("conf_part_update")
-        #event should be colored red
-        errevent = list()
-        errevent.append("call_hold_failed")
-        errevent.append("call_resume_failed")
-        errevent.append("call_add_video_failed")
-        errevent.append("call_remove_video_failed")
-        errevent.append("conf_invite_failed")
-        errevent.append("conf_kick_failed")
-        errevent.append("conf_hold_failed")
-        errevent.append("conf_resume_failed")
+            #some browncolor, other infoevent will be green
+            browncolor = list()
+            browncolor.append("call_incoming")
+            browncolor.append("call_add_video_request")
+            browncolor.append("call_add_video_cancel")
+            browncolor.append("conf_disconnected")
+            browncolor.append("conf_outgoing")
+            browncolor.append("call_outgoing")
+            browncolor.append("conf_part_update")
+            #event should be colored red
+            errevent = list()
+            errevent.append("call_hold_failed")
+            errevent.append("call_resume_failed")
+            errevent.append("call_add_video_failed")
+            errevent.append("call_remove_video_failed")
+            errevent.append("conf_invite_failed")
+            errevent.append("conf_kick_failed")
+            errevent.append("conf_hold_failed")
+            errevent.append("conf_resume_failed")
 
-        self.retmsg.msglevel = Msglevel.INFO
-        self.retmsg.color = maplevel2color(self.retmsg.msglevel)
+            self.retmsg.msglevel = Msglevel.INFO
+            self.retmsg.color = maplevel2color(self.retmsg.msglevel)
 
-        if 'event_name' in servicejson:
-            curevent = str(servicejson['event_name']).strip()
-            #rtcp changed is too verbose , so ignore it.
-            if curevent in ignoreevent:
-                return None
+            if 'event_name' in servicejson:
+                curevent = str(servicejson['event_name']).strip()
+                #rtcp changed is too verbose , so ignore it.
+                if curevent in ignoreevent:
+                    return None
 
-            if curevent not in skipevent:
-                #some event should be highlighted
-                #just change the color here, phrase is not converted.
-                if curevent in infoevent:
-                    if curevent in browncolor:
-                        self.retmsg.msglevel = Msglevel.WARNING
-                        self.retmsg.color = maplevel2color(self.retmsg.msglevel)
-                    else:
-                        self.retmsg.msglevel = Msglevel.NORMAL
-                        self.retmsg.color = maplevel2color(self.retmsg.msglevel)
-                    event = mapzhphrase(curevent, ReportScenariophrase)
-                    self.retmsg.report = constructReport(type=ReportType.SCEEVENT_BASE,event=event, level=self.retmsg.msglevel)
-                elif curevent in errevent:
-                    self.retmsg.msglevel = Msglevel.ERROR
-                    self.retmsg.color = maplevel2color(self.retmsg.msglevel)
-                    event = mapzhphrase(curevent, ReportScenariophrase)
-                    self.retmsg.report = constructReport(type=ReportType.SCEEVENT_BASE,event=event, level=self.retmsg.msglevel)
-
-                eventstr = 'Event: ' + curevent + '\n'
-            if curevent == "call_terminate":
-                if 'state_code' in servicejson:
-                    imsreason =  mapcode2str(str(servicejson['state_code']), Constantimsreason)
-                    termreason = 'Term Call: ' + imsreason + '\n'
-                    self.retmsg.msglevel = Msglevel.WARNING
-                    self.retmsg.color = maplevel2color(self.retmsg.msglevel)
-                    event = mapzhphrase("call_terminate", ReportScenariophrase, post=imsreason)
-                    self.retmsg.report = constructReport(type=ReportType.SCEEVENT_BASE,event=event, level=self.retmsg.msglevel)
-
-            if curevent == "call_rtp_received" or curevent == "conf_rtp_received":
-                if 'rtp_received' in servicejson and 'is_video' in servicejson:
-                    #python will convert true to True, false to False
-                    rtpstate = str(servicejson['rtp_received']).lower()
-                    isvideo = str(servicejson['is_video']).lower()
-                    if rtpstate == 'true':
-
-                        self.retmsg.msglevel = Msglevel.NORMAL
-                        self.retmsg.color = maplevel2color(self.retmsg.msglevel)
-                        if curevent == "call_rtp_received" :
-                            if isvideo == 'false':
-                                rtprecv = "Voice RTP received\n"
-                                event = mapzhphrase("voicecallrtp", ReportScenariophrase)
-                            else:
-                                rtprecv = "Video RTP received\n"
-                                event = mapzhphrase("videocallrtp", ReportScenariophrase)
+                if curevent not in skipevent:
+                    #some event should be highlighted
+                    #just change the color here, phrase is not converted.
+                    if curevent in infoevent:
+                        if curevent in browncolor:
+                            self.retmsg.msglevel = Msglevel.WARNING
+                            self.retmsg.color = maplevel2color(self.retmsg.msglevel)
                         else:
-                            if isvideo == 'false':
-                                rtprecv = "Conf Voice RTP received\n"
-                                event = mapzhphrase("voiceconfrtp", ReportScenariophrase)
-                            else:
-                                rtprecv = "Conf Video RTP received\n"
-                                event = mapzhphrase("videoconfrtp", ReportScenariophrase)
+                            self.retmsg.msglevel = Msglevel.NORMAL
+                            self.retmsg.color = maplevel2color(self.retmsg.msglevel)
+                        event = mapzhphrase(curevent, ReportScenariophrase)
                         self.retmsg.report = constructReport(type=ReportType.SCEEVENT_BASE,event=event, level=self.retmsg.msglevel)
-                    else:
-                        #show error msg.
-                        #service no rtp ,but need ImsCM confirm
-                        self.retmsg.msglevel = Msglevel.WARNING
+                    elif curevent in errevent:
+                        self.retmsg.msglevel = Msglevel.ERROR
                         self.retmsg.color = maplevel2color(self.retmsg.msglevel)
-                        if curevent == "call_rtp_received":
-                            if isvideo == 'false':
-                                rtprecv = "No Voice RTP received\n"
-                                event = mapzhphrase("voicecallnortp", ReportScenariophrase)
-                            else:
-                                rtprecv = "No Video RTP received\n"
-                                event = mapzhphrase("video", ReportScenariophrase)
-                        else:
-                            if isvideo == "false":
-                                rtprecv = "Conf No Voice RTP received\n"
-                                event = mapzhphrase("voiceconfnortp", ReportScenariophrase)
-                            else:
-                                rtprecv = "Conf No Video RTP received\n"
-                                event = mapzhphrase("videoconfnortp", ReportScenariophrase)
+                        event = mapzhphrase(curevent, ReportScenariophrase)
                         self.retmsg.report = constructReport(type=ReportType.SCEEVENT_BASE,event=event, level=self.retmsg.msglevel)
 
-        if 'id' in servicejson:
-            callidstr = "StackCallid: " + str(servicejson['id']) + '\n'
-        if 'alert_type' in servicejson:
-            alertstr = "User Alert: " + mapcode2str(str(servicejson['alert_type']), Constantcallcode) + '\n'
-        if 'is_video' in servicejson:
-            if str(servicejson['is_video']).lower() == "false":
-                isvideostr = "calltype: Voice Call\n"
-            else:
-                isvideostr = "calltype: Video Call\n"
-        if 'phone_num' in servicejson:
-            phonenumstr = "PhoneNum :" + servicejson['phone_num'] + '\n'
-        if 'sip_uri' in servicejson:
-            #seems not useful, so comment here
-            #sipuristr = "SIP URI :" + servicejson['sip_uri'] + '\n'
-            sipuristr = ''
-        if 'video_height' in servicejson:
-            videohight = "Video Height :" + str(servicejson['video_height']) + '\n'
-        if 'video_width' in servicejson:
-            videowidth = "Video Width :" + str(servicejson['video_width']) + '\n'
-        if 'video_orientation' in servicejson:
-            #seems dead code ... Orz~
-            pass
-        if 'conf_part_new_status' in servicejson:
-            confpartstatus = "Conf Part State: " + str(servicejson['conf_part_new_status'])
-        #assemble the str
-        self.retmsg.msg = eventstr + rtprecv + termreason + callidstr + alertstr + isvideostr + phonenumstr + sipuristr + \
-                     videohight + videowidth + videoorient + confpartstatus
-        return self.retmsg
+                    eventstr = 'Event: ' + curevent + '\n'
+                if curevent == "call_terminate":
+                    if 'state_code' in servicejson:
+                        imsreason =  mapcode2str(str(servicejson['state_code']), Constantimsreason)
+                        termreason = 'Term Call: ' + imsreason + '\n'
+                        self.retmsg.msglevel = Msglevel.WARNING
+                        self.retmsg.color = maplevel2color(self.retmsg.msglevel)
+                        event = mapzhphrase("call_terminate", ReportScenariophrase, post=imsreason)
+                        self.retmsg.report = constructReport(type=ReportType.SCEEVENT_BASE,event=event, level=self.retmsg.msglevel)
+
+                if curevent == "call_rtp_received" or curevent == "conf_rtp_received":
+                    if 'rtp_received' in servicejson and 'is_video' in servicejson:
+                        #python will convert true to True, false to False
+                        rtpstate = str(servicejson['rtp_received']).lower()
+                        isvideo = str(servicejson['is_video']).lower()
+                        if rtpstate == 'true':
+
+                            self.retmsg.msglevel = Msglevel.NORMAL
+                            self.retmsg.color = maplevel2color(self.retmsg.msglevel)
+                            if curevent == "call_rtp_received" :
+                                if isvideo == 'false':
+                                    rtprecv = "Voice RTP received\n"
+                                    event = mapzhphrase("voicecallrtp", ReportScenariophrase)
+                                else:
+                                    rtprecv = "Video RTP received\n"
+                                    event = mapzhphrase("videocallrtp", ReportScenariophrase)
+                            else:
+                                if isvideo == 'false':
+                                    rtprecv = "Conf Voice RTP received\n"
+                                    event = mapzhphrase("voiceconfrtp", ReportScenariophrase)
+                                else:
+                                    rtprecv = "Conf Video RTP received\n"
+                                    event = mapzhphrase("videoconfrtp", ReportScenariophrase)
+                            self.retmsg.report = constructReport(type=ReportType.SCEEVENT_BASE,event=event, level=self.retmsg.msglevel)
+                        else:
+                            #show error msg.
+                            #service no rtp ,but need ImsCM confirm
+                            self.retmsg.msglevel = Msglevel.WARNING
+                            self.retmsg.color = maplevel2color(self.retmsg.msglevel)
+                            if curevent == "call_rtp_received":
+                                if isvideo == 'false':
+                                    rtprecv = "No Voice RTP received\n"
+                                    event = mapzhphrase("voicecallnortp", ReportScenariophrase)
+                                else:
+                                    rtprecv = "No Video RTP received\n"
+                                    event = mapzhphrase("video", ReportScenariophrase)
+                            else:
+                                if isvideo == "false":
+                                    rtprecv = "Conf No Voice RTP received\n"
+                                    event = mapzhphrase("voiceconfnortp", ReportScenariophrase)
+                                else:
+                                    rtprecv = "Conf No Video RTP received\n"
+                                    event = mapzhphrase("videoconfnortp", ReportScenariophrase)
+                            self.retmsg.report = constructReport(type=ReportType.SCEEVENT_BASE,event=event, level=self.retmsg.msglevel)
+
+            if 'id' in servicejson:
+                callidstr = "StackCallid: " + str(servicejson['id']) + '\n'
+            if 'alert_type' in servicejson:
+                alertstr = "User Alert: " + mapcode2str(str(servicejson['alert_type']), Constantcallcode) + '\n'
+            if 'is_video' in servicejson:
+                if str(servicejson['is_video']).lower() == "false":
+                    isvideostr = "calltype: Voice Call\n"
+                else:
+                    isvideostr = "calltype: Video Call\n"
+            if 'phone_num' in servicejson:
+                phonenumstr = "PhoneNum :" + servicejson['phone_num'] + '\n'
+            if 'sip_uri' in servicejson:
+                #seems not useful, so comment here
+                #sipuristr = "SIP URI :" + servicejson['sip_uri'] + '\n'
+                sipuristr = ''
+            if 'video_height' in servicejson:
+                videohight = "Video Height :" + str(servicejson['video_height']) + '\n'
+            if 'video_width' in servicejson:
+                videowidth = "Video Width :" + str(servicejson['video_width']) + '\n'
+            if 'video_orientation' in servicejson:
+                #seems dead code ... Orz~
+                pass
+            if 'conf_part_new_status' in servicejson:
+                confpartstatus = "Conf Part State: " + str(servicejson['conf_part_new_status'])
+            #assemble the str
+            self.retmsg.msg = eventstr + rtprecv + termreason + callidstr + alertstr + isvideostr + phonenumstr + sipuristr + \
+                         videohight + videowidth + videoorient + confpartstatus
+            return self.retmsg
+        except ValueError:
+            return None
 
 class loginstatus(eventhandler):
     '''
@@ -1067,49 +1070,52 @@ class regstatus(eventhandler):
     def handler(self):
 
         regstr = self.match.group(1).strip()
-        regjson = json.loads(regstr)
-        eventname = regjson['event_name']
-        statecode = regjson['state_code']
-        #only return when statecode >= 0xE100 or -1
+        try:
+            regjson = json.loads(regstr)
+            eventname = regjson['event_name']
+            statecode = regjson['state_code']
+            #only return when statecode >= 0xE100 or -1
 
-        #seems MTC_CLI_REG_BASE+16: other error is not error,
-        if isRegError(statecode):
-            self.retmsg.msglevel = Msglevel.ERROR
-            self.retmsg.color = maplevel2color(self.retmsg.msglevel)
-            eventstr = map2phrase(eventname, Reportregphrase) + '\n'
-            mappedstr = str(statecode) + '-->' + mapcode2str(str(statecode),Constantregerrcode)
-            statestr = "state: " + mappedstr
-
-            event = mapzhphrase(eventname, Reportregphrase)
-            self.retmsg.report = constructReport(event=event, level=self.retmsg.msglevel, errorstr=mappedstr)
-            self.retmsg.msg = eventstr + statestr
-            return self.retmsg
-        else:
-            #in service's log, -1 is default value when login_ok or refresh_ok
-            #login_ok, login_failed, logouted,refresh_ok, refresh_failed
-            if eventname == "login_failed" or eventname == "refresh_failed":
+            #seems MTC_CLI_REG_BASE+16: other error is not error,
+            if isRegError(statecode):
                 self.retmsg.msglevel = Msglevel.ERROR
-            elif eventname == "login_ok" or eventname == "refresh_ok":
-                self.retmsg.msglevel = Msglevel.NORMAL
-            else:
-                self.retmsg.msglevel = Msglevel.INFO
-            self.retmsg.color = maplevel2color(self.retmsg.msglevel)
-            eventstr = map2phrase(eventname, Reportregphrase)
+                self.retmsg.color = maplevel2color(self.retmsg.msglevel)
+                eventstr = map2phrase(eventname, Reportregphrase) + '\n'
+                mappedstr = str(statecode) + '-->' + mapcode2str(str(statecode),Constantregerrcode)
+                statestr = "state: " + mappedstr
 
-            if eventname == "state_update":
-                #this code is not working here, mtc_cli.h
-                #[VoWifiService]RegisterService: Get the register state changed callback, register state: 1, code: 57600
-                #[Adapter]VoWifiRegisterManager: Get the register state changed callback: {"event_code":6,"event_name":"state_update","state_code":1}
-                eventstr += " to " + mapcode2str(str(statecode), Constantregstatecode)
-                #hard code here, we use service to track
-                return None
-            else:
-                #state_update event is some kind of verbose, will not be included in report
                 event = mapzhphrase(eventname, Reportregphrase)
-                self.retmsg.report = constructReport(event=event, level=self.retmsg.msglevel)
+                self.retmsg.report = constructReport(event=event, level=self.retmsg.msglevel, errorstr=mappedstr)
+                self.retmsg.msg = eventstr + statestr
+                return self.retmsg
+            else:
+                #in service's log, -1 is default value when login_ok or refresh_ok
+                #login_ok, login_failed, logouted,refresh_ok, refresh_failed
+                if eventname == "login_failed" or eventname == "refresh_failed":
+                    self.retmsg.msglevel = Msglevel.ERROR
+                elif eventname == "login_ok" or eventname == "refresh_ok":
+                    self.retmsg.msglevel = Msglevel.NORMAL
+                else:
+                    self.retmsg.msglevel = Msglevel.INFO
+                self.retmsg.color = maplevel2color(self.retmsg.msglevel)
+                eventstr = map2phrase(eventname, Reportregphrase)
 
-            self.retmsg.msg = eventstr
-            return self.retmsg
+                if eventname == "state_update":
+                    #this code is not working here, mtc_cli.h
+                    #[VoWifiService]RegisterService: Get the register state changed callback, register state: 1, code: 57600
+                    #[Adapter]VoWifiRegisterManager: Get the register state changed callback: {"event_code":6,"event_name":"state_update","state_code":1}
+                    eventstr += " to " + mapcode2str(str(statecode), Constantregstatecode)
+                    #hard code here, we use service to track
+                    return None
+                else:
+                    #state_update event is some kind of verbose, will not be included in report
+                    event = mapzhphrase(eventname, Reportregphrase)
+                    self.retmsg.report = constructReport(event=event, level=self.retmsg.msglevel)
+
+                self.retmsg.msg = eventstr
+                return self.retmsg
+        except ValueError:
+            return None
 
 class subs504(eventhandler):
     def handler(self):
@@ -1121,85 +1127,88 @@ class subs504(eventhandler):
 class news2bstatus(eventhandler):
     def handler(self):
         s2bstr = self.match.group(1).strip()
-        s2bjson = json.loads(s2bstr)
-        #notifyS2bAttachSuccess, notifyS2bResult
-        #we only care about attach_successed, attach_stopped, attach_failed
-        # {"event_code":1,"event_name":"attach_successed","session_id":1,"local_ip4":"10.135.191.151","local_ip6":"2404:8d00:80b:8156:7bab:a1e2:cd9e:2f50","pcscf_ip4":"10.34.129.240;10.34.193.240","pcscf_ip6":"2407:ed00:1200:1000::1;2407:ed00:2200:1000::1","pref_ip4":false,"is_sos":false}
-	    # {"event_code":4,"event_name":"attach_stopped","session_id":1,"state_code":53760}
-        action = s2bjson['event_name']
-        if action == "attach_successed":
-            statestr = "epdg attach successfully\n"
-            ipv4str = ipv6str = pcscfv4str = dnsv4str = dnsv6str= pcscfv6str = prefipv4str = issosstr = sessidstr = ''
-            if 'local_ip4' in s2bjson:
-                ipv4str = "     IPv4: " + s2bjson['local_ip4'] + '\n'
-            if 'local_ip6' in s2bjson:
-                ipv6str = "     IPv6: " + s2bjson['local_ip6'] + '\n'
-            if 'dns_ip4' in s2bjson:
-                dnsv4str = "DNS IPv4: " + s2bjson['dns_ip4'] + '\n'
-            if 'dns_ip6' in s2bjson:
-                dnsv6str = "DNS IPv6: " + s2bjson['dns_ip6'] + '\n'
-            if 'pcscf_ip4' in s2bjson:
-                pcscfv4str = "   PCSCF IPv4: " + s2bjson['pcscf_ip4'] + '\n'
-            if 'pcscf_ip6' in s2bjson:
-                pcscfv6str = "   PCSCF IPv6: " + s2bjson['pcscf_ip6'] + '\n'
-            if 'pref_ip4' in s2bjson:
-                prefipv4str = "Prefered IPv4: " + str(s2bjson['pref_ip4']) + '\n'
-            if 'is_sos' in s2bjson:
-                issosstr = " Tunnel For Sos: " + str(s2bjson['is_sos']) + '\n'
-            if 'session_id' in s2bjson:
-                sessidstr = " Session id: " + str(s2bjson['session_id']) + '\n'
-            self.retmsg.msglevel = Msglevel.NORMAL
-            self.retmsg.color = maplevel2color(self.retmsg.msglevel)
-            self.retmsg.msg = statestr + ipv4str + ipv6str + dnsv4str+ dnsv6str +pcscfv4str + pcscfv6str + prefipv4str + issosstr + sessidstr
-            event = mapzhphrase("successed", Reports2bphrase)
-            self.retmsg.report = constructReport(event=event, level=self.retmsg.msglevel)
+        try:
+            s2bjson = json.loads(s2bstr)
+            #notifyS2bAttachSuccess, notifyS2bResult
+            #we only care about attach_successed, attach_stopped, attach_failed
+            # {"event_code":1,"event_name":"attach_successed","session_id":1,"local_ip4":"10.135.191.151","local_ip6":"2404:8d00:80b:8156:7bab:a1e2:cd9e:2f50","pcscf_ip4":"10.34.129.240;10.34.193.240","pcscf_ip6":"2407:ed00:1200:1000::1;2407:ed00:2200:1000::1","pref_ip4":false,"is_sos":false}
+            # {"event_code":4,"event_name":"attach_stopped","session_id":1,"state_code":53760}
+            action = s2bjson['event_name']
+            if action == "attach_successed":
+                statestr = "epdg attach successfully\n"
+                ipv4str = ipv6str = pcscfv4str = dnsv4str = dnsv6str= pcscfv6str = prefipv4str = issosstr = sessidstr = ''
+                if 'local_ip4' in s2bjson:
+                    ipv4str = "     IPv4: " + s2bjson['local_ip4'] + '\n'
+                if 'local_ip6' in s2bjson:
+                    ipv6str = "     IPv6: " + s2bjson['local_ip6'] + '\n'
+                if 'dns_ip4' in s2bjson:
+                    dnsv4str = "DNS IPv4: " + s2bjson['dns_ip4'] + '\n'
+                if 'dns_ip6' in s2bjson:
+                    dnsv6str = "DNS IPv6: " + s2bjson['dns_ip6'] + '\n'
+                if 'pcscf_ip4' in s2bjson:
+                    pcscfv4str = "   PCSCF IPv4: " + s2bjson['pcscf_ip4'] + '\n'
+                if 'pcscf_ip6' in s2bjson:
+                    pcscfv6str = "   PCSCF IPv6: " + s2bjson['pcscf_ip6'] + '\n'
+                if 'pref_ip4' in s2bjson:
+                    prefipv4str = "Prefered IPv4: " + str(s2bjson['pref_ip4']) + '\n'
+                if 'is_sos' in s2bjson:
+                    issosstr = " Tunnel For Sos: " + str(s2bjson['is_sos']) + '\n'
+                if 'session_id' in s2bjson:
+                    sessidstr = " Session id: " + str(s2bjson['session_id']) + '\n'
+                self.retmsg.msglevel = Msglevel.NORMAL
+                self.retmsg.color = maplevel2color(self.retmsg.msglevel)
+                self.retmsg.msg = statestr + ipv4str + ipv6str + dnsv4str+ dnsv6str +pcscfv4str + pcscfv6str + prefipv4str + issosstr + sessidstr
+                event = mapzhphrase("successed", Reports2bphrase)
+                self.retmsg.report = constructReport(event=event, level=self.retmsg.msglevel)
 
-        elif action == "attach_stopped":
-            sessidstr = ''
-            errorcode = ''
-            if 'state_code' in s2bjson:
-                errorcode = s2bjson['state_code']
-            if 'session_id' in s2bjson:
-                sessidstr = " Session id: " + str(s2bjson['session_id']) + '\n'
-            statestr = "epdg attach stopped\n"
-            #add three spaces for alignment, not working...Orz...
-            mappedstr = str(errorcode) + '-->' + mapcode2str(str(errorcode), Constants2berrcode)
-            errorstr = " StateCode: " + mappedstr + '\n'
+            elif action == "attach_stopped":
+                sessidstr = ''
+                errorcode = ''
+                if 'state_code' in s2bjson:
+                    errorcode = s2bjson['state_code']
+                if 'session_id' in s2bjson:
+                    sessidstr = " Session id: " + str(s2bjson['session_id']) + '\n'
+                statestr = "epdg attach stopped\n"
+                #add three spaces for alignment, not working...Orz...
+                mappedstr = str(errorcode) + '-->' + mapcode2str(str(errorcode), Constants2berrcode)
+                errorstr = " StateCode: " + mappedstr + '\n'
 
-            #in s2b stopped, the statecode should be checked
-            if isS2bError(errorcode):
+                #in s2b stopped, the statecode should be checked
+                if isS2bError(errorcode):
+                    self.retmsg.msglevel = Msglevel.ERROR
+                    event = mapzhphrase("stopped_abnormally", Reports2bphrase)
+                    self.retmsg.report = constructReport(event=event, level=self.retmsg.msglevel, errorstr=mappedstr)
+                else:
+                    self.retmsg.msglevel = Msglevel.WARNING
+                    event = mapzhphrase("stopped", Reports2bphrase)
+                    self.retmsg.report = constructReport(event=event, level=self.retmsg.msglevel, errorstr=mappedstr)
+
+                self.retmsg.color = maplevel2color(self.retmsg.msglevel)
+                self.retmsg.msg = statestr + errorstr + sessidstr
+
+            elif action == "attach_failed":
+                sessidstr = ''
+                errorcode = ''
+                if 'state_code' in s2bjson:
+                    errorcode = str(s2bjson['state_code'])
+                if 'session_id' in s2bjson:
+                    sessidstr = " Session id: " + str(s2bjson['session_id']) + '\n'
+                statestr = "epdg attach failed\n"
+                mappedstr = str(errorcode) + '-->' + mapcode2str(str(errorcode), Constants2berrcode)
+                errorstr = "   stateCode: " +  mappedstr + '\n'
+
                 self.retmsg.msglevel = Msglevel.ERROR
-                event = mapzhphrase("stopped_abnormally", Reports2bphrase)
+                self.retmsg.color = maplevel2color(self.retmsg.msglevel)
+                self.retmsg.msg = statestr + errorstr + sessidstr
+
+                event = mapzhphrase("failed", Reports2bphrase)
                 self.retmsg.report = constructReport(event=event, level=self.retmsg.msglevel, errorstr=mappedstr)
+
             else:
-                self.retmsg.msglevel = Msglevel.WARNING
-                event = mapzhphrase("stopped", Reports2bphrase)
-                self.retmsg.report = constructReport(event=event, level=self.retmsg.msglevel, errorstr=mappedstr)
-
-            self.retmsg.color = maplevel2color(self.retmsg.msglevel)
-            self.retmsg.msg = statestr + errorstr + sessidstr
-
-        elif action == "attach_failed":
-            sessidstr = ''
-            errorcode = ''
-            if 'state_code' in s2bjson:
-                errorcode = str(s2bjson['state_code'])
-            if 'session_id' in s2bjson:
-                sessidstr = " Session id: " + str(s2bjson['session_id']) + '\n'
-            statestr = "epdg attach failed\n"
-            mappedstr = str(errorcode) + '-->' + mapcode2str(str(errorcode), Constants2berrcode)
-            errorstr = "   stateCode: " +  mappedstr + '\n'
-
-            self.retmsg.msglevel = Msglevel.ERROR
-            self.retmsg.color = maplevel2color(self.retmsg.msglevel)
-            self.retmsg.msg = statestr + errorstr + sessidstr
-
-            event = mapzhphrase("failed", Reports2bphrase)
-            self.retmsg.report = constructReport(event=event, level=self.retmsg.msglevel, errorstr=mappedstr)
-
-        else:
+                return None
+            return self.retmsg
+        except ValueError:
             return None
-        return self.retmsg
 
 class s2binfo(eventhandler):
     def handler(self):
@@ -1228,67 +1237,70 @@ class olds2bstatus(eventhandler):
     def handler(self):
         #input str is ALWAYS json string.
         s2bstr = self.match.group(1).strip()
-        s2bjson = json.loads(s2bstr)
-        action = s2bjson['security_json_action']
+        try:
+            s2bjson = json.loads(s2bstr)
+            action = s2bjson['security_json_action']
 
-        if action == 'security_json_action_s2b_failed':
-            errorcode = s2bjson['security_json_param_error_code']
-            statestr = "epdg attach failed\n"
-            mappedstr = str(errorcode) + '-->' + mapcode2str(str(errorcode), Constants2berrcode)
-            errorstr = "   stateCode: " +  mappedstr
+            if action == 'security_json_action_s2b_failed':
+                errorcode = s2bjson['security_json_param_error_code']
+                statestr = "epdg attach failed\n"
+                mappedstr = str(errorcode) + '-->' + mapcode2str(str(errorcode), Constants2berrcode)
+                errorstr = "   stateCode: " +  mappedstr
 
-            self.retmsg.msglevel = Msglevel.ERROR
-            self.retmsg.color = maplevel2color(self.retmsg.msglevel)
-            self.retmsg.msg = statestr + errorstr
-
-            event = mapzhphrase("failed", Reports2bphrase)
-            self.retmsg.report = constructReport(event=event, level=self.retmsg.msglevel, errorstr=mappedstr)
-        elif action == "security_json_action_s2b_stopped":
-            errorcode = s2bjson['security_json_param_error_code']
-            ishandover = s2bjson['security_json_param_handover']
-            statestr = "epdg attach stopped\n"
-            #add three spaces for alignment, not working...Orz...
-            hostr = " ishandover: " + str(ishandover) + '\n'
-            mappedstr = str(errorcode) + '-->' +mapcode2str(str(errorcode), Constants2berrcode)
-            errorstr = " StateCode: " + mappedstr
-
-            #in s2b stopped, the statecode should be checked
-            if isS2bError(errorcode):
                 self.retmsg.msglevel = Msglevel.ERROR
-                event = mapzhphrase("stopped_abnormally", Reports2bphrase)
+                self.retmsg.color = maplevel2color(self.retmsg.msglevel)
+                self.retmsg.msg = statestr + errorstr
+
+                event = mapzhphrase("failed", Reports2bphrase)
                 self.retmsg.report = constructReport(event=event, level=self.retmsg.msglevel, errorstr=mappedstr)
+            elif action == "security_json_action_s2b_stopped":
+                errorcode = s2bjson['security_json_param_error_code']
+                ishandover = s2bjson['security_json_param_handover']
+                statestr = "epdg attach stopped\n"
+                #add three spaces for alignment, not working...Orz...
+                hostr = " ishandover: " + str(ishandover) + '\n'
+                mappedstr = str(errorcode) + '-->' +mapcode2str(str(errorcode), Constants2berrcode)
+                errorstr = " StateCode: " + mappedstr
+
+                #in s2b stopped, the statecode should be checked
+                if isS2bError(errorcode):
+                    self.retmsg.msglevel = Msglevel.ERROR
+                    event = mapzhphrase("stopped_abnormally", Reports2bphrase)
+                    self.retmsg.report = constructReport(event=event, level=self.retmsg.msglevel, errorstr=mappedstr)
+                else:
+                    self.retmsg.msglevel = Msglevel.WARNING
+                    event = mapzhphrase("stopped", Reports2bphrase)
+                    self.retmsg.report = constructReport(event=event, level=self.retmsg.msglevel, errorstr=mappedstr)
+
+                self.retmsg.color = maplevel2color(self.retmsg.msglevel)
+                self.retmsg.msg = statestr + hostr + errorstr
+
+            elif action == "security_json_action_s2b_successed":
+                statestr = "epdg attach successfully\n"
+                ipv4str = ipv6str = pcscfv4str = pcscfv6str = dnsv4str = dnsv6str = ''
+                if 'security_json_param_local_ip4' in s2bjson:
+                    ipv4str = "     IPv4: " + s2bjson['security_json_param_local_ip4'] + '\n'
+                if 'security_json_param_local_ip6' in s2bjson:
+                    ipv6str = "     IPv6: " + s2bjson['security_json_param_local_ip6'] + '\n'
+                if 'security_json_param_pcscf_ip4' in s2bjson:
+                    pcscfv4str = "   PCSCF IPv4: " + s2bjson['security_json_param_pcscf_ip4'] + '\n'
+                if 'security_json_param_pcscf_ip6' in s2bjson:
+                    pcscfv6str = "   PCSCF IPv6: " + s2bjson['security_json_param_pcscf_ip6'] + '\n'
+                if 'security_json_param_dns_ip4' in s2bjson:
+                    dnsv4str = "   DNS IPv4: " + s2bjson['security_json_param_dns_ip4'] + '\n'
+                if 'security_json_param_dns_ip6' in s2bjson:
+                    dnsv6str = "   DNS IPv6: " + s2bjson['security_json_param_dns_ip6'] + '\n'
+                self.retmsg.msglevel = Msglevel.NORMAL
+                self.retmsg.color = maplevel2color(self.retmsg.msglevel)
+                self.retmsg.msg = statestr + ipv4str + ipv6str + pcscfv4str + pcscfv6str + dnsv4str + dnsv6str
+                event = mapzhphrase("successed", Reports2bphrase)
+                self.retmsg.report = constructReport(event=event, level=self.retmsg.msglevel)
             else:
-                self.retmsg.msglevel = Msglevel.WARNING
-                event = mapzhphrase("stopped", Reports2bphrase)
-                self.retmsg.report = constructReport(event=event, level=self.retmsg.msglevel, errorstr=mappedstr)
+                return None
 
-            self.retmsg.color = maplevel2color(self.retmsg.msglevel)
-            self.retmsg.msg = statestr + hostr + errorstr
-
-        elif action == "security_json_action_s2b_successed":
-            statestr = "epdg attach successfully\n"
-            ipv4str = ipv6str = pcscfv4str = pcscfv6str = dnsv4str = dnsv6str = ''
-            if 'security_json_param_local_ip4' in s2bjson:
-                ipv4str = "     IPv4: " + s2bjson['security_json_param_local_ip4'] + '\n'
-            if 'security_json_param_local_ip6' in s2bjson:
-                ipv6str = "     IPv6: " + s2bjson['security_json_param_local_ip6'] + '\n'
-            if 'security_json_param_pcscf_ip4' in s2bjson:
-                pcscfv4str = "   PCSCF IPv4: " + s2bjson['security_json_param_pcscf_ip4'] + '\n'
-            if 'security_json_param_pcscf_ip6' in s2bjson:
-                pcscfv6str = "   PCSCF IPv6: " + s2bjson['security_json_param_pcscf_ip6'] + '\n'
-            if 'security_json_param_dns_ip4' in s2bjson:
-                dnsv4str = "   DNS IPv4: " + s2bjson['security_json_param_dns_ip4'] + '\n'
-            if 'security_json_param_dns_ip6' in s2bjson:
-                dnsv6str = "   DNS IPv6: " + s2bjson['security_json_param_dns_ip6'] + '\n'
-            self.retmsg.msglevel = Msglevel.NORMAL
-            self.retmsg.color = maplevel2color(self.retmsg.msglevel)
-            self.retmsg.msg = statestr + ipv4str + ipv6str + pcscfv4str + pcscfv6str + dnsv4str + dnsv6str
-            event = mapzhphrase("successed", Reports2bphrase)
-            self.retmsg.report = constructReport(event=event, level=self.retmsg.msglevel)
-        else:
+            return self.retmsg
+        except ValueError:
             return None
-
-        return self.retmsg
 
 class simstatus(eventhandler):
     '''
@@ -1970,7 +1982,7 @@ class notask(eventhandler):
     def handler(self):
         self.retmsg.msglevel = Msglevel.WARNING
         self.retmsg.color = maplevel2color(self.retmsg.msglevel)
-        self.retmsg.msg = "2G/3G Network, Do not start VoWiFi"
+        self.retmsg.msg = "2G/3G Network, Do not camp on volte"
         return self.retmsg
 
 class hosignal(eventhandler):
@@ -1984,6 +1996,16 @@ class hosignal(eventhandler):
         self.retmsg.msg = msg
         return self.retmsg
 
+class cmregstat(eventhandler):
+    def handler(self):
+        self.retmsg.msglevel = Msglevel.WARNING
+        self.retmsg.color = maplevel2color(self.retmsg.msglevel)
+        imsfeature = str(self.match.group(1)).strip()
+        regstate = str(self.match.group(2)).strip()
+        msg = "IMS Feature: " + imsfeature + '\n'
+        msg += "VOLTE Regstate: " + regstate
+        self.retmsg.msg = msg
+        return self.retmsg
 
 class audioqos(eventhandler):
     def handler(self):
@@ -2024,6 +2046,8 @@ class videoqosinvideo(eventhandler):
         msg+= "Video Rtt: " + rtt
         self.retmsg.msg = msg
         return self.retmsg
+
+
 
 if __name__ == '__main__':
     key = 'abc'

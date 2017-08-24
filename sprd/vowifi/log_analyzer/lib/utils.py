@@ -239,6 +239,31 @@ class utils():
         f = ('%.2f' % nbytes).rstrip('0').rstrip('.')
         return '%s %s' % (f, suffixes[i])
 
+    def findfields(self, line):
+        #for android log before android o
+        #08-23 21:47:17.415  1118  1118 D LEMON   : 21:47:17.415
+        #after android o
+        #00D347 08-23 19:57:51.585  1205  1254 D LEMON
+        #but sometimes, still ..., so the log team sucks
+        fields = line.split()
+        datepattern= "\d\d-\d\d"
+        dpattern = re.compile(datepattern)
+        first = fields[0]
+        match = dpattern.match(first)
+        fruit = dict()
+        fruit['day'] = ""
+        fruit['time'] = ""
+        fruit['pid'] = ""
+        if match:
+            fruit['day'] = fields[0]
+            fruit['time'] = fields[1]
+            fruit['pid'] = fields[2]
+        else:
+            fruit['day'] = fields[1]
+            fruit['time'] = fields[2]
+            fruit['pid'] = fields[3]
+        return fruit
+
     class dotdict(dict):
         """dot.notation access to dictionary attributes"""
         def __getattr__(self, attr):
@@ -250,6 +275,12 @@ class utils():
 
 if __name__ == '__main__':
     utils = utils()
+    line1 = "08-23 21:47:17.415  1118  1118 D LEMON   : 21:47:17.415"
+    line2 = "00D347 08-23 19:57:51.585  1205  1254 D LEMON"
+    fruit = utils.findfields(line1)
+    print fruit
+    fruit = utils.findfields(line2)
+    print fruit
     matches = utils.findlogs('./src/dtac_video_mo/')
     for index, match in enumerate(matches):
         for key,value in match.iteritems():
