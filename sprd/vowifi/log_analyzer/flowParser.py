@@ -327,7 +327,8 @@ class flowParser():
                     backwardline = searchstart - 3
                     fields = self.loglines[backwardline].split(' ')
                     #04-17 23:21:24.420
-                    timestamp = fields[0] + ' ' + fields[1]
+                    fruit = self.utils.findfields(fields)
+                    timestamp = fruit['day'] + ' ' + fruit['time']
                     break
             else:
                 searchstart = searchstart - 1
@@ -395,7 +396,8 @@ class flowParser():
                     forwardline = searchstart + 1
                     fields = self.loglines[forwardline].split(' ')
                     #04-17 23:21:24.420
-                    timestamp = fields[0] + ' ' + fields[1]
+                    fruit = self.utils.findfields(fields)
+                    timestamp = fruit['day'] + ' ' + fruit['time']
                     #if we found two siptags then break
                     break
             else:
@@ -422,7 +424,8 @@ class flowParser():
         ikemsg['lineno'] = lineno
         fields = line.split(' ')
         #04-17 23:21:24.420
-        timestamp = fields[0] + ' ' + fields[1]
+        fruit = self.utils.findfields(fields)
+        timestamp = fruit['day'] + ' ' + fruit['time']
         ikemsg['timestamp'] = timestamp
 
         ikemsg['msg'] = line
@@ -518,7 +521,7 @@ class flowParser():
         if len(lineinfo) < 6:
             self.logger.logger.error(line + ' is not valid log line')
             return
-        lpid = lineinfo[2]
+        lpid = self.utils.findfields(lineinfo)['pid']
         if lpid not in self.pidpair:
             #add some exceptional event like dhcp event
             return
@@ -556,9 +559,10 @@ class flowParser():
                 if match:
                     #now parse the line
                     eventmsg = dict()
-                    fields = line.strip(' \t').split(' ')
+                    fields = line.split()
                     #04-17 23:21:24.420
-                    timestamp = fields[0] + ' ' + fields[1]
+                    fruit = self.utils.findfields(fields)
+                    timestamp = fruit['day'] + ' ' + fruit['time']
                     eventmsg['timestamp'] = timestamp
                     eventmsg['msg'] = line.strip(' \t')
                     eventdict = dict()

@@ -369,9 +369,10 @@ class radioParser():
         #add timestamp and atcmd
         atmsg = dict()
         #get timestamp first
-        fields = line.strip().split(' ')
+        fields = line.split()
         #04-17 23:21:24.420
-        timestamp = fields[0] + ' ' + fields[1]
+        fruit = self.utils.findfields(fields)
+        timestamp = fruit['day'] + ' ' + fruit['time']
         atmsg['timestamp'] = timestamp
         atmsg['issip'] = 0
         atmsg['isat'] = 1

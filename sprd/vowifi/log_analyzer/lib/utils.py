@@ -239,13 +239,12 @@ class utils():
         f = ('%.2f' % nbytes).rstrip('0').rstrip('.')
         return '%s %s' % (f, suffixes[i])
 
-    def findfields(self, line):
+    def findfields(self, fields):
         #for android log before android o
         #08-23 21:47:17.415  1118  1118 D LEMON   : 21:47:17.415
         #after android o
         #00D347 08-23 19:57:51.585  1205  1254 D LEMON
         #but sometimes, still ..., so the log team sucks
-        fields = line.split()
         datepattern= "\d\d-\d\d"
         dpattern = re.compile(datepattern)
         first = fields[0]
@@ -277,9 +276,11 @@ if __name__ == '__main__':
     utils = utils()
     line1 = "08-23 21:47:17.415  1118  1118 D LEMON   : 21:47:17.415"
     line2 = "00D347 08-23 19:57:51.585  1205  1254 D LEMON"
-    fruit = utils.findfields(line1)
+    field1 = line1.split()
+    field2 = line2.split()
+    fruit = utils.findfields(field1)
     print fruit
-    fruit = utils.findfields(line2)
+    fruit = utils.findfields(field2)
     print fruit
     matches = utils.findlogs('./src/dtac_video_mo/')
     for index, match in enumerate(matches):

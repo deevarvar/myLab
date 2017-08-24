@@ -454,9 +454,11 @@ class logParser():
                         continue
                     #FIXME: this logic is not correct any more after stephen refactor
                     # the ltag is like "[ImsCM] ImsConnectionManagerMonitor:" instead of ImsConnectionManagerMonitor:
+                    fruit = self.utils.findfields(lineinfo)
                     ltag = lineinfo[5].replace(":", "")
                     #self.logger.logger.error('ltag is ' +ltag)
-                    lpid = lineinfo[2]
+
+                    lpid = fruit['pid']
                     #print ltag + ' '+ str(lpid)
                     #need to add priority to check if foundnumnum
                     for process in tagsection:
