@@ -18,6 +18,7 @@ from datetime import datetime
 #      C:\Users\Zhihua.Ye\Documents\MyJabberFiles\cindy.xie@spreadtrum.com\SOS_APN_ECALL\SOS_APN_ECALL\SOS_APN_ECALL\ap\current\00-0823_195345
 #      1. imsbr, ciregu D:\code\log\bug_log\vit_log\2017_8_15\mingzhe_last\12
 #       D:\code\log\bug_log\vit_log\2017_8_24\729634\ylog
+#     D:\code\log\bug_log\vit_log\2017_8_24\737005\patch
 #TODO: add parser for CGCONTRDP, PDN connection, v4, v6
 #      v4: D:\code\log\bug_log\vit_log\2017_8_15\727817\MO\2017-08-19-15-28-06\android
 #      v4: 726983
