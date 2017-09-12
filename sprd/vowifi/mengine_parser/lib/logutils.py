@@ -12,11 +12,11 @@ class logutils():
     def __init__(self):
         pass
 
-    def checkint(self, string):
-        string = string.split()
-        if string[0] in ('-', '+'):
-            return string[1:].isdigit()
-        return string.isdigit()
+    def checkint(self, s):
+        s = s.strip()
+        if s[0] in ('-', '+'):
+            return s[1:].isdigit()
+        return s.isdigit()
 
     def wordinline(self, word, line):
         if word in line:
@@ -53,6 +53,9 @@ class logutils():
             fruit['day'] = fields[1]
             fruit['time'] = fields[2]
             fruit['pid'] = fields[3]
+        #pid should be integer, or return None
+        if not self.checkint(fruit['pid']):
+            fruit['pid'] = None
         return fruit
 
 
