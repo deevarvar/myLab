@@ -28,6 +28,7 @@ from datetime import datetime
 #      add parser CCED D:\code\log\bug_log\vit_log\2017_8_7\mingzhe_issue\android
 #      add parser , CREG is better D:\code\log\bug_log\vit_log\2017_8_7\727815\2\android
 #      NO NEED: CIREG get the real result!
+#      policy: bug 746245
 
 from seqdiag import parser, builder, drawer
 from blockdiag.utils.bootstrap import create_fontmap
