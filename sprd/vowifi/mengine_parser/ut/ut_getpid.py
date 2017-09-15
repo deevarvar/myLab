@@ -6,7 +6,6 @@ import unittest
 import os
 import sys
 sys.path.append('../')
-import definition
 from mflow_parser import mflow
 
 #define a struct to collect all the cases
@@ -65,6 +64,7 @@ class TestGetPid(unittest.TestCase):
         result['pid'] = [None]
         casethree = onecase(description=des, lines=lines, result=result)
         self.cases.append(casethree)
+
         for index, case in enumerate(self.cases):
             logname = str(count) + ".log"
             lines = case.getlines()
@@ -73,7 +73,8 @@ class TestGetPid(unittest.TestCase):
                     log.write(line)
             count = count + 1
 
-    def test_one(self):
+
+    def test_AllInOne(self):
         count = 0
         for index, case in enumerate(self.cases):
             logname = str(count) + '.log'
@@ -81,8 +82,8 @@ class TestGetPid(unittest.TestCase):
             mins = mflow(logname=logname)
             mins.findPid()
             result = case.getresult()
-            self.assertEqual(result['num'], len(mins.pid))
-            self.assertListEqual(result['pid'], mins.pid)
+            self.assertEqual(result['num'], len(mins.pids))
+            self.assertListEqual(result['pid'], mins.pids)
             count = count + 1
 
     def tearDown(self):

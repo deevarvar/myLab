@@ -1,6 +1,14 @@
 #!/usr/bin/env python3
 #-*- coding: utf-8 -*-
 
+
+#comment from wenmei:
+
+'''
+nal_type:7和nal_type:8代表sps 和pps \
+get length 8461, complete 1, type 0,
+type 0 表示keyframe
+'''
 """ 
 Description: This app is used to parse the main log file and get the information of VoLTE video call 
 Version-0.3

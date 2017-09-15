@@ -3,6 +3,7 @@
 
 import os
 import re
+import errno
 
 #1. utils to handle android logs like main.log, radio.log, kernel.log
 #2. find pid by keyword
@@ -11,6 +12,16 @@ import re
 class logutils():
     def __init__(self):
         pass
+
+    #similar to "mkdir -p"
+    def mkdirp(self, path):
+        try:
+            os.makedirs(path)
+        except OSError as exc:  # Python >2.5
+            if exc.errno == errno.EEXIST and os.path.isdir(path):
+                pass
+            else:
+                raise
 
     def checkint(self, s):
         s = s.strip()
