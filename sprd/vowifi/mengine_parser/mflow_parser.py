@@ -41,10 +41,12 @@ class mflow():
         self.outdir = os.path.dirname(logname) + '/output'
         self.logutils.mkdirp(self.outdir)
 
-        self.trimlog = self.outdir + '/' + 'media.log'
+        self.trimlog = self.outdir + '/' + 'media_verbose.log'
         with open(self.trimlog, 'a+')as trimlog:
             trimlog.truncate()
 
+        #final eventmsg should be processed
+        self.eventmsgs = list()
 
         #pid should be a verbose list
         self.pids = list()
@@ -80,6 +82,7 @@ class mflow():
         #find all pids
         self.findPid()
 
+        #handle each patten by pid
         for index, line in enumerate(self.loglines):
             fields = line.split()
             fruit = self.logutils.findfields(fields)
@@ -92,11 +95,20 @@ class mflow():
                     elist = pevent.geteventlist()
                     for eindex, event in enumerate(elist):
                         key = event['key']
+                        groupnum = event['groupnum']
+                        color = event['color']
+                        eventHandler = event['eventHandler']
+
                         regex = re.compile(key)
                         result = regex.search(line)
                         if result:
+                            #redirect output
                             with open(self.trimlog, 'a+') as trimlog:
                                 trimlog.write(line)
+
+                            #start to handle event
+                            handlerobj = eventHandler(result, color, groupnum)
+                            eventdict = handlerobj.getret()
 
 if __name__ == '__main__':
     mflow = mflow(logname="./samplelog/main.log")
