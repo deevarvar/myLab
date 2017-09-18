@@ -51,6 +51,16 @@ class mflow():
         #pid should be a verbose list
         self.pids = list()
 
+        #call list
+        self.calllist = list()
+
+        #call number
+        self.callnum = 0
+
+        #Do we really need this F*cking global flag
+        self.incall = False
+        self.curcall = None
+
     def findPid(self):
         '''
         description: process may restart, so pid is a list
@@ -106,11 +116,17 @@ class mflow():
                             with open(self.trimlog, 'a+') as trimlog:
                                 trimlog.write(line)
 
-                            #start to handle event
-                            handlerobj = eventHandler(result, color, groupnum)
+                            #start to handle event, pass the mflow instance
+                            handlerobj = eventHandler(result, color, groupnum, mflow=self, fruit=fruit)
                             eventdict = handlerobj.getret()
+
+    def dumpcalllist(self):
+        self.logger.logger.info('Totally Call number is ' + str(self.callnum))
+        for cindex, call in enumerate(self.calllist):
+            call.dumpcall()
 
 if __name__ == '__main__':
     mflow = mflow(logname="./samplelog/main.log")
     mflow.parse()
+    mflow.dumpcalllist()
     pass
