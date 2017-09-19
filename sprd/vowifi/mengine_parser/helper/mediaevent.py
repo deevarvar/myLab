@@ -44,15 +44,15 @@ mediaevent.addevent(key="localVideoAsBwKbps (\d+) Kbps", module=mname, groupnum=
 #REAL_OUTPOUT = 'send_statistics_proxy'
 #WATERMELON: (send_statistics_proxy.cc:93): send stats input fps: 0, encode fps: 1, encode bps: 10526; ssrc 2775897723 :rtcp: total lost 0, loss ratio 0, jitter 0, max seq 0; rtp: sent packets 9, fec 0, nack 0; width 240 height 320
 
-mediaevent.addevent(key="send_statistics_proxy.*input fps: (\d+).*encode fps: (\d+).*encode bps: (\d+);", module=mname, groupnum=3)
+mediaevent.addevent(key="send_statistics_proxy.*input fps: (\d+).*encode fps: (\d+).*encode bps: (\d+);", module=mname, groupnum=3, eventHandler=SendStat)
 #//6. received fps, bitrate, loss rate, jitter, rtt
 #RECV_STATICTIS = 'receive_statistics_proxy'
 #receive_statistics_proxy.cc:60): recv stats incoming fps 7 decode fps 17 render fps 17 packets 117 bitrate 419610 rtcp: total loss 0 loss ratio 0 jitter 644 max seq 79
-mediaevent.addevent(key="receive_statistics_proxy.*incoming fps (\d+).*bitrate (\d+).*loss ratio (\d+).*jitter (\d+)", module=mname, groupnum=4)
+mediaevent.addevent(key="receive_statistics_proxy.*incoming fps (\d+).*bitrate (\d+).*loss ratio (\d+).*jitter (\d+) max seq (\d+)", module=mname, groupnum=5, eventHandler=RecvStat)
 
 #get rtt value... , why not combine these into one log..., Orz
 #08-31 16:18:24.911  4117  4310 I MME     : 16:18:24.911 MVD: INFO: StatFillRtpRtcp Video RTCP RR stream [1], iJitter 7, irtt 75, iLoss 0.
-mediaevent.addevent(key="MVD: INFO: StatFillRtpRtcp Video RTCP RR stream .*irtt (\d+),", module=mname, groupnum=1)
+mediaevent.addevent(key="MVD: INFO: StatFillRtpRtcp Video RTCP RR stream.*iJitter (\d+), irtt (\d+), iLoss (\d+)", module=mname, groupnum=3, eventHandler=VideoRtt)
 
 #//7. first sps, pps and i frame decoded time
 #FIRST_KEY_FRAME_TIME = 'get length' && 'complete 1' &&'type 0'

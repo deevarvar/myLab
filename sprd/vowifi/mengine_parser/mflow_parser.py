@@ -27,7 +27,8 @@ import re
 #      2. data statistics
 #
 
-class mflow():
+
+class mflow:
     def __init__(self, logname='', outdir='./', loglevel='DEBUG'):
         self.log = os.path.realpath(logname)
         with open(self.log, 'rb') as logfile:
@@ -124,6 +125,11 @@ class mflow():
         self.logger.logger.info('Totally Call number is ' + str(self.callnum))
         for cindex, call in enumerate(self.calllist):
             call.dumpcall()
+
+    def exportexcel(self):
+        # generate sheet named by VT_Call_number_sendstat/recvstat
+        for cindex, call in enumerate(self.calllist):
+            pass
 
 if __name__ == '__main__':
     mflow = mflow(logname="./samplelog/main.log")
