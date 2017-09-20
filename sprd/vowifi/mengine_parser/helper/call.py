@@ -55,6 +55,7 @@ class VtCall(Call):
         # send statistics
         self.sendstat = dict()
         self.sendstat['num'] = 0
+        self.sendstat['timestamp'] = list()
         # inputfps, encodefps, encodebps
         self.sendstat['inputfps'] = list()
         self.sendstat['encodefps'] = list()
@@ -62,6 +63,7 @@ class VtCall(Call):
 
         # recv statistics
         self.recvstat = dict()
+        self.recvstat['timestamp'] = list()
         # maxseq is used to indicate if packet num is changed.
         self.recvstat['maxseq'] = 0
         self.recvstat['num'] = 0
@@ -91,14 +93,20 @@ class VtCall(Call):
                                 ', cvo is ' + str(self.codec['cvo']) + ', videoas is ' + self.codec['videoas'])
         self.logger.logger.info('send pkt num is '+ str(self.sendstat['num']) +', recv pkt num is ' + str(self.recvstat['num']))
 
-        self.logger.logger.info('input fps, encode fps, encode bitrate')
+        self.logger.logger.info('time, input fps, encode fps, encode bitrate')
         for sindex in range(0, self.sendstat['num']):
-            self.logger.logger.info(self.sendstat['inputfps'][sindex] + ', ' + self.sendstat['encodefps'][sindex]  + ', ' + self.sendstat['encodebps'][sindex])
+            self.logger.logger.info(self.sendstat['timestamp'][sindex] + ', '+self.sendstat['inputfps'][sindex] + ', ' + self.sendstat['encodefps'][sindex]  + ', ' + self.sendstat['encodebps'][sindex])
 
-        self.logger.logger.info('recvfps, recvbitrate, jitter, rtt, loss')
+        self.logger.logger.info('time, recvfps, recvbitrate, jitter, rtt, loss')
         # in case rtt may be out of index, use less one
         for rindex in range(0, min(self.recvstat['num'], self.recvstat['rtt'])):
-            self.logger.logger.info(self.recvstat['recvfps'][rindex] + ', ' + self.recvstat['recvbps'][rindex] + ', '
+            self.logger.logger.info(self.recvstat['timestamp'][rindex] + ', '+self.recvstat['recvfps'][rindex] + ', ' + self.recvstat['recvbps'][rindex] + ', '
                                      + self.recvstat['jitter'][rindex] + ', ' + self.recvstat['rtt'][rindex] + ', '+ self.recvstat['loss'][rindex])
 
 
+    def exportrecvdata(self,output='recv.xlsx'):
+        #try rtt first
+        pass
+
+    def exportsenddata(self, output='send.xlsx'):
+        pass

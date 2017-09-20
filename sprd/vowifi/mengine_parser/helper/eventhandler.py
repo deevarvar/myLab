@@ -161,7 +161,8 @@ class SendStat(EventHandler):
             sendstat['inputfps'].append(inputfps)
             sendstat['encodefps'].append(encodefps)
             sendstat['encodebps'].append(encodebps)
-
+            timestamp = self.fruit['time']
+            sendstat['timestamp'].append(timestamp)
 
 
 class RecvStat(EventHandler):
@@ -180,6 +181,9 @@ class RecvStat(EventHandler):
                 recvstat['num'] += 1
                 recvstat['recvfps'].append(recvfps)
                 recvstat['recvbps'].append(recvbps)
+                timestamp = self.fruit['time']
+                recvstat['timestamp'].append(timestamp)
+
             else:
                 self.logger.logger.info("maxseq " + maxseq + " not updated so packet is not updated in call " + str(self.mflow.callnum))
 

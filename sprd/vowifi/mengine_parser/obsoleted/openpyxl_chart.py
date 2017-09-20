@@ -1,3 +1,5 @@
+# http://openpyxl.readthedocs.io/en/2.3.3/charts/secondary.html
+# http://openpyxl.readthedocs.io/en/default/charts/limits_and_scaling.html
 from datetime import date
 
 from openpyxl import Workbook
@@ -18,6 +20,10 @@ rows = [
     [date(2015,9, 4), 30, 25, 40],
     [date(2015,9, 5), 25, 35, 30],
     [date(2015,9, 6), 20, 40, 35],
+    ["Time", "jitter", "rtt", "loss"],
+    ["09:25:35.584", 10, 50, 0],
+    ["09:26:35.584", 20, 55, 10],
+    ["09:27:35.584", 30, 60, 20],
 ]
 
 for row in rows:
@@ -74,8 +80,18 @@ c2.x_axis.title = "Date"
 
 c2.add_data(data, titles_from_data=True)
 dates = Reference(ws, min_col=1, min_row=2, max_row=7)
+# set x_axis
 c2.set_categories(dates)
 
 ws.add_chart(c2, "A61")
 
+c3 = LineChart()
+c3.title = "Text Axis"
+c3.y_axis.title = "value"
+c3.x_axis.title = "Date"
+newdata = Reference(ws, min_col=2, min_row=8, max_col=4, max_row=11)
+c3.add_data(newdata, titles_from_data=True)
+dates = Reference(ws, min_col=1, min_row=9, max_row=11)
+c3.set_categories(dates)
+ws.add_chart(c3, "A70")
 wb.save("line.xlsx")
