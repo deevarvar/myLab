@@ -133,36 +133,26 @@ class mflow:
     def exportexcel(self):
         # generate sheet named by VT_Call_number_sendstat/recvstat
         wb = Workbook()
-        firstws = wb.active
+
         # the first sheet is always sendstat of call 1
 
         for cindex, call in enumerate(self.calllist):
             #one call will have two sheets: send, recv
-            if cindex == 0:
+            realindex = cindex + 1
+            if realindex == 1:
+                # 1. generate the sheet
                 # the first sheet is always created.
-                firstws.title = "VTCall_1_sendstat"
+                firstws = wb.active
+                firstws.title = call.sendsheettitle(realindex)
+                secondws = wb.create_sheet(title=call.recvsheettitle(realindex))
 
-                header = ['time', 'input fps', 'encode fps', 'encode bitrate']
-                firstws.append(header)
-                for sindex in range(0, call.sendstat['num']):
-                    onerow = list()
-                    # excel need digits instead of chars
-                    onerow.append(call.sendstat['timestamp'][sindex])
-                    onerow.append(int(call.sendstat['inputfps'][sindex]))
-                    onerow.append(int(call.sendstat['encodefps'][sindex]))
-                    onerow.append(int(call.sendstat['encodebps'][sindex])/1000)
-                    firstws.append(onerow)
+                call.gensendsheet(firstws)
+                adjuctcolumnsize(firstws)
 
-                fpschart = ChartInfo(title="Send Statistics", xtitle="timestamp", ytitle="fps")
-                fpsref = ReferenceInfo(min_col=2, min_row=1, max_col=3, max_row=call.sendstat['num']+1)
-                encodechart = ChartInfo(title="Send Statistics", xtitle="timestamp", ytitle="encode kbps")
-                encoderef = ReferenceInfo(min_col=4, min_row=1, max_col=4,  max_row=call.sendstat['num']+1)
-                chartcell = 'A' + str(call.sendstat['num'] + 3)
-                addtwoaxischart(firstws,fpschart, fpsref, encodechart, encoderef, chartcell)
-
-
-                secondws = wb.create_sheet(title="VTCall_1_recvstat")
-                newheader = ['time stamp', 'recvfps', 'recvbps', 'jitter', 'rtt', 'loss']
+                call.genrecvsheet(secondws)
+                adjuctcolumnsize(secondws)
+                '''
+                newheader = call.recvheader()
                 secondws.append(newheader)
                 rownum = min(call.recvstat['num'], call.recvstat['rtt'])
                 for rindex in range(0, rownum):
@@ -196,7 +186,7 @@ class mflow:
                 chartinfo = ChartInfo(title="Recv Loss", xtitle="timestamp", ytitle="loss")
                 referenceinfo = ReferenceInfo(min_col=6, min_row=1, max_col=6, max_row=rownum+1)
                 addoneaxischart(secondws, chartinfo, referenceinfo, chartcell)
-
+                '''
             else:
                 pass
 

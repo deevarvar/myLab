@@ -28,6 +28,12 @@ class excel:
 CHART_WIDTH = 20
 CHART_HEIGHT = 10
 
+# used in chart between chart
+WIDTH_SPACE = 3
+HEIGHT_START = 2
+HEIGHT_SPACE = 25
+
+
 class ChartInfo:
     def __init__(self, title, xtitle, ytitle):
         self.title = title
@@ -41,6 +47,21 @@ class ReferenceInfo:
         self.max_col = max_col
         self.min_row = min_row
         self.max_row = max_row
+
+
+def getcolumnletter(num):
+    return utils.get_column_letter(num)
+
+
+# https://stackoverflow.com/questions/13197574/openpyxl-adjust-column-width-size
+def adjuctcolumnsize(ws):
+    dims = dict()
+    for row in ws.rows:
+        for cell in row:
+            if cell.value:
+                dims[cell.column] = max((dims.get(cell.column, 0), len(str(cell.value))))
+    for col, value in dims.items():
+        ws.column_dimensions[col].width = value+1
 
 def addoneaxischart(worksheet, chartinfo, referenceinfo, chartcell):
     # we do not do type checking here.

@@ -2,7 +2,7 @@
 #author: zhihua.ye@spreadtrum.com
 #TODO: use sqlite to convert .ini file into db
 
-#sample bug:749083 , 749671
+#sample bug:749083 , 749671, 751978
 
 
 from event import *

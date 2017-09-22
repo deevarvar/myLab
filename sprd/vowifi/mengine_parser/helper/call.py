@@ -4,6 +4,7 @@
 # define struct about vt call statistics
 #
 from lib.logConf import *
+from helper.excelhelper import *
 
 
 class Call:
@@ -74,6 +75,28 @@ class VtCall(Call):
         self.recvstat['rtt'] = list()
         self.recvstat['loss'] = list()
 
+        # some column index variable in excel
+        self.index = dict()
+        self.index['timestamp'] =1
+        self.index['inputfps'] = 2
+        self.index['encodefps'] = 3
+        self.index['encodebps'] = 4
+        self.index['recvfps'] = 2
+        self.index['recvbps'] = 3
+        self.index['jitter'] = 4
+        self.index['rtt'] = 5
+        self.index['loss'] = 6
+
+        # some width/height in excel, used to place the chart..
+        # will use get_column_letter to change to column letter
+        # 1->A, 27->A1, 26->Z
+        self.sendwidth = 4
+        self.recvwidth = 6
+
+        # height need to updated with rows...
+        self.sendheight = 0
+        self.recvheight = 0
+
     def assemblerecvpkt(self, recvfps, recvbitrate):
         self.recvstat['num'] += 1
         onepacket = list()
@@ -103,10 +126,83 @@ class VtCall(Call):
             self.logger.logger.info(self.recvstat['timestamp'][rindex] + ', '+self.recvstat['recvfps'][rindex] + ', ' + self.recvstat['recvbps'][rindex] + ', '
                                      + self.recvstat['jitter'][rindex] + ', ' + self.recvstat['rtt'][rindex] + ', '+ self.recvstat['loss'][rindex])
 
+    def sendsheettitle(self, num):
+        return "VTCall_" + str(num) +"_sendstat"
 
-    def exportrecvdata(self,output='recv.xlsx'):
-        #try rtt first
-        pass
+    def recvsheettitle(self, num):
+        return "VTCall_" + str(num) +"_recvstat"
 
-    def exportsenddata(self, output='send.xlsx'):
-        pass
+    def sendheader(self):
+        header = ['time', 'input fps', 'encode fps', 'encode bitrate']
+        return header
+
+    def recvheader(self):
+        header = ['time stamp', 'recvfps', 'recvbps', 'jitter', 'rtt', 'loss']
+        return header
+
+    # if possbile may add extra data output file
+    def gensendsheet(self, sendsheet):
+
+        header = self.sendheader()
+        sendsheet.append(header)
+        rownum = self.sendstat['num']
+        for sindex in range(0, rownum):
+            onerow = list()
+            onerow.append(self.sendstat['timestamp'][sindex])
+            # excel need digits instead of chars
+            onerow.append(int(self.sendstat['inputfps'][sindex]))
+            onerow.append(int(self.sendstat['encodefps'][sindex]))
+            onerow.append(int(self.sendstat['encodebps'][sindex])/1000)
+            sendsheet.append(onerow)
+            self.sendheight += 1
+        self.sendheight += 1
+
+        fpschart = ChartInfo(title="Send Statistics", xtitle="timestamp", ytitle="fps")
+        fpsref = ReferenceInfo(min_col=self.index['inputfps'], min_row=1, max_col=self.index['encodefps'], max_row=rownum+1)
+        encodechart = ChartInfo(title="Send Statistics", xtitle="timestamp", ytitle="encode kbps")
+        encoderef = ReferenceInfo(min_col=self.index['encodebps'], min_row=1, max_col=self.index['encodebps'],  max_row=rownum+1)
+        # not hardcoded here,  it is G3
+        chartcell = getcolumnletter(self.sendwidth + WIDTH_SPACE) + str(HEIGHT_START)
+
+        addtwoaxischart(sendsheet, fpschart, fpsref, encodechart, encoderef, chartcell)
+
+    def genrecvsheet(self, recvsheet):
+        # fps && bps with two axis
+        newheader = self.recvheader()
+        recvsheet.append(newheader)
+        rownum = min(self.recvstat['num'], self.recvstat['rtt'])
+        for rindex in range(0, rownum):
+            onerow = list()
+            # excel need digits instead of chars
+            onerow.append(self.recvstat['timestamp'][rindex])
+            onerow.append(int(self.recvstat['recvfps'][rindex]))
+            onerow.append(int(self.recvstat['recvbps'][rindex])/1000)
+            onerow.append(int(self.recvstat['jitter'][rindex]))
+            onerow.append(int(self.recvstat['rtt'][rindex]))
+            onerow.append(int(self.recvstat['loss'][rindex]))
+            recvsheet.append(onerow)
+            self.recvheight += 1
+        self.recvheight += 1
+
+        recvfpschart = ChartInfo(title="Recv Statistics", xtitle="timestamp", ytitle="recv fps")
+        recvref = ReferenceInfo(min_col=self.index['recvfps'], min_row=self.index['recvfps'], max_col=self.index['recvfps'], max_row=rownum+1)
+        recvbpschart = ChartInfo(title="Recv Statistics", xtitle="timestamp", ytitle="recv kbps")
+        recvbpsref = ReferenceInfo(min_col=self.index['recvbps'], min_row=1, max_col=self.index['recvbps'], max_row=rownum+1)
+
+        # we will draw three chart here
+        chartcell = getcolumnletter(self.recvwidth + WIDTH_SPACE) + str(HEIGHT_START + HEIGHT_SPACE)
+        addtwoaxischart(recvsheet, recvfpschart, recvref, recvbpschart, recvbpsref, chartcell)
+
+        # jitter && rtt with two axis
+        jitterchart = ChartInfo(title="Recv Qos", xtitle="timestamp", ytitle="jitter")
+        jitterref = ReferenceInfo(min_col=self.index['jitter'], min_row=1, max_col=self.index['jitter'], max_row=rownum+1)
+        rttchart = ChartInfo(title="Recv Qos", xtitle="timestamp", ytitle="rtt")
+        rttref = ReferenceInfo(min_col=self.index['rtt'], min_row=1, max_col=self.index['rtt'], max_row=rownum+1)
+        chartcell = getcolumnletter(self.recvwidth + WIDTH_SPACE) + str(2*HEIGHT_START)
+        addtwoaxischart(recvsheet, jitterchart, jitterref, rttchart, rttref, chartcell)
+
+        # loss
+        chartinfo = ChartInfo(title="Recv Loss", xtitle="timestamp", ytitle="loss")
+        referenceinfo = ReferenceInfo(min_col=self.index['loss'] , min_row=1, max_col=self.index['loss'] , max_row=rownum+1)
+        chartcell = getcolumnletter(self.recvwidth + WIDTH_SPACE) + str(HEIGHT_START + 2*HEIGHT_SPACE)
+        addoneaxischart(recvsheet, chartinfo, referenceinfo, chartcell)
