@@ -21,14 +21,15 @@ import re
 #3.1 idea is different from old style:
 #     media only need the process, simple is beautiful.
 #     record start
-# TODO:    record statistics, pps, sps,rtp
+
 #     record end
 # for phrase one:
 #      1. log grep
 #      2. data statistics
 # TODO:     3. vowifi video start/stop
 # TODO:     4. call info
-
+# TODO:    record statistics, pps, sps,rtp
+# TODO:    add simple UI.
 
 class mflow:
     def __init__(self, logname='', outdir='./', loglevel='DEBUG'):
@@ -139,62 +140,28 @@ class mflow:
         for cindex, call in enumerate(self.calllist):
             #one call will have two sheets: send, recv
             realindex = cindex + 1
+            self.logger.logger.info('start to handle call ' + str(realindex))
             if realindex == 1:
                 # 1. generate the sheet
                 # the first sheet is always created.
                 firstws = wb.active
                 firstws.title = call.sendsheettitle(realindex)
-                secondws = wb.create_sheet(title=call.recvsheettitle(realindex))
-
-                call.gensendsheet(firstws)
-                adjuctcolumnsize(firstws)
-
-                call.genrecvsheet(secondws)
-                adjuctcolumnsize(secondws)
-                '''
-                newheader = call.recvheader()
-                secondws.append(newheader)
-                rownum = min(call.recvstat['num'], call.recvstat['rtt'])
-                for rindex in range(0, rownum):
-                    onerow = list()
-                    # excel need digits instead of chars
-                    onerow.append(call.recvstat['timestamp'][rindex])
-                    onerow.append(int(call.recvstat['recvfps'][rindex]))
-                    onerow.append(int(call.recvstat['recvbps'][rindex])/1000)
-                    onerow.append(int(call.recvstat['jitter'][rindex]))
-                    onerow.append(int(call.recvstat['rtt'][rindex]))
-                    onerow.append(int(call.recvstat['loss'][rindex]))
-                    secondws.append(onerow)
-
-                recvfpschart = ChartInfo(title="Recv Statistics", xtitle="timestamp", ytitle="recv fps")
-                recvref = ReferenceInfo(min_col=2, min_row=1, max_col=2, max_row=rownum+1)
-                recvbpschart = ChartInfo(title="Recv Statistics", xtitle="timestamp", ytitle="recv kbps")
-                recvbpsref = ReferenceInfo(min_col=5, min_row=1, max_col=5, max_row=rownum+1)
-                chartcell = 'I1'
-                addtwoaxischart(secondws,recvfpschart, recvref, recvbpschart, recvbpsref, chartcell)
-
-
-                jitterchart = ChartInfo(title="Recv Qos", xtitle="timestamp", ytitle="jitter")
-                jitterref = ReferenceInfo(min_col=4, min_row=1, max_col=4, max_row=rownum+1)
-                rttchart = ChartInfo(title="Recv Qos", xtitle="timestamp", ytitle="rtt")
-                rttref = ReferenceInfo(min_col=3, min_row=1, max_col=3, max_row=rownum+1)
-                chartcell = 'I30'
-                addtwoaxischart(secondws, jitterchart, jitterref, rttchart, rttref, chartcell)
-
-                #loss
-                chartcell = 'I60'
-                chartinfo = ChartInfo(title="Recv Loss", xtitle="timestamp", ytitle="loss")
-                referenceinfo = ReferenceInfo(min_col=6, min_row=1, max_col=6, max_row=rownum+1)
-                addoneaxischart(secondws, chartinfo, referenceinfo, chartcell)
-                '''
             else:
-                pass
+                firstws = wb.create_sheet(title=call.sendsheettitle(realindex))
 
+            secondws = wb.create_sheet(title=call.recvsheettitle(realindex))
+
+            call.gensendsheet(firstws)
+            adjuctcolumnsize(firstws)
+
+            call.genrecvsheet(secondws)
+            adjuctcolumnsize(secondws)
 
         wb.save(self.excel)
 
 if __name__ == '__main__':
     mflow = mflow(logname="./samplelog/main.log")
+    #mflow = mflow(logname="./samplelog/751978/mo.log")
     mflow.parse()
     mflow.dumpcalllist()
     mflow.exportexcel()

@@ -29,7 +29,7 @@ CHART_WIDTH = 20
 CHART_HEIGHT = 10
 
 # used in chart between chart
-WIDTH_SPACE = 3
+WIDTH_SPACE = 2
 HEIGHT_START = 2
 HEIGHT_SPACE = 25
 
