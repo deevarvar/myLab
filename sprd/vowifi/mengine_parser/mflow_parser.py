@@ -21,12 +21,13 @@ import re
 #3.1 idea is different from old style:
 #     media only need the process, simple is beautiful.
 #     record start
-#     record statistics, pps, sps,rtp
+# TODO:    record statistics, pps, sps,rtp
 #     record end
 # for phrase one:
 #      1. log grep
 #      2. data statistics
-#
+# TODO:     3. vowifi video start/stop
+# TODO:     4. call info
 
 
 class mflow:
@@ -131,8 +132,8 @@ class mflow:
 
     def exportexcel(self):
         # generate sheet named by VT_Call_number_sendstat/recvstat
-        wb = excel()
-        firstws = wb.workbook.active
+        wb = Workbook()
+        firstws = wb.active
         # the first sheet is always sendstat of call 1
 
         for cindex, call in enumerate(self.calllist):
@@ -151,40 +152,16 @@ class mflow:
                     onerow.append(int(call.sendstat['encodefps'][sindex]))
                     onerow.append(int(call.sendstat['encodebps'][sindex])/1000)
                     firstws.append(onerow)
-                # set axis
-                linechartone = LineChart()
-                linechartone.title = "Send Statistics"
-                linechartone.y_axis.title = "fps"
-                linechartone.x_axis.title = "timestamp"
-                linechartone.witdh = 20
-                linechartone.height = 10
-                #self.logger.logger.info('height is ' + str(linechart.height) + ', width is ' + str(linechart.width))
-                #linechart.y_axis.scaling.min = 0
-                #linechart.y_axis.scaling.max = 100
-                data = Reference(firstws, min_col=2, min_row=1, max_col=3, max_row=call.sendstat['num']+1)
-                linechartone.add_data(data, titles_from_data=True)
-                dates = Reference(firstws, min_col=1, min_row=2, max_row=call.sendstat['num']+1)
-                linechartone.set_categories(dates)
 
-
-
-                linecharttwo = LineChart()
-                linecharttwo.y_axis.title = "encode kbps"
-                linecharttwo.y_axis.axId = 200
-                # Display y-axis of the second chart on the right by setting it to cross the x-axis at its maximum
-                linechartone.y_axis.crosses = "max"
-
-                # data
-                bardata = Reference(firstws, min_col=4, min_row=1, max_row=call.sendstat['num']+1)
-                linecharttwo.add_data(bardata, titles_from_data=True)
-                linecharttwo.set_categories(dates)
-
-                linechartone += linecharttwo
+                fpschart = ChartInfo(title="Send Statistics", xtitle="timestamp", ytitle="fps")
+                fpsref = ReferenceInfo(min_col=2, min_row=1, max_col=3, max_row=call.sendstat['num']+1)
+                encodechart = ChartInfo(title="Send Statistics", xtitle="timestamp", ytitle="encode kbps")
+                encoderef = ReferenceInfo(min_col=4, min_row=1, max_col=4,  max_row=call.sendstat['num']+1)
                 chartcell = 'A' + str(call.sendstat['num'] + 3)
-                firstws.add_chart(linechartone, chartcell)
+                addtwoaxischart(firstws,fpschart, fpsref, encodechart, encoderef, chartcell)
 
 
-                secondws = wb.workbook.create_sheet(title="VTCall_1_recvstat")
+                secondws = wb.create_sheet(title="VTCall_1_recvstat")
                 newheader = ['time stamp', 'recvfps', 'recvbps', 'jitter', 'rtt', 'loss']
                 secondws.append(newheader)
                 rownum = min(call.recvstat['num'], call.recvstat['rtt'])
@@ -199,80 +176,32 @@ class mflow:
                     onerow.append(int(call.recvstat['loss'][rindex]))
                     secondws.append(onerow)
 
-                #fps, bps
-                linechartone = LineChart()
-                linechartone.title = "Recv Statistics"
-                linechartone.y_axis.title = "recv fps"
-                linechartone.x_axis.title = "timestamp"
-                linechartone.witdh = 20
-                linechartone.height = 10
-                data = Reference(secondws, min_col=2, min_row=1, max_col=2, max_row=rownum+1)
-                linechartone.add_data(data, titles_from_data=True)
-                linechartone.set_categories(dates)
-
-                linecharttwo = LineChart()
-                linecharttwo.y_axis.title = "recv kbps"
-                linecharttwo.y_axis.axId = 200
-                # Display y-axis of the second chart on the right by setting it to cross the x-axis at its maximum
-                linechartone.y_axis.crosses = "max"
-
-                # data
-                bardata = Reference(secondws, min_col=3, min_row=1, max_row=rownum+1)
-                linecharttwo.add_data(bardata, titles_from_data=True)
-                linecharttwo.set_categories(dates)
-
-                linechartone += linecharttwo
+                recvfpschart = ChartInfo(title="Recv Statistics", xtitle="timestamp", ytitle="recv fps")
+                recvref = ReferenceInfo(min_col=2, min_row=1, max_col=2, max_row=rownum+1)
+                recvbpschart = ChartInfo(title="Recv Statistics", xtitle="timestamp", ytitle="recv kbps")
+                recvbpsref = ReferenceInfo(min_col=5, min_row=1, max_col=5, max_row=rownum+1)
                 chartcell = 'I1'
-                secondws.add_chart(linechartone, chartcell)
+                addtwoaxischart(secondws,recvfpschart, recvref, recvbpschart, recvbpsref, chartcell)
 
 
-                #jitter, rtt
-                linechartone = LineChart()
-                linechartone.title = "Recv Qos"
-                linechartone.y_axis.title = "jitter"
-                linechartone.x_axis.title = "timestamp"
-                linechartone.witdh = 20
-                linechartone.height = 10
-                data = Reference(secondws, min_col=4, min_row=1, max_col=4, max_row=rownum+1)
-                linechartone.add_data(data, titles_from_data=True)
-                linechartone.set_categories(dates)
-
-                linecharttwo = LineChart()
-                linecharttwo.y_axis.title = "rtt"
-                linecharttwo.y_axis.axId = 200
-                # Display y-axis of the second chart on the right by setting it to cross the x-axis at its maximum
-                linechartone.y_axis.crosses = "max"
-
-                # data
-                bardata = Reference(secondws, min_col=5, min_row=1, max_row=rownum+1)
-                linecharttwo.add_data(bardata, titles_from_data=True)
-                linecharttwo.set_categories(dates)
-
-                linechartone += linecharttwo
+                jitterchart = ChartInfo(title="Recv Qos", xtitle="timestamp", ytitle="jitter")
+                jitterref = ReferenceInfo(min_col=4, min_row=1, max_col=4, max_row=rownum+1)
+                rttchart = ChartInfo(title="Recv Qos", xtitle="timestamp", ytitle="rtt")
+                rttref = ReferenceInfo(min_col=3, min_row=1, max_col=3, max_row=rownum+1)
                 chartcell = 'I30'
-                secondws.add_chart(linechartone, chartcell)
-
-
+                addtwoaxischart(secondws, jitterchart, jitterref, rttchart, rttref, chartcell)
 
                 #loss
-                linechartone = LineChart()
-                linechartone.title = "Recv Loss"
-                linechartone.y_axis.title = "loss"
-                linechartone.x_axis.title = "timestamp"
-                linechartone.witdh = 20
-                linechartone.height = 10
-                data = Reference(secondws, min_col=6, min_row=1, max_col=6, max_row=rownum+1)
-                linechartone.add_data(data, titles_from_data=True)
-                linechartone.set_categories(dates)
                 chartcell = 'I60'
-                secondws.add_chart(linechartone, chartcell)
-
+                chartinfo = ChartInfo(title="Recv Loss", xtitle="timestamp", ytitle="loss")
+                referenceinfo = ReferenceInfo(min_col=6, min_row=1, max_col=6, max_row=rownum+1)
+                addoneaxischart(secondws, chartinfo, referenceinfo, chartcell)
 
             else:
                 pass
 
 
-        wb.workbook.save(self.excel)
+        wb.save(self.excel)
 
 if __name__ == '__main__':
     mflow = mflow(logname="./samplelog/main.log")
