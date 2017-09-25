@@ -160,8 +160,8 @@ class mflow:
         wb.save(self.excel)
 
 if __name__ == '__main__':
-    mflow = mflow(logname="./samplelog/main.log")
-    #mflow = mflow(logname="./samplelog/751978/mo.log")
+    #mflow = mflow(logname="./samplelog/main.log")
+    mflow = mflow(logname="./samplelog/751978/mo.log")
     mflow.parse()
     mflow.dumpcalllist()
     mflow.exportexcel()

@@ -1,5 +1,5 @@
-#-*- coding=utf-8 -*-
-#author: zhihua.ye@spreadtrum.com
+# -*- coding=utf-8 -*-
+# author: zhihua.ye@spreadtrum.com
 
 
 import unittest

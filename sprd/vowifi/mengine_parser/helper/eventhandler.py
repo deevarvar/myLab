@@ -4,7 +4,7 @@
 from constants import *
 from lib.logConf import *
 from helper.call import *
-
+from lib.logutils import *
 
 class EventResult:
     def __init__(self):
@@ -45,6 +45,7 @@ class EventHandler:
         # the mflow instance used to communicate with main process
         self.mflow = mflow
         self.fruit = fruit
+        self.logutils = logutils()
 
     def handler(self):
         # need to overwrite the handler.
@@ -93,7 +94,9 @@ class VideoStop(EventHandler):
         self.logger.logger.info("vt call "+ str(self.mflow.callnum) +" ended")
         self.mflow.incall = False
         self.mflow.curcall.time['end'] = self.fruit['day'] + ' ' + self.fruit['time']
-
+        start = self.mflow.curcall.time['start']
+        end = self.mflow.curcall.time['end']
+        self.mflow.curcall.time['duration'] = str(self.logutils.converttime(end) - self.logutils.converttime(start))
 
 class AttachCam(EventHandler):
     def handler(self):
@@ -201,3 +204,18 @@ class VideoRtt(EventHandler):
             recvstat['jitter'].append(jitter)
             recvstat['rtt'].append(vrtt)
             recvstat['loss'].append(loss)
+
+
+class GetNal(EventHandler):
+    def handler(self):
+        if self.mflow.incall:
+            naltype = self.match.group(1).strip()
+            if naltype == '7':
+                if not self.mflow.curcall.time['firstsps']:
+                   self.mflow.curcall.time['firstsps'] = self.fruit['time']
+
+            elif naltype == '8':
+                if not self.mflow.curcall.time['firstpps']:
+                   self.mflow.curcall.time['firstpps'] = self.fruit['time']
+            else:
+                self.logger.logger.info('unknown nal type ' + naltype)

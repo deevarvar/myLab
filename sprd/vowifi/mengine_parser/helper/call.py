@@ -10,8 +10,9 @@ from helper.excelhelper import *
 class Call:
     def __init__(self):
         self.time = dict()
-        self.time['start'] = ''  # incoming/outgoing
-        self.time['end'] = ''   # callend
+        self.time['start'] = None  # incoming/outgoing
+        self.time['end'] = None   # callend
+        self.time['duration'] = None
         self.streamid = ''
         self.logger = logConf()
 
@@ -110,7 +111,9 @@ class VtCall(Call):
         :return:
         """
         self.logger.logger.info('call start is ' + self.time['start'])
-        self.logger.logger.info('call start is ' + self.time['end'])
+        self.logger.logger.info('call stop is ' + self.time['end'])
+        self.logger.logger.info('call duration is ' + self.time['duration'])
+        self.logger.logger.info('first sps time is ' + str(self.time['firstsps']) + ', first pps time is ' + str(self.time['firstpps']))
         self.logger.logger.info('cam resolution is ' + self.camerainfo['width'] + 'x' + self.camerainfo['height'])
         self.logger.logger.info('codec payload is ' + self.codec['payload'] + ', name is ' + self.codec['name'] +
                                 ', cvo is ' + str(self.codec['cvo']) + ', videoas is ' + self.codec['videoas'])
