@@ -1,5 +1,5 @@
-#-*- coding=utf-8 -*-
-#author: zhihua.ye@spreadtrum.com
+# -*- coding=utf-8 -*-
+# author: zhihua.ye@spreadtrum.com
 
 import sys
 import os
@@ -12,6 +12,7 @@ from lib.logutils import logutils
 from helper.processmap import *
 from helper.excelhelper import *
 import re
+from easygui import *
 
 #TODO list:
 #1. find pid by words
@@ -27,8 +28,8 @@ import re
 #      1. log grep
 #      2. data statistics
 # TODO:     3. vowifi video start/stop
-# TODO:     4. call info
-# TODO:    record statistics, pps, sps,rtp
+# FIXED:     4. call info
+# FIXED:    record statistics, pps, sps,rtp
 # TODO:    add simple UI.
 
 class mflow:
@@ -41,15 +42,19 @@ class mflow:
         self.config = config()
         self.logutils = logutils()
 
+        logbasename = os.path.basename(logname)
+        # get prefix, get timestamp
+        prefix = logbasename.split('.')[0]
+        self.version = self.config.getversion()
         #output is in one extra dir
         self.outdir = os.path.dirname(logname) + '/output'
         self.logutils.mkdirp(self.outdir)
 
-        self.trimlog = self.outdir + '/' + 'media_verbose.log'
+        self.trimlog = self.outdir + '/' + prefix + '_' +self.logger.timestamp +'_media.log'
         with open(self.trimlog, 'a+')as trimlog:
             trimlog.truncate()
 
-        self.excel = self.outdir + '/' + 'statictics.xlsx'
+        self.excel = self.outdir + '/' + prefix + '_' +self.logger.timestamp +'_statictics.xlsx'
 
         #final eventmsg should be processed
         self.eventmsgs = list()
@@ -131,24 +136,34 @@ class mflow:
         for cindex, call in enumerate(self.calllist):
             call.dumpcall()
 
+    def gensummarysheet(self,sheet):
+        # gen header
+        sheet.title = "Summary"
+        header = ['No.', 'start', 'end', 'duration', 'first sps', 'first pps']
+        sheet.append(header)
+        for cindex, call in enumerate(self.calllist):
+            onerow = list()
+            onerow.append(cindex+1)
+            onerow.append(call.time['start'])
+            onerow.append(call.time['end'])
+            onerow.append(call.time['duration'])
+            onerow.append(call.time['firstpps'])
+            onerow.append(call.time['firstsps'])
+            sheet.append(onerow)
+        adjuctcolumnsize(sheet)
+
     def exportexcel(self):
         # generate sheet named by VT_Call_number_sendstat/recvstat
         wb = Workbook()
+        self.gensummarysheet(wb.active)
 
         # the first sheet is always sendstat of call 1
-
         for cindex, call in enumerate(self.calllist):
             #one call will have two sheets: send, recv
             realindex = cindex + 1
             self.logger.logger.info('start to handle call ' + str(realindex))
-            if realindex == 1:
-                # 1. generate the sheet
-                # the first sheet is always created.
-                firstws = wb.active
-                firstws.title = call.sendsheettitle(realindex)
-            else:
-                firstws = wb.create_sheet(title=call.sendsheettitle(realindex))
 
+            firstws = wb.create_sheet(title=call.sendsheettitle(realindex))
             secondws = wb.create_sheet(title=call.recvsheettitle(realindex))
 
             call.gensendsheet(firstws)
@@ -158,6 +173,8 @@ class mflow:
             adjuctcolumnsize(secondws)
 
         wb.save(self.excel)
+
+
 
 if __name__ == '__main__':
     #mflow = mflow(logname="./samplelog/main.log")

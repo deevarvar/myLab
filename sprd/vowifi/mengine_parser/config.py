@@ -25,6 +25,9 @@ class config():
     def getavckey(self):
         return self.config['key']['avc']
 
+    def getversion(self):
+        return self.config['version']
+
 
 
 if __name__ == '__main__':
