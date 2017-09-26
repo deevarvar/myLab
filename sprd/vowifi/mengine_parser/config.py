@@ -1,5 +1,9 @@
 #-*- coding=utf-8 -*-
 #author: zhihua.ye@spreadtrum.com
+# https://github.com/pyinstaller/pyinstaller/issues/1890
+# pyinstaller's issue, add hook-openpyxl.py to
+# C:\Python27\Lib\site-packages\PyInstaller\hooks
+
 
 import os
 from configobj import ConfigObj,ConfigObjError
