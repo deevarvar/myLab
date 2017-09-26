@@ -139,11 +139,18 @@ class mflow:
     def gensummarysheet(self,sheet):
         # gen header
         sheet.title = "Summary"
-        header = ['No.', 'start', 'end', 'duration', 'first sps', 'first pps']
+        #header = ['No.', 'Codec', 'CVO/id', 'fps', 'Resolution', 'start', 'end', 'duration', 'first sps', 'first pps']
+        header = ['No.', 'Codec', 'CVO/id', 'start', 'end', 'duration', 'first sps', 'first pps']
         sheet.append(header)
         for cindex, call in enumerate(self.calllist):
             onerow = list()
             onerow.append(cindex+1)
+            # add codec info
+            onerow.append(call.codec['name'] +'/' + call.codec['payload'])
+            onerow.append(call.codec['cvo'] + '/' + call.codec['cvoid'])
+            #onerow.append(call.camerainfo['minfps'] + '->' + call.camerainfo['maxfps'])
+            #onerow.append(call.camerainfo['width'] + 'x' + call.camerainfo['height'])
+
             onerow.append(call.time['start'])
             onerow.append(call.time['end'])
             onerow.append(call.time['duration'])

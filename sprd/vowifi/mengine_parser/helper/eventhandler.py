@@ -115,8 +115,9 @@ class CamFps(EventHandler):
         if self.mflow.incall:
             minfps = self.match.group(1).strip()
             maxfps = self.match.group(2).strip()
-            self.mflow.curcall.camerainfo['minfps'] = minfps
-            self.mflow.curcall.camerainfo['maxfps'] = maxfps
+            # divide 1000 here
+            self.mflow.curcall.camerainfo['minfps'] = str(int(minfps)/1000)
+            self.mflow.curcall.camerainfo['maxfps'] = str(int(maxfps)/1000)
 
 
 class VtResolution(EventHandler):
@@ -142,8 +143,9 @@ class SetCodec(EventHandler):
 class SetCvo(EventHandler):
     def handler(self):
         if self.mflow.incall:
-            self.mflow.curcall.codec['cvo'] = True
-
+            cvoid = self.match.group(1).strip()
+            self.mflow.curcall.codec['cvo'] = 'Supported'
+            self.mflow.curcall.codec['cvoid'] = cvoid
 
 class VideoAs(EventHandler):
     def handler(self):

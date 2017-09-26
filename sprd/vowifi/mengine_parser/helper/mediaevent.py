@@ -33,8 +33,8 @@ mediaevent.addevent(key="set sensor-rot (\d+)\*(\d+)", module=mname, groupnum=2,
 #SetCdc stream [1] codec H264 pl 114 br 600000 fr 30 X 480 Y 640.
 mediaevent.addevent(key="SetCdc stream \[(\d+)\] codec (.*) pl (\d+) br (\d+) fr (\d+) X (\d+) Y (\d+).", module=mname, groupnum=7,eventHandler=SetCodec)
 #CVO_INFO = 'urn:3gpp:video-orientation'
-mediaevent.addevent(key="CreateVideoSendStream:.*\[{name: urn:3gpp:video-orientation,, id: (\d+)}\]", module=mname, groupnum=1, eventHandler=SetCvo)
-mediaevent.addevent(key="CreateVideoReceiveStream:.*\[{name: urn:3gpp:video-orientation,, id: (\d+)}\]", module=mname, groupnum=1)
+mediaevent.addevent(key="CreateVideoSendStream:.*\[{name: urn:3gpp:video-orientation,.*id: (\d+)}\]", module=mname, groupnum=1, eventHandler=SetCvo)
+mediaevent.addevent(key="CreateVideoReceiveStream:.*\[{name: urn:3gpp:video-orientation,.*id: (\d+)}\]", module=mname, groupnum=1)
 
 #//4. modem configured AS value
 #CALL_NETWORKBANDWIDTH = 'localVideoAsBwKbps'

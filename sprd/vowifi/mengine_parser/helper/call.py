@@ -49,7 +49,8 @@ class VtCall(Call):
         self.codec = dict()
         self.codec['payload'] = ''
         self.codec['name'] = ''
-        self.codec['cvo'] = False
+        self.codec['cvo'] = 'Unsupported'
+        self.codec['cvoid'] = ''
         self.codec['videoas'] = ''
 
         # use openpyxl to draw excel
