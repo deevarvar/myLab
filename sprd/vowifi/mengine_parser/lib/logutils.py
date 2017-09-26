@@ -30,7 +30,7 @@ class logutils():
         :param orig:
         :return:
         """
-        regex = "(\d+)-(\d+).*(\d+):(\d+):(\d+)\.(\d+)"
+        regex = "(\d+)-(\d+)[ \t](\d+):(\d+):(\d+)\.(\d+)"
         pattern = re.compile(regex)
         match = pattern.search(timestring)
 
@@ -41,15 +41,22 @@ class logutils():
         minute = int(match.group(4).lstrip("0"))
 
         sec = int(match.group(5).lstrip("0"))
-        microsec = match.group(6).lstrip("0")
+        microsec = match.group(6)
 
-        # for microsec, we only need first 3 char
+        microsec = '0.' + microsec
+        microsec = float(microsec)
+        microsec = int(microsec * 1000000)
+
+        """
+        # for microsec logic is wrong
+        .067, .006
         microsec = microsec[:3]
         mlen = len(microsec)
         if mlen < 3:
             microsec += (3 - mlen) * '0'
 
         microsec = int(microsec) * 1000
+        """
 
         output = datetime(year=datetime.today().year, month=month, day=day, hour=hour, minute=minute, second=sec, microsecond=microsec)
         #print output
