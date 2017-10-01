@@ -25,6 +25,8 @@ from datetime import datetime
 #      v6: D:\code\merge\vdf\0523_onsite_ho_401
 #      v6:
 #      D:\code\log\ref_log\instruments\Anritsu\9820a_handover\9820a_handover\external_storage\2017-06-21-18-16-20\android
+#      #AT< +IMSREGADDR:10.59.219.223,10.15.0.26
+#      D:\code\log\bug_log\vit_log\2017_8_24\xianhe
 #      add parser CCED D:\code\log\bug_log\vit_log\2017_8_7\mingzhe_issue\android
 #      add parser , CREG is better D:\code\log\bug_log\vit_log\2017_8_7\727815\2\android
 #      NO NEED: CIREG get the real result!
@@ -132,6 +134,8 @@ class radioParser():
             self.pattern['ccedpattern'] = config['radioParser']['ccedpattern']
             self.pattern['ccedpattern'] = config['radioParser']['ccedpattern']
             self.pattern['cregpattern'] = config['radioParser']['cregpattern']
+
+            self.pattern['cgconpattern'] = config['radioParser']['cgconpattern']
 
             #there are always dirty msgs to ignroe, Orz...
             self.ignoremsg = list()
@@ -359,12 +363,17 @@ class radioParser():
         ccedpattern['direct'] = '->'
         self.keypattern.append(ccedpattern)
         '''
+        cgconpattern = dict()
+        cgconpattern['pattern'] = re.compile(self.pattern['cgconpattern'])
+        cgconpattern['func'] = self.pdpcontext
+        cgconpattern['direct'] = '<-'
+        self.keypattern.append(cgconpattern)
+
         cregpattern = dict()
         cregpattern['pattern'] = re.compile(self.pattern['cregpattern'])
         cregpattern['func'] = self.cellchange
         cregpattern['direct'] = '<-'
         self.keypattern.append(cregpattern)
-
 
     def initAtmsg(self, line):
         #common steps
@@ -651,20 +660,29 @@ class radioParser():
         action.setAll(eventname, msglevel, color)
         return action
 
-    def getvolteaddr(self, addr):
+    def getvolteaddr(self, string):
         eventname = ''
         color = 'black'
         msglevel = Msglevel.INFO
         action = actionBuilder()
+        string = string.strip()
         #FIXME: sometimes addr is messy code.
-
+        #AT< +IMSREGADDR:10.59.219.223,10.15.0.26
         try:
-            addr.decode('utf-8')
-            eventname = "Volte Register Addr is \n" + addr
+            string.decode('utf-8')
+            fields = string.split(',')
+            addr = fields[0]
+            addrstr = "Volte Register Addr: " + addr +'\n'
+            pcscfstr = ''
+            if len(fields) > 1:
+                pcscf = fields[1]
+                pcscfstr = 'PCSCF in Use: ' + pcscf
+
+            eventname =  addrstr + pcscfstr
             action.setAll(eventname, msglevel, color)
             return action
         except UnicodeError:
-            print 'err addr is ' + str(addr.decode('utf8',errors='replace'))
+            self.logger.logger.error('err addr is ' + str(string.decode('utf8',errors='replace')))
             return None
 
 
@@ -1054,6 +1072,86 @@ class radioParser():
 
         return action
 
+    def pdpcontext(self, string):
+
+        string = string.strip()
+        fields = string.split(',')
+        """
+        format: +CGCONTRDP: <cid>,<bearer_id>,<apn>[,<local_addr and
+        subnet_mask>[,<gw_addr>[,<DNS_prim_addr>[,<DNS_sec_addr>[,<PCSCF_prim_addr>[,<PCS
+        CF_sec_addr>[,<IM_CN_Signalling_Flag>[,<LIPA_indication>]]]]]]]]][<CR><LF>
+        """
+        self.logger.logger.info('zhihuaye ' + str(fields))
+        flen = len(fields)
+        if flen < 3:
+            return None
+
+        cid = fields[0]
+        bearerid = fields[1]
+        #only need apn, guess
+        apn = fields[2]
+        addr = subnet = gw = dns1 = dns2 = pcscf1 = pcscf2 = ''
+
+
+        #simple and stupid
+        if flen > 3:
+            #handle local addr and subnet
+            #v6 is 0000:0000:0000:0000:0000:001a:a9b9:ec01 0000:0000:0000:0000:0000:0000:0000:0000
+            #v4 is 100.100.115.1.255.0.0.0
+            addrsubnet = fields[3]
+            isv4 = True
+            if ':' in addrsubnet:
+                isv4 = False
+            if isv4:
+                asfields = addrsubnet.split('.')
+                addr = '.'.join(asfields[:4])
+                subnet = '.'.join(asfields[4:])
+            else:
+                asfields = addrsubnet.split(' ')
+                addr = asfields[0]
+                subnet = asfields[1]
+            self.logger.logger.info('addr is ' + addr +', subnet is ' + subnet)
+            if flen > 4:
+                gw = fields[4]
+                if flen > 5:
+                    dns1 = fields[5]
+
+                    if flen > 6:
+                        dns2 = fields[6]
+                        if flen > 7:
+                            pcscf1 = fields[7]
+                            if flen > 8:
+                                pcscf2 = fields[8]
+
+
+
+        color = 'blue'
+        msglevel =  Msglevel.INFO
+        action = actionBuilder()
+        apnstr = addrstr = subnetstr = gwstr = dns1str = dns2str = pcscf1str = pcscf2str = ''
+        if apn:
+            apnstr = "APN: " + apn + '\n'
+        if addr:
+            addrstr = "IP: " + addr + '\n'
+        if subnet:
+            subnetstr = "SubNet: " + subnet + '\n'
+        if gw:
+            gwstr = "Gateway: " + gw + '\n'
+        if dns1:
+            dns1str = "DNS1: " + dns1 + '\n'
+        if dns2:
+            dns2str = "DNS2: " + dns2 + '\n'
+        if pcscf1:
+            pcscf1str = "PCSCF1: " + pcscf1 + '\n'
+        if pcscf2:
+            pcscf2str = "PCSCF2: " + pcscf2 + '\n'
+
+        eventname = "PDP Context: " + apnstr + addrstr + subnetstr \
+                    + gwstr + dns1str + dns2str + pcscf1str + pcscf2str
+
+        action.setAll(eventname, msglevel, color)
+        return action
+
     def getAtmsg(self,keypattern, line, lineno):
         '''
         :param pattern:  all kinds of pattern
@@ -1206,6 +1304,7 @@ class radioParser():
         self.dumpatmsgs()
         return self.atmsgs
 
+
     #assemblestr only used in this file
     #for other module, only asseble is used in other module.
     def assembleStr(self):
@@ -1222,7 +1321,10 @@ class radioParser():
 
             label =  " [label = \"" + eventname  + "\" "
             labelcolor = ", color=" + color
-            atcmd = " AtCmd: " + atmsg['atcmd'] + '\n'
+
+            #at cmd may be too long
+
+            atcmd = " AtCmd: " + self.utils.wrapper(atmsg['atcmd']) + '\n'
             timestamp = " time: " + atmsg['timestamp'] + '\n'
             lineno = "Lineno: " + atmsg['lineno'] + '\n'
             note = ", note = \"" + atcmd + timestamp + lineno+ "\""
@@ -1238,7 +1340,7 @@ class radioParser():
 
 
 if __name__ == '__main__':
-    rp = radioParser(logname='./0-radio-07-27-11-29-56.log')
+    rp = radioParser(logname='./v4v6pdp.ylog')
     #rp = radioParser(logname='./0-radio-07-27-11-13-22.log')
 
     #rp = radioParser(logname='./0-radio-07-14-11-19-19.log')

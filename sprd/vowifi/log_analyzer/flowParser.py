@@ -1218,7 +1218,9 @@ class flowParser():
         #only need label, note
         label =  " [label = \"" + eventname  + "\" "
         labelcolor = ", color=" + color
-        atcmd = " AtCmd: " + atmsg['atcmd'] + '\n'
+
+        #atcmd may be long
+        atcmd = " AtCmd: " + self.utils.wrapper(atmsg['atcmd']) + '\n'
         timestamp = " time: " + atmsg['timestamp'] + '\n'
         lineno = "Lineno: " + atmsg['lineno'] + '\n'
         note = ", note = \"" + atcmd + timestamp + lineno+ "\""

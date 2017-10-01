@@ -569,7 +569,7 @@ imscmEvent.addEvent('Lte network, networkType = (.*)', module_ImsCM, eventType =
 imscmEvent.addEvent('(wifi is disconnected)', module_ImsCM, eventType = eventType.EDGE, color="blue", eventHandler=wifidisconn)
 ##wifi calling
 imscmEvent.addEvent('database has changed, mIsWifiCallingEnabled = (.*)', module_ImsCM, eventType = eventType.EDGE, eventHandler=wfcstatus)
-imscmEvent.addEvent('database has changed, isWfcEnabled = (.*)', module_ImsCM, eventType = eventType.EDGE, eventHandler=wfcstatus)
+imscmEvent.addEvent('database has changed.*IsWfcEnabled = (.*),', module_ImsCM, eventType = eventType.EDGE, eventHandler=wfcstatus)
 
 ##default wifi calling
 imscmEvent.addEvent('(Wifi-calling is .*)', module_ImsCM, eventType = eventType.EDGE, color = "blue")

@@ -239,6 +239,11 @@ class utils():
         f = ('%.2f' % nbytes).rstrip('0').rstrip('.')
         return '%s %s' % (f, suffixes[i])
 
+    def wrapper(self,string):
+        #https://stackoverflow.com/questions/15254195/python-how-to-add-space-on-each-3-characters
+        wrapperlen = 40
+        return '\n'.join([string[index:index+wrapperlen] for index in range(0, len(string), wrapperlen)])
+
     def findfields(self, fields):
         #for android log before android o
         #08-23 21:47:17.415  1118  1118 D LEMON   : 21:47:17.415
