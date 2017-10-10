@@ -31,6 +31,7 @@ class logutils():
         :return:
         """
         regex = "(\d+)-(\d+)[ \t](\d+):(\d+):(\d+)\.(\d+)"
+
         pattern = re.compile(regex)
         match = pattern.search(timestring)
 
@@ -39,8 +40,10 @@ class logutils():
 
         hour = int(match.group(3).lstrip("0"))
         minute = int(match.group(4).lstrip("0"))
-
-        sec = int(match.group(5).lstrip("0"))
+        if match.group(5) == '00':
+            sec = 0
+        else:
+            sec = int(match.group(5).lstrip("0"))
         microsec = match.group(6)
 
         microsec = '0.' + microsec
