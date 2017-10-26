@@ -88,15 +88,18 @@ class VideoStart(EventHandler):
 
 class VideoStop(EventHandler):
     """
-        video start flag
+        video stop flag
     """
     def handler(self):
         self.logger.logger.info("vt call "+ str(self.mflow.callnum) +" ended")
         self.mflow.incall = False
-        self.mflow.curcall.time['end'] = self.fruit['day'] + ' ' + self.fruit['time']
-        start = self.mflow.curcall.time['start']
-        end = self.mflow.curcall.time['end']
-        self.mflow.curcall.time['duration'] = str(self.logutils.converttime(end) - self.logutils.converttime(start))
+
+        # if no video start, but there is stop, we ignore it.
+        if self.mflow.curcall:
+            self.mflow.curcall.time['end'] = self.fruit['day'] + ' ' + self.fruit['time']
+            start = self.mflow.curcall.time['start']
+            end = self.mflow.curcall.time['end']
+            self.mflow.curcall.time['duration'] = str(self.logutils.converttime(end) - self.logutils.converttime(start))
 
 class AttachCam(EventHandler):
     def handler(self):
