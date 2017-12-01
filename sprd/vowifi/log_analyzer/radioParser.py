@@ -628,6 +628,7 @@ class radioParser():
         return action
 
     def getrtp(self, state):
+        #+WIFIPARAM:<latency>,<loss>,<jitter>,<rtpTimeout>
         eventname = ''
         color = 'black'
         msglevel = Msglevel.INFO
