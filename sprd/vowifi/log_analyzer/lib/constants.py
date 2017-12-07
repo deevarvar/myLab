@@ -910,6 +910,12 @@ phoneEvent.addEvent("Try to invite this call(.*)to the conference call(.*)", mod
 
 phoneEvent.addEvent("The handler get the message: (\d+)", module_Adapter, eventType=eventType.EDGE, eventHandler=teleaction, display=False)
 
+#add SRVCC events
+phoneEvent.addEvent("(Handle the SRVCC success as register logout now)", module_Adapter, eventType=eventType.EDGE, eventHandler=srvcclogout)
+phoneEvent.addEvent("(handle the SRVCC start event)", module_Adapter, eventType=eventType.EDGE)
+phoneEvent.addEvent("(handle the SRVCC success event)", module_Adapter, eventType=eventType.EDGE)
+phoneEvent.addEvent("(handle the SRVCC failed/cancel event)", module_Adapter, eventType=eventType.EDGE, color="red")
+phoneEvent.addEvent("(Try to release the call)", module_Adapter, eventType=eventType.EDGE, color="blue")
 #some error in adapter
 phoneEvent.addEvent("(Failed to update the data router state, please check)", module_Adapter,eventType=eventType.EDGE, eventHandler=adddrerror )
 

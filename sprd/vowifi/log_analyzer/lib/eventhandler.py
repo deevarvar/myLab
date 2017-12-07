@@ -1749,6 +1749,13 @@ class networktype(eventhandler):
         self.retmsg.msg = "Network Type: " + networktype
         return self.retmsg
 
+class srvcclogout(eventhandler):
+    def handler(self):
+        self.retmsg.msglevel = Msglevel.INFO
+        self.retmsg.color = maplevel2color(self.retmsg.msglevel)
+        self.retmsg.msg = "logout after SRVCC"
+        return self.retmsg
+
 class teleaction(eventhandler):
     def handler(self):
         self.retmsg.msglevel = Msglevel.INFO
