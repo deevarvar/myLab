@@ -24,4 +24,4 @@ find_ip('./source_file/ip.txt')
 def find_mac(file_name):
     with open(file_name, 'r') as mac_file:
         for line in mac_file:
-            mac_pattern =
+            mac_pattern = line
