@@ -10,3 +10,6 @@ grep -oE '\b[0-9a-zA-Z]{2}(:[0-9a-zA-Z]{2}){5}\b' source_file/ip.txt
 
 #find email: zhiye@cisco.com
 grep -oE '\b[0-9a-zA-Z._#%-]+@[A-Z0-9a-z.-]+\.[a-zA-Z]{2,4}\b' source_file/ip.txt
+
+
+#awk --re-interval '/([0-9]{2}:){5}[0-9][0-9]/{print $0}' source_file/ip.txt

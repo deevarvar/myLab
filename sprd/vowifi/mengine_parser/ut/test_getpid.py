@@ -66,11 +66,16 @@ class TestGetPid(unittest.TestCase):
         self.cases.append(casethree)
 
         for index, case in enumerate(self.cases):
-            logname = str(count) + ".log"
+            logname = './'+ str(count) + ".log"
             lines = case.getlines()
-            with open(logname, 'w') as log:
+            with open(logname, 'w+') as log:
                 for index, line in enumerate(lines):
+                    print 'line is {}'.format(line)
                     log.write(line)
+            if os.path.isfile(logname):
+                print '{} exists'.format(os.path.realpath(logname))
+
+            print 'write {} {}'.format(count, logname)
             count = count + 1
 
 
@@ -78,8 +83,12 @@ class TestGetPid(unittest.TestCase):
         count = 0
         for index, case in enumerate(self.cases):
             logname = str(count) + '.log'
+            if os.path.isfile(logname):
+                print '{} exists'.format(os.path.realpath(logname))
+            else:
+                print '{} not exists'.format(logname)
             print case.getdesc()
-            mins = mflow(logname=logname)
+            mins = mflow(logname=os.path.realpath(logname))
             mins.findPid()
             result = case.getresult()
             self.assertEqual(result['num'], len(mins.pids))
