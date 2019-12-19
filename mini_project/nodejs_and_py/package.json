@@ -4,7 +4,7 @@
     "author": "ZhiHua Ye <zhihuayer@gmail.com>",
   	"license": "MIT",
 	"dependencies": {
-    "express": "~4.2.0"
+    "express": "~4.17.1"
 	}
 
 
