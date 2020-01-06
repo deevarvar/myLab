@@ -1,28 +1,7 @@
 # -*- coding:utf-8 -*-
 import unittest
-import random
-
-class ListNode:
-    def __init__(self, x):
-        self.val = x
-        self.next = None
-
-def append_list(head, val):
-    if head:
-        newnode = ListNode(val)
-        head.next = newnode
-
-def iter_node(head):
-    while head:
-        print "-->{}".format(head.val)
-        head = head->next
-
+from List import ListNode, List 
 class PartTest(unittest.TestCase):
-    head1 = ListNode(1)
-    append_list(head1, 2)
-    append_list(head1, 3)
-    append_list(head1, 4)
-    exphead = head1
     def setUp(self):
         pass
 
@@ -33,7 +12,42 @@ class PartTest(unittest.TestCase):
 class Partition:
     def partition(self, pHead, x):
         # write code here
-        pass
+        slist = List()
+        blist = List()
+        newlist = List()
+        exist = False
+        while pHead:
+            if pHead.val < x:
+                slist.append(pHead.val)
+            elif pHead.val >= x:
+                blist.append(pHead.val)
+            pHead = pHead.next
+        print "bigger is {}".format(blist)
+        print "smaller is {}".format(slist)
+        scurr = slist.head
+        bcurr = blist.head
+        while scurr:
+            newlist.append(scurr.val)
+            scurr = scurr.next
+        while bcurr:
+            newlist.append(bcurr.val)
+            bcurr = bcurr.next
+        print newlist
+        return newlist.head
 
 if __name__ == '__main__':
-    unittest.main()
+    l = List()
+    l.append(5)
+    l.append(1)
+    l.append(4)
+    l.append(3)
+    l.append(2)
+    print l 
+    judge = Partition()
+    print judge.partition(l.head, 4)
+    l = List()
+    l.append(3)
+    l.append(3)
+    l.append(3)
+    print l
+    print judge.partition(l.head, 3)     
