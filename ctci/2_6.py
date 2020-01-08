@@ -10,6 +10,7 @@ class PalTest(unittest.TestCase):
     TEST_DATA = [
             ([], True),
             ([10,2,3], False),
+            ([888], True),
             ([56,100,100,56], True),
             ([1,2,3,2,1], True)
             ]
@@ -31,6 +32,15 @@ class PalTest(unittest.TestCase):
                 newl.append(node)
             print "listinfo is {}".format(newl)
             self.assertEqual(self.judge.isPalindrome(newl.head), exp)
+
+    def test_palstack(self):
+        for nodes, exp in self.TEST_DATA:
+            newl = List()
+            for node in nodes:
+                newl.append(node)
+            print "stack listinfo is {}".format(newl)
+            self.assertEqual(self.judge.isPalindromeUsingStack(newl.head), exp)
+
 
 class Palindrome:
     def isPalindrome(self, pHead):
@@ -76,8 +86,39 @@ class Palindrome:
         return prev
 
     def isPalindromeUsingStack(self, pHead):
-        # use stack to record first half
-        pass
+        # just reverse latter ones
+        if pHead == None:
+            return True
+        fast = pHead
+        slow = pHead
+        rev = []
+        while slow:
+            fast = fast.next
+            if fast:
+                fast = fast.next
+                if fast:
+                    slow = slow.next
+                else: 
+                    break
+            else:
+                break
+        mid = slow
+        print "mid is {}".format(mid)
+        # reverse latter half
+        later = mid.next
+        while later:
+            rev.append(later)
+            later = later.next
+        # compare from start
+        start = pHead
+        while len(rev):
+            ele = rev.pop()
+            if start.val == ele.val:
+                start = start.next
+            else:
+                return False 
+        return True
+
 
 if __name__ == '__main__':
     unittest.main()
