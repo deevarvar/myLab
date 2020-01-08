@@ -12,8 +12,8 @@ class ListNode:
         return repr(self.val)
 
 class List:
-    def __init__(self):
-        self.head = None
+    def __init__(self, head=None):
+        self.head = head
 
     def append(self, data):
         if self.head is None:
@@ -74,7 +74,8 @@ class List:
         return False if other else True
 
 if __name__ == '__main__':
-    l = List()
+    node = ListNode(100)
+    l = List(head=node)
     l.append(1)
     l.append(2)
     l.append(3)
