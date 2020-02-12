@@ -77,7 +77,7 @@ int Partition(int array[], int low, int high){
 
 		array[hole] = array[low];
 		hole = low;	
-		while(low < high && array[high] > refer) high--;
+		while(low < high && array[high] >= refer) high--;
 		array[hole] = array[high];
 		hole = high;
 	}
